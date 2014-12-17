@@ -1,0 +1,35 @@
+<?xml version="1.0" ?>
+<layout>
+    <planelist>
+        <plane>
+            <callsign>BAW951</callsign>
+            <place>
+                <latitude>60.3385</latitude>
+                <longitude>24.9576</longitude>
+            </place>
+            <speed>250</speed>
+            <altitude>9000</altitude>
+            <heading>160</heading>
+        </plane>
+        <plane>
+            <callsign>SAS483</callsign>
+            <place>
+                <latitude>65.0746</latitude>
+                <longitude>24.6544</longitude>
+            </place>
+            <speed>250</speed>
+            <altitude>9000</altitude>
+            <heading>160</heading>
+        </plane>
+        <plane>
+            <callsign>BAW335</callsign>
+            <place>
+                <latitude>62.9604</latitude>
+                <longitude>21.0662</longitude>
+            </place>
+            <speed>250</speed>
+            <altitude>9000</altitude>
+            <heading>160</heading>
+        </plane>
+    </planelist>
+</layout>
