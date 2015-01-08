@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-#include "../tools/sfml_drawsurface.hpp"
+#include "../tools/drawing/sfml/sfml_drawsurface.hpp"
 #include <map>
 
 class View {

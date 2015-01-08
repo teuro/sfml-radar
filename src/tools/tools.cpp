@@ -81,15 +81,8 @@ Point Tools::calculate(Point& cp, Coordinate& a, Coordinate& b, int zoom) {
 	return calculate(cp, tmp_a, distance_pixels, true, true);
 }
 
-Coordinate Tools::calculate(Coordinate& cp, double bearing, double d, bool rad, bool modify) {
-    if (!rad) {
-        bearing = deg2rad(bearing);
-    }
-
-    if (modify) {
-        bearing -= deg2rad(90.0);
-    }
-
+Coordinate Tools::calculate(Coordinate& cp, double bearing, double d) {
+    //std::clog << "Tools::calculate(" << cp.get_latitude() << ", " << cp.get_longitude() << ", " << bearing << ", " << d << std::endl;
     double lat1 = deg2rad(cp.get_latitude());
     double lon1 = deg2rad(cp.get_longitude());
 
@@ -144,4 +137,18 @@ Point Tools::calculate(Point& sp, double bearing, double length, bool rad, bool 
 
 int Tools::rnd(int a, int b) {
     return (a + std::rand() % (a + b));
+}
+
+std::string Tools::ltrim(std::string s) {
+    s.erase(s.begin(), std::find_if(s.begin(), s.end(), std::not1(std::ptr_fun<int, int>(std::isspace))));
+    return s;
+}
+
+std::string Tools::rtrim(std::string s) {
+    s.erase(std::find_if(s.rbegin(), s.rend(), std::not1(std::ptr_fun<int, int>(std::isspace))).base(), s.end());
+    return s;
+}
+
+std::string Tools::trim(std::string s) {
+    return ltrim(rtrim(s));
 }

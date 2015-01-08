@@ -15,12 +15,12 @@
 #include "models/game.hpp"
 #include "models/atis.hpp"
 #include "models/player.hpp"
-#include "views/game_view.hpp"
-#include "views/atis_view.hpp"
-#include "views/player_view.hpp"
+#include "views/game/game_view.hpp"
+#include "views/atis/atis_view.hpp"
+#include "views/player/player_view.hpp"
 #include "models/point.hpp"
 #include "tools/settings.hpp"
-#include "tools/queryresult.hpp"
+#include "tools/database/queryresult.hpp"
 #include "models/database.hpp"
 
 /**

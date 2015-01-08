@@ -4,7 +4,7 @@
 #include <stack>
 #include <string>
 
-#include "../tools/queryresult.hpp"
+#include "../tools/database/queryresult.hpp"
 
 /**
     * namespace Database

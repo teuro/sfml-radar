@@ -1,35 +1,23 @@
 <?xml version="1.0" ?>
 <layout>
-    <planelist>
-        <plane>
-            <callsign>BAW951</callsign>
-            <place>
-                <latitude>60.3385</latitude>
-                <longitude>24.9576</longitude>
-            </place>
-            <speed>250</speed>
-            <altitude>9000</altitude>
-            <heading>160</heading>
-        </plane>
-        <plane>
-            <callsign>SAS483</callsign>
-            <place>
-                <latitude>65.0746</latitude>
-                <longitude>24.6544</longitude>
-            </place>
-            <speed>250</speed>
-            <altitude>9000</altitude>
-            <heading>160</heading>
-        </plane>
-        <plane>
-            <callsign>BAW335</callsign>
-            <place>
-                <latitude>62.9604</latitude>
-                <longitude>21.0662</longitude>
-            </place>
-            <speed>250</speed>
-            <altitude>9000</altitude>
-            <heading>160</heading>
-        </plane>
-    </planelist>
+    <elements>
+        <element id="clearance-box" class="data">
+            <name>Clearance box</name>
+        </element>
+        <element id="planelist" class="data">
+            <name>Planelist</name>
+            <plane>PRI312</plane>
+            <plane>SAS269</plane>
+            <plane>FIN636</plane>
+            <plane>BAW984</plane>
+        </element>
+        <element id="metar" class="data">
+            <name>Metar</name>
+            <metar>EFHK 301250Z 27006KT 2000 +RA BKN012 03/02 Q0998</metar>
+        </element>
+        <element id="input" class="data">
+            <name>Input</name>
+            <input />
+        </element>
+    </elements>
 </layout>

@@ -3,9 +3,6 @@
 Game::Game(Coordinate& cp, Settings& s) : center_point(cp), settings(s) {
     this->duration = 0;
     this->separation_errors = 0;
-    this->cl_alt = -1;
-    this->cl_spd = -1;
-    this->cl_hdg = -1;
     this->new_plane = 5000;
 }
 
@@ -14,9 +11,7 @@ Game::~Game() { }
 void Game::load() {
     std::clog << "Game::load()" << std::endl;
 
-    this->document.LoadFile("layout.xml");
-
-    this->load_airfield("EFPO");
+    this->load_airfield("EFHK");
 
     this->duration = 0;
 
@@ -24,7 +19,7 @@ void Game::load() {
     create_plane();
     create_plane();
 
-    this->build_xml();
+    this->metar.update();
 }
 
 void Game::set_centerpoint(Coordinate& cp) {
@@ -33,6 +28,10 @@ void Game::set_centerpoint(Coordinate& cp) {
 
 Coordinate& Game::get_centerpoint() {
     return this->center_point;
+}
+
+Airfield* Game::get_active_field() {
+    return this->active_field;
 }
 
 std::vector <Navpoint>& Game::get_navpoints() {
@@ -115,13 +114,22 @@ void Game::select_aircraft(Point& mouse) {
             this->selected = (*plane);
         }
     }
+}
 
-    this->cl_spd = -1;
-    this->cl_hdg = -1;
-    this->cl_alt = -1;
+void Game::select_aircraft(std::string callsign) {
+    this->selected = NULL;
+
+    std::list <Aircraft*> :: iterator plane;
+
+    for (plane = this->aircrafts.begin(); plane != this->aircrafts.end(); ++plane) {
+        if (callsign == (*plane)->get_name()) {
+            this->selected = (*plane);
+        }
+    }
 }
 
 Point Game::get_place(Point& center, Coordinate& target) {
+    //std::clog << "Game::get_place(" << center.get_x() << ", " << center.get_y() << ", " << target.get_latitude() << ", " << target.get_longitude() << ")" << std::endl;
     Point target_place = Tools::calculate(center, this->center_point, target, this->settings.zoom);
 
     return target_place;
@@ -131,12 +139,22 @@ void Game::create_plane() {
     Queryresult airlines = Database::get_result("SELECT ICAO FROM airlines");
     Navpoint t_navpoint = this->navpoints[Tools::rnd(0, (int)this->navpoints.size())];
 
-    std::string t_callsign = airlines(Tools::rnd(0, airlines.size()), "ICAO") + Tools::tostr(Tools::rnd(1, 999));
-    this->aircrafts.push_back(new Aircraft(t_callsign, 250, 160, 9000, t_navpoint.get_place()));
-}
+    int type = Tools::rnd(1, 100);
 
-std::vector <Runway>& Game::get_runways() {
-    return this->active_field->get_runways();
+    std::string t_callsign = airlines(Tools::rnd(0, airlines.size()), "ICAO") + Tools::tostr(Tools::rnd(1, 999));
+
+    Aircraft* tmp;
+
+    if (type > 50) {
+        /** Departure **/
+        tmp = new Aircraft(t_callsign, 0, 0, this->active_field->get_altitude(), t_navpoint.get_place(), type);
+        this->holdings.push(tmp);
+        std::clog << "Holding planes " << this->holdings.size() << std::endl;
+    } else {
+        /** Arrival **/
+        tmp = new Aircraft(t_callsign, 250, 160, 9000, t_navpoint.get_place(), type);
+        this->aircrafts.push_back(tmp);
+    }
 }
 
 void Game::load_airfield(std::string icao) {
@@ -150,7 +168,7 @@ void Game::load_airfield(std::string icao) {
 
     this->active_field = new Airfield(airport(0, "ICAO"), place);
 
-    std::string query = Database::bind_param("SELECT name, latitude, longitude FROM navpoints WHERE ? = ? OR airfield_id = 1000", v);
+    std::string query = Database::bind_param("SELECT name, latitude, longitude FROM navpoints WHERE ? = ?", v);
 
     Queryresult q_navpoints = Database::get_result(query);
     for (unsigned int i = 0; i < q_navpoints.size(); ++i) {
@@ -183,54 +201,120 @@ void Game::load_airfield(std::string icao) {
 }
 
 void Game::build_xml() {
-    //std::clog << "Game::build_xml()" << std::endl;
+    this->document.LoadFile("layout.xml");
     TiXmlElement* root = document.RootElement();
 
-    if (root->NoChildren()) {
-        std::clog << root->Value() << " has no childrens" << std::endl;
-    } else {
-        root->Clear();
-    }
+    document.RootElement()->Clear();
 
-    TiXmlElement* planelist = new TiXmlElement("planelist");
+    TiXmlElement* elements = new TiXmlElement("elements");
+    TiXmlElement* element1 = new TiXmlElement("element");
+    TiXmlElement* element2 = new TiXmlElement("element");
+    TiXmlElement* element3 = new TiXmlElement("metar");
+    TiXmlElement* element4 = new TiXmlElement("input");
 
-    for (this->plane = this->aircrafts.begin(); this->plane != this->aircrafts.end(); ++this->plane) {
+    TiXmlElement* name1 = new TiXmlElement("name");
+    TiXmlElement* name2 = new TiXmlElement("name");
+    TiXmlElement* name3 = new TiXmlElement("name");
+    TiXmlElement* name4 = new TiXmlElement("name");
+
+    TiXmlText* t1 = new TiXmlText("Planelist");
+    TiXmlText* t2 = new TiXmlText("Clearance box");
+    TiXmlText* t3 = new TiXmlText("Metar");
+    TiXmlText* t4 = new TiXmlText("Input");
+
+    name1->LinkEndChild(t1);
+    name2->LinkEndChild(t2);
+    name3->LinkEndChild(t3);
+    name4->LinkEndChild(t4);
+
+    element1->SetAttribute("id", "planelist");
+    element1->SetAttribute("class", "data");
+
+    element2->SetAttribute("id", "clearance-box");
+    element2->SetAttribute("class", "data");
+
+    element1->LinkEndChild(name1);
+    element2->LinkEndChild(name2);
+
+    elements->LinkEndChild(element2);
+
+    std::list <Aircraft*> :: iterator plane;
+
+    for (plane = this->aircrafts.begin(); plane != this->aircrafts.end(); ++plane) {
         TiXmlElement* t_plane = new TiXmlElement("plane");
 
-        TiXmlElement* t_place = new TiXmlElement("place");
-        TiXmlElement* t_lati = new TiXmlElement("latitude");
-        TiXmlElement* t_long = new TiXmlElement("longitude");
-
-        TiXmlElement* t_call = new TiXmlElement("callsign");
-        t_call->LinkEndChild(new TiXmlText((*this->plane)->get_name().c_str()));
-
-        TiXmlElement* t_spd = new TiXmlElement("speed");
-        t_spd->LinkEndChild(new TiXmlText(Tools::tostr((*plane)->get_speed()).c_str()));
-
-        TiXmlElement* t_alt = new TiXmlElement("altitude");
-        t_alt->LinkEndChild(new TiXmlText(Tools::tostr((*plane)->get_altitude()).c_str()));
-
-        TiXmlElement* t_hdg = new TiXmlElement("heading");
-        t_hdg->LinkEndChild(new TiXmlText(Tools::tostr((*plane)->get_heading()).c_str()));
-
-        TiXmlText* s_lat = new TiXmlText(Tools::tostr((*plane)->get_place().get_latitude()).c_str());
-        TiXmlText* s_lon = new TiXmlText(Tools::tostr((*plane)->get_place().get_longitude()).c_str());
-
-        t_lati->LinkEndChild(s_lat);
-        t_long->LinkEndChild(s_lon);
-
-        t_place->LinkEndChild(t_lati);
-        t_place->LinkEndChild(t_long);
-
-        t_plane->LinkEndChild(t_call);
-        t_plane->LinkEndChild(t_place);
-        t_plane->LinkEndChild(t_spd);
-        t_plane->LinkEndChild(t_alt);
-        t_plane->LinkEndChild(t_hdg);
-
-        planelist->LinkEndChild(t_plane);
+        t_plane->LinkEndChild(new TiXmlText((*plane)->get_name().c_str()));
+        element1->LinkEndChild(t_plane);
     }
 
-    root->LinkEndChild(planelist);
+    elements->LinkEndChild(element1);
+
+    TiXmlElement* e_metar = new TiXmlElement("element");
+    e_metar->SetAttribute("id", "metar");
+    e_metar->SetAttribute("class", "data");
+    e_metar->LinkEndChild(name3);
+    TiXmlText* t_metar = new TiXmlText("EFHK 301250Z 27006KT 2000 +RA BKN012 03/02 Q0998");
+    element3->LinkEndChild(t_metar);
+    e_metar->LinkEndChild(element3);
+
+    TiXmlElement* e_input = new TiXmlElement("element");
+    e_input->SetAttribute("id", "input");
+    e_input->SetAttribute("class", "data");
+    e_input->LinkEndChild(name4);
+    e_input->LinkEndChild(element4);
+
+    elements->LinkEndChild(e_metar);
+    elements->LinkEndChild(e_input);
+    root->LinkEndChild(elements);
     document.SaveFile();
+}
+
+int Game::get_separation_errors() {
+    return this->separation_errors;
+}
+
+Aircraft* Game::get_selected() {
+    return this->selected;
+}
+
+double Game::get_next_plane() {
+    return this->new_plane;
+}
+
+void Game::set_clearance(std::string callsign, std::vector <std::string> command) {
+    this->select_aircraft(callsign);
+
+    if (this->selected != NULL) {
+        int turn = -1;
+        int act_spd = this->selected->get_clearance_speed();
+        int act_hdg = this->selected->get_clearance_heading();
+        int act_alt = this->selected->get_clearance_altitude();
+
+        if (this->selected->get_turn() == -1 || this->selected->get_turn() == 1) {
+            turn = this->selected->get_turn();
+        }
+
+        if (command[0] == "turn") {
+            int cl_gdg;
+
+            if (command.size() == 3) {
+                turn = (command[2] == "left") ? -1 : 1;
+            }
+
+            cl_gdg = Tools::tonumber<int>(command.back());
+
+            Clearance t(act_spd, act_alt, cl_gdg, turn);
+            this->selected->set_clearance(t);
+        } else if (command[0] == "speed") {
+            int cl_spd = Tools::tonumber<int>(command[1]);
+            Clearance t(cl_spd, act_alt, act_hdg, turn);
+            this->selected->set_clearance(t);
+        } else if (command[0] == "climb" || command[0] == "descent") {
+            int cl_alt = Tools::tonumber<int>(command[1]);
+            Clearance t(act_spd, cl_alt, act_hdg, turn);
+            this->selected->set_clearance(t);
+        }
+    } else {
+        throw std::runtime_error("Unknown command please try again");
+    }
 }

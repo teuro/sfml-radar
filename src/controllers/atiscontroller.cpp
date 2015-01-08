@@ -1,6 +1,6 @@
 #include "atiscontroller.hpp"
 
-Atiscontroller::Atiscontroller(Atisview& av, Settings& s, Atis& a) : Controller(&av, s), atis(a) { }
+Atiscontroller::Atiscontroller(Atisview& av, Settings& s, Atis& a) : Controller(s), atisview(av), atis(a) { }
 
 Atiscontroller::~Atiscontroller() { }
 
@@ -20,6 +20,12 @@ void Atiscontroller::handle_function_keys(int key) {
 
 }
 
-void Atiscontroller::handle_text_input(std::string text) {
+void Atiscontroller::handle_text_input() {
 
 }
+
+void Atiscontroller::update(double elapsed, bool draw) {
+
+}
+
+void Atiscontroller::update_command(std::string command) { }

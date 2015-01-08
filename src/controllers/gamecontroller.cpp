@@ -1,6 +1,6 @@
 #include "gamecontroller.hpp"
 
-Gamecontroller::Gamecontroller(Gameview& gv, Settings& s, Game& g) : Controller(&gv, s), game(g) {
+Gamecontroller::Gamecontroller(Gameview& gv, Settings& s, Game& g) : Controller(s), gameview(gv), game(g) {
     this->function_key = Tools::SPEED;
 }
 
@@ -12,41 +12,34 @@ void Gamecontroller::handle_function_keys(int action) {
 
 void Gamecontroller::handle_mouse_release(Point& mouse_start, Point& mouse_end) {
     double distance_px  = Tools::distancePX(mouse_end, mouse_start);
-    double angle_rad    = Tools::angle(mouse_start, mouse_end);
-    double distance_nm  = (distance_px * this->settings.zoom) / this->settings.screen_width;
+    double angle_rad    = Tools::angle(mouse_end, mouse_start);
+    double distance_nm  = Tools::distanceNM(distance_px, this->settings.zoom, this->settings.screen_width);
 
-    Coordinate center = Tools::calculate(this->game.get_centerpoint(), angle_rad, distance_nm, true, true);
+    Coordinate center = Tools::calculate(this->game.get_centerpoint(), angle_rad, distance_nm);
 
     this->game.set_centerpoint(center);
-    this->function_key = Tools::NONE;
 }
 
 void Gamecontroller::handle_mouse_wheel(int amount) {
-    if (this->function_key > 0) {
-        switch (this->function_key) {
-            case Tools::SPEED:
-                this->game.set_cl_spd(amount);
-                break;
-            case Tools::ALTITUDE:
-                this->game.set_cl_alt(amount*100);
-                break;
-            case Tools::HEADING:
-                this->game.set_cl_hdg(amount*5);
-                break;
-            default:
-                break;
-        }
-    } else {
-        this->settings.zoom += (amount * 10);
+    this->settings.zoom += (-amount * 10);
 
-        if (this->settings.zoom < 10) {
-            this->settings.zoom = 10;
-        }
+    if (this->settings.zoom < 10) {
+        this->settings.zoom = 10;
     }
 }
 
-void Gamecontroller::update(double elapsed) {
+void Gamecontroller::update(double elapsed, bool draw) {
     this->game.update(elapsed);
+
+    if (draw) {
+        this->gameview.clear_screen();
+        this->gameview.draw();
+        this->gameview.draw_planes(this->game.get_aircrafts(), this->game.get_selected());
+        this->gameview.draw_navpoints(this->game.get_navpoints());
+        this->gameview.draw_airfield(this->game.get_active_field());
+        this->gameview.render();
+    }
+
 }
 
 void Gamecontroller::set_centerpoint(Coordinate& cp) {
@@ -59,6 +52,11 @@ Coordinate& Gamecontroller::get_centerpoint() {
 
 void Gamecontroller::handle_mouse_click(Point& mouse) {
     this->game.select_aircraft(mouse);
+
+    if (this->game.get_selected() != NULL) {
+        std::string callsign = this->game.get_selected()->get_name();
+        this->gameview.set_command(callsign + ": ");
+    }
 }
 
 void Gamecontroller::load() {
@@ -66,7 +64,26 @@ void Gamecontroller::load() {
     this->game.load();
 }
 
-void Gamecontroller::handle_text_input(std::string text) {
-    Clearance cl(this->game.get_selected()->get_name(), this->game.get_duration(), this->game.get_cl_spd(), this->game.get_cl_alt(), this->game.get_cl_hdg(), 1);
-    this->game.get_selected()->set_clearance(cl);
+void Gamecontroller::handle_text_input() {
+    std::string command = this->gameview.get_command();
+    std::string callsign;
+    std::string type;
+    int value;
+
+    callsign = command.substr(0, command.find(":"));
+    command = command.substr(command.find(": ")+1);
+    command = Tools::trim(command);
+    std::vector <std::string> parts = Tools::split(" ", command);
+
+    try {
+        this->game.set_clearance(callsign, parts);
+    } catch (std::runtime_error& re) {
+        this->gameview.set_reply(re.what());
+        command = "";
+        parts.erase(parts.begin(), parts.end());
+    }
+}
+
+void Gamecontroller::update_command(std::string command) {
+    this->gameview.update_command(command);
 }

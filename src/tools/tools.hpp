@@ -6,6 +6,11 @@
 #include <vector>
 #include <cstdlib>
 
+#include <algorithm>
+#include <functional>
+#include <cctype>
+#include <locale>
+
 #include "../models/coordinate.hpp"
 #include "../models/point.hpp"
 
@@ -23,7 +28,7 @@ namespace Tools {
 
 	Point calculate(Point& cp, Coordinate& a, Coordinate& b, int zoom);
 	Point calculate(Point& sp, double angle, double length, bool rad, bool turn = false);
-	Coordinate calculate(Coordinate& cp, double angle, double length, bool rad = false, bool modify = false);
+	Coordinate calculate(Coordinate& cp, double angle, double length);
 
 	int rnd(int a, int b);
 
@@ -48,6 +53,7 @@ namespace Tools {
 
 	template <class T>
 	T tonumber(std::string a) {
+	    //std::clog << "Tools::tonumber(" << a << ")" << std::endl;
         std::istringstream is(a);
         T tmp;
 
@@ -61,6 +67,11 @@ namespace Tools {
 
 	std::vector <std::string> split(std::string delimiter, std::string input);
 	enum function_keys {SPEED = 1, ALTITUDE = 2, HEADING = 3, NONE = -1};
+
+	std::string ltrim(std::string s);
+	std::string rtrim(std::string s);
+	std::string trim(std::string s);
+
 }
 
 #endif // _TOOLS_HPP

@@ -9,7 +9,7 @@
 
 class Aircraft {
 public:
-    Aircraft(std::string name, int speed, int heading, int altitude, Coordinate p);
+    Aircraft(std::string name, int speed, int heading, int altitude, Coordinate p, int type);
     ~Aircraft();
     void update(double elapsed);
 
@@ -17,16 +17,18 @@ public:
     std::string get_name();
     void set_clearance(Clearance& cl);
 
-    double get_speed() { return this->speed; }
-    double get_heading() { return this->heading; }
-    double get_altitude() { return this->altitude; }
+    double get_speed();
+    double get_heading();
+    double get_altitude();
+    int get_turn();
 
-    double get_clearance_speed() { return this->clearance_speed; }
-    double get_clearance_heading() { return this->clearance_heading; }
-    double get_clearance_altitude() { return this->clearance_altitude; }
+    double get_clearance_speed();
+    double get_clearance_heading();
+    double get_clearance_altitude();
 
-    void set_separation_error(bool t) { this->separation_error = t; }
-    bool get_separation_error() { return this->separation_error; }
+    void set_separation_error(bool t);
+    bool get_separation_error();
+    int get_type();
 protected:
 private:
     Coordinate place;
@@ -49,6 +51,7 @@ private:
     void change_altitude(double elapsed);
     void change_heading();
     double change_parameter(double elapsed, double value, double _value, double change, int turn = 0);
+    int type;
 };
 
 

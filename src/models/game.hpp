@@ -9,6 +9,8 @@
 #include <stdexcept>
 #include <dirent.h>
 #include <tinyxml/tinyxml.h>
+#include <tinyxpath/xpath_processor.h>
+#include <queue>
 
 #include "navpoint.hpp"
 #include "aircraft.hpp"
@@ -16,9 +18,10 @@
 #include "../tools/settings.hpp"
 #include "clearance.hpp"
 #include "database.hpp"
+#include "metar.hpp"
 
 /**
-    * Game veryu low-level on MVC model
+    * Game very low-level on MVC model
     * Representing state of game
 **/
 
@@ -69,7 +72,7 @@ public:
         * @param void
         * @return double
 	**/
-	double get_next_plane() { return this->new_plane; }
+	double get_next_plane();
 
     /**
         Loads game needed variables
@@ -81,27 +84,22 @@ public:
 	void update(double elapsed);
 
 	void select_aircraft(Point& mouse);
-	int get_separation_errors() { return this->separation_errors; }
+	void select_aircraft(std::string callsign);
+	int get_separation_errors();
 	Point get_place(Point& center, Coordinate& target);
-	Aircraft* get_selected() { return this->selected; }
+	Aircraft* get_selected();
+	Airfield* get_active_field();
 
-	void set_cl_values(int spd, int alt, int hdg) {
-	    this->cl_spd = spd;
-	    this->cl_alt = alt;
-	    this->cl_hdg = hdg;
-    }
+	void set_clearance(std::string callsign, std::vector <std::string> command);
 
-    int get_cl_spd() { return this->cl_spd; }
-    int get_cl_hdg() { return this->cl_hdg; }
-    int get_cl_alt() { return this->cl_alt; }
-
-    void set_cl_spd(int t_spd) { this->cl_spd += t_spd; }
-    void set_cl_hdg(int t_hdg) { this->cl_hdg += t_hdg; }
-    void set_cl_alt(int t_alt) { this->cl_alt += t_alt; }
-    std::vector <Runway>& get_runways();
     TiXmlDocument document;
 private:
     void load_airfield(std::string icao);
+    /**
+        * Create new Aircraft* element
+        * @param none
+        * @param none
+    **/
     void create_plane();
     void build_xml();
 	Coordinate& center_point;
@@ -109,19 +107,17 @@ private:
 
 	std::vector     <Navpoint>      navpoints;
 	std::list       <Aircraft*>     aircrafts;
-	std::vector     <Airfield>       airfields;
+	std::queue      <Aircraft*>     holdings;
+	std::vector     <Airfield>      airfields;
 
     Airfield* active_field;
     Aircraft* selected;
 
     double duration;
     int separation_errors;
-    int cl_spd;
-    int cl_alt;
-    int cl_hdg;
     int new_plane;
 
-    std::list <Aircraft*> :: iterator plane;
+    Metar metar;
 };
 
 #endif // _GAME_HPP

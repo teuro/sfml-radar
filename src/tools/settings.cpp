@@ -1,6 +1,6 @@
 #include "settings.hpp"
 
-Settings::Settings() { }
+Settings::Settings(Coordinate& cp) : centerpoint(cp) { }
 
 Settings::~Settings() { }
 

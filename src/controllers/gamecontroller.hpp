@@ -1,8 +1,10 @@
 #ifndef GAMECONTROLLER_HPP
 #define GAMECONTROLLER_HPP
 
+#include <cstdlib>
+
 #include "../models/game.hpp"
-#include "../views/game_view.hpp"
+#include "../views/game/game_view.hpp"
 #include "controller.hpp"
 
 class Gamecontroller : public Controller {
@@ -14,12 +16,14 @@ public:
     void handle_mouse_wheel(int amount);
     void set_centerpoint(Coordinate& cp);
     Coordinate& get_centerpoint();
-    void update(double elapsed);
+    void update(double elapsed,  bool draw);
     void handle_mouse_click(Point& mouse);
     void load();
-    void handle_text_input(std::string text);
+    void handle_text_input();
+    void update_command(std::string command);
 protected:
 private:
+    Gameview& gameview;
     Game& game;
     int function_key;
 };

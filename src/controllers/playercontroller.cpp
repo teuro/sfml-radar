@@ -1,6 +1,6 @@
 #include "playercontroller.hpp"
 
-Playercontroller::Playercontroller(Playerview pv, Settings& s, Player& p) : Controller(&pv, s), player(p) { }
+Playercontroller::Playercontroller(Playerview& pv, Settings& s, Player& p) : Controller(s), playerview(pv), player(p) { }
 
 Playercontroller::~Playercontroller() { }
 
@@ -20,6 +20,8 @@ void Playercontroller::handle_function_keys(int key) {
 
 }
 
-void Playercontroller::handle_text_input(std::string text) {
+void Playercontroller::handle_text_input() {
 
 }
+
+void Playercontroller::update_command(std::string command) { }
