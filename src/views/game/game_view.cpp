@@ -241,10 +241,7 @@ void Gameview::draw_airfield(Airfield* airfield) {
 }
 
 void Gameview::set_command(std::string command) {
-    this->callsign = command;
-    if (this->callsign.length() == 0) {
-        this->command = "";
-    }
+    this->command = command;
 }
 
 void Gameview::update_command(std::string command) {

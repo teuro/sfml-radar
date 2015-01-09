@@ -94,7 +94,10 @@ bool Program::handle_event(sf::Event& event) {
             }
             return true;
         case sf::Event::TextEntered:
-            if (event.text.unicode != 13) {
+            if (event.text.unicode == 8) {
+                input_string = input_string.erase(input_string.length()-1, 1);
+
+            } else if (event.text.unicode != 13) {
                 input_string += sf::String(event.text.unicode);
             }
 

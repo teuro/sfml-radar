@@ -85,5 +85,6 @@ void Gamecontroller::handle_text_input() {
 }
 
 void Gamecontroller::update_command(std::string command) {
-    this->gameview.update_command(command);
+    this->gameview.set_command("");
+    this->gameview.set_command(command);
 }
