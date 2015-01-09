@@ -6,10 +6,7 @@
         </element>
         <element id="planelist" class="data">
             <name>Planelist</name>
-            <plane>PRI312</plane>
-            <plane>SAS269</plane>
-            <plane>FIN636</plane>
-            <plane>BAW984</plane>
+            <plane>FIN768</plane>
         </element>
         <element id="metar" class="data">
             <name>Metar</name>
