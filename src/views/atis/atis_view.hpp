@@ -12,12 +12,13 @@
 
 class Atisview : public View {
 public:
-	Atisview(Atis& m, Drawsurface& d, Settings& s);
+	Atisview(Drawsurface& d, Settings& s);
 	~Atisview();
-	void draw();
+	void draw(std::string dep, std::string lnd, int tr_alt, int tr_lvl);
+	void update_command(std::string command);
 private:
-    Atis& atis;
     Settings& settings;
+    void load();
 };
 
 #endif // ATIS_VIEW

@@ -16,6 +16,7 @@ public:
     void handle_function_keys(int key);
     void handle_text_input();
     void update_command(std::string command);
+    bool is_ok();
 protected:
 private:
     Playerview& playerview;

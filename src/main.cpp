@@ -14,16 +14,16 @@ int main(){
         Coordinate cp(62.0000, 25.0000);
         Settings settings(cp);
 
-        Game    game    (cp, settings);
         Atis    atis    (settings);
+        Game    game    (cp, settings, atis);
         Player  player  (settings);
 
         Gameview    gameview(drawer, settings);
-        Atisview    atisview(atis,      drawer, settings);
-        Playerview  playerview(player,  drawer, settings);
+        Atisview    atisview(drawer, settings);
+        Playerview  playerview(drawer, settings);
 
         Gamecontroller      gamecontroller(     gameview,       settings, game);
-        Atiscontroller      atiscontroller(     atisview,       settings, atis );
+        Atiscontroller      atiscontroller(     atisview,       settings, atis, game );
         Playercontroller    playercontroller(   playerview,     settings, player);
 
         Program program(gamecontroller, atiscontroller, playercontroller, window, settings);

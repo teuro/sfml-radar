@@ -103,7 +103,8 @@ private:
 
     bool handle_event(sf::Event& event);
 
-    enum state {PLAYER, ATIS, GAME};
+    enum types {PLAYER, ATIS, GAME};
+
     int game_state;
 
     void load();

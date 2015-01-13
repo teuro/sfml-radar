@@ -14,6 +14,7 @@ public:
     double get_length();
     double get_heading();
     std::string get_name();
+    bool operator ==(const std::string name);
 protected:
 private:
     std::string name;

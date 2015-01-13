@@ -42,6 +42,7 @@ void Layout_element::set_size(int width, int height) {
 }
 
 void Layout_element::set_content(std::string content) {
+    this->v_content.erase(this->v_content.begin(), this->v_content.end());
     unsigned int pos = content.find(";");
 
     if (pos != std::string::npos) {
@@ -50,4 +51,8 @@ void Layout_element::set_content(std::string content) {
     } else {
         this->v_content.push_back(content);
     }
+}
+
+void Layout_element::update_content(std::string content) {
+    this->set_content(content);
 }

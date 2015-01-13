@@ -12,11 +12,10 @@
 
 class Playerview : public View {
 public:
-	Playerview(Player& p, Drawsurface& d, Settings& s);
+	Playerview(Drawsurface& d, Settings& s);
 	~Playerview();
 	void draw();
 private:
-    Player& player;
     Settings& settings;
 };
 

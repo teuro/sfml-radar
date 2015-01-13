@@ -25,3 +25,7 @@ double Runway::get_heading() {
 std::string Runway::get_name() {
     return this->name;
 }
+
+bool Runway::operator ==(std::string name) {
+    return this->name == name;
+}

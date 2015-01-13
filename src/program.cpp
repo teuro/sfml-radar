@@ -11,7 +11,7 @@ Program::Program(Gamecontroller& gc,
                      window(w),
                      settings(s){
     this->load();
-    this->game_state = GAME;
+    this->game_state = PLAYER;
     this->counter = 30;
 }
 
@@ -67,6 +67,14 @@ bool Program::run() {
     }
 
     this->ctrl->update(elapsed.asMilliseconds(), this->draw);
+
+    if (this->ctrl->is_ok()) {
+        if (this->game_state == PLAYER) {
+            this->game_state = ATIS;
+        } else if (this->game_state == ATIS) {
+            this->game_state = GAME;
+        }
+    }
 
     return true;
 }

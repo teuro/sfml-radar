@@ -1,6 +1,6 @@
 #include "game.hpp"
 
-Game::Game(Coordinate& cp, Settings& s) : center_point(cp), settings(s) {
+Game::Game(Coordinate& cp, Settings& s, Atis& a) : center_point(cp), settings(s), atis(a) {
     this->duration = 0;
     this->separation_errors = 0;
     this->new_plane = 5000;
@@ -218,7 +218,7 @@ void Game::build_xml() {
     TiXmlElement* name4 = new TiXmlElement("name");
 
     TiXmlText* t1 = new TiXmlText("Planelist");
-    TiXmlText* t2 = new TiXmlText("Clearance box");
+    TiXmlText* t2 = new TiXmlText("Atis");
     TiXmlText* t3 = new TiXmlText("Metar");
     TiXmlText* t4 = new TiXmlText("Input");
 
@@ -230,7 +230,7 @@ void Game::build_xml() {
     element1->SetAttribute("id", "planelist");
     element1->SetAttribute("class", "data");
 
-    element2->SetAttribute("id", "clearance-box");
+    element2->SetAttribute("id", "atis-box");
     element2->SetAttribute("class", "data");
 
     element1->LinkEndChild(name1);
@@ -253,7 +253,7 @@ void Game::build_xml() {
     e_metar->SetAttribute("id", "metar");
     e_metar->SetAttribute("class", "data");
     e_metar->LinkEndChild(name3);
-    TiXmlText* t_metar = new TiXmlText("EFHK 301250Z 27006KT 2000 +RA BKN012 03/02 Q0998");
+    TiXmlText* t_metar = new TiXmlText("EFHK 301250 27006KT 2000 +RA BKN012 03/02 Q0998");
     element3->LinkEndChild(t_metar);
     e_metar->LinkEndChild(element3);
 
@@ -317,4 +317,13 @@ void Game::set_clearance(std::string callsign, std::vector <std::string> command
     } else {
         throw std::runtime_error("Unknown command please try again");
     }
+}
+
+Metar& Game::get_metar() {
+    return this->metar;
+}
+
+void Game::set_active_runways(Runway* dep, Runway* lnd) {
+    this->departure = dep;
+    this->landing = lnd;
 }

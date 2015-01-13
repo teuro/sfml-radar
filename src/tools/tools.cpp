@@ -152,3 +152,9 @@ std::string Tools::rtrim(std::string s) {
 std::string Tools::trim(std::string s) {
     return ltrim(rtrim(s));
 }
+
+double Tools::calculate_backwind(double wind, double runway) {
+    //std::clog << "Wind direction " << wind << " runway direction " << runway << std::endl;
+    wind = deg2rad(wind);
+    return (std::cos(deg2rad(std::abs((wind + 180.0) - runway))));
+}

@@ -68,23 +68,26 @@ void Gamecontroller::handle_text_input() {
     std::string command = this->gameview.get_command();
     std::string callsign;
     std::string type;
-    int value;
 
     callsign = command.substr(0, command.find(":"));
     command = command.substr(command.find(": ")+1);
     command = Tools::trim(command);
+
     std::vector <std::string> parts = Tools::split(" ", command);
 
-    try {
-        this->game.set_clearance(callsign, parts);
-    } catch (std::runtime_error& re) {
-        this->gameview.set_reply(re.what());
-        command = "";
-        parts.erase(parts.begin(), parts.end());
-    }
+    this->game.set_clearance(callsign, parts);
+    parts.erase(parts.begin(), parts.end());
 }
 
 void Gamecontroller::update_command(std::string command) {
     this->gameview.set_command("");
     this->gameview.set_command(command);
+}
+
+bool Gamecontroller::is_ok() {
+    return true;
+}
+
+Airfield* Gamecontroller::get_active_field() {
+    return this->game.get_active_field();
 }

@@ -72,6 +72,7 @@ namespace Tools {
 	std::string rtrim(std::string s);
 	std::string trim(std::string s);
 
+    double calculate_backwind(double wind, double runway);
 }
 
 #endif // _TOOLS_HPP

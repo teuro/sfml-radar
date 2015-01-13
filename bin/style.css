@@ -7,14 +7,6 @@
     background-color: rgb(15, 20, 20);
 }
 
-#clearance-box {
-    top: 50px;
-    left: 10px;
-    width: 390px;
-    height: 80px;
-    background-color: rgb(15, 20, 20);
-}
-
 #metar {
     top: 10px;
     left: 10px;
@@ -29,4 +21,22 @@
     left: 10px;
     height: 30px;
     width: 600px;
+    color: rgb(30, 125, 210);
+    background-color: rgb(156, 68, 37);
+}
+
+#departure {
+    top: 30px;
+    left: 50px;
+    width: 50px;
+    height: 30px;
+}
+
+#atis-box {
+    top: 30px;
+    left: 600px;
+    width: 85px;
+    height: 100px;
+    color: rgb(60, 60, 60);
+    background-color: rgb(185, 185 ,185);
 }

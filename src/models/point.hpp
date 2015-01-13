@@ -33,5 +33,4 @@ private:
 	int y;
 };
 
-
 #endif // _POINT_HPP

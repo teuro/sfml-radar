@@ -1,16 +1,16 @@
 <?xml version="1.0" ?>
 <layout>
     <elements>
-        <element id="clearance-box" class="data">
-            <name>Clearance box</name>
+        <element id="atis-box" class="data">
+            <name>Atis</name>
         </element>
         <element id="planelist" class="data">
             <name>Planelist</name>
-            <plane>FIN768</plane>
+            <plane>SAS198</plane>
         </element>
         <element id="metar" class="data">
             <name>Metar</name>
-            <metar>EFHK 301250Z 27006KT 2000 +RA BKN012 03/02 Q0998</metar>
+            <metar>EFHK 301250 27006KT 2000 +RA BKN012 03/02 Q0998</metar>
         </element>
         <element id="input" class="data">
             <name>Input</name>

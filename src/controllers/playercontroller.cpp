@@ -24,4 +24,10 @@ void Playercontroller::handle_text_input() {
 
 }
 
-void Playercontroller::update_command(std::string command) { }
+void Playercontroller::update_command(std::string command) {
+
+}
+
+bool Playercontroller::is_ok() {
+    return true;
+}

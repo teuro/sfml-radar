@@ -19,6 +19,7 @@
 #include "clearance.hpp"
 #include "database.hpp"
 #include "metar.hpp"
+#include "atis.hpp"
 
 /**
     * Game very low-level on MVC model
@@ -32,7 +33,7 @@ public:
         * @param Coordinate& cp center point of game
         * @param Settings& s game settiungs
     **/
-	Game(Coordinate& cp, Settings& s);
+	Game(Coordinate& cp, Settings& s, Atis& a);
 	~Game();
 
     /**
@@ -93,6 +94,10 @@ public:
 	void set_clearance(std::string callsign, std::vector <std::string> command);
 
     TiXmlDocument document;
+
+    Metar& get_metar();
+
+    void set_active_runways(Runway* dep, Runway* lnd);
 private:
     void load_airfield(std::string icao);
     /**
@@ -104,6 +109,7 @@ private:
     void build_xml();
 	Coordinate& center_point;
 	Settings& settings;
+	Atis& atis;
 
 	std::vector     <Navpoint>      navpoints;
 	std::list       <Aircraft*>     aircrafts;
@@ -112,6 +118,8 @@ private:
 
     Airfield* active_field;
     Aircraft* selected;
+    Runway* departure;
+    Runway* landing;
 
     double duration;
     int separation_errors;
