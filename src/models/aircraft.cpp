@@ -12,6 +12,8 @@ Aircraft::Aircraft(std::string name, int speed, int heading, int altitude, Coord
 
     this->separation_error = false;
     this->type = type;
+    this->landing = NULL;
+    this->approach = false;
 }
 
 Aircraft::~Aircraft() { }
@@ -29,7 +31,7 @@ void Aircraft::update(double elapsed) {
     double distance = this->speed * (elapsed / 1000) / 3600;
     this->place = Tools::calculate(this->place, Tools::deg2rad(this->heading), distance);
 
-    this->altitude  = change_parameter(elapsed, this->altitude, this->clearance_altitude, 11.0, 0);
+    this->altitude  = change_parameter(elapsed, this->altitude, this->clearance_altitude, 55.0, 0);
     this->speed     = change_parameter(elapsed, this->speed, this->clearance_speed, 3.0, 0);
     this->heading   = change_parameter(elapsed, this->heading, this->clearance_heading, 3.0, this->turn);
 
@@ -55,6 +57,7 @@ void Aircraft::handle_clearance(Clearance& ac) {
     this->clearance_altitude    = ac.get_altitude();
     this->clearance_heading     = ac.get_heading();
     this->turn                  = ac.get_turn();
+    this->landing               = ac.get_landing();
 
     while (this->clearance_heading < 0.0) {
         this->clearance_heading += 360.0;
@@ -62,6 +65,10 @@ void Aircraft::handle_clearance(Clearance& ac) {
 
     while (this->clearance_heading > 360.0) {
         this->clearance_heading -= 360.0;
+    }
+
+    if (this->landing != NULL) {
+        this->approach = true;
     }
 }
 

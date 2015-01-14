@@ -34,6 +34,9 @@ public:
     std::string get_landing_runway();
     int get_transition_level();
     int get_transition_altitude();
+
+    void set_command(std::string command);
+    std::string get_command();
 protected:
 private:
     Settings& settings;
@@ -43,6 +46,7 @@ private:
     std::string landing_runway;
     void build_xml();
     TiXmlDocument document;
+    std::string command;
 };
 
 

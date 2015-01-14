@@ -98,6 +98,9 @@ public:
     Metar& get_metar();
 
     void set_active_runways(Runway* dep, Runway* lnd);
+
+    void set_command(std::string command);
+    std::string get_command();
 private:
     void load_airfield(std::string icao);
     /**
@@ -115,6 +118,8 @@ private:
 	std::list       <Aircraft*>     aircrafts;
 	std::queue      <Aircraft*>     holdings;
 	std::vector     <Airfield>      airfields;
+
+	std::string command;
 
     Airfield* active_field;
     Aircraft* selected;

@@ -1,20 +1,16 @@
 <?xml version="1.0" ?>
 <layout>
     <elements>
-        <element id="atis-box" class="data">
-            <name>Atis</name>
+        <element id="atis-box" class="data" name="Atis Box" />
+        <element id="planelist" class="data" name="Planelist">
+            <plane>PRI476</plane>
+            <plane>PRI447</plane>
         </element>
-        <element id="planelist" class="data">
-            <name>Planelist</name>
-            <plane>SAS198</plane>
-        </element>
-        <element id="metar" class="data">
-            <name>Metar</name>
+        <element id="metar" class="data" name="Metar">
             <metar>EFHK 301250 27006KT 2000 +RA BKN012 03/02 Q0998</metar>
         </element>
-        <element id="input" class="data">
-            <name>Input</name>
-            <input />
+        <element id="input" class="data" name="Input">
+            <input></input>
         </element>
     </elements>
 </layout>

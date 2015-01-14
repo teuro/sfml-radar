@@ -4,9 +4,59 @@ View::View(Drawsurface& d) : drawer(d) { }
 
 View::~View() { }
 
+int count_childs(TiXmlNode* crnt) {
+    int count = 0;
+
+    for(TiXmlNode* child = crnt->FirstChild(); child; child = child->NextSibling() ) {
+        count++;
+    }
+
+    return count;
+}
+
+void View::iterate(TiXmlNode* el) {
+    for (TiXmlNode* node = el->FirstChild(); node; node = node->NextSibling()) {
+        std::string node_name = node->Value();
+
+        if (node_name == "element") {
+            TiXmlElement* pr = node->ToElement();
+
+            if (pr->Attribute("id") && pr->Attribute("class") && pr->Attribute("name")) {
+                std::string name    = pr->Attribute("name");
+                std::string id      = pr->Attribute("id");
+                std::string cl      = pr->Attribute("class");
+
+                Layout_element tmp(name, id, cl);
+                View::layout_elements[name] = tmp;
+                TiXmlNode* ch = node->FirstChild();
+
+                for (int i = 0; i < count_childs(node); ++i) {
+                    if (!ch->NoChildren()) {
+                        //std::clog << ch->FirstChild()->Value() << std::endl;
+                        this->layout_elements[name].set_content(ch->FirstChild()->Value());
+                    }
+                    ch = ch->NextSibling();
+                }
+            }
+        }
+
+        iterate(node);
+    }
+}
+
 void View::load() {
     this->styles = parse("style.css");
     this->document.LoadFile("layout.xml");
+
+    this->layout_elements.clear();
+
+    View::iterate(this->document.RootElement());
+
+    std::map <std::string, Layout_element> :: iterator le;
+
+    for (le = this->layout_elements.begin(); le != this->layout_elements.end(); ++le) {
+        this->style(le->second);
+    }
 }
 
 void View::clear_screen() {
@@ -113,14 +163,6 @@ void View::style(Layout_element& le) {
 
         ++t_style;
     }
-}
-
-void View::set_command(std::string command) {
-    this->layout_elements["Input"].update_content(command);
-}
-
-std::string View::get_command() {
-    return this->command;
 }
 
 void View::draw() {

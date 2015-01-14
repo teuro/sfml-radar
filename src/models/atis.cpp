@@ -1,11 +1,6 @@
 #include "atis.hpp"
 
-Atis::Atis(Settings& s) : settings(s) {
-    this->transition_altitude = 5000;
-    this->transition_level = 50;
-    this->departure_runway = "22R";
-    this->landing_runway = "15";
-}
+Atis::Atis(Settings& s) : settings(s) { }
 
 Atis::~Atis() {
 
@@ -54,29 +49,35 @@ void Atis::build_xml() {
     document.RootElement()->Clear();
 
     TiXmlElement* elements = new TiXmlElement("elements");
+    TiXmlElement* element1 = new TiXmlElement("metar");
+    TiXmlElement* element2 = new TiXmlElement("input");
 
-    TiXmlElement* element = new TiXmlElement("element");
-    element->SetAttribute("id", "input");
-    element->SetAttribute("class", "data");
+    TiXmlElement* e_metar = new TiXmlElement("element");
+    e_metar->SetAttribute("id", "metar");
+    e_metar->SetAttribute("class", "data");
+    e_metar->SetAttribute("name", "Metar");
+    TiXmlText* t_metar = new TiXmlText("EFHK 301250 27006KT 2000 +RA BKN012 03/02 Q0998");
+    element1->LinkEndChild(t_metar);
+    e_metar->LinkEndChild(element1);
 
-    TiXmlElement* name = new TiXmlElement("name");
-    name->LinkEndChild(new TiXmlText("Input"));
+    TiXmlElement* e_input = new TiXmlElement("element");
+    e_input->SetAttribute("id", "input");
+    e_input->SetAttribute("class", "data");
+    e_input->SetAttribute("name", "Input");
+    TiXmlText* t_input = new TiXmlText(this->command.c_str());
+    element2->LinkEndChild(t_input);
+    e_input->LinkEndChild(element2);
 
-    element->LinkEndChild(name);
-    elements->LinkEndChild(element);
-
-    TiXmlElement* element1 = new TiXmlElement("element");
-    element1->SetAttribute("id", "metar");
-    element1->SetAttribute("class", "data");
-
-    TiXmlElement* name1 = new TiXmlElement("name");
-    name1->LinkEndChild(new TiXmlText("Metar"));
-
-    element1->LinkEndChild(name1);
-
-    elements->LinkEndChild(element1);
-
+    elements->LinkEndChild(e_metar);
+    elements->LinkEndChild(e_input);
     root->LinkEndChild(elements);
-
     document.SaveFile();
+}
+
+void Atis::set_command(std::string command) {
+    this->command = command;
+}
+
+std::string Atis::get_command() {
+    return this->command;
 }

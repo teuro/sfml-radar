@@ -15,7 +15,6 @@ public:
 	Atisview(Drawsurface& d, Settings& s);
 	~Atisview();
 	void draw(std::string dep, std::string lnd, int tr_alt, int tr_lvl);
-	void update_command(std::string command);
 private:
     Settings& settings;
     void load();

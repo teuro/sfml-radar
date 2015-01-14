@@ -21,7 +21,7 @@ void Atiscontroller::handle_function_keys(int key) {
 }
 
 void Atiscontroller::handle_text_input() {
-    std::vector <std::string> parts = Tools::split(":", this->input);
+    std::vector <std::string> parts = Tools::split(":", this->atis.get_command());
     std::string target = parts[0];
 
     if (target == "departure") {
@@ -43,8 +43,8 @@ void Atiscontroller::update(double elapsed, bool draw) {
 }
 
 void Atiscontroller::update_command(std::string command) {
-    this->input = command;
-    this->atisview.update_command(command);
+    this->atis.set_command("");
+    this->atis.set_command(command);
 }
 
 bool Atiscontroller::is_ok() {

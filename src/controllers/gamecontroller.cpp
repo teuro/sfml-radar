@@ -52,11 +52,6 @@ Coordinate& Gamecontroller::get_centerpoint() {
 
 void Gamecontroller::handle_mouse_click(Point& mouse) {
     this->game.select_aircraft(mouse);
-
-    if (this->game.get_selected() != NULL) {
-        std::string callsign = this->game.get_selected()->get_name();
-        this->gameview.set_command(callsign + ": ");
-    }
 }
 
 void Gamecontroller::load() {
@@ -65,7 +60,7 @@ void Gamecontroller::load() {
 }
 
 void Gamecontroller::handle_text_input() {
-    std::string command = this->gameview.get_command();
+    std::string command = this->game.get_command();
     std::string callsign;
     std::string type;
 
@@ -80,8 +75,8 @@ void Gamecontroller::handle_text_input() {
 }
 
 void Gamecontroller::update_command(std::string command) {
-    this->gameview.set_command("");
-    this->gameview.set_command(command);
+    this->game.set_command("");
+    this->game.set_command(command);
 }
 
 bool Gamecontroller::is_ok() {

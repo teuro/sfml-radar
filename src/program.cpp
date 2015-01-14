@@ -102,7 +102,7 @@ bool Program::handle_event(sf::Event& event) {
             }
             return true;
         case sf::Event::TextEntered:
-            if (event.text.unicode == 8) {
+            if (event.text.unicode == 8 && this->input_string.length()) {
                 input_string = input_string.erase(input_string.length()-1, 1);
 
             } else if (event.text.unicode != 13) {

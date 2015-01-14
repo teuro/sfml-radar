@@ -19,12 +19,10 @@ public:
 	virtual void draw();
 	void render();
 	void clear_screen();
-	void set_command(std::string command);
-	std::string get_command();
+	void iterate(TiXmlNode* el);
 protected:
     Drawsurface& drawer;
     TiXmlDocument document;
-    std::string command;
     std::list <Style> styles;
     std::map <std::string, Layout_element> layout_elements;
     void draw_element(Layout_element& layout_element);

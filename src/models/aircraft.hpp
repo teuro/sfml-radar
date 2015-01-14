@@ -52,6 +52,8 @@ private:
     void change_heading();
     double change_parameter(double elapsed, double value, double _value, double change, int turn = 0);
     int type;
+    Runway* landing;
+    bool approach;
 };
 
 

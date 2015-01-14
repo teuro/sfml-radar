@@ -212,29 +212,13 @@ void Game::build_xml() {
     TiXmlElement* element3 = new TiXmlElement("metar");
     TiXmlElement* element4 = new TiXmlElement("input");
 
-    TiXmlElement* name1 = new TiXmlElement("name");
-    TiXmlElement* name2 = new TiXmlElement("name");
-    TiXmlElement* name3 = new TiXmlElement("name");
-    TiXmlElement* name4 = new TiXmlElement("name");
-
-    TiXmlText* t1 = new TiXmlText("Planelist");
-    TiXmlText* t2 = new TiXmlText("Atis");
-    TiXmlText* t3 = new TiXmlText("Metar");
-    TiXmlText* t4 = new TiXmlText("Input");
-
-    name1->LinkEndChild(t1);
-    name2->LinkEndChild(t2);
-    name3->LinkEndChild(t3);
-    name4->LinkEndChild(t4);
-
     element1->SetAttribute("id", "planelist");
     element1->SetAttribute("class", "data");
+    element1->SetAttribute("name", "Planelist");
 
     element2->SetAttribute("id", "atis-box");
     element2->SetAttribute("class", "data");
-
-    element1->LinkEndChild(name1);
-    element2->LinkEndChild(name2);
+    element2->SetAttribute("name", "Atis Box");
 
     elements->LinkEndChild(element2);
 
@@ -252,7 +236,7 @@ void Game::build_xml() {
     TiXmlElement* e_metar = new TiXmlElement("element");
     e_metar->SetAttribute("id", "metar");
     e_metar->SetAttribute("class", "data");
-    e_metar->LinkEndChild(name3);
+    e_metar->SetAttribute("name", "Metar");
     TiXmlText* t_metar = new TiXmlText("EFHK 301250 27006KT 2000 +RA BKN012 03/02 Q0998");
     element3->LinkEndChild(t_metar);
     e_metar->LinkEndChild(element3);
@@ -260,7 +244,9 @@ void Game::build_xml() {
     TiXmlElement* e_input = new TiXmlElement("element");
     e_input->SetAttribute("id", "input");
     e_input->SetAttribute("class", "data");
-    e_input->LinkEndChild(name4);
+    e_input->SetAttribute("name", "Input");
+    TiXmlText* t_input = new TiXmlText(this->command.c_str());
+    element4->LinkEndChild(t_input);
     e_input->LinkEndChild(element4);
 
     elements->LinkEndChild(e_metar);
@@ -313,9 +299,11 @@ void Game::set_clearance(std::string callsign, std::vector <std::string> command
             int cl_alt = Tools::tonumber<int>(command[1]);
             Clearance t(act_spd, cl_alt, act_hdg, turn);
             this->selected->set_clearance(t);
+        } else if (command[0] == "approach") {
+            Clearance cl(this->landing);
         }
     } else {
-        throw std::runtime_error("Unknown command please try again");
+
     }
 }
 
@@ -326,4 +314,12 @@ Metar& Game::get_metar() {
 void Game::set_active_runways(Runway* dep, Runway* lnd) {
     this->departure = dep;
     this->landing = lnd;
+}
+
+void Game::set_command(std::string command) {
+    this->command = command;
+}
+
+std::string Game::get_command() {
+    return this->command;
 }
