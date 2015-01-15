@@ -3,6 +3,8 @@
 Layout_element::Layout_element(std::string n, std::string i, std::string cl) : name(n), id(i), s_class(cl) {
     this->t_color_setted = false;
     this->t_color_setted = false;
+    this->p1.set_place(10, 10);
+    this->p2.set_place(60, 60);
 }
 
 Layout_element::~Layout_element() {

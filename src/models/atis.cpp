@@ -1,6 +1,11 @@
 #include "atis.hpp"
 
-Atis::Atis(Settings& s) : settings(s) { }
+Atis::Atis(Settings& s) : settings(s) {
+    this->departure_runway      = "";
+    this->landing_runway        = "";
+    this->transition_altitude   = 0;
+    this->transition_level      = 0;
+}
 
 Atis::~Atis() {
 
@@ -68,8 +73,42 @@ void Atis::build_xml() {
     element2->LinkEndChild(t_input);
     e_input->LinkEndChild(element2);
 
+    TiXmlElement* e_atis = new TiXmlElement("element");
+    TiXmlElement* e_dep = new TiXmlElement("departure");
+    TiXmlElement* e_lnd = new TiXmlElement("landing");
+    TiXmlElement* e_alt = new TiXmlElement("altidude");
+    TiXmlElement* e_lvl = new TiXmlElement("level");
+
+    e_atis->SetAttribute("id", "atis");
+    e_atis->SetAttribute("class", "data");
+    e_atis->SetAttribute("name", "Atis");
+
+    std::string s_dep = "Takeoff runway: " + Tools::tostr(this->departure_runway);
+    TiXmlText* t_dep = new TiXmlText(s_dep.c_str());
+
+    std::string s_lnd = "Landing runway: " + Tools::tostr(this->landing_runway);
+    TiXmlText* t_lnd = new TiXmlText(s_lnd.c_str());
+
+    std::string s_alt = "Transition altitude: " + Tools::tostr(this->transition_altitude);
+    TiXmlText* t_alt = new TiXmlText(s_alt.c_str());
+
+    std::string s_lvl = "Transistion level: " + Tools::tostr(this->transition_level);
+    TiXmlText* t_lvl = new TiXmlText(s_lvl.c_str());
+
+
+    e_dep->LinkEndChild(t_dep);
+    e_lnd->LinkEndChild(t_lnd);
+    e_alt->LinkEndChild(t_alt);
+    e_lvl->LinkEndChild(t_lvl);
+
+    e_atis->LinkEndChild(e_dep);
+    e_atis->LinkEndChild(e_lnd);
+    e_atis->LinkEndChild(e_alt);
+    e_atis->LinkEndChild(e_lvl);
+
     elements->LinkEndChild(e_metar);
     elements->LinkEndChild(e_input);
+    elements->LinkEndChild(e_atis);
     root->LinkEndChild(elements);
     document.SaveFile();
 }

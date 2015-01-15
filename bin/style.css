@@ -40,3 +40,10 @@
     color: rgb(60, 60, 60);
     background-color: rgb(185, 185 ,185);
 }
+
+#atis {
+    top: 150px;
+    left: 30px;
+    width: 200px;
+    height: 120px;
+}
