@@ -1,6 +1,6 @@
 #include "aircraft.hpp"
 
-Aircraft::Aircraft(std::string name, int speed, int heading, int altitude, Coordinate p, int type) : place(p) {
+Aircraft::Aircraft(std::string name, int speed, int heading, int altitude, Coordinate p, int type, Settings& s) : place(p), settings(s) {
     this->name = name;
     this->heading = heading;
     this->altitude = altitude;

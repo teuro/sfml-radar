@@ -3,13 +3,14 @@
 
 #include "coordinate.hpp"
 #include "../tools/tools.hpp"
+#include "../tools/settings.hpp"
 #include "clearance.hpp"
 
 #include <stack>
 
 class Aircraft {
 public:
-    Aircraft(std::string name, int speed, int heading, int altitude, Coordinate p, int type);
+    Aircraft(std::string name, int speed, int heading, int altitude, Coordinate p, int type, Settings& s);
     ~Aircraft();
     void update(double elapsed);
 
@@ -54,6 +55,7 @@ private:
     int type;
     Runway* landing;
     bool approach;
+    Settings& settings;
 };
 
 

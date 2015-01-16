@@ -3,10 +3,9 @@
     <elements>
         <element id="atis-box" class="data" name="Atis Box" />
         <element id="planelist" class="data" name="Planelist">
-            <plane>BAW143</plane>
-            <plane>NAX125</plane>
-            <plane>BAW763</plane>
-            <plane>SAS39</plane>
+            <plane>FIN824</plane>
+            <plane>NAX643</plane>
+            <plane>FIN113</plane>
         </element>
         <element id="metar" class="data" name="Metar">
             <metar>EFHK 301250 27006KT 2000 +RA BKN012 03/02 Q0998</metar>

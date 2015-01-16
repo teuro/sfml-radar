@@ -147,12 +147,12 @@ void Game::create_plane() {
 
     if (type > 50) {
         /** Departure **/
-        tmp = new Aircraft(t_callsign, 0, 0, this->active_field->get_altitude(), t_navpoint.get_place(), type);
+        tmp = new Aircraft(t_callsign, 0, 0, this->active_field->get_altitude(), t_navpoint.get_place(), type, settings);
         this->holdings.push(tmp);
         std::clog << "Holding planes " << this->holdings.size() << std::endl;
     } else {
         /** Arrival **/
-        tmp = new Aircraft(t_callsign, 250, 160, 9000, t_navpoint.get_place(), type);
+        tmp = new Aircraft(t_callsign, 250, 160, 9000, t_navpoint.get_place(), type, settings);
         this->aircrafts.push_back(tmp);
     }
 }
