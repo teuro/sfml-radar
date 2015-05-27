@@ -46,38 +46,79 @@ void Game::add_point(Navpoint np) {
     this->navpoints.push_back(np);
 }
 
-void Game::update(double elapsed) {
-    this->duration += elapsed;
+void Game::check_collision(std::list <Aircraft*>& planes) {
+    this->errors.clear();
 
     std::list <Aircraft*> :: iterator plane_a;
     std::list <Aircraft*> :: iterator plane_b;
-
-    std::list <Aircraft*> errors;
 
     for (plane_a = this->aircrafts.begin(); plane_a != this->aircrafts.end(); ++plane_a) {
         for (plane_b = this->aircrafts.begin(); plane_b != this->aircrafts.end(); ++plane_b) {
             if (*plane_a == *plane_b) {
                 continue;
-            } else {
-                if (std::abs((*plane_a)->get_altitude() - (*plane_b)->get_altitude()) < this->settings.separation_vertical) {
-                    if (Tools::distanceNM((*plane_a)->get_place(), (*plane_b)->get_place()) < this->settings.separation_horizontal) {
-                        errors.push_back((*plane_a));
-                        errors.push_back((*plane_b));
-                        if (!(*plane_a)->get_separation_error() || !(*plane_b)->get_separation_error()) {
-                            std::clog << "Separation error occured between " << (*plane_a)->get_name() << " and " << (*plane_b)->get_name() << std::endl;
-                            ++this->separation_errors;
-                        }
+            }
+
+            if (
+                (*plane_a)->get_altitude() >= 1000 &&
+                (*plane_b)->get_altitude() >= 1000 &&
+                std::abs((*plane_a)->get_altitude() - (*plane_b)->get_altitude()) < this->settings.separation_vertical) {
+                if (Tools::distanceNM((*plane_a)->get_place(), (*plane_b)->get_place()) < this->settings.separation_horizontal) {
+                    this->errors.push_back((*plane_a));
+                    this->errors.push_back((*plane_b));
+
+                    if (!(*plane_a)->get_separation_error() || !(*plane_b)->get_separation_error()) {
+                        std::clog << "Separation error occured between " << (*plane_a)->get_name() << " and " << (*plane_b)->get_name() << std::endl;
+                        ++this->separation_errors;
                     }
                 }
             }
         }
-
-        (*plane_a)->update(elapsed);
-
     }
+}
+
+bool Game::is_free(Inpoint& navpoint) {
+    std::list <Aircraft*> :: iterator plane;
+
+    for (plane = this->aircrafts.begin(); plane != this->aircrafts.end(); ++plane) {
+        if (
+            Tools::distanceNM(navpoint.get_place(), (*plane)->get_place()) < this->settings.separation_horizontal &&
+            std::abs((*plane)->get_altitude() - navpoint.get_altitude()) < this->settings.separation_vertical
+        ) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+void Game::handle_holdings() {
+    if (this->holdings.size()) {
+        std::list <Aircraft*> :: iterator plane = this->aircrafts.begin();
+
+        while (plane != this->aircrafts.end()) {
+            if ((*plane)->get_altitude() < 1000) {
+                return;
+            }
+
+            ++plane;
+        }
+
+        Aircraft* t = this->holdings.front();
+        t->set_place(this->departure->get_start_place());
+        Clearance cl(160, this->active_field->get_altitude(), this->departure->get_heading(), 1);
+        this->holdings.pop();
+        this->aircrafts.push_back(t);
+    }
+}
+
+void Game::update(double elapsed) {
+    this->duration += elapsed;
+    this->check_collision(this->aircrafts);
+    this->handle_holdings();
 
     for (std::list <Aircraft*> :: iterator it = this->aircrafts.begin(); it != this->aircrafts.end(); ++it) {
         (*it)->set_separation_error(false);
+        (*it)->update(elapsed);
     }
 
     for (std::list <Aircraft*> :: iterator it = errors.begin(); it != errors.end(); ++it) {
@@ -108,7 +149,7 @@ void Game::select_aircraft(Point& mouse) {
 
     for (plane = this->aircrafts.begin(); plane != this->aircrafts.end(); ++plane) {
         Point tmp(this->settings.screen_width/2, this->settings.screen_height/2);
-        Point aircraft = this->get_place(tmp, (*plane)->get_place());
+        Point aircraft = Tools::calculate(tmp, this->center_point, (*plane)->get_place(), this->settings.zoom);
 
         if (Tools::on_area(mouse, aircraft)) {
             this->selected = (*plane);
@@ -128,18 +169,15 @@ void Game::select_aircraft(std::string callsign) {
     }
 }
 
-Point Game::get_place(Point& center, Coordinate& target) {
-    //std::clog << "Game::get_place(" << center.get_x() << ", " << center.get_y() << ", " << target.get_latitude() << ", " << target.get_longitude() << ")" << std::endl;
-    Point target_place = Tools::calculate(center, this->center_point, target, this->settings.zoom);
-
-    return target_place;
-}
-
 void Game::create_plane() {
     Queryresult airlines = Database::get_result("SELECT ICAO FROM airlines");
-    Navpoint t_navpoint = this->navpoints[Tools::rnd(0, (int)this->navpoints.size())];
+    Inpoint t_navpoint = this->inpoints[Tools::rnd(0, (int)this->inpoints.size())];
 
     int type = Tools::rnd(1, 100);
+
+    if (!is_free(t_navpoint)) {
+        type = 51;
+    }
 
     std::string t_callsign = airlines(Tools::rnd(0, airlines.size()), "ICAO") + Tools::tostr(Tools::rnd(1, 999));
 
@@ -152,7 +190,7 @@ void Game::create_plane() {
         std::clog << "Holding planes " << this->holdings.size() << std::endl;
     } else {
         /** Arrival **/
-        tmp = new Aircraft(t_callsign, 250, 160, 9000, t_navpoint.get_place(), type, settings);
+        tmp = new Aircraft(t_callsign, 200, 40, 3000, t_navpoint.get_place(), type, settings);
         this->aircrafts.push_back(tmp);
     }
 }
@@ -168,7 +206,7 @@ void Game::load_airfield(std::string icao) {
 
     this->active_field = new Airfield(airport(0, "ICAO"), place);
 
-    std::string query = Database::bind_param("SELECT name, latitude, longitude FROM navpoints WHERE ? = ?", v);
+    std::string query = Database::bind_param("SELECT name, latitude, longitude, altitude, heading, type FROM navpoints WHERE ? = ?", v);
 
     Queryresult q_navpoints = Database::get_result(query);
     for (unsigned int i = 0; i < q_navpoints.size(); ++i) {
@@ -176,8 +214,21 @@ void Game::load_airfield(std::string icao) {
         double t_lat = Tools::tonumber<double>(q_navpoints(i, "latitude"));
         double t_lon = Tools::tonumber<double>(q_navpoints(i, "longitude"));
 
-        Coordinate tplace(t_lat, t_lon);
-        this->navpoints.push_back(Navpoint(q_navpoints(i, "name"), tplace));
+        Coordinate t_place(t_lat, t_lon);
+        std::string t_name  = q_navpoints(i, "name");
+        int type = Tools::tonumber<int>(q_navpoints(i, "type"));
+
+        if (type == 1) {
+            double t_altitude   = Tools::tonumber<double>(q_navpoints(i, "altitude"));
+            double t_heading    = Tools::tonumber<double>(q_navpoints(i, "heading"));
+
+            this->inpoints.push_back(Inpoint(t_name, t_place, 250, t_altitude, t_heading));
+        } else {
+            this->outpoints.push_back((Outpoint(t_name, t_place)));
+        }
+
+        this->navpoints.insert(this->navpoints.end(), this->outpoints.begin(), this->outpoints.end());
+        this->navpoints.insert(this->navpoints.end(), this->inpoints.begin(), this->inpoints.end());
     }
 
     query = Database::bind_param("SELECT name, start_latitude, start_longitude, end_latitude, end_longitude FROM runways WHERE ? = ?", v);
@@ -209,7 +260,6 @@ void Game::build_xml() {
     TiXmlElement* elements = new TiXmlElement("elements");
     TiXmlElement* element1 = new TiXmlElement("element");
     TiXmlElement* element2 = new TiXmlElement("element");
-    TiXmlElement* element3 = new TiXmlElement("metar");
     TiXmlElement* element4 = new TiXmlElement("input");
 
     element1->SetAttribute("id", "planelist");
@@ -233,14 +283,6 @@ void Game::build_xml() {
 
     elements->LinkEndChild(element1);
 
-    TiXmlElement* e_metar = new TiXmlElement("element");
-    e_metar->SetAttribute("id", "metar");
-    e_metar->SetAttribute("class", "data");
-    e_metar->SetAttribute("name", "Metar");
-    TiXmlText* t_metar = new TiXmlText("EFHK 301250 27006KT 2000 +RA BKN012 03/02 Q0998");
-    element3->LinkEndChild(t_metar);
-    e_metar->LinkEndChild(element3);
-
     TiXmlElement* e_input = new TiXmlElement("element");
     e_input->SetAttribute("id", "input");
     e_input->SetAttribute("class", "data");
@@ -249,7 +291,6 @@ void Game::build_xml() {
     element4->LinkEndChild(t_input);
     e_input->LinkEndChild(element4);
 
-    elements->LinkEndChild(e_metar);
     elements->LinkEndChild(e_input);
     root->LinkEndChild(elements);
     document.SaveFile();
@@ -300,7 +341,23 @@ void Game::set_clearance(std::string callsign, std::vector <std::string> command
             Clearance t(act_spd, cl_alt, act_hdg, turn);
             this->selected->set_clearance(t);
         } else if (command[0] == "approach") {
-            Clearance cl(this->landing);
+            std::clog << this->selected->get_name() << " ";
+            std::clog << this->selected->get_altitude() << " ";
+            std::clog << this->selected->get_speed() << " ";
+            std::clog << this->selected->get_heading() << " ";
+            std::clog << (Tools::rad2deg(this->landing->get_heading()) + 30) << " ";
+            std::clog << (Tools::rad2deg(this->landing->get_heading()) - 30) << " ";
+
+            if (this->selected->get_altitude() <= 3000 &&
+                this->selected->get_speed() <= 200 &&
+                this->selected->get_heading() >= (Tools::rad2deg(this->landing->get_heading()) - 30) &&
+                Tools::rad2deg(this->selected->get_heading() <= (this->selected->get_heading()) + 30)) {
+                Clearance cl(this->landing);
+                this->selected->set_clearance(cl);
+            }
+        } else if (command[0] == "direct") {
+            Navpoint* t = &(*std::find(this->navpoints.begin(), this->navpoints.end(), command[1]));
+            this->selected->set_target(t);
         }
     } else {
 
@@ -322,4 +379,20 @@ void Game::set_command(std::string command) {
 
 std::string Game::get_command() {
     return this->command;
+}
+
+std::string Game::get_departure() {
+    return this->atis.get_departure_runway();
+}
+
+std::string Game::get_landing() {
+    return this->atis.get_landing_runway();
+}
+
+std::string Game::get_transition_altitude() {
+    return Tools::tostr(this->atis.get_transition_altitude());
+}
+
+std::string Game::get_transition_level() {
+    return Tools::tostr(this->atis.get_transition_level());
 }

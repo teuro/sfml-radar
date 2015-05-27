@@ -11,3 +11,15 @@ Inpoint::Inpoint(std::string name, double latitude, double longitude, double spd
 Inpoint::~Inpoint() {
 
 }
+
+double Inpoint::get_altitude() {
+    return this->altitude;
+}
+
+double Inpoint::get_speed() {
+    return this->speed;
+}
+
+double Inpoint::get_heading() {
+    return this->heading;
+}

@@ -13,7 +13,9 @@ Aircraft::Aircraft(std::string name, int speed, int heading, int altitude, Coord
     this->separation_error = false;
     this->type = type;
     this->landing = NULL;
+    this->target = NULL;
     this->approach = false;
+    this->turn = -1;
 }
 
 Aircraft::~Aircraft() { }
@@ -26,6 +28,15 @@ void Aircraft::update(double elapsed) {
         this->clearances.pop();
 
         this->handle_clearance(active);
+    }
+
+    if (this->target != NULL) {
+        //std::clog << this->name << " direct to " << this->target->get_name() << " " << this->target->get_place().get_latitude() << ", " << this->target->get_place().get_longitude() << std::endl;
+        this->clearance_heading = Tools::rad2deg(Tools::angle(this->place, this->target->get_place()));
+
+        if (Tools::on_area(this->place, this->target->get_place())) {
+            this->target = NULL;
+        }
     }
 
     double distance = this->speed * (elapsed / 1000) / 3600;
@@ -41,6 +52,10 @@ void Aircraft::update(double elapsed) {
 
     while (this->heading > 360.0) {
         this->heading -= 360.0;
+    }
+
+    if (this->approach) {
+        std::clog << "Approaching " << this->landing->get_name() << std::endl;
     }
 }
 
@@ -68,6 +83,7 @@ void Aircraft::handle_clearance(Clearance& ac) {
     }
 
     if (this->landing != NULL) {
+        std::clog << this->landing->get_name() << std::endl;
         this->approach = true;
     }
 }
@@ -133,4 +149,12 @@ bool Aircraft::get_separation_error() {
 
 int Aircraft::get_type() {
     return this->type;
+}
+
+void Aircraft::set_target(Navpoint* target) {
+    this->target = target;
+}
+
+void Aircraft::set_place(Coordinate& place) {
+    this->place = place;
 }

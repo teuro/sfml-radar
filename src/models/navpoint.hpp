@@ -12,6 +12,7 @@ public:
     ~Navpoint();
     Coordinate& get_place();
     std::string get_name();
+    bool operator==(std::string name);
 protected:
     Coordinate place;
     std::string name;

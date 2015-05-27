@@ -11,8 +11,10 @@
 #include <tinyxml/tinyxml.h>
 #include <tinyxpath/xpath_processor.h>
 #include <queue>
+#include <algorithm>
 
-#include "navpoint.hpp"
+#include "inpoint.hpp"
+#include "outpoint.hpp"
 #include "aircraft.hpp"
 #include "airfield.hpp"
 #include "../tools/settings.hpp"
@@ -82,12 +84,34 @@ public:
     **/
 	void load();
 
+    /**
+        Calculate new state of game
+        * @param double elapsed
+        * @return void
+    **/
 	void update(double elapsed);
 
+    /**
+        * Select a plane
+        * @param Point& mouse
+        * @return void
+    **/
 	void select_aircraft(Point& mouse);
+
+	/**
+        * Select a plane
+        * @param std::string callsign
+        * @return void
+	**/
 	void select_aircraft(std::string callsign);
+
+	/**
+        * Return separation errors
+        * @param none
+        * @return int separation errors
+	**/
 	int get_separation_errors();
-	Point get_place(Point& center, Coordinate& target);
+
 	Aircraft* get_selected();
 	Airfield* get_active_field();
 
@@ -101,6 +125,10 @@ public:
 
     void set_command(std::string command);
     std::string get_command();
+    std::string get_departure();
+    std::string get_landing();
+    std::string get_transition_level();
+    std::string get_transition_altitude();
 private:
     void load_airfield(std::string icao);
     /**
@@ -110,13 +138,19 @@ private:
     **/
     void create_plane();
     void build_xml();
+    void check_collision(std::list <Aircraft*>& planes);
+    void handle_holdings();
+    bool is_free(Inpoint& navpoint);
 	Coordinate& center_point;
 	Settings& settings;
 	Atis& atis;
 
+	std::vector     <Outpoint>      outpoints;
+	std::vector     <Inpoint>      inpoints;
 	std::vector     <Navpoint>      navpoints;
 	std::list       <Aircraft*>     aircrafts;
 	std::queue      <Aircraft*>     holdings;
+	std::list       <Aircraft*>     errors;
 	std::vector     <Airfield>      airfields;
 
 	std::string command;

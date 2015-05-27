@@ -19,6 +19,7 @@ public:
 	Gameview(Drawsurface& d, Settings& s);
 	~Gameview();
 	void draw();
+	 void load();
 
 	void draw_navpoints(std::vector <Navpoint>& navpoints);
 	void draw_airfield(Airfield* airfield);
@@ -28,7 +29,6 @@ private:
 
     void draw_plane(Aircraft*& plane, Point& center_point, std::string color);
     void read_data(std::string datafile);
-    void load();
 };
 
 #endif // _GAME_VIEW_HPP

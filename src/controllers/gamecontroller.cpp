@@ -32,7 +32,13 @@ void Gamecontroller::update(double elapsed, bool draw) {
     this->game.update(elapsed);
 
     if (draw) {
+        this->gameview.load();
         this->gameview.clear_screen();
+        this->gameview.add_element("Metar", "metar", "data", this->game.get_metar().get_metar());
+        //this->gameview.add_element("Atisbox", "atis-box", "data", this->game.get_departure());
+        this->gameview.add_element("Atisbox", "atis-box", "data", this->game.get_landing());
+        //this->gameview.add_element("Atisbox", "atis-box", "data", this->game.get_transition_altitude());
+        //this->gameview.add_element("Atisbox", "atis-box", "data", this->game.get_transition_level());
         this->gameview.draw();
         this->gameview.draw_planes(this->game.get_aircrafts(), this->game.get_selected());
         this->gameview.draw_navpoints(this->game.get_navpoints());
@@ -74,7 +80,26 @@ void Gamecontroller::handle_text_input() {
     parts.erase(parts.begin(), parts.end());
 }
 
+std::string Gamecontroller::matching_elements(std::string input) {
+	std::clog << "Gamecontroller::matching_elements(" << input << ")" << std::endl;
+	std::string elements = "";
+	std::list <Aircraft*> t_planes = this->game.get_aircrafts();
+	
+	std::list <Aircraft*> :: iterator plane_a = t_planes.begin();
+	
+	while (plane_a != t_planes.end()) {
+		//std::clog << (*plane_a)->get_name() << std::endl;
+		if (Tools::is_match(input, (*plane_a)->get_name())) {
+			elements += (*plane_a)->get_name() + " ";
+		}
+		++plane_a;
+	}
+		
+	return elements;
+}
+
 void Gamecontroller::update_command(std::string command) {
+	std::clog << this->matching_elements(command) << std::endl;
     this->game.set_command("");
     this->game.set_command(command);
 }

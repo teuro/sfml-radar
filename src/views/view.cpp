@@ -169,7 +169,14 @@ void View::draw() {
     std::map <std::string, Layout_element> :: iterator element;
 
     for (element = layout_elements.begin(); element != layout_elements.end(); ++element) {
+        //std::clog << element->first << std::endl;
         style(element->second);
         draw_element(element->second);
     }
+}
+
+void View::add_element(std::string key, std::string id, std::string cl, std::string value) {
+    Layout_element le(key, id, cl);
+    this->layout_elements[key] = le;
+    this->layout_elements[key].set_content(value);
 }

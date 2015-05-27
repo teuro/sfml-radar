@@ -57,7 +57,7 @@ bool Program::run() {
         return this->handle_event(event);
     }
 
-    if (this->counter > 10 && !this->draw) {
+    if (this->counter > 20 && !this->draw) {
         this->counter = 0;
         this->draw = true;
     } else {

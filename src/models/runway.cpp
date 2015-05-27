@@ -19,7 +19,13 @@ double Runway::get_length() {
 }
 
 double Runway::get_heading() {
-    return Tools::angle(this->start_place, this->end_place);
+    double hdg = Tools::angle(this->start_place, this->end_place);
+
+    while (hdg < 0) {
+        hdg += (2 * Tools::get_PI());
+    }
+
+    return hdg;
 }
 
 std::string Runway::get_name() {

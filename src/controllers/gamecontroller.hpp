@@ -25,6 +25,7 @@ public:
     Airfield* get_active_field();
 protected:
 private:
+	std::string matching_elements(std::string input);
     Gameview& gameview;
     Game& game;
     int function_key;

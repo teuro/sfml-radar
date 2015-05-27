@@ -11,13 +11,7 @@ void Gameview::load() {
 
 void Gameview::draw() {
     //std::clog << "Gameview::draw()" << std::endl;
-    this->load();
-
-    std::map <std::string, Layout_element> :: iterator le;
-
-    for (le = this->layout_elements.begin(); le != this->layout_elements.end(); ++le) {
-        this->draw_element(le->second);
-    }
+    this->View::draw();
 }
 
 void Gameview::draw_plane(Aircraft*& plane, Point& center_point, std::string color) {
@@ -27,7 +21,7 @@ void Gameview::draw_plane(Aircraft*& plane, Point& center_point, std::string col
     std::clog << plane->get_name() << " " << aircraft_place.get_x() << ", " << aircraft_place.get_y() << std::endl;
     #endif
     double minute_px        = Tools::distancePX(plane->get_speed() * (1.0 / 60.0), this->settings.zoom, this->settings.screen_width);
-    double separation_ring  = Tools::distancePX(settings.separation_horizontal, this->settings.zoom, this->settings.screen_width);
+    double separation_ring  = Tools::distancePX(settings.separation_horizontal/2.0, this->settings.zoom, this->settings.screen_width);
 
     Point end_point = Tools::calculate(aircraft_place, plane->get_heading(), minute_px, false, true);
     drawer.lineColor(aircraft_place, end_point, color);
@@ -75,6 +69,8 @@ void Gameview::draw_airfield(Airfield* airfield) {
     for (unsigned int i = 0; i < runways.size(); ++i) {
         Point rwys = Tools::calculate(this->center_point, this->settings.centerpoint, runways[i].get_start_place(), this->settings.zoom);
         Point rwye = Tools::calculate(this->center_point, this->settings.centerpoint, runways[i].get_end_place(), this->settings.zoom);
+
+        //std::clog << runways[i].get_name() << " " << Tools::rad2deg(Tools::angle(runways[i].get_start_place(), runways[i].get_end_place())) << std::endl;
 
         this->drawer.lineColor(rwys, rwye, "white");
     }

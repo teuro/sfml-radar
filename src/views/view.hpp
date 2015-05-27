@@ -20,6 +20,7 @@ public:
 	void render();
 	void clear_screen();
 	void iterate(TiXmlNode* el);
+	void add_element(std::string key, std::string id, std::string cl, std::string value);
 protected:
     Drawsurface& drawer;
     TiXmlDocument document;

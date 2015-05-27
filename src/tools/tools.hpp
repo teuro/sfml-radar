@@ -25,10 +25,12 @@ namespace Tools {
 	double distancePX(Point& a, Point& b);
 	double distancePX(double nm, double zoom, double screen_width = 800);
 	double angle(Point& a, Point& b);
+	double angle(Coordinate& a, Coordinate& b);
 
 	Point calculate(Point& cp, Coordinate& a, Coordinate& b, int zoom);
 	Point calculate(Point& sp, double angle, double length, bool rad, bool turn = false);
 	Coordinate calculate(Coordinate& cp, double angle, double length);
+	bool is_match(std::string a, std::string b);
 
 	int rnd(int a, int b);
 
@@ -64,6 +66,7 @@ namespace Tools {
 
 
 	bool on_area(Point& mouse, Point& aircraft);
+	bool on_area(Coordinate& a, Coordinate& b);
 
 	std::vector <std::string> split(std::string delimiter, std::string input);
 	enum function_keys {SPEED = 1, ALTITUDE = 2, HEADING = 3, NONE = -1};
@@ -73,6 +76,7 @@ namespace Tools {
 	std::string trim(std::string s);
 
     double calculate_backwind(double wind, double runway);
+    double get_PI();
 }
 
 #endif // _TOOLS_HPP

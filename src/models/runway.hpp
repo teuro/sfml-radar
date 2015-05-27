@@ -11,8 +11,10 @@ public:
 
     Coordinate& get_start_place();
     Coordinate& get_end_place();
+
     double get_length();
     double get_heading();
+
     std::string get_name();
     bool operator ==(const std::string name);
 protected:

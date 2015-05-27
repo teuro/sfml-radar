@@ -19,3 +19,7 @@ Coordinate& Navpoint::get_place() {
 std::string Navpoint::get_name() {
     return this->name;
 }
+
+bool Navpoint::operator ==(std::string name) {
+    return this->name == name;
+}

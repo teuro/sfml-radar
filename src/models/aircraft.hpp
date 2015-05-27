@@ -1,7 +1,7 @@
 #ifndef _AIRCRAFT_HPP
 #define _AIRCRAFT_HPP
 
-#include "coordinate.hpp"
+#include "navpoint.hpp"
 #include "../tools/tools.hpp"
 #include "../tools/settings.hpp"
 #include "clearance.hpp"
@@ -28,7 +28,9 @@ public:
     double get_clearance_altitude();
 
     void set_separation_error(bool t);
+    void set_target(Navpoint* target);
     bool get_separation_error();
+    void set_place(Coordinate& place);
     int get_type();
 protected:
 private:
@@ -54,6 +56,7 @@ private:
     double change_parameter(double elapsed, double value, double _value, double change, int turn = 0);
     int type;
     Runway* landing;
+    Navpoint* target;
     bool approach;
     Settings& settings;
 };

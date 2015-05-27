@@ -5,6 +5,10 @@ namespace Tools {
 	const double earth_radius = 3440;
 }
 
+double Tools::get_PI() {
+    return Tools::PI;
+}
+
 double Tools::deg2rad(double deg) {
 	return deg * (Tools::PI / 180.0);
 }
@@ -54,15 +58,6 @@ double Tools::angle(Point& a, Point& b) {
     return tmp_angle;
 }
 
-double Tools::angle(Coordinate& a, Coordinate& b) {
-	double tmp_x = b.get_latitude() - a.get_latitude();
-	double tmp_y = b.get_longitude() - a.get_longitude();
-
-    double tmp_angle = std::atan2(tmp_y, tmp_x);
-
-	return tmp_angle;
-}
-
 Point Tools::calculate(Point& cp, Coordinate& a, Coordinate& b, int zoom) {
     /**
     std::clog << "Point& cp = " << cp.get_x() << ", " << cp.get_y() << std::endl;
@@ -102,6 +97,10 @@ bool Tools::on_area(Point& mouse, Point& aircraft) {
     bool y = mouse.get_y() > (aircraft.get_y()-5) && mouse.get_y() < (aircraft.get_y()+5);
 
     return (x && y);
+}
+
+bool Tools::on_area(Coordinate& a, Coordinate& b) {
+    return (distanceNM(a, b) < 0.3);
 }
 
 std::vector <std::string> Tools::split(std::string delimiter, std::string input) {
@@ -157,4 +156,23 @@ double Tools::calculate_backwind(double wind, double runway) {
     //std::clog << "Wind direction " << wind << " runway direction " << runway << std::endl;
     wind = deg2rad(wind);
     return (std::cos(deg2rad(std::abs((wind + 180.0) - runway))));
+}
+
+double Tools::angle(Coordinate& a, Coordinate& b) {
+    double fLat = a.get_latitude();
+    double fLng = a.get_longitude();
+    double tLat = b.get_latitude();
+    double tLng = b.get_longitude();
+
+    return atan2(sin(fLng-tLng)*cos(tLat), cos(fLat)*sin(tLat)-sin(fLat)*cos(tLat)*cos(fLng-tLng));
+}
+
+bool Tools::is_match(std::string a, std::string b) {
+	for (unsigned int i = 0; i < a.length(); ++i) {
+		if (a[i] != b[i]) {
+			return false;
+		}
+	}
+	
+	return true;
 }
