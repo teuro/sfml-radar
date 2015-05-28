@@ -93,19 +93,29 @@ bool Program::handle_event(sf::Event& event) {
             } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
                 this->window.close();
                 return false;
-            } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::F5)) {
-                this->ctrl->handle_function_keys(Tools::SPEED);
-            } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::F6)) {
-                this->ctrl->handle_function_keys(Tools::ALTITUDE);
-            } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::F7)) {
-                this->ctrl->handle_function_keys(Tools::HEADING);
-            }
+            } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+				this->ctrl->handle_function_keys(Tools::UP);
+			} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+				this->ctrl->handle_function_keys(Tools::DOWN);
+			} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
+				this->ctrl->handle_function_keys(Tools::LEFT);
+			} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
+				this->ctrl->handle_function_keys(Tools::RIGHT);
+			}
+			
+			if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Return)) {
+				input_string = this->ctrl->get_input();
+			}
             return true;
         case sf::Event::TextEntered:
             if (event.text.unicode == 8 && this->input_string.length()) {
                 input_string = input_string.erase(input_string.length()-1, 1);
 
-            } else if (event.text.unicode != 13) {
+            } else if (
+				((event.text.unicode >= 65 && event.text.unicode <= 122) ||
+				(event.text.unicode >= 48 && event.text.unicode <= 57) ||
+				(event.text.unicode == 32)) && 
+				event.text.unicode != 13 && event.text.unicode != 8) {
                 input_string += sf::String(event.text.unicode);
             }
 

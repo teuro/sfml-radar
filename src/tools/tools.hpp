@@ -69,7 +69,7 @@ namespace Tools {
 	bool on_area(Coordinate& a, Coordinate& b);
 
 	std::vector <std::string> split(std::string delimiter, std::string input);
-	enum function_keys {SPEED = 1, ALTITUDE = 2, HEADING = 3, NONE = -1};
+	enum function_keys {UP = 1, DOWN, LEFT, RIGHT, NONE = -1};
 
 	std::string ltrim(std::string s);
 	std::string rtrim(std::string s);
