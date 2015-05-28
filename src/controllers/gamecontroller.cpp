@@ -1,13 +1,19 @@
 #include "gamecontroller.hpp"
 
-Gamecontroller::Gamecontroller(Gameview& gv, Settings& s, Game& g) : Controller(s), gameview(gv), game(g) {
-    this->function_key = Tools::SPEED;
-}
+Gamecontroller::Gamecontroller(Gameview& gv, Settings& s, Game& g) : Controller(s), gameview(gv), game(g) { }
 
 Gamecontroller::~Gamecontroller() { }
 
+std::string Gamecontroller::get_input() {
+	return this->game.get_command();
+}
+
 void Gamecontroller::handle_function_keys(int action) {
-    this->function_key = action;
+	if (action == Tools::RIGHT) {
+		if (this->quicklist.size()) {
+			this->game.set_command(this->quicklist.front());
+		}
+	}
 }
 
 void Gamecontroller::handle_mouse_release(Point& mouse_start, Point& mouse_end) {
@@ -80,9 +86,9 @@ void Gamecontroller::handle_text_input() {
     parts.erase(parts.begin(), parts.end());
 }
 
-std::string Gamecontroller::matching_elements(std::string input) {
-	std::clog << "Gamecontroller::matching_elements(" << input << ")" << std::endl;
-	std::string elements = "";
+std::list <std::string> Gamecontroller::matching_elements(std::string input) {
+	//std::clog << "Gamecontroller::matching_elements(" << input << ")" << std::endl;
+	std::list <std::string> elements;
 	std::list <Aircraft*> t_planes = this->game.get_aircrafts();
 	
 	std::list <Aircraft*> :: iterator plane_a = t_planes.begin();
@@ -90,7 +96,7 @@ std::string Gamecontroller::matching_elements(std::string input) {
 	while (plane_a != t_planes.end()) {
 		//std::clog << (*plane_a)->get_name() << std::endl;
 		if (Tools::is_match(input, (*plane_a)->get_name())) {
-			elements += (*plane_a)->get_name() + " ";
+			elements.push_back((*plane_a)->get_name());
 		}
 		++plane_a;
 	}
@@ -99,7 +105,7 @@ std::string Gamecontroller::matching_elements(std::string input) {
 }
 
 void Gamecontroller::update_command(std::string command) {
-	std::clog << this->matching_elements(command) << std::endl;
+	this->quicklist = this->matching_elements(command);
     this->game.set_command("");
     this->game.set_command(command);
 }

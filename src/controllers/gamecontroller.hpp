@@ -23,9 +23,11 @@ public:
     void update_command(std::string command);
     bool is_ok();
     Airfield* get_active_field();
+	std::string get_input();
 protected:
 private:
-	std::string matching_elements(std::string input);
+	std::list <std::string> quicklist;
+	std::list <std::string> matching_elements(std::string input);
     Gameview& gameview;
     Game& game;
     int function_key;
