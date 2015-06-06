@@ -27,7 +27,7 @@ public:
     bool operator ==(std::string id) { return (this->id == id); }
     std::string get_class() { return this->s_class; }
     std::vector <std::string> get_content();
-
+    
     int t_red;
     int t_green;
     int t_blue;
@@ -43,6 +43,7 @@ private:
     std::string id;
     std::string s_class;
     std::vector <std::string> v_content;
+    std::string content;
 
     Point p1;
     Point p2;

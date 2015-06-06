@@ -102,10 +102,6 @@ bool Program::handle_event(sf::Event& event) {
 			} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
 				this->ctrl->handle_function_keys(Tools::RIGHT);
 			}
-			
-			if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Return)) {
-				input_string = this->ctrl->get_input();
-			}
             return true;
         case sf::Event::TextEntered:
             if (event.text.unicode == 8 && this->input_string.length()) {

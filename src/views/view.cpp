@@ -86,8 +86,9 @@ void View::draw_element(Layout_element& layout_element) {
     t.change_y(8);
 
     std::vector <std::string> content = layout_element.get_content();
+	
     for (unsigned int i = 0; i < content.size(); ++i) {
-        if (layout_element.t_color_setted) {
+	   if (layout_element.t_color_setted) {
             drawer.draw_text(content[i], t, layout_element.t_red, layout_element.t_green, layout_element.t_blue);
         } else {
             drawer.draw_text(content[i], t, "blue");
@@ -169,14 +170,19 @@ void View::draw() {
     std::map <std::string, Layout_element> :: iterator element;
 
     for (element = layout_elements.begin(); element != layout_elements.end(); ++element) {
-        //std::clog << element->first << std::endl;
         style(element->second);
         draw_element(element->second);
     }
 }
 
-void View::add_element(std::string key, std::string id, std::string cl, std::string value) {
-    Layout_element le(key, id, cl);
-    this->layout_elements[key] = le;
-    this->layout_elements[key].set_content(value);
+void View::add_element(std::string name, std::string id, std::string cl, std::string value) {
+	if (this->layout_elements.find(name) == this->layout_elements.end()) {
+		//std::clog << "Not found '" << id << "' let's insert" << std::endl;
+		 Layout_element le(name, id, cl);
+		this->layout_elements[name] = le;
+	} else {
+		//std::clog << "Found '" << id << "' let's modify content" << std::endl;
+	}
+	
+    this->layout_elements[name].set_content(value);
 }

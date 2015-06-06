@@ -46,7 +46,7 @@ void Game::add_point(Navpoint np) {
     this->navpoints.push_back(np);
 }
 
-void Game::check_collision(std::list <Aircraft*>& planes) {
+void Game::check_collision() {
     this->errors.clear();
 
     std::list <Aircraft*> :: iterator plane_a;
@@ -113,7 +113,7 @@ void Game::handle_holdings() {
 
 void Game::update(double elapsed) {
     this->duration += elapsed;
-    this->check_collision(this->aircrafts);
+    this->check_collision();
     this->handle_holdings();
 
     for (std::list <Aircraft*> :: iterator it = this->aircrafts.begin(); it != this->aircrafts.end(); ++it) {
@@ -260,7 +260,7 @@ void Game::build_xml() {
     TiXmlElement* elements = new TiXmlElement("elements");
     TiXmlElement* element1 = new TiXmlElement("element");
     TiXmlElement* element2 = new TiXmlElement("element");
-    TiXmlElement* element4 = new TiXmlElement("input");
+//    TiXmlElement* element4 = new TiXmlElement("input");
 
     element1->SetAttribute("id", "planelist");
     element1->SetAttribute("class", "data");
@@ -287,9 +287,6 @@ void Game::build_xml() {
     e_input->SetAttribute("id", "input");
     e_input->SetAttribute("class", "data");
     e_input->SetAttribute("name", "Input");
-    TiXmlText* t_input = new TiXmlText(this->command.c_str());
-    element4->LinkEndChild(t_input);
-    e_input->LinkEndChild(element4);
 
     elements->LinkEndChild(e_input);
     root->LinkEndChild(elements);
@@ -371,14 +368,6 @@ Metar& Game::get_metar() {
 void Game::set_active_runways(Runway* dep, Runway* lnd) {
     this->departure = dep;
     this->landing = lnd;
-}
-
-void Game::set_command(std::string command) {
-    this->command = command;
-}
-
-std::string Game::get_command() {
-    return this->command;
 }
 
 std::string Game::get_departure() {

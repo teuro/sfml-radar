@@ -123,8 +123,6 @@ public:
 
     void set_active_runways(Runway* dep, Runway* lnd);
 
-    void set_command(std::string command);
-    std::string get_command();
     std::string get_departure();
     std::string get_landing();
     std::string get_transition_level();
@@ -138,20 +136,20 @@ private:
     **/
     void create_plane();
     void build_xml();
-    void check_collision(std::list <Aircraft*>& planes);
+    void check_collision();
     void handle_holdings();
     bool is_free(Inpoint& navpoint);
 	Coordinate& center_point;
 	Settings& settings;
 	Atis& atis;
 
-	std::vector     <Outpoint>      outpoints;
-	std::vector     <Inpoint>      inpoints;
-	std::vector     <Navpoint>      navpoints;
-	std::list       <Aircraft*>     aircrafts;
-	std::queue      <Aircraft*>     holdings;
-	std::list       <Aircraft*>     errors;
-	std::vector     <Airfield>      airfields;
+	std::vector     <Outpoint>		outpoints;
+	std::vector     <Inpoint>		inpoints;
+	std::vector     <Navpoint>		navpoints;
+	std::list       <Aircraft*>		aircrafts;
+	std::queue      <Aircraft*>		holdings;
+	std::list       <Aircraft*>		errors;
+	std::vector     <Airfield>		airfields;
 
 	std::string command;
 
