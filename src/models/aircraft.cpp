@@ -73,6 +73,8 @@ void Aircraft::handle_clearance(Clearance& ac) {
     this->clearance_heading     = ac.get_heading();
     this->turn                  = ac.get_turn();
     this->landing               = ac.get_landing();
+	
+	//std::clog << this->clearance_speed << " " << this->clearance_altitude << " " << this->clearance_heading << " " << this->turn << " " << this->landing << std::endl;
 
     while (this->clearance_heading < 0.0) {
         this->clearance_heading += 360.0;

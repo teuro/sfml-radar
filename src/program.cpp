@@ -110,7 +110,7 @@ bool Program::handle_event(sf::Event& event) {
             } else if (
 				((event.text.unicode >= 65 && event.text.unicode <= 122) ||
 				(event.text.unicode >= 48 && event.text.unicode <= 57) ||
-				(event.text.unicode == 32)) && 
+				(event.text.unicode == 32 || event.text.unicode == 58)) && 
 				event.text.unicode != 13 && event.text.unicode != 8) {
                 input_string += sf::String(event.text.unicode);
             }

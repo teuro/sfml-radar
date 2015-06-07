@@ -163,6 +163,8 @@ private:
     int new_plane;
 
     Metar metar;
+	
+	enum turn {LEFT = -1, RIGHT = 1};
 };
 
 #endif // _GAME_HPP

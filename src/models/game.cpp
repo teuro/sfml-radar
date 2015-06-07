@@ -165,6 +165,8 @@ void Game::select_aircraft(std::string callsign) {
     for (plane = this->aircrafts.begin(); plane != this->aircrafts.end(); ++plane) {
         if (callsign == (*plane)->get_name()) {
             this->selected = (*plane);
+			this->center_point = this->selected->get_place();
+			return;
         }
     }
 }
@@ -307,9 +309,9 @@ double Game::get_next_plane() {
 
 void Game::set_clearance(std::string callsign, std::vector <std::string> command) {
     this->select_aircraft(callsign);
-
+	
     if (this->selected != NULL) {
-        int turn = -1;
+        int turn = LEFT;
         int act_spd = this->selected->get_clearance_speed();
         int act_hdg = this->selected->get_clearance_heading();
         int act_alt = this->selected->get_clearance_altitude();
@@ -322,7 +324,7 @@ void Game::set_clearance(std::string callsign, std::vector <std::string> command
             int cl_gdg;
 
             if (command.size() == 3) {
-                turn = (command[2] == "left") ? -1 : 1;
+                turn = (command[1] == "left") ? LEFT : RIGHT;
             }
 
             cl_gdg = Tools::tonumber<int>(command.back());
