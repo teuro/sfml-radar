@@ -21,6 +21,10 @@ Aircraft::Aircraft(std::string name, int speed, int heading, int altitude, Coord
 Aircraft::~Aircraft() { }
 
 void Aircraft::update(double elapsed) {
+	if (this->type > 50 && this->speed > 130 && this->altitude < 1000) {
+		this->set_clearance_altitude(1500);
+	}
+
     while (this->clearances.size()) {
         Clearance active;
         std::clog << this->clearances.size() << " clearances on stack" << std::endl;
@@ -74,7 +78,7 @@ void Aircraft::handle_clearance(Clearance& ac) {
     this->turn                  = ac.get_turn();
     this->landing               = ac.get_landing();
 	
-	//std::clog << this->clearance_speed << " " << this->clearance_altitude << " " << this->clearance_heading << " " << this->turn << " " << this->landing << std::endl;
+	std::clog << this->clearance_speed << " " << this->clearance_altitude << " " << this->clearance_heading << " " << this->turn << " " << this->landing << std::endl;
 
     while (this->clearance_heading < 0.0) {
         this->clearance_heading += 360.0;
@@ -159,4 +163,16 @@ void Aircraft::set_target(Navpoint* target) {
 
 void Aircraft::set_place(Coordinate& place) {
     this->place = place;
+}
+
+void Aircraft::set_clearance_speed(double cl_spd) {
+	this->clearance_speed = cl_spd;
+}
+
+void Aircraft::set_clearance_heading(double cl_hdg) {
+	this->clearance_heading = cl_hdg;
+}
+
+void Aircraft::set_clearance_altitude(double cl_alt) {
+	this->clearance_altitude = cl_alt;
 }

@@ -20,12 +20,11 @@ namespace Tools {
 
 	double distanceNM(Coordinate& a, Coordinate& b);
 	double distanceNM(double px, double zoom, double screen_width = 800);
-	double angle(Coordinate& a, Coordinate& b);
 
 	double distancePX(Point& a, Point& b);
 	double distancePX(double nm, double zoom, double screen_width = 800);
 	double angle(Point& a, Point& b);
-	double angle(Coordinate& a, Coordinate& b);
+	double angle(Coordinate& a, Coordinate& b, bool math = true);
 
 	Point calculate(Point& cp, Coordinate& a, Coordinate& b, int zoom);
 	Point calculate(Point& sp, double angle, double length, bool rad, bool turn = false);

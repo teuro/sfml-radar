@@ -24,6 +24,10 @@ double Runway::get_heading() {
     while (hdg < 0) {
         hdg += (2 * Tools::get_PI());
     }
+	
+	while (hdg > 2 * Tools::get_PI()) {
+        hdg -= (2 * Tools::get_PI());
+    }
 
     return hdg;
 }

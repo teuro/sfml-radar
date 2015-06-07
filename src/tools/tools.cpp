@@ -158,13 +158,19 @@ double Tools::calculate_backwind(double wind, double runway) {
     return (std::cos(deg2rad(std::abs((wind + 180.0) - runway))));
 }
 
-double Tools::angle(Coordinate& a, Coordinate& b) {
+double Tools::angle(Coordinate& a, Coordinate& b, bool math) {
     double fLat = a.get_latitude();
     double fLng = a.get_longitude();
     double tLat = b.get_latitude();
     double tLng = b.get_longitude();
-
-    return atan2(sin(fLng-tLng)*cos(tLat), cos(fLat)*sin(tLat)-sin(fLat)*cos(tLat)*cos(fLng-tLng));
+	
+	double t_angle = atan2(sin(fLng-tLng)*cos(tLat), cos(fLat)*sin(tLat)-sin(fLat)*cos(tLat)*cos(fLng-tLng));
+	
+	if (math){
+		return t_angle;
+	} else {
+		return t_angle + (PI / 2.0);
+	}
 }
 
 bool Tools::is_match(std::string a, std::string b) {

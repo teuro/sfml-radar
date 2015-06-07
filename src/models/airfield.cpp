@@ -1,6 +1,8 @@
 #include "airfield.hpp"
 
-Airfield::Airfield(std::string n, Coordinate& p) : name(n), place(p) { }
+Airfield::Airfield(std::string n, Coordinate& p) : name(n), place(p) { 
+	this->altitude = 150;
+}
 
 Airfield::~Airfield() { }
 
