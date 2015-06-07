@@ -14,6 +14,12 @@ void Gamecontroller::handle_function_keys(int action) {
 
 void Gamecontroller::handle_mouse_release(Point& mouse_start, Point& mouse_end) {
     double distance_px  = Tools::distancePX(mouse_end, mouse_start);
+	/** 
+		* Here we have to make correction to angle, because there is difference between math and real world 
+		* Basically we just turn clockwise and then anti clockwise
+		* It can't be Tools::angle behaviour, because it would mees up rest of code
+		* This is not best practise, but at the moment it is enough :)
+	**/
     double angle_rad    = Tools::angle(mouse_start, mouse_end) + (3.14/2.0);
     double distance_nm  = Tools::distanceNM(distance_px, this->settings.zoom, this->settings.screen_width);
 	
