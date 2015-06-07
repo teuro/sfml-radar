@@ -15,10 +15,6 @@ void Game::load() {
 
     this->duration = 0;
 
-    create_plane();
-    create_plane();
-    create_plane();
-
     this->metar.update();
 }
 
@@ -96,6 +92,7 @@ void Game::handle_holdings() {
         std::list <Aircraft*> :: iterator plane = this->aircrafts.begin();
 
         while (plane != this->aircrafts.end()) {
+			//std::clog << (*plane)->get_name() << " " << (*plane)->get_altitude() << std::endl;
             if ((*plane)->get_altitude() < 1000) {
                 return;
             }
@@ -105,9 +102,11 @@ void Game::handle_holdings() {
 
         Aircraft* t = this->holdings.front();
         t->set_place(this->departure->get_start_place());
-        Clearance cl(160, this->active_field->get_altitude(), this->departure->get_heading(), 1);
+		
+		//std::clog << "Departure heading is " << Tools::rad2deg(this->departure->get_heading()+3.14/2.0) << std::endl;
+        t->set_clearance_speed(160);
+		this->aircrafts.push_back(t);
         this->holdings.pop();
-        this->aircrafts.push_back(t);
     }
 }
 
@@ -172,6 +171,7 @@ void Game::select_aircraft(std::string callsign) {
 }
 
 void Game::create_plane() {
+	std::clog << "Game::create_plane()" << std::endl;
     Queryresult airlines = Database::get_result("SELECT ICAO FROM airlines");
     Inpoint t_navpoint = this->inpoints[Tools::rnd(0, (int)this->inpoints.size())];
 
@@ -187,7 +187,7 @@ void Game::create_plane() {
 
     if (type > 50) {
         /** Departure **/
-        tmp = new Aircraft(t_callsign, 0, 0, this->active_field->get_altitude(), t_navpoint.get_place(), type, settings);
+        tmp = new Aircraft(t_callsign, 0, Tools::rad2deg(this->departure->get_heading()), this->active_field->get_altitude(), t_navpoint.get_place(), type, settings);
         this->holdings.push(tmp);
         std::clog << "Holding planes " << this->holdings.size() << std::endl;
     } else {
@@ -368,6 +368,8 @@ Metar& Game::get_metar() {
 }
 
 void Game::set_active_runways(Runway* dep, Runway* lnd) {
+	std::clog << "Game::set_active_runways(" << dep->get_name() << ", " << lnd->get_name() << ")" << std::endl;
+	
     this->departure = dep;
     this->landing = lnd;
 }

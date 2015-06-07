@@ -82,6 +82,10 @@ bool Atiscontroller::is_ok() {
         }
 
         this->game.set_active_runways(departure, landing);
+		
+		for (unsigned int i = 0; i < 3; ++i) {
+			this->game.create_plane();
+    	}
 
         return true;
     }

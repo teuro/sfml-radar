@@ -127,6 +127,8 @@ public:
     std::string get_landing();
     std::string get_transition_level();
     std::string get_transition_altitude();
+	
+	void create_plane();
 private:
     void load_airfield(std::string icao);
     /**
@@ -134,7 +136,6 @@ private:
         * @param none
         * @param none
     **/
-    void create_plane();
     void build_xml();
     void check_collision();
     void handle_holdings();
