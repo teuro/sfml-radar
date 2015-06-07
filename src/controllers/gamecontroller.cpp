@@ -23,7 +23,7 @@ void Gamecontroller::handle_mouse_release(Point& mouse_start, Point& mouse_end) 
     double angle_rad    = Tools::angle(mouse_start, mouse_end) + (3.14/2.0);
     double distance_nm  = Tools::distanceNM(distance_px, this->settings.zoom, this->settings.screen_width);
 	
-	std::clog << "Kulma on " << angle_rad << " radiaania, eli " << Tools::rad2deg(angle_rad) << " astetta" << std::endl;
+	//std::clog << "Kulma on " << angle_rad << " radiaania, eli " << Tools::rad2deg(angle_rad) << " astetta" << std::endl;
 
     Coordinate center = Tools::calculate(this->game.get_centerpoint(), angle_rad, distance_nm);
 
@@ -45,10 +45,10 @@ void Gamecontroller::update(double elapsed, bool draw) {
         this->gameview.load();
         this->gameview.clear_screen();
         this->gameview.add_element("Metar", "metar", "data", this->game.get_metar().get_metar());
-        //this->gameview.add_element("Atisbox", "atis-box", "data", this->game.get_departure());
-        this->gameview.add_element("Atisbox", "atis-box", "data", this->game.get_landing());
-        //this->gameview.add_element("Atisbox", "atis-box", "data", this->game.get_transition_altitude());
-        //this->gameview.add_element("Atisbox", "atis-box", "data", this->game.get_transition_level());
+        this->gameview.add_element("Atisbox", "atis-box", "data", "DEP RWY " + this->game.get_departure());
+        this->gameview.add_element("Atisbox", "atis-box", "data", "LND RWY " + this->game.get_landing());
+        this->gameview.add_element("Atisbox", "atis-box", "data", "TR ALT " + this->game.get_transition_altitude());
+        this->gameview.add_element("Atisbox", "atis-box", "data", "TR LVL " + this->game.get_transition_level());
 		this->gameview.add_element("Input", "input", "data", this->command);
         this->gameview.draw();
         this->gameview.draw_planes(this->game.get_aircrafts(), this->game.get_selected());
