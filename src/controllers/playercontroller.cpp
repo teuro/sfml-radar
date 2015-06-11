@@ -16,8 +16,9 @@ void Playercontroller::handle_mouse_wheel(int amount) {
 
 }
 
-void Playercontroller::handle_function_keys(int key) {
-
+std::string Playercontroller::handle_function_keys(int key) {
+	
+	return "";
 }
 
 void Playercontroller::handle_text_input() {

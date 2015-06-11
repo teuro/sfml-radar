@@ -23,7 +23,7 @@ void Gameview::draw_plane(Aircraft*& plane, Point& center_point, std::string col
     double minute_px        = Tools::distancePX(plane->get_speed() * (1.0 / 60.0), this->settings.zoom, this->settings.screen_width);
     double separation_ring  = Tools::distancePX(settings.separation_horizontal/2.0, this->settings.zoom, this->settings.screen_width);
 
-    Point end_point = Tools::calculate(aircraft_place, plane->get_heading(), minute_px, false, true);
+    Point end_point = Tools::calculate(aircraft_place, plane->get_heading(), minute_px, false);
     drawer.lineColor(aircraft_place, end_point, color);
     drawer.circleColor(aircraft_place, separation_ring, color);
     drawer.rectangleColor(aircraft_place, 10, color);

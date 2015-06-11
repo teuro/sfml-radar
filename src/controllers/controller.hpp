@@ -5,7 +5,7 @@
 
 class Controller {
 public:
-    virtual void handle_function_keys(int key) = 0;
+    virtual std::string handle_function_keys(int key) = 0;
     virtual void handle_mouse_click(Point& mouse) = 0;
     virtual void handle_mouse_release(Point& mouse_start, Point& mouse_end) = 0;
     virtual void handle_mouse_wheel(int amount) = 0;

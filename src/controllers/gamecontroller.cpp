@@ -4,12 +4,18 @@ Gamecontroller::Gamecontroller(Gameview& gv, Settings& s, Game& g) : Controller(
 
 Gamecontroller::~Gamecontroller() { }
 
-void Gamecontroller::handle_function_keys(int action) {
+std::string Gamecontroller::handle_function_keys(int action) {
+	if (action == Tools::NONE) {
+		throw std::logic_error("Gamecontroller reach fault key");
+	}
+
 	if (action == Tools::RIGHT) {
 		if (this->quicklist.size()) {
-			//this->game.set_command(this->quicklist.front());
+			this->command = this->quicklist.front();
 		}
 	}
+	
+	return this->command;
 }
 
 void Gamecontroller::handle_mouse_release(Point& mouse_start, Point& mouse_end) {
@@ -81,8 +87,10 @@ void Gamecontroller::handle_text_input() {
 
     std::vector <std::string> parts = Tools::split(" ", t_command);
 
-    this->game.set_clearance(callsign, parts);
+    this->game.build_clearance(callsign, parts);
     parts.erase(parts.begin(), parts.end());
+	
+	this->command = "";
 }
 
 std::list <std::string> Gamecontroller::matching_elements(std::string input) {

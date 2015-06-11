@@ -81,6 +81,7 @@ bool Program::run() {
 
 bool Program::handle_event(sf::Event& event) {
     sf::Vector2i mouse_place = sf::Mouse::getPosition(this->window);
+	int button_type = -1;
 
     switch (event.type) {
         case sf::Event::Closed:
@@ -94,14 +95,15 @@ bool Program::handle_event(sf::Event& event) {
                 this->window.close();
                 return false;
             } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-				this->ctrl->handle_function_keys(Tools::UP);
+				button_type = Tools::UP;
 			} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-				this->ctrl->handle_function_keys(Tools::DOWN);
+				button_type = Tools::DOWN;
 			} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-				this->ctrl->handle_function_keys(Tools::LEFT);
+				button_type = Tools::LEFT;
 			} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-				this->ctrl->handle_function_keys(Tools::RIGHT);
+				button_type = Tools::RIGHT;
 			}
+			this->input_string = this->ctrl->handle_function_keys(button_type);
             return true;
         case sf::Event::TextEntered:
             if (event.text.unicode == 8 && this->input_string.length()) {

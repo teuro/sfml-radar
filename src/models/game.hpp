@@ -115,7 +115,7 @@ public:
 	Aircraft* get_selected();
 	Airfield* get_active_field();
 
-	void set_clearance(std::string callsign, std::vector <std::string> command);
+	void build_clearance(std::string callsign, std::vector <std::string> command);
 
     TiXmlDocument document;
 

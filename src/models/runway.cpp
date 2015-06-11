@@ -19,15 +19,8 @@ double Runway::get_length() {
 }
 
 double Runway::get_heading() {
+	std::clog << "Runway::get_heading of " << this->name << std::endl;
     double hdg = Tools::angle(this->start_place, this->end_place);
-
-    while (hdg < 0) {
-        hdg += (2 * Tools::get_PI());
-    }
-	
-	while (hdg > 2 * Tools::get_PI()) {
-        hdg -= (2 * Tools::get_PI());
-    }
 
     return hdg;
 }

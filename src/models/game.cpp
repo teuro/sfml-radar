@@ -307,7 +307,7 @@ double Game::get_next_plane() {
     return this->new_plane;
 }
 
-void Game::set_clearance(std::string callsign, std::vector <std::string> command) {
+void Game::build_clearance(std::string callsign, std::vector <std::string> command) {
     this->select_aircraft(callsign);
 	
     if (this->selected != NULL) {

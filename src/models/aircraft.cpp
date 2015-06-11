@@ -97,7 +97,7 @@ void Aircraft::handle_clearance(Clearance& ac) {
 double Aircraft::change_parameter(double elapsed, double actual_value, double clearance_value, double change, int turn) {
     elapsed /= 1000;
     double add = (clearance_value > actual_value) ? 1.0 : -1.0;
-    //std::clog << "Aircraft::chang_parameter(" << elapsed << ", " << actual_value << ", " << clearance_value << ", " << change << ", " << turn << ")" << std::endl;
+    //std::clog << "Aircraft::change_parameter(" << elapsed << ", " << actual_value << ", " << clearance_value << ", " << change << ", " << turn << ")" << std::endl;
     if (std::abs(actual_value - clearance_value) < 1.3) {
         //std::clog << "Actual value is closer to clearance value than 1.3 unit " << std::endl;
         return clearance_value;

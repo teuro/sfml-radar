@@ -3,12 +3,8 @@
     <elements>
         <element id="atis-box" class="data" name="Atis Box" />
         <element id="planelist" class="data" name="Planelist">
-            <plane>PRI654</plane>
-            <plane>NAX787</plane>
-            <plane>NAX787</plane>
-            <plane>FIN136</plane>
-            <plane>FIN211</plane>
-            <plane>PRI978</plane>
+            <plane>SAS569</plane>
+            <plane>SAS509</plane>
         </element>
         <element id="input" class="data" name="Input" />
     </elements>

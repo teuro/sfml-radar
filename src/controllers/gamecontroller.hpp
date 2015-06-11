@@ -7,11 +7,30 @@
 #include "../views/game/game_view.hpp"
 #include "controller.hpp"
 
+/**
+	* Gamecontroller
+	* Responsible for linking gameview and model together
+**/
+
 class Gamecontroller : public Controller {
 public:
     Gamecontroller(Gameview& gv, Settings& s, Game& g);
     ~Gamecontroller();
-    void handle_function_keys(int key);
+	/**
+		* handle_function_keys
+		* reacts any high-level buttons
+		* @parameter int key
+		* @return void
+	**/
+    std::string handle_function_keys(int key);
+	
+	/**
+		* handle_mouse_release
+		* Moves center point 
+		* @parameter Point mouse_start point where mouse left button was pushed
+		* @parameter Point mouse_end point where mouse left button was released
+		* @return void
+	**/
     void handle_mouse_release(Point& mouse_start, Point& mouse_end);
     void handle_mouse_wheel(int amount);
     void set_centerpoint(Coordinate& cp);
