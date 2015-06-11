@@ -58,22 +58,28 @@ double Tools::angle(Point& a, Point& b) {
     return tmp_angle;
 }
 
-Point Tools::calculate(Point& cp, Coordinate& a, Coordinate& b, int zoom) {
-    /**
-    std::clog << "Point& cp = " << cp.get_x() << ", " << cp.get_y() << std::endl;
-    std::clog << "Coordinate& a = " << a.get_latitude() << ", " << a.get_longitude() << std::endl;
-    std::clog << "Coordinate& b = " << b.get_latitude() << ", " << b.get_longitude() << std::endl;
-    std::clog << "zoom = " << zoom << std::endl;
-    **/
-    double tmp_l = distanceNM(a, b);
-    //std::clog << "Distance between " << a.get_latitude() << ", " << a.get_longitude() << " and " << b.get_latitude() << ", " << b.get_longitude() << " is " << tmp_l << " nm" << std::endl;
-    double tmp_a = angle(a, b);
+Point Tools::calculate(Point& sp, double bearing, double length, bool rad) {
+    if (!rad) {
+        bearing = deg2rad(bearing);
+    }
+
+    double tmpx = sp.get_x() + std::cos(bearing) * length;
+    double tmpy = sp.get_y() + std::sin(bearing) * length;
+
+    Point tmp(tmpx, tmpy);
+    return tmp;
+}
+
+Point Tools::calculate(Point& center_point_screen, Coordinate& center_point_map, Coordinate& target, int zoom) {
+    double tmp_length = Tools::distanceNM(center_point_map, target);
+    //std::clog << "Distance between " << center_point_map.get_latitude() << ", " << center_point_map.get_longitude() << " and " << target.get_latitude() << ", " << target.get_longitude() << " is " << tmp_l << " nm" << std::endl;
+    double tmp_angle = Tools::angle(center_point_map, target);
     //std::clog << "Bearing is " << tmp_a * rad2deg() << " degrees " << std::endl;
 
-    int distance_pixels = (2 * cp.get_x() * tmp_l) / zoom;
+    int distance_pixels = Tools::distancePX(tmp_length, zoom);
     //std::clog << "Distance in pixels is " << distance_pixels << std::endl;
 
-	return calculate(cp, tmp_a, distance_pixels, true, true);
+	return Tools::calculate(center_point_screen, tmp_angle, distance_pixels, true);
 }
 
 Coordinate Tools::calculate(Coordinate& cp, double bearing, double d) {
@@ -118,22 +124,6 @@ std::vector <std::string> Tools::split(std::string delimiter, std::string input)
     }
 }
 
-Point Tools::calculate(Point& sp, double bearing, double length, bool rad, bool turn) {
-    if (!rad) {
-        bearing = deg2rad(bearing);
-    }
-
-    if (turn) {
-        bearing -= deg2rad(90.0);
-    }
-
-    double tmpx = sp.get_x() + std::cos(bearing) * length;
-    double tmpy = sp.get_y() + std::sin(bearing) * length;
-
-    Point tmp(tmpx, tmpy);
-    return tmp;
-}
-
 int Tools::rnd(int a, int b) {
     return (a + std::rand() % (a + b));
 }
@@ -152,13 +142,7 @@ std::string Tools::trim(std::string s) {
     return ltrim(rtrim(s));
 }
 
-double Tools::calculate_backwind(double wind, double runway) {
-    //std::clog << "Wind direction " << wind << " runway direction " << runway << std::endl;
-    wind = deg2rad(wind);
-    return (std::cos(deg2rad(std::abs((wind + 180.0) - runway))));
-}
-
-double Tools::angle(Coordinate& a, Coordinate& b, bool math) {
+double Tools::angle(Coordinate& a, Coordinate& b) {
     double fLat = a.get_latitude();
     double fLng = a.get_longitude();
     double tLat = b.get_latitude();
@@ -166,11 +150,15 @@ double Tools::angle(Coordinate& a, Coordinate& b, bool math) {
 	
 	double t_angle = atan2(sin(fLng-tLng)*cos(tLat), cos(fLat)*sin(tLat)-sin(fLat)*cos(tLat)*cos(fLng-tLng));
 	
-	if (math){
-		return t_angle;
-	} else {
-		return t_angle + (PI / 2.0);
+	while (t_angle < 0) {
+		t_angle += 2 * PI; 
 	}
+	
+	while (t_angle > (2 * PI)) {
+		t_angle -= 2 * PI; 
+	}
+	
+	return t_angle;
 }
 
 bool Tools::is_match(std::string a, std::string b) {

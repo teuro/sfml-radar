@@ -16,8 +16,9 @@ void Atiscontroller::handle_mouse_wheel(int amount) {
 
 }
 
-void Atiscontroller::handle_function_keys(int key) {
-
+std::string Atiscontroller::handle_function_keys(int key) {
+	
+	return "";
 }
 
 void Atiscontroller::handle_text_input() {
@@ -62,13 +63,13 @@ bool Atiscontroller::is_ok() {
         Runway* departure   = &(*std::find(rwys.begin(), rwys.end(), Tools::trim(this->atis.get_departure_runway())));
         Runway* landing     = &(*std::find(rwys.begin(), rwys.end(), Tools::trim(this->atis.get_landing_runway())));
 
-        dep_wind = Tools::calculate_backwind(metar.get_wind_direction(), departure->get_heading());
-        lnd_wind = Tools::calculate_backwind(metar.get_wind_direction(), landing->get_heading());
+        dep_wind = this->calculate_backwind(metar.get_wind_direction(), departure->get_heading());
+        lnd_wind = this->calculate_backwind(metar.get_wind_direction(), landing->get_heading());
 
         int level = metar.get_correct_level(this->atis.get_transition_altitude());
 
         if (this->atis.get_transition_level() != level) {
-            std::cerr << "Transistion level is wrong" << std::endl;
+            std::cerr << "Transition level is wrong " << level << std::endl;
         }
 
         if (dep_wind > 0) {
@@ -91,4 +92,22 @@ bool Atiscontroller::is_ok() {
     }
 
     return false;
+}
+
+double Atiscontroller::calculate_backwind(double wind_direction_deg, double runway_heading) {
+	//std::clog << "Wind direction = " << wind_direction_deg << " <=> " << Tools::rad2deg(runway_heading) << std::endl;
+    double wind_direction_rad = Tools::deg2rad(wind_direction_deg);
+	double t_wind = wind_direction_rad + Tools::get_PI();
+	
+	while (t_wind > (2 * Tools::get_PI())) {
+		t_wind -= Tools::get_PI() * 2;
+	}
+	
+	while (t_wind < 0) {
+		t_wind += Tools::get_PI() * 2;
+	}
+	
+	std::clog << "t_wind = " << Tools::rad2deg(t_wind) << " degrees runway is " << Tools::rad2deg(runway_heading) << " degrees" << std::endl;
+	
+	return std::cos(std::abs(t_wind - runway_heading));
 }

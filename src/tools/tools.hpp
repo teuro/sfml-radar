@@ -15,19 +15,85 @@
 #include "../models/point.hpp"
 
 namespace Tools {
+	/**
+		* deg2rad
+		* Converts degrees to radians
+		* @parameter double deg
+		* @return double
+	**/
     double deg2rad(double deg);
+	
+	/**
+		* rad2deg
+		* converts radians to degrees
+		* @parameter double rad
+		* @return double
+	**/
     double rad2deg(double rad);
 
+	/**
+		* distanceNM 
+		* Calculates distance between two coordinate points
+		* @parameter Coordinate a
+		* @parameter Coordinate b
+		* @return double
+	**/
 	double distanceNM(Coordinate& a, Coordinate& b);
+	
+	/**
+		* distanceNM
+		* Converts pixels to nautical miles 
+		* @parameter double px
+		* @parameter double zoom
+		* @parameter double screen_width
+		* @return double
+	**/
 	double distanceNM(double px, double zoom, double screen_width = 800);
-
+	
+	/**
+		* distancePX
+		* Calculates distance between two screen points
+		* @paramterer Point a
+		* @paramterer Point b
+		* @return double
+	**/
 	double distancePX(Point& a, Point& b);
+	
+	/**
+		* distanceP´X
+		* Converts nautcal miles to pixels
+		* @parameter double nm
+		* @parameter double zoom
+		* @parameter double screen_width
+		* @return double
+	**/
 	double distancePX(double nm, double zoom, double screen_width = 800);
+	
+	/**
+		* angle
+		* Calculates angle between two
+	**/
+	
 	double angle(Point& a, Point& b);
-	double angle(Coordinate& a, Coordinate& b, bool math = true);
+	
+	/**
+		* angle
+		* give angle between two coordinate point 
+		* angle is anticlockwise by default but You may choose clockwise 
+		* @parameter Coordinate a
+		* @parameter Coordinate b
+		* @return double
+	**/
+	
+	double angle(Coordinate& a, Coordinate& b);
+	
+	/**
+		* calculate
+		* Calculates new 
+	**/
 
-	Point calculate(Point& cp, Coordinate& a, Coordinate& b, int zoom);
-	Point calculate(Point& sp, double angle, double length, bool rad, bool turn = false);
+	Point calculate(Point& center_point_screen, Coordinate& center_point_map, Coordinate& target, int zoom);
+	Point calculate(Point& sp, double angle, double length, bool rad);
 	Coordinate calculate(Coordinate& cp, double angle, double length);
 	bool is_match(std::string a, std::string b);
 
@@ -74,7 +140,6 @@ namespace Tools {
 	std::string rtrim(std::string s);
 	std::string trim(std::string s);
 
-    double calculate_backwind(double wind, double runway);
     double get_PI();
 }
 
