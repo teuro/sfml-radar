@@ -58,11 +58,37 @@ double Tools::angle(Point& a, Point& b) {
     return tmp_angle;
 }
 
+double Tools::angle(Coordinate& a, Coordinate& b) {
+    double fLat = a.get_latitude();
+    double fLng = a.get_longitude();
+    double tLat = b.get_latitude();
+    double tLng = b.get_longitude();
+	
+	double t_angle = 0;
+	t_angle = std::atan2(std::sin(fLng-tLng) * std::cos(tLat), std::cos(fLat) * std::sin(tLat)-std::sin(fLat) * std::cos(tLat) * std::cos(fLng-tLng));
+	
+	t_angle -= (PI / 2.0);
+	
+	while (t_angle < 0) {
+		t_angle += (2 * PI);
+	}
+	
+	while (t_angle > (2 * PI)) {
+		t_angle -= (2 * PI);
+	}
+	
+	return t_angle;
+}
+
 Point Tools::calculate(Point& sp, double bearing, double length, bool rad) {
     if (!rad) {
         bearing = deg2rad(bearing);
     }
-
+	/**
+	std::clog << "start point = " << sp.get_x() << ", " << sp.get_y() << std::endl;
+	std::clog << "length = " << length << " px" << std::endl;
+	std::clog << "bearing = " << bearing << " rad" << std::endl;
+	**/
     double tmpx = sp.get_x() + std::cos(bearing) * length;
     double tmpy = sp.get_y() + std::sin(bearing) * length;
 
@@ -74,7 +100,7 @@ Point Tools::calculate(Point& center_point_screen, Coordinate& center_point_map,
     double tmp_length = Tools::distanceNM(center_point_map, target);
     //std::clog << "Distance between " << center_point_map.get_latitude() << ", " << center_point_map.get_longitude() << " and " << target.get_latitude() << ", " << target.get_longitude() << " is " << tmp_l << " nm" << std::endl;
     double tmp_angle = Tools::angle(center_point_map, target);
-    //std::clog << "Bearing is " << tmp_a * rad2deg() << " degrees " << std::endl;
+    //std::clog << "Bearing is " << rad2deg(tmp_angle) << " degrees " << std::endl;
 
     int distance_pixels = Tools::distancePX(tmp_length, zoom);
     //std::clog << "Distance in pixels is " << distance_pixels << std::endl;
@@ -140,25 +166,6 @@ std::string Tools::rtrim(std::string s) {
 
 std::string Tools::trim(std::string s) {
     return ltrim(rtrim(s));
-}
-
-double Tools::angle(Coordinate& a, Coordinate& b) {
-    double fLat = a.get_latitude();
-    double fLng = a.get_longitude();
-    double tLat = b.get_latitude();
-    double tLng = b.get_longitude();
-	
-	double t_angle = atan2(sin(fLng-tLng)*cos(tLat), cos(fLat)*sin(tLat)-sin(fLat)*cos(tLat)*cos(fLng-tLng));
-	
-	while (t_angle < 0) {
-		t_angle += 2 * PI; 
-	}
-	
-	while (t_angle > (2 * PI)) {
-		t_angle -= 2 * PI; 
-	}
-	
-	return t_angle;
 }
 
 bool Tools::is_match(std::string a, std::string b) {

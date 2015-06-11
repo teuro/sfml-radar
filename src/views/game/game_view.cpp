@@ -69,9 +69,7 @@ void Gameview::draw_airfield(Airfield* airfield) {
     for (unsigned int i = 0; i < runways.size(); ++i) {
         Point rwys = Tools::calculate(this->center_point, this->settings.centerpoint, runways[i].get_start_place(), this->settings.zoom);
         Point rwye = Tools::calculate(this->center_point, this->settings.centerpoint, runways[i].get_end_place(), this->settings.zoom);
-
-        //std::clog << runways[i].get_name() << " " << Tools::rad2deg(Tools::angle(runways[i].get_start_place(), runways[i].get_end_place())) << std::endl;
-
+		
         this->drawer.lineColor(rwys, rwye, "white");
     }
 }

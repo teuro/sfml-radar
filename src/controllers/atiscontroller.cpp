@@ -49,7 +49,7 @@ void Atiscontroller::update_command(std::string command) {
 }
 
 bool Atiscontroller::is_ok() {
-    Metar metar = this->game.get_metar();
+	Metar metar = this->game.get_metar();
     int wind        = metar.get_wind_direction();
     int pressure    = metar.get_pressure();
 
@@ -106,8 +106,6 @@ double Atiscontroller::calculate_backwind(double wind_direction_deg, double runw
 	while (t_wind < 0) {
 		t_wind += Tools::get_PI() * 2;
 	}
-	
-	std::clog << "t_wind = " << Tools::rad2deg(t_wind) << " degrees runway is " << Tools::rad2deg(runway_heading) << " degrees" << std::endl;
 	
 	return std::cos(std::abs(t_wind - runway_heading));
 }
