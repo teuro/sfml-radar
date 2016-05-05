@@ -1,6 +1,10 @@
 #include "settings.hpp"
 
-Settings::Settings() { this->database_name = "radar.db"; }
+Settings::Settings() { 
+	this->database_name = "radar.db"; 
+	this->search_term = "? = ?"; 
+	this->bind_term = " = "; 
+}
 
 Settings::~Settings() { }
 

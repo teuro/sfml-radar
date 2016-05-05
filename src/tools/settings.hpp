@@ -63,6 +63,8 @@ public:
     int zoom;
     std::string program_name;
     std::string database_name;
+    std::string search_term;
+    std::string bind_term;
 };
 
 
