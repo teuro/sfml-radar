@@ -16,7 +16,6 @@ Coordinate& Airfield::get_place() {
 
 void Airfield::add_runway(Runway rwy) {
     this->runways.push_back(rwy);
-    std::clog << "Runway " << rwy.get_name() << " added vector size = " << this->runways.size() << std::endl;
 }
 
 int Airfield::get_altitude() {
@@ -30,5 +29,5 @@ Runway& Airfield::get_runway(std::string name) {
 		}
 	}
 	
-	throw new std::logic_error("Runway " + name + " not exists");
+	throw std::logic_error("Runway " + name + " not exists");
 }
