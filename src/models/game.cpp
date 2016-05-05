@@ -234,12 +234,8 @@ void Game::load_airfield(std::string icao) {
 			this->navpoints.insert(this->navpoints.end(), this->outpoints.begin(), this->outpoints.end());
 			this->navpoints.insert(this->navpoints.end(), this->inpoints.begin(), this->inpoints.end());
 		}
-	} catch (std::runtime_error& e) {
-		std::cerr << e.what() << std::endl;
-	} catch (std::logic_error& e) {
-		std::cerr << e.what() << std::endl;
 	} catch ( ... ) {
-		std::cerr << "Should not never ever happens" << std::endl;
+		throw;
 	}
 	
 	try {
@@ -252,9 +248,7 @@ void Game::load_airfield(std::string icao) {
 			double s_lon = Tools::tonumber<double>(q_runways(i, "start_longitude"));
 			double e_lat = Tools::tonumber<double>(q_runways(i, "end_latitude"));
 			double e_lon = Tools::tonumber<double>(q_runways(i, "end_longitude"));
-			
-			std::clog << q_runways(i, "name") << " " << s_lat << ", " << s_lon << " " << e_lat << ", " << e_lon << std::endl;
-
+		
 			Coordinate start_p(s_lat, s_lon);
 			Coordinate end_p(e_lat, e_lon);
 
@@ -262,17 +256,11 @@ void Game::load_airfield(std::string icao) {
 			
 			this->active_field->add_runway(rwy);
 		}
-	} catch (std::runtime_error& e) {
-		std::cerr << e.what() << std::endl;
-	} catch (std::logic_error& e) {
-		std::cerr << e.what() << std::endl;
 	} catch ( ... ) {
-		std::cerr << "Should not never ever happens" << std::endl;
+		throw;
 	}
 	
     this->center_point = this->active_field->get_place();
-	
-	std::clog << "Game::airfield " << icao << " loaded" << std::endl;
 }
 
 Aircraft* Game::get_selected() {
