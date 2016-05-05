@@ -1,13 +1,17 @@
 <?xml version="1.0" ?>
 <layout>
     <elements>
-        <element id="atis-box" class="data" name="Atis Box" />
-        <element id="planelist" class="data" name="Planelist">
-            <plane>PRI618</plane>
-            <plane>SAS73</plane>
-            <plane>SAS771</plane>
-            <plane>FIN462</plane>
+        <element id="metar" class="data" name="Metar">
+            <metar>EFHK 301250 27006KT 2000 +RA BKN012 03/02 Q0998</metar>
         </element>
-        <element id="input" class="data" name="Input" />
+        <element id="input" class="data" name="Input">
+            <input></input>
+        </element>
+        <element id="atis" class="data" name="Atis">
+            <departure>Takeoff runway: 22L</departure>
+            <landing>Landing runway: 22L</landing>
+            <altidude>Transition altitude: 5000</altidude>
+            <level>Transistion level: 50</level>
+        </element>
     </elements>
 </layout>

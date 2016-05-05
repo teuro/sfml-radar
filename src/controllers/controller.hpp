@@ -1,6 +1,9 @@
 #ifndef CONTROLLER_HPP
 #define CONTROLLER_HPP
 
+#include <tinyxml/tinyxml.h>
+#include <tinyxpath/xpath_processor.h>
+
 #include "../views/view.hpp"
 
 class Controller {

@@ -1,29 +1,38 @@
 #include "database.hpp"
 
 Queryresult Database::get_result(std::string query) {
-    //std::clog << query << std::endl;
-    sqlite3pp::database db("radar.db");
+	Settings s;
+	
+    sqlite3pp::database db(s.database_name.c_str());
+	
     sqlite3pp::query qry(db, query.c_str());
+	
     Queryresult qrslt(qry);
-
+	
     return qrslt;
 }
 
-std::string Database::bind_param(std::string query_string, std::stack <std::string> variables) {
-    while (true) {
-        if (variables.size()) {
-            std::string::size_type pos = query_string.find("?", 0);
-
-            std::string part1 = query_string.substr(0, pos);
-            std::string part2 = query_string.substr(pos, 1);
-            std::string part3 = query_string.substr(pos+1);
-
-            part2 = variables.top();
-            variables.pop();
-
-            query_string = part1 + part2 + part3;
-        } else {
-            return query_string;
-        }
-    }
+std::string Database::bind_param(std::string query_string, std::map <std::string, std::string> variables, std::string search_term, std::string bind_term) {
+	if (query_string.length() == 0) {
+		throw std::logic_error("Empty query string not able to perform");
+	}
+	
+	for (const auto& item : variables) {
+		std::string::size_type pos = query_string.find(search_term, 0);
+		std::clog << pos << std::endl;
+		
+		if (pos == std::string::npos) {
+			throw std::logic_error("Query string '" + query_string + "' does not contain more " + search_term + " check Your querys");
+		}
+		
+		std::string part1 = query_string.substr(0, pos);
+		std::string part2 = query_string.substr(pos, search_term.length());
+		std::string part3 = query_string.substr(pos + search_term.length());
+		
+		part2 = item.first + bind_term + item.second;
+		
+		query_string = part1 + part2 + part3;
+	}
+	
+	return query_string;
 }

@@ -5,10 +5,6 @@ Gamecontroller::Gamecontroller(Gameview& gv, Settings& s, Game& g) : Controller(
 Gamecontroller::~Gamecontroller() { }
 
 std::string Gamecontroller::handle_function_keys(int action) {
-	if (action == Tools::NONE) {
-		throw std::logic_error("Gamecontroller reach fault key");
-	}
-
 	if (action == Tools::RIGHT) {
 		if (this->quicklist.size()) {
 			this->command = this->quicklist.front();
@@ -20,10 +16,8 @@ std::string Gamecontroller::handle_function_keys(int action) {
 
 void Gamecontroller::handle_mouse_release(Point& mouse_start, Point& mouse_end) {
     double distance_px  = Tools::distancePX(mouse_end, mouse_start);
-    double angle_rad    = Tools::angle(mouse_end, mouse_start) - (3.14 / 2.0);
+    double angle_rad    = Tools::angle(mouse_end, mouse_start);
     double distance_nm  = Tools::distanceNM(distance_px, this->settings.zoom, this->settings.screen_width);
-	
-	//std::clog << "Kulma on " << angle_rad << " radiaania, eli " << Tools::rad2deg(angle_rad) << " astetta" << std::endl;
 
     Coordinate center = Tools::calculate(this->game.get_centerpoint(), angle_rad, distance_nm);
 
@@ -39,87 +33,39 @@ void Gamecontroller::handle_mouse_wheel(int amount) {
 }
 
 void Gamecontroller::update(double elapsed, bool draw) {
-    this->game.update(elapsed);
-
-    if (draw) {
-        this->gameview.load();
-        this->gameview.clear_screen();
-        this->gameview.add_element("Metar", "metar", "data", this->game.get_metar().get_metar());
-        this->gameview.add_element("Atisbox", "atis-box", "data", "DEP RWY " + this->game.get_departure());
-        this->gameview.add_element("Atisbox", "atis-box", "data", "LND RWY " + this->game.get_landing());
-        this->gameview.add_element("Atisbox", "atis-box", "data", "TR ALT " + this->game.get_transition_altitude());
-        this->gameview.add_element("Atisbox", "atis-box", "data", "TR LVL " + this->game.get_transition_level());
+	this->game.update(elapsed);
+	if (draw) {
+		//std::clog << "Draw..." << std::endl;
+		this->gameview.load();
+		this->gameview.clear_screen();
+		this->gameview.add_element("Metar", "metar", "data", this->game.get_metar());
 		this->gameview.add_element("Input", "input", "data", this->command);
-        this->gameview.draw();
-        this->gameview.draw_planes(this->game.get_aircrafts(), this->game.get_selected());
-        this->gameview.draw_navpoints(this->game.get_navpoints());
-        this->gameview.draw_airfield(this->game.get_active_field());
-        this->gameview.render();
-    }
-
-}
-
-void Gamecontroller::set_centerpoint(Coordinate& cp) {
-    this->game.set_centerpoint(cp);
-}
-
-Coordinate& Gamecontroller::get_centerpoint() {
-    return this->game.get_centerpoint();
+		this->gameview.draw();
+		this->gameview.draw_planes(this->game.get_aircrafts(), this->game.get_selected());
+		//this->gameview.draw_navpoints(this->game.get_navpoints());
+		this->gameview.draw_airfield(this->game.get_active_field());
+		//this->gameview.draw_test();
+		this->gameview.render();
+	}
 }
 
 void Gamecontroller::handle_mouse_click(Point& mouse) {
-    this->game.select_aircraft(mouse);
+	this->game.select_aircraft(mouse);
 }
 
 void Gamecontroller::load() {
     std::clog << "Gamecontroller::load()" << std::endl;
-    this->game.load();
+	this->game.load("EFHK", "22R", "15");
 }
 
 void Gamecontroller::handle_text_input() {
     std::string t_command = this->command;
-    std::string callsign;
-    std::string type;
-
-    callsign = command.substr(0, t_command.find(":"));
-    t_command = command.substr(t_command.find(": ")+1);
-    t_command = Tools::trim(t_command);
-
-    std::vector <std::string> parts = Tools::split(" ", t_command);
-
-    this->game.build_clearance(callsign, parts);
-    parts.erase(parts.begin(), parts.end());
-	
-	this->command = "";
-}
-
-std::list <std::string> Gamecontroller::matching_elements(std::string input) {
-	//std::clog << "Gamecontroller::matching_elements(" << input << ")" << std::endl;
-	std::list <std::string> elements;
-	std::list <Aircraft*> t_planes = this->game.get_aircrafts();
-	
-	std::list <Aircraft*> :: iterator plane_a = t_planes.begin();
-	
-	while (plane_a != t_planes.end()) {
-		//std::clog << (*plane_a)->get_name() << std::endl;
-		if (Tools::is_match(input, (*plane_a)->get_name())) {
-			elements.push_back((*plane_a)->get_name());
-		}
-		++plane_a;
-	}
-		
-	return elements;
 }
 
 void Gamecontroller::update_command(std::string command) {
 	this->command = command;
-	this->quicklist = this->matching_elements(this->command);
 }
 
 bool Gamecontroller::is_ok() {
     return true;
-}
-
-Airfield* Gamecontroller::get_active_field() {
-    return this->game.get_active_field();
 }

@@ -1,8 +1,10 @@
 #include "runway.hpp"
 
-Runway::Runway(std::string n, Coordinate s, Coordinate e) : name(n), start_place(s), end_place(e), init_heading(220), turning_altirude(550) {
-    //std::clog << "Runway " << this->name << " created" << std::endl;
+Runway::Runway(std::string n, Coordinate s, Coordinate e) : name(n), start_place(s), end_place(e) {
+    std::clog << "Runway " << this->name << " created" << std::endl;
 }
+
+Runway::Runway() {}
 
 Runway::~Runway() { }
 
@@ -19,8 +21,8 @@ double Runway::get_length() {
 }
 
 double Runway::get_heading() {
-	double hdg = Tools::angle(this->end_place, this->start_place);
-
+	std::clog << this->start_place << ", " << this->end_place << std::endl;
+	double hdg = Tools::angle(this->start_place, this->end_place);
     return hdg;
 }
 

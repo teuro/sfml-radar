@@ -26,7 +26,7 @@ public:
 	void change_y(int amount);
 	void change_x(int amount);
 
-	friend std::ostream& operator << (std::ostream& virta, const Point& olio);
+	friend std::ostream& operator << (std::ostream& stream, const Point& point);
 protected:
 private:
 	int x;

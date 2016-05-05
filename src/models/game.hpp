@@ -9,7 +9,6 @@
 #include <stdexcept>
 #include <dirent.h>
 #include <tinyxml/tinyxml.h>
-#include <tinyxpath/xpath_processor.h>
 #include <queue>
 #include <algorithm>
 
@@ -18,9 +17,7 @@
 #include "aircraft.hpp"
 #include "airfield.hpp"
 #include "../tools/settings.hpp"
-#include "clearance.hpp"
 #include "database.hpp"
-#include "metar.hpp"
 #include "atis.hpp"
 
 /**
@@ -35,7 +32,7 @@ public:
         * @param Coordinate& cp center point of game
         * @param Settings& s game settiungs
     **/
-	Game(Coordinate& cp, Settings& s, Atis& a);
+	Game(Settings& s, Atis& a);
 	~Game();
 
     /**
@@ -82,7 +79,7 @@ public:
         * @param void
         * @return void
     **/
-	void load();
+	void load(std::string airfield, std::string dep, std::string lnd);
 
     /**
         Calculate new state of game
@@ -105,42 +102,19 @@ public:
 	**/
 	void select_aircraft(std::string callsign);
 
-	/**
-        * Return separation errors
-        * @param none
-        * @return int separation errors
-	**/
-	int get_separation_errors();
-
 	Aircraft* get_selected();
 	Airfield* get_active_field();
 
-	void build_clearance(std::string callsign, std::vector <std::string> command);
-
     TiXmlDocument document;
-
-    Metar& get_metar();
-
-    void set_active_runways(Runway* dep, Runway* lnd);
-
-    std::string get_departure();
-    std::string get_landing();
-    std::string get_transition_level();
-    std::string get_transition_altitude();
 	
 	void create_plane();
+	std::string get_metar();
 private:
     void load_airfield(std::string icao);
-    /**
-        * Create new Aircraft* element
-        * @param none
-        * @param none
-    **/
-    void build_xml();
     void check_collision();
     void handle_holdings();
     bool is_free(Inpoint& navpoint);
-	Coordinate& center_point;
+	Coordinate center_point;
 	Settings& settings;
 	Atis& atis;
 
@@ -156,14 +130,12 @@ private:
 
     Airfield* active_field;
     Aircraft* selected;
-    Runway* departure;
-    Runway* landing;
+    Runway departure;
+    Runway landing;
 
     double duration;
     int separation_errors;
     int new_plane;
-
-    Metar metar;
 	
 	enum turn {LEFT = -1, RIGHT = 1};
 };

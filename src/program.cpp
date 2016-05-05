@@ -30,7 +30,7 @@ void Program::init() {
 
     this->settings.set_values(tmp);
 
-    this->window.setTitle(settings.program_name);
+    this->window.setTitle(this->settings.program_name);
 }
 
 void Program::close() {
@@ -38,7 +38,7 @@ void Program::close() {
 }
 
 bool Program::run() {
-    sf::Event event;
+	sf::Event event;
     sf::Time elapsed = this->clock.restart();
 
     switch (this->game_state) {
@@ -54,11 +54,11 @@ bool Program::run() {
     }
 
     while (this->window.pollEvent(event)) {
-        return this->handle_event(event);
+		return this->handle_event(event);
     }
 
     if (this->counter > 20 && !this->draw) {
-        this->counter = 0;
+		this->counter = 0;
         this->draw = true;
     } else {
         sf::sleep(sf::milliseconds(50));
@@ -108,7 +108,6 @@ bool Program::handle_event(sf::Event& event) {
         case sf::Event::TextEntered:
             if (event.text.unicode == 8 && this->input_string.length()) {
                 input_string = input_string.erase(input_string.length()-1, 1);
-
             } else if (
 				((event.text.unicode >= 65 && event.text.unicode <= 122) ||
 				(event.text.unicode >= 48 && event.text.unicode <= 57) ||

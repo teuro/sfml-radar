@@ -1,6 +1,9 @@
 #include "view.hpp"
 
-View::View(Drawsurface& d) : drawer(d) { }
+View::View(Drawsurface& d) : drawer(d) { 
+	this->styles = parse_css::parse("style.css");
+    this->document.LoadFile("layout.xml");
+}
 
 View::~View() { }
 
@@ -45,9 +48,6 @@ void View::iterate(TiXmlNode* el) {
 }
 
 void View::load() {
-    this->styles = parse("style.css");
-    this->document.LoadFile("layout.xml");
-
     this->layout_elements.clear();
 
     View::iterate(this->document.RootElement());
@@ -68,6 +68,7 @@ void View::render() {
 }
 
 void View::draw_element(Layout_element& layout_element) {
+	//std::clog << "View::draw_element(" << layout_element.get_name() << ")" << std::endl;
     if (layout_element.b_color_setted) {
         drawer.rectangleColor(layout_element.get_top_left(), layout_element.get_bottom_right(), layout_element.b_red, layout_element.b_green, layout_element.b_blue, true);
     } else {
@@ -105,8 +106,8 @@ bool compare_length(std::string const& lhs, std::string const& rhs) {
 void View::style(Layout_element& le) {
     std::list <Style> :: iterator t_style = this->styles.begin();
     while (t_style != this->styles.end()) {
-        if (le.get_id() == t_style->get_id()) {
-            Point p(t_style->get_left(), t_style->get_top());
+		if (le.get_id() == t_style->get_id()) {
+	        Point p(t_style->get_left(), t_style->get_top());
             le.set_place(p);
 
             int t_color = t_style->get_t_color();
@@ -178,7 +179,7 @@ void View::draw() {
 void View::add_element(std::string name, std::string id, std::string cl, std::string value) {
 	if (this->layout_elements.find(name) == this->layout_elements.end()) {
 		//std::clog << "Not found '" << id << "' let's insert" << std::endl;
-		 Layout_element le(name, id, cl);
+		Layout_element le(name, id, cl);
 		this->layout_elements[name] = le;
 	} else {
 		//std::clog << "Found '" << id << "' let's modify content" << std::endl;

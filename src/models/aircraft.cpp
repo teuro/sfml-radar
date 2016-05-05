@@ -1,6 +1,6 @@
 #include "aircraft.hpp"
 
-Aircraft::Aircraft(std::string name, int speed, int heading, int altitude, Coordinate p, int type, Settings& s) : place(p), settings(s) {
+Aircraft::Aircraft(std::string name, double speed, double heading, double altitude, Coordinate p, int type, Settings& s) : place(p), settings(s) {
     this->name = name;
     this->heading = heading;
     this->altitude = altitude;
@@ -21,7 +21,7 @@ Aircraft::Aircraft(std::string name, int speed, int heading, int altitude, Coord
 Aircraft::~Aircraft() { }
 
 void Aircraft::update(double elapsed) {
-	if (this->type > 50 && this->speed > 130 && this->altitude < 1000) {
+	if (this->type >= 50 && this->speed > 130 && this->altitude < 1000) {
 		this->set_clearance_altitude(1500);
 	}
 
@@ -36,7 +36,7 @@ void Aircraft::update(double elapsed) {
 
     if (this->target != NULL) {
         //std::clog << this->name << " direct to " << this->target->get_name() << " " << this->target->get_place().get_latitude() << ", " << this->target->get_place().get_longitude() << std::endl;
-        this->clearance_heading = Tools::rad2deg(Tools::angle(this->place, this->target->get_place()));
+        this->clearance_heading = Tools::angle(this->place, this->target->get_place());
 
         if (Tools::on_area(this->place, this->target->get_place())) {
             this->target = NULL;
@@ -44,19 +44,12 @@ void Aircraft::update(double elapsed) {
     }
 
     double distance = this->speed * (elapsed / 1000) / 3600;
-    this->place = Tools::calculate(this->place, Tools::deg2rad(this->heading), distance);
 
     this->altitude  = change_parameter(elapsed, this->altitude, this->clearance_altitude, 55.0, 0);
     this->speed     = change_parameter(elapsed, this->speed, this->clearance_speed, 3.0, 0);
-    this->heading   = change_parameter(elapsed, this->heading, this->clearance_heading, 3.0, this->turn);
-
-    while (this->heading < 0.0) {
-        this->heading += 360.0;
-    }
-
-    while (this->heading > 360.0) {
-        this->heading -= 360.0;
-    }
+    this->heading   = change_parameter(elapsed, this->heading, this->clearance_heading, Tools::deg2rad(3.0), this->turn);
+	
+    this->place = Tools::calculate(this->place, this->heading, distance);
 
     if (this->approach) {
         std::clog << "Approaching " << this->landing->get_name() << std::endl;
@@ -78,16 +71,6 @@ void Aircraft::handle_clearance(Clearance& ac) {
     this->turn                  = ac.get_turn();
     this->landing               = ac.get_landing();
 	
-	std::clog << this->clearance_speed << " " << this->clearance_altitude << " " << this->clearance_heading << " " << this->turn << " " << this->landing << std::endl;
-
-    while (this->clearance_heading < 0.0) {
-        this->clearance_heading += 360.0;
-    }
-
-    while (this->clearance_heading > 360.0) {
-        this->clearance_heading -= 360.0;
-    }
-
     if (this->landing != NULL) {
         std::clog << this->landing->get_name() << std::endl;
         this->approach = true;

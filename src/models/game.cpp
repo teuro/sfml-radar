@@ -1,6 +1,6 @@
 #include "game.hpp"
 
-Game::Game(Coordinate& cp, Settings& s, Atis& a) : center_point(cp), settings(s), atis(a) {
+Game::Game(Settings& s, Atis& a) : settings(s), atis(a) {
     this->duration = 0;
     this->separation_errors = 0;
     this->new_plane = 5000;
@@ -8,14 +8,16 @@ Game::Game(Coordinate& cp, Settings& s, Atis& a) : center_point(cp), settings(s)
 
 Game::~Game() { }
 
-void Game::load() {
-    std::clog << "Game::load()" << std::endl;
+void Game::load(std::string airfield, std::string dep, std::string lnd) {
+    std::clog << "Game::load(" << airfield << ", " << dep << ", " << lnd << ")" << std::endl;
 
-    this->load_airfield("EFHK");
+    this->load_airfield(airfield);
 
     this->duration = 0;
-
-    this->metar.update();
+	this->departure = this->active_field->get_runway(dep);
+	this->landing = this->active_field->get_runway(lnd);
+	
+	std::clog << "Game is loaded" << std::endl;
 }
 
 void Game::set_centerpoint(Coordinate& cp) {
@@ -101,7 +103,7 @@ void Game::handle_holdings() {
         }
 
         Aircraft* t = this->holdings.front();
-        t->set_place(this->departure->get_start_place());
+        t->set_place(this->departure.get_start_place());
 		
 		//std::clog << "Departure heading is " << Tools::rad2deg(this->departure->get_heading()+3.14/2.0) << std::endl;
         t->set_clearance_speed(160);
@@ -111,7 +113,7 @@ void Game::handle_holdings() {
 }
 
 void Game::update(double elapsed) {
-    this->duration += elapsed;
+	this->duration += elapsed;
     this->check_collision();
     this->handle_holdings();
 
@@ -129,8 +131,6 @@ void Game::update(double elapsed) {
         double t = Tools::rnd(this->settings.new_plane_lower * 1000, this->settings.new_plane_upper * 1000);
         this->new_plane += t;
     }
-
-    this->build_xml();
 }
 
 std::vector <Airfield>& Game::get_airfields() {
@@ -173,219 +173,112 @@ void Game::select_aircraft(std::string callsign) {
 void Game::create_plane() {
 	std::clog << "Game::create_plane()" << std::endl;
     Queryresult airlines = Database::get_result("SELECT ICAO FROM airlines");
-    Inpoint t_navpoint = this->inpoints[Tools::rnd(0, (int)this->inpoints.size())];
+	std::clog << "Airlines ok" << std::endl;
+    Inpoint t_inpoint = this->inpoints[Tools::rnd(0, (int)this->inpoints.size()-1)];
+	std::clog << "Inpoint ok" << std::endl;
+    Outpoint t_outpoint = this->outpoints[Tools::rnd(0, (int)this->outpoints.size()-1)];
+	std::clog << "Outpoint ok" << std::endl;
+	double heading = this->departure.get_heading();
+	std::clog << "Departing runway " << this->departure.get_name() << " is " << Tools::rad2deg(this->departure.get_heading()) << std::endl;
 
     int type = Tools::rnd(1, 100);
-
-    if (!is_free(t_navpoint)) {
-        type = 51;
-    }
+	type = 51;
 
     std::string t_callsign = airlines(Tools::rnd(0, airlines.size()), "ICAO") + Tools::tostr(Tools::rnd(1, 999));
-
-    Aircraft* tmp;
-
-    if (type > 50) {
-        /** Departure **/
-        tmp = new Aircraft(t_callsign, 0, Tools::rad2deg(this->departure->get_heading()), this->active_field->get_altitude(), t_navpoint.get_place(), type, settings);
-        this->holdings.push(tmp);
-        std::clog << "Holding planes " << this->holdings.size() << std::endl;
-    } else {
-        /** Arrival **/
-        tmp = new Aircraft(t_callsign, 200, 40, 3000, t_navpoint.get_place(), type, settings);
-        this->aircrafts.push_back(tmp);
-    }
+	
+	std::clog << "Plane " << t_callsign << " created type is " << type << std::endl;
+	Aircraft* plane;
+	
+	if (type >= 50) {
+		std::clog << "Create departure plane towards " << t_outpoint.get_name() << std::endl;
+		plane = new Aircraft(t_callsign, 120.0, heading, this->active_field->get_altitude(), this->departure.get_start_place(), type, this->settings);
+		this->holdings.push(plane);
+	} else {
+		std::clog << "Create arrival plane from " << t_inpoint.get_name() << std::endl;
+	}
 }
 
 void Game::load_airfield(std::string icao) {
     Queryresult airport = Database::get_result("SELECT ROWID AS airfield_id, ICAO, latitude, longitude FROM airfields WHERE ICAO = '" + icao + "'");
 
-    std::stack <std::string> v;
-    v.push(airport(0, "airfield_id"));
-    v.push("airfield_id");
+    std::map <std::string, std::string> variables;
+	
+    variables["airfield_id"] = airport(0, "airfield_id");
 
     Coordinate place(Tools::tonumber<double>(airport(0, "latitude")), Tools::tonumber<double>(airport(0, "longitude")));
 
     this->active_field = new Airfield(airport(0, "ICAO"), place);
+	
+	try {
+		std::string query = Database::bind_param("SELECT name, latitude, longitude, altitude, heading, type FROM navpoints WHERE ? = ?", variables);
+		
+		Queryresult q_navpoints = Database::get_result(query);
+		
+		for (unsigned int i = 0; i < q_navpoints.size(); ++i) {
+			double t_lat = Tools::tonumber<double>(q_navpoints(i, "latitude"));
+			double t_lon = Tools::tonumber<double>(q_navpoints(i, "longitude"));
 
-    std::string query = Database::bind_param("SELECT name, latitude, longitude, altitude, heading, type FROM navpoints WHERE ? = ?", v);
+			Coordinate t_place(t_lat, t_lon);
+			std::string t_name  = q_navpoints(i, "name");
+			int type = Tools::tonumber<int>(q_navpoints(i, "type"));
 
-    Queryresult q_navpoints = Database::get_result(query);
-    for (unsigned int i = 0; i < q_navpoints.size(); ++i) {
+			if (type == 2) {
+				double t_altitude   = Tools::tonumber<double>(q_navpoints(i, "altitude"));
+				double t_heading    = Tools::tonumber<double>(q_navpoints(i, "heading"));
 
-        double t_lat = Tools::tonumber<double>(q_navpoints(i, "latitude"));
-        double t_lon = Tools::tonumber<double>(q_navpoints(i, "longitude"));
+				this->inpoints.push_back(Inpoint(t_name, t_place, 250, t_altitude, t_heading));
+			} else {
+				this->outpoints.push_back((Outpoint(t_name, t_place)));
+			}
 
-        Coordinate t_place(t_lat, t_lon);
-        std::string t_name  = q_navpoints(i, "name");
-        int type = Tools::tonumber<int>(q_navpoints(i, "type"));
+			this->navpoints.insert(this->navpoints.end(), this->outpoints.begin(), this->outpoints.end());
+			this->navpoints.insert(this->navpoints.end(), this->inpoints.begin(), this->inpoints.end());
+		}
+	} catch (std::runtime_error& e) {
+		std::cerr << e.what() << std::endl;
+	} catch (std::logic_error& e) {
+		std::cerr << e.what() << std::endl;
+	} catch ( ... ) {
+		std::cerr << "Should not never ever happens" << std::endl;
+	}
+	
+	try {
+		std::string query = Database::bind_param("SELECT name, start_latitude, start_longitude, end_latitude, end_longitude FROM runways WHERE ? = ?", variables);
+		
+		Queryresult q_runways = Database::get_result(query);
 
-        if (type == 1) {
-            double t_altitude   = Tools::tonumber<double>(q_navpoints(i, "altitude"));
-            double t_heading    = Tools::tonumber<double>(q_navpoints(i, "heading"));
+		for (unsigned int i = 0; i < q_runways.size(); ++i) {
+			double s_lat = Tools::tonumber<double>(q_runways(i, "start_latitude"));
+			double s_lon = Tools::tonumber<double>(q_runways(i, "start_longitude"));
+			double e_lat = Tools::tonumber<double>(q_runways(i, "end_latitude"));
+			double e_lon = Tools::tonumber<double>(q_runways(i, "end_longitude"));
+			
+			std::clog << q_runways(i, "name") << " " << s_lat << ", " << s_lon << " " << e_lat << ", " << e_lon << std::endl;
 
-            this->inpoints.push_back(Inpoint(t_name, t_place, 250, t_altitude, t_heading));
-        } else {
-            this->outpoints.push_back((Outpoint(t_name, t_place)));
-        }
+			Coordinate start_p(s_lat, s_lon);
+			Coordinate end_p(e_lat, e_lon);
 
-        this->navpoints.insert(this->navpoints.end(), this->outpoints.begin(), this->outpoints.end());
-        this->navpoints.insert(this->navpoints.end(), this->inpoints.begin(), this->inpoints.end());
-    }
-
-    query = Database::bind_param("SELECT name, start_latitude, start_longitude, end_latitude, end_longitude FROM runways WHERE ? = ?", v);
-    Queryresult q_runways = Database::get_result(query);
-
-    for (unsigned int i = 0; i < q_runways.size(); ++i) {
-        double s_lat = Tools::tonumber<double>(q_runways(i, "start_latitude"));
-        double s_lon = Tools::tonumber<double>(q_runways(i, "start_longitude"));
-        double e_lat = Tools::tonumber<double>(q_runways(i, "end_latitude"));
-        double e_lon = Tools::tonumber<double>(q_runways(i, "end_longitude"));
-
-        Coordinate start_p(s_lat, s_lon);
-        Coordinate end_p(e_lat, e_lon);
-
-        Runway rwy(q_runways(i, "name"), start_p, end_p);
-
-        this->active_field->add_runway(rwy);
-    }
-
+			Runway rwy(q_runways(i, "name"), start_p, end_p);
+			
+			this->active_field->add_runway(rwy);
+		}
+	} catch (std::runtime_error& e) {
+		std::cerr << e.what() << std::endl;
+	} catch (std::logic_error& e) {
+		std::cerr << e.what() << std::endl;
+	} catch ( ... ) {
+		std::cerr << "Should not never ever happens" << std::endl;
+	}
+	
     this->center_point = this->active_field->get_place();
-}
-
-void Game::build_xml() {
-    this->document.LoadFile("layout.xml");
-    TiXmlElement* root = document.RootElement();
-
-    document.RootElement()->Clear();
-
-    TiXmlElement* elements = new TiXmlElement("elements");
-    TiXmlElement* element1 = new TiXmlElement("element");
-    TiXmlElement* element2 = new TiXmlElement("element");
-//    TiXmlElement* element4 = new TiXmlElement("input");
-
-    element1->SetAttribute("id", "planelist");
-    element1->SetAttribute("class", "data");
-    element1->SetAttribute("name", "Planelist");
-
-    element2->SetAttribute("id", "atis-box");
-    element2->SetAttribute("class", "data");
-    element2->SetAttribute("name", "Atis Box");
-
-    elements->LinkEndChild(element2);
-
-    std::list <Aircraft*> :: iterator plane;
-
-    for (plane = this->aircrafts.begin(); plane != this->aircrafts.end(); ++plane) {
-        TiXmlElement* t_plane = new TiXmlElement("plane");
-
-        t_plane->LinkEndChild(new TiXmlText((*plane)->get_name().c_str()));
-        element1->LinkEndChild(t_plane);
-    }
-
-    elements->LinkEndChild(element1);
-
-    TiXmlElement* e_input = new TiXmlElement("element");
-    e_input->SetAttribute("id", "input");
-    e_input->SetAttribute("class", "data");
-    e_input->SetAttribute("name", "Input");
-
-    elements->LinkEndChild(e_input);
-    root->LinkEndChild(elements);
-    document.SaveFile();
-}
-
-int Game::get_separation_errors() {
-    return this->separation_errors;
+	
+	std::clog << "Game::airfield " << icao << " loaded" << std::endl;
 }
 
 Aircraft* Game::get_selected() {
     return this->selected;
 }
 
-double Game::get_next_plane() {
-    return this->new_plane;
-}
-
-void Game::build_clearance(std::string callsign, std::vector <std::string> command) {
-    this->select_aircraft(callsign);
-	
-    if (this->selected != NULL) {
-        int turn = LEFT;
-        int act_spd = this->selected->get_clearance_speed();
-        int act_hdg = this->selected->get_clearance_heading();
-        int act_alt = this->selected->get_clearance_altitude();
-
-        if (this->selected->get_turn() == -1 || this->selected->get_turn() == 1) {
-            turn = this->selected->get_turn();
-        }
-
-        if (command[0] == "turn") {
-            int cl_gdg;
-
-            if (command.size() == 3) {
-                turn = (command[1] == "left") ? LEFT : RIGHT;
-            }
-
-            cl_gdg = Tools::tonumber<int>(command.back());
-
-            Clearance t(act_spd, act_alt, cl_gdg, turn);
-            this->selected->set_clearance(t);
-        } else if (command[0] == "speed") {
-            int cl_spd = Tools::tonumber<int>(command[1]);
-            Clearance t(cl_spd, act_alt, act_hdg, turn);
-            this->selected->set_clearance(t);
-        } else if (command[0] == "climb" || command[0] == "descent") {
-            int cl_alt = Tools::tonumber<int>(command[1]);
-            Clearance t(act_spd, cl_alt, act_hdg, turn);
-            this->selected->set_clearance(t);
-        } else if (command[0] == "approach") {
-            std::clog << this->selected->get_name() << " ";
-            std::clog << this->selected->get_altitude() << " ";
-            std::clog << this->selected->get_speed() << " ";
-            std::clog << this->selected->get_heading() << " ";
-            std::clog << (Tools::rad2deg(this->landing->get_heading()) + 30) << " ";
-            std::clog << (Tools::rad2deg(this->landing->get_heading()) - 30) << " ";
-
-            if (this->selected->get_altitude() <= 3000 &&
-                this->selected->get_speed() <= 200 &&
-                this->selected->get_heading() >= (Tools::rad2deg(this->landing->get_heading()) - 30) &&
-                Tools::rad2deg(this->selected->get_heading() <= (this->selected->get_heading()) + 30)) {
-                Clearance cl(this->landing);
-                this->selected->set_clearance(cl);
-            }
-        } else if (command[0] == "direct") {
-            Navpoint* t = &(*std::find(this->navpoints.begin(), this->navpoints.end(), command[1]));
-            this->selected->set_target(t);
-        }
-    } else {
-
-    }
-}
-
-Metar& Game::get_metar() {
-    return this->metar;
-}
-
-void Game::set_active_runways(Runway* dep, Runway* lnd) {
-	std::clog << "Game::set_active_runways(" << dep->get_name() << ", " << lnd->get_name() << ")" << std::endl;
-	
-    this->departure = dep;
-    this->landing = lnd;
-}
-
-std::string Game::get_departure() {
-    return this->atis.get_departure_runway();
-}
-
-std::string Game::get_landing() {
-    return this->atis.get_landing_runway();
-}
-
-std::string Game::get_transition_altitude() {
-    return Tools::tostr(this->atis.get_transition_altitude());
-}
-
-std::string Game::get_transition_level() {
-    return Tools::tostr(this->atis.get_transition_level());
+std::string Game::get_metar() {
+	return "EFHK ...";
 }

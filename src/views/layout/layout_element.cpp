@@ -44,8 +44,13 @@ void Layout_element::set_size(int width, int height) {
 }
 
 void Layout_element::set_content(std::string content) {
+	this->v_content.clear();
+	this->v_content.push_back(content);
+}
+
+void Layout_element::add_content(std::string content) {
     unsigned int pos = content.find(";");
-	//std::clog << this->name << " " << content << std::endl;
+	
     if (pos != std::string::npos) {
         this->v_content = Tools::split(";", content);
         this->v_content.erase(this->v_content.end()-1);

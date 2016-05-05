@@ -11,11 +11,10 @@ int main(){
         sf::RenderWindow window(sf::VideoMode(800, 600), "ATC-radar");
         sfml_drawsurface drawer(window);
 
-        Coordinate cp(62.0000, 25.0000);
-        Settings settings(cp);
-
+        Settings settings;
+	
         Atis    atis    (settings);
-        Game    game    (cp, settings, atis);
+        Game    game    (settings, atis);
         Player  player  (settings);
 
         Gameview    gameview(drawer, settings);
@@ -23,7 +22,7 @@ int main(){
         Playerview  playerview(drawer, settings);
 
         Gamecontroller      gamecontroller(     gameview,       settings, game);
-        Atiscontroller      atiscontroller(     atisview,       settings, atis, game );
+        Atiscontroller      atiscontroller(     atisview,       settings, atis);
         Playercontroller    playercontroller(   playerview,     settings, player);
 
         Program program(gamecontroller, atiscontroller, playercontroller, window, settings);

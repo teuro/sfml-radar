@@ -8,10 +8,11 @@
 
 class Settings {
 public:
-	Settings(Coordinate& cp);
+	Settings();
 	~Settings();
 	void set_values(std::map <std::string, std::string> values);
-	Coordinate& centerpoint;
+	void set_cp(Coordinate& cp);
+	Coordinate centerpoint;
 
     int screen_width;
     int screen_height;
@@ -61,6 +62,7 @@ public:
     int departure_separation;
     int zoom;
     std::string program_name;
+    std::string database_name;
 };
 
 

@@ -7,6 +7,7 @@
 class Runway {
 public:
     Runway(std::string n, Coordinate s, Coordinate e);
+    Runway();
     ~Runway();
 
     Coordinate& get_start_place();
@@ -25,6 +26,5 @@ private:
     double init_heading;
     double turning_altirude;
 };
-
 
 #endif // _RUNWAY_HPP
