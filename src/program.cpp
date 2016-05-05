@@ -19,6 +19,8 @@ Program::~Program() { }
 
 void Program::init() {
     std::clog << "Program::init()" << std::endl;
+    this->atiscontroller.load();
+    this->playercontroller.load();
     this->gamecontroller.load();
 
     Queryresult qrslt = Database::get_result("SELECT setting_name, setting_value FROM settings");
