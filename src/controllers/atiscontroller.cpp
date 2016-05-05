@@ -48,6 +48,10 @@ void Atiscontroller::update_command(std::string command) {
     this->atis.set_command(command);
 }
 
+void Atiscontroller::load() {
+	std::clog << "Atiscontroller::load()" << std::endl;
+}
+
 bool Atiscontroller::is_ok() {
     return true;
 }
