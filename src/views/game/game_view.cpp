@@ -11,19 +11,18 @@ void Gameview::load() {
 
 void Gameview::draw() {
     //std::clog << "Gameview::draw()" << std::endl;
-    this->View::draw();
+	
+	this->View::draw();
 }
 
 void Gameview::draw_plane(Aircraft*& plane, Point& center_point, std::string color) {
-    Point aircraft_place = Tools::calculate(this->center_point, this->settings.centerpoint, plane->get_place(), this->settings.zoom);
+	Point aircraft_place = Tools::calculate(this->center_point, this->settings.centerpoint, plane->get_place(), this->settings.zoom);
+	
+	double minute_px        = Tools::distancePX(plane->get_speed() * (1.0 / 60.0), this->settings.zoom, this->settings.screen_width);
+    double separation_ring  = Tools::distancePX(settings.separation_horizontal / 2.0, this->settings.zoom, this->settings.screen_width);
 
-    #ifdef DEBUG
-    std::clog << plane->get_name() << " " << aircraft_place.get_x() << ", " << aircraft_place.get_y() << std::endl;
-    #endif
-    double minute_px        = Tools::distancePX(plane->get_speed() * (1.0 / 60.0), this->settings.zoom, this->settings.screen_width);
-    double separation_ring  = Tools::distancePX(settings.separation_horizontal/2.0, this->settings.zoom, this->settings.screen_width);
-
-    Point end_point = Tools::calculate(aircraft_place, plane->get_heading(), minute_px, false);
+    Point end_point = Tools::calculate(aircraft_place, plane->get_heading(), minute_px, true);
+	
     drawer.lineColor(aircraft_place, end_point, color);
     drawer.circleColor(aircraft_place, separation_ring, color);
     drawer.rectangleColor(aircraft_place, 10, color);
@@ -65,11 +64,28 @@ void Gameview::draw_planes(std::list <Aircraft*> planes, Aircraft* selected) {
 
 void Gameview::draw_airfield(Airfield* airfield) {
     std::vector <Runway> runways = airfield->get_runways();
-
-    for (unsigned int i = 0; i < runways.size(); ++i) {
-        Point rwys = Tools::calculate(this->center_point, this->settings.centerpoint, runways[i].get_start_place(), this->settings.zoom);
-        Point rwye = Tools::calculate(this->center_point, this->settings.centerpoint, runways[i].get_end_place(), this->settings.zoom);
+	
+    for (unsigned int i = 0; i < runways.size(); i+=2) {
+		Point rwys = Tools::calculate(this->center_point, this->settings.centerpoint, runways[i].get_start_place(), this->settings.zoom);
+		Point rwye = Tools::calculate(this->center_point, this->settings.centerpoint, runways[i].get_end_place(), this->settings.zoom);
 		
         this->drawer.lineColor(rwys, rwye, "white");
     }
+}
+
+void Gameview::draw_test() {
+	Coordinate nor(this->settings.centerpoint.get_latitude()+0.150, this->settings.centerpoint.get_longitude());
+	Coordinate sth(this->settings.centerpoint.get_latitude()-0.150, this->settings.centerpoint.get_longitude());
+	Coordinate est(this->settings.centerpoint.get_latitude(), this->settings.centerpoint.get_longitude()+0.150);
+	Coordinate wst(this->settings.centerpoint.get_latitude(), this->settings.centerpoint.get_longitude()-0.150);
+	
+	Point north = Tools::calculate(this->center_point, this->settings.centerpoint, nor, this->settings.zoom);
+	Point south = Tools::calculate(this->center_point, this->settings.centerpoint, sth, this->settings.zoom);
+	Point east = Tools::calculate(this->center_point, this->settings.centerpoint, est, this->settings.zoom);
+	Point west = Tools::calculate(this->center_point, this->settings.centerpoint, wst, this->settings.zoom);
+	
+	//drawer.rectangleColor(north, 10, "red");
+	//drawer.rectangleColor(south, 10, "red");
+	drawer.rectangleColor(east, 10, "red");
+	//drawer.rectangleColor(west, 10, "red");
 }

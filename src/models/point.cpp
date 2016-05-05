@@ -36,7 +36,7 @@ void Point::change_x(int amount) {
     this->x += amount;
 }
 
-std::ostream& operator << (std::ostream& virta, const Point& olio) {
-    virta << olio.x << ", " << olio.y << std::endl;
-    return virta;
+std::ostream& operator << (std::ostream& stream, const Point& point) {
+    stream << "(" << point.x << ", " << point.y << ")";
+    return stream;
 }

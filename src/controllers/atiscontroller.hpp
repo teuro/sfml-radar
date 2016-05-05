@@ -4,7 +4,6 @@
 #include <algorithm>
 
 #include "../models/atis.hpp"
-#include "../models/game.hpp"
 #include "../models/airfield.hpp"
 #include "../views/atis/atis_view.hpp"
 #include "../tools/tools.hpp"
@@ -19,7 +18,7 @@ struct pressure_limit {
 
 class Atiscontroller : public Controller {
 public:
-    Atiscontroller(Atisview& av, Settings& s, Atis& a, Game& g);
+    Atiscontroller(Atisview& av, Settings& s, Atis& a);
     ~Atiscontroller();
     void handle_mouse_click(Point& mouse);
     void handle_mouse_release(Point& mouse_start, Point& mouse_end);
@@ -34,7 +33,6 @@ private:
 	double calculate_backwind(double wind, double runway);
     Atisview& atisview;
     Atis& atis;
-    Game& game;
     std::string input;
 };
 

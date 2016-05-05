@@ -12,6 +12,7 @@ public:
     std::vector <Runway>& get_runways();
     Coordinate& get_place();
     void add_runway(Runway rwy);
+	Runway& get_runway(std::string name);
     int get_altitude();
 protected:
 private:

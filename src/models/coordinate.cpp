@@ -21,15 +21,14 @@ double Coordinate::get_longitude() {
 }
 
 void Coordinate::set_latitude(double latitude) {
-    if (latitude > 360.0) {
-        throw std::logic_error("Given latitude is out of bound");
-    }
     this->latitude = latitude;
 }
 
 void Coordinate::set_longitude(double longitude) {
-    if (longitude > 360.0) {
-        throw std::logic_error("Given longitude is out of bound");
-    }
     this->longitude = longitude;
+}
+
+std::ostream& operator << (std::ostream& virta, const Coordinate& coord) {
+	virta << "(" << coord.latitude << ", " << coord.longitude << ")";
+	return virta;
 }

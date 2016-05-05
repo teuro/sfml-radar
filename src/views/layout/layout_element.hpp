@@ -22,6 +22,7 @@ public:
     void set_size(int width, int height);
     int get_height() { return (this->p2.get_y() - this->p1.get_y()); }
     void set_content(std::string content);
+    void add_content(std::string content);
     void update_content(std::string content);
 
     bool operator ==(std::string id) { return (this->id == id); }

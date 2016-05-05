@@ -24,6 +24,7 @@ public:
 	void draw_navpoints(std::vector <Navpoint>& navpoints);
 	void draw_airfield(Airfield* airfield);
 	void draw_planes(std::list <Aircraft*> planes, Aircraft* selected);
+	void draw_test();
 private:
     Settings& settings;
 

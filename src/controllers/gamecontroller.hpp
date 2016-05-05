@@ -4,6 +4,7 @@
 #include <cstdlib>
 
 #include "../models/game.hpp"
+#include "../models/menu.hpp"
 #include "../views/game/game_view.hpp"
 #include "controller.hpp"
 

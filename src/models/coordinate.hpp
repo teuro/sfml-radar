@@ -17,6 +17,8 @@ public:
 	Coordinate(double latitude_degrees, double latitude_minutes, double latitude_seconds, double longitude_degrees, double longitude_minutes, double longitude_seconds);
 	Coordinate() { }
 	~Coordinate();
+	
+	friend std::ostream& operator << (std::ostream& virta, const Coordinate& coord);
 
     /**
         * get_latitude

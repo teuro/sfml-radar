@@ -10,7 +10,7 @@
 
 class Aircraft {
 public:
-    Aircraft(std::string name, int speed, int heading, int altitude, Coordinate p, int type, Settings& s);
+    Aircraft(std::string name, double speed, double heading, double altitude, Coordinate p, int type, Settings& s);
     ~Aircraft();
     void update(double elapsed);
 

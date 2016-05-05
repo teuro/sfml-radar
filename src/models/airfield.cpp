@@ -7,7 +7,7 @@ Airfield::Airfield(std::string n, Coordinate& p) : name(n), place(p) {
 Airfield::~Airfield() { }
 
 std::vector <Runway>& Airfield::get_runways() {
-    return this->runways;
+	return this->runways;
 }
 
 Coordinate& Airfield::get_place() {
@@ -16,9 +16,19 @@ Coordinate& Airfield::get_place() {
 
 void Airfield::add_runway(Runway rwy) {
     this->runways.push_back(rwy);
-    //std::clog << "Runway " << rwy.get_name() << " added vector size = " << this->runways.size() << std::endl;
+    std::clog << "Runway " << rwy.get_name() << " added vector size = " << this->runways.size() << std::endl;
 }
 
 int Airfield::get_altitude() {
     return this->altitude;
+}
+
+Runway& Airfield::get_runway(std::string name) {
+	for (unsigned int i = 0; i < this->runways.size(); ++i) {
+		if (this->runways[i].get_name() == name) {
+			return this->runways[i];
+		}
+	}
+	
+	throw new std::logic_error("Runway " + name + " not exists");
 }
