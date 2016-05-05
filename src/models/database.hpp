@@ -15,7 +15,7 @@
 **/
 
 namespace Database {
-    /**
+	/**
         * get_result
         * Make a query and returns data
 		* Makes absolutely anything to results, so You receive raw data from database
@@ -32,12 +32,10 @@ namespace Database {
 		* Technically it would be better to define search and bind terms somewhere else, but for now this is more than enough
         * @param std::string query
         * @param std::stack variables
-		* @param std::string search_term
-		* @param std::string bind_term
         * @return std::string
     **/
 
-    std::string bind_param(std::string query_string, std::map <std::string, std::string> variables, std::string search_term = "? = ?", std::string bind_term = " = ");
+    std::string bind_param(std::string query_string, std::map <std::string, std::string> variables);
 }
 
 #endif // DATABASE_HPP
