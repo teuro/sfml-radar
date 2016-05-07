@@ -14,22 +14,28 @@
 #include "../../models/aircraft.hpp"
 #include "../../models/airfield.hpp"
 
+/**
+	* Gameview is responsible to render game to screen.
+	* view 
+**/
+
 class Gameview : public View {
 public:
 	Gameview(Drawsurface& d, Settings& s);
 	~Gameview();
 	void draw();
-	 void load();
+	void load();
 
 	void draw_navpoints(std::vector <Navpoint>& navpoints);
 	void draw_airfield(Airfield* airfield);
 	void draw_planes(std::list <Aircraft*> planes, Aircraft* selected);
-	void draw_test();
+	void set_centerpoint(Coordinate& cp);
 private:
     Settings& settings;
 
     void draw_plane(Aircraft*& plane, Point& center_point, std::string color);
     void read_data(std::string datafile);
+	Coordinate centerpoint;
 };
 
 #endif // _GAME_VIEW_HPP

@@ -16,7 +16,7 @@ void Gameview::draw() {
 }
 
 void Gameview::draw_plane(Aircraft*& plane, Point& center_point, std::string color) {
-	Point aircraft_place = Tools::calculate(this->center_point, this->settings.centerpoint, plane->get_place(), this->settings.zoom);
+	Point aircraft_place = Tools::calculate(this->center_point, this->centerpoint, plane->get_place(), this->settings.zoom);
 	
 	double minute_px        = Tools::distancePX(plane->get_speed() * (1.0 / 60.0), this->settings.zoom, this->settings.screen_width);
     double separation_ring  = Tools::distancePX(settings.separation_horizontal / 2.0, this->settings.zoom, this->settings.screen_width);
@@ -38,7 +38,7 @@ void Gameview::draw_plane(Aircraft*& plane, Point& center_point, std::string col
 
 void Gameview::draw_navpoints(std::vector <Navpoint>& navpoints) {
     for (unsigned int i = 0; i < navpoints.size(); ++i) {
-        Point place_screen = Tools::calculate(this->center_point, this->settings.centerpoint, navpoints[i].get_place(), this->settings.zoom);
+        Point place_screen = Tools::calculate(this->center_point, this->centerpoint, navpoints[i].get_place(), this->settings.zoom);
 
         this->drawer.trigonColor(place_screen, 5, "green");
         this->drawer.draw_text(navpoints[i].get_name(), place_screen, "green");
@@ -66,26 +66,13 @@ void Gameview::draw_airfield(Airfield* airfield) {
     std::vector <Runway> runways = airfield->get_runways();
 	
     for (unsigned int i = 0; i < runways.size(); i+=2) {
-		Point rwys = Tools::calculate(this->center_point, this->settings.centerpoint, runways[i].get_start_place(), this->settings.zoom);
-		Point rwye = Tools::calculate(this->center_point, this->settings.centerpoint, runways[i].get_end_place(), this->settings.zoom);
+		Point rwys = Tools::calculate(this->center_point, this->centerpoint, runways[i].get_start_place(), this->settings.zoom);
+		Point rwye = Tools::calculate(this->center_point, this->centerpoint, runways[i].get_end_place(), this->settings.zoom);
 		
         this->drawer.lineColor(rwys, rwye, "white");
     }
 }
 
-void Gameview::draw_test() {
-	Coordinate nor(this->settings.centerpoint.get_latitude()+0.150, this->settings.centerpoint.get_longitude());
-	Coordinate sth(this->settings.centerpoint.get_latitude()-0.150, this->settings.centerpoint.get_longitude());
-	Coordinate est(this->settings.centerpoint.get_latitude(), this->settings.centerpoint.get_longitude()+0.150);
-	Coordinate wst(this->settings.centerpoint.get_latitude(), this->settings.centerpoint.get_longitude()-0.150);
-	
-	Point north = Tools::calculate(this->center_point, this->settings.centerpoint, nor, this->settings.zoom);
-	Point south = Tools::calculate(this->center_point, this->settings.centerpoint, sth, this->settings.zoom);
-	Point east = Tools::calculate(this->center_point, this->settings.centerpoint, est, this->settings.zoom);
-	Point west = Tools::calculate(this->center_point, this->settings.centerpoint, wst, this->settings.zoom);
-	
-	//drawer.rectangleColor(north, 10, "red");
-	//drawer.rectangleColor(south, 10, "red");
-	drawer.rectangleColor(east, 10, "red");
-	//drawer.rectangleColor(west, 10, "red");
+void Gameview::set_centerpoint(Coordinate& cp) {
+	this->centerpoint = cp;
 }
