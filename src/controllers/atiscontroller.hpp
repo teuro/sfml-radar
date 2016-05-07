@@ -8,6 +8,7 @@
 #include "../views/atis/atis_view.hpp"
 #include "../tools/tools.hpp"
 #include "controller.hpp"
+#include "../models/database.hpp"
 
 struct pressure_limit {
     int lower_limit;
@@ -35,6 +36,9 @@ private:
     Atisview& atisview;
     Atis& atis;
     std::string input;
+	std::map <int, std::string> airfields;
+	void select_departure(Point& mouse);
+	void select_landing(Point& mouse);
 };
 
 
