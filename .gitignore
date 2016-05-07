@@ -1,4 +1,5 @@
 **/docs
-**.exe
+*.exe
 *.xml
 *.css
+*.o
