@@ -114,7 +114,7 @@ private:
     void check_collision();
     void handle_holdings();
     bool is_free(Inpoint& navpoint);
-	Coordinate center_point;
+	Coordinate centerpoint;
 	Settings& settings;
 	Atis& atis;
 

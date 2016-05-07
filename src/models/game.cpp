@@ -21,11 +21,11 @@ void Game::load(std::string airfield, std::string dep, std::string lnd) {
 }
 
 void Game::set_centerpoint(Coordinate& cp) {
-    this->center_point = cp;
+    this->centerpoint = cp;
 }
 
 Coordinate& Game::get_centerpoint() {
-    return this->center_point;
+    return this->centerpoint;
 }
 
 Airfield* Game::get_active_field() {
@@ -148,7 +148,7 @@ void Game::select_aircraft(Point& mouse) {
 
     for (plane = this->aircrafts.begin(); plane != this->aircrafts.end(); ++plane) {
         Point tmp(this->settings.screen_width/2, this->settings.screen_height/2);
-        Point aircraft = Tools::calculate(tmp, this->center_point, (*plane)->get_place(), this->settings.zoom);
+        Point aircraft = Tools::calculate(tmp, this->centerpoint, (*plane)->get_place(), this->settings.zoom);
 
         if (Tools::on_area(mouse, aircraft)) {
             this->selected = (*plane);
@@ -164,7 +164,6 @@ void Game::select_aircraft(std::string callsign) {
     for (plane = this->aircrafts.begin(); plane != this->aircrafts.end(); ++plane) {
         if (callsign == (*plane)->get_name()) {
             this->selected = (*plane);
-			this->center_point = this->selected->get_place();
 			return;
         }
     }
@@ -260,7 +259,8 @@ void Game::load_airfield(std::string icao) {
 		throw;
 	}
 	
-    this->center_point = this->active_field->get_place();
+    this->centerpoint = this->active_field->get_place();
+	std::clog << "Game::load_airfield(" << icao << ") => " << this->centerpoint << std::endl; 
 }
 
 Aircraft* Game::get_selected() {
