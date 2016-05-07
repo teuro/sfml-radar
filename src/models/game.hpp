@@ -18,7 +18,6 @@
 #include "airfield.hpp"
 #include "../tools/settings.hpp"
 #include "database.hpp"
-#include "atis.hpp"
 
 /**
     * Game very low-level on MVC model
@@ -32,7 +31,7 @@ public:
         * @param Coordinate& cp center point of game
         * @param Settings& s game settiungs
     **/
-	Game(Settings& s, Atis& a);
+	Game(Settings& s);
 	~Game();
 
     /**
@@ -116,7 +115,6 @@ private:
     bool is_free(Inpoint& navpoint);
 	Coordinate centerpoint;
 	Settings& settings;
-	Atis& atis;
 
 	std::vector     <Outpoint>		outpoints;
 	std::vector     <Inpoint>		inpoints;

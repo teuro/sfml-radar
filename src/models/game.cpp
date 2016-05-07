@@ -1,6 +1,6 @@
 #include "game.hpp"
 
-Game::Game(Settings& s, Atis& a) : settings(s), atis(a) {
+Game::Game(Settings& s) : settings(s) {
     this->duration = 0;
     this->separation_errors = 0;
     this->new_plane = 5000;

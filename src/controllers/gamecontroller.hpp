@@ -4,6 +4,7 @@
 #include <cstdlib>
 
 #include "../models/game.hpp"
+#include "../models/atis.hpp"
 #include "../models/menu.hpp"
 #include "../views/game/game_view.hpp"
 #include "controller.hpp"
@@ -15,7 +16,7 @@
 
 class Gamecontroller : public Controller {
 public:
-    Gamecontroller(Gameview& gv, Settings& s, Game& g);
+    Gamecontroller(Gameview& gv, Settings& s, Game& g, Atis& a);
     ~Gamecontroller();
 	/**
 		* handle_function_keys
@@ -51,6 +52,7 @@ private:
 	std::list <std::string> matching_elements(std::string input);
     Gameview& gameview;
     Game& game;
+    Atis& atis;
     int function_key;
 };
 

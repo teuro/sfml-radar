@@ -1,6 +1,6 @@
 #include "gamecontroller.hpp"
 
-Gamecontroller::Gamecontroller(Gameview& gv, Settings& s, Game& g) : Controller(s), gameview(gv), game(g) { }
+Gamecontroller::Gamecontroller(Gameview& gv, Settings& s, Game& g, Atis& a) : Controller(s), gameview(gv), game(g), atis(a) { }
 
 Gamecontroller::~Gamecontroller() { }
 
@@ -53,7 +53,8 @@ void Gamecontroller::handle_mouse_click(Point& mouse) {
 }
 
 void Gamecontroller::load() {
-	this->game.load("EFHK", "22R", "15");
+	std::clog << "Gamecontroller::load()" << std::endl;
+	this->game.load("EFHK", this->atis.get_departure_runway(), this->atis.get_landing_runway());
 }
 
 void Gamecontroller::handle_text_input() {
@@ -65,5 +66,5 @@ void Gamecontroller::update_command(std::string command) {
 }
 
 bool Gamecontroller::is_ok() {
-    return true;
+    return false;
 }
