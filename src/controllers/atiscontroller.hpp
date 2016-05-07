@@ -28,6 +28,7 @@ public:
     void handle_text_input();
     void update_command(std::string command);
     bool is_ok();
+	void load();
 protected:
 private:
 	double calculate_backwind(double wind, double runway);

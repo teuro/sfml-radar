@@ -32,3 +32,7 @@ void Playercontroller::update_command(std::string command) {
 bool Playercontroller::is_ok() {
     return true;
 }
+
+void Playercontroller::load() {
+	std::clog << "Playercontroller::load()" << std::endl;
+}
