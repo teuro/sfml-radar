@@ -1,9 +1,6 @@
 #ifndef ATIS_HPP
 #define ATIS_HPP
 
-#include <tinyxml/tinyxml.h>
-#include <tinyxpath/xpath_processor.h>
-
 #include "../tools/settings.hpp"
 
 /**
@@ -44,8 +41,6 @@ private:
     int transition_altitude;
     std::string departure_runway;
     std::string landing_runway;
-    void build_xml();
-    TiXmlDocument document;
     std::string command;
 };
 
