@@ -14,14 +14,14 @@ int main(){
         Settings settings;
 	
         Atis    atis    (settings);
-        Game    game    (settings, atis);
+        Game    game    (settings);
         Player  player  (settings);
 
         Gameview    gameview(drawer, settings);
         Atisview    atisview(drawer, settings);
         Playerview  playerview(drawer, settings);
 
-        Gamecontroller      gamecontroller(     gameview,       settings, game);
+        Gamecontroller      gamecontroller(     gameview,       settings, game, atis);
         Atiscontroller      atiscontroller(     atisview,       settings, atis);
         Playercontroller    playercontroller(   playerview,     settings, player);
 

@@ -1,15 +1,9 @@
 #include "program.hpp"
 
-Program::Program(Gamecontroller& gc,
-                 Atiscontroller& ac,
-                 Playercontroller& pc,
-                 sf::RenderWindow& w,
-                 Settings& s) :
-                     gamecontroller(gc),
-                     atiscontroller(ac),
-                     playercontroller(pc),
-                     window(w),
-                     settings(s){
+Program::Program(
+Gamecontroller& gc, Atiscontroller& ac, Playercontroller& pc, sf::RenderWindow& w, Settings& s) : 
+gamecontroller(gc), atiscontroller(ac), playercontroller(pc), window(w), settings(s) 
+{
     this->load();
     this->game_state = PLAYER;
     this->counter = 30;
@@ -19,9 +13,6 @@ Program::~Program() { }
 
 void Program::init() {
     std::clog << "Program::init()" << std::endl;
-    this->atiscontroller.load();
-    this->playercontroller.load();
-    this->gamecontroller.load();
 
     Queryresult qrslt = Database::get_result("SELECT setting_name, setting_value FROM settings");
     std::map <std::string, std::string> tmp;
@@ -35,6 +26,12 @@ void Program::init() {
     this->window.setTitle(this->settings.program_name);
 }
 
+void Program::load() {
+    std::clog << "Program::load()" << std::endl;
+	this->ctrl = &this->playercontroller;
+	this->playercontroller.load();
+}
+
 void Program::close() {
     std::clog << "Program::close()" << std::endl;
 }
@@ -42,17 +39,24 @@ void Program::close() {
 bool Program::run() {
 	sf::Event event;
     sf::Time elapsed = this->clock.restart();
-
-    switch (this->game_state) {
-    case GAME:
-        this->ctrl = &this->gamecontroller;
-        break;
-    case ATIS:
-        this->ctrl = &this->atiscontroller;
-        break;
-    case PLAYER:
-        this->ctrl = &this->playercontroller;
-        break;
+	
+	if (this->ctrl->is_ok()) {
+        if (this->game_state == PLAYER) {
+            this->game_state = ATIS;
+        } else if (this->game_state == ATIS) {
+            this->game_state = GAME;
+        }
+		
+		switch (this->game_state) {
+		case ATIS:
+			this->ctrl = &this->atiscontroller;
+			this->atiscontroller.load();
+			break;
+		case GAME:
+			this->ctrl = &this->gamecontroller;
+			this->gamecontroller.load();
+			break;
+		}
     }
 
     while (this->window.pollEvent(event)) {
@@ -69,14 +73,6 @@ bool Program::run() {
     }
 
     this->ctrl->update(elapsed.asMilliseconds(), this->draw);
-
-    if (this->ctrl->is_ok()) {
-        if (this->game_state == PLAYER) {
-            this->game_state = ATIS;
-        } else if (this->game_state == ATIS) {
-            this->game_state = GAME;
-        }
-    }
 
     return true;
 }
@@ -143,8 +139,4 @@ bool Program::handle_event(sf::Event& event) {
     }
 
     return true;
-}
-
-void Program::load() {
-    std::clog << "Program::load()" << std::endl;
 }
