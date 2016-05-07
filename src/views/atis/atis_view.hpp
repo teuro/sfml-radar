@@ -14,7 +14,8 @@ class Atisview : public View {
 public:
 	Atisview(Drawsurface& d, Settings& s);
 	~Atisview();
-	void draw(std::string dep, std::string lnd, int tr_alt, int tr_lvl);
+	void draw();
+	void draw_airfields(std::map <int, std::string>& airfields);
 private:
     Settings& settings;
     void load();
