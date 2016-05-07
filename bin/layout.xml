@@ -7,11 +7,5 @@
         <element id="input" class="data" name="Input">
             <input></input>
         </element>
-        <element id="atis" class="data" name="Atis">
-            <departure>Takeoff runway: 22L</departure>
-            <landing>Landing runway: 22L</landing>
-            <altidude>Transition altitude: 5000</altidude>
-            <level>Transistion level: 50</level>
-        </element>
     </elements>
 </layout>
