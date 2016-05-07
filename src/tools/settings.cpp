@@ -8,10 +8,6 @@ Settings::Settings() {
 
 Settings::~Settings() { }
 
-void Settings::set_cp(Coordinate& cp) {
-	this->centerpoint = cp;
-}
-
 void Settings::set_values(std::map<std::string, std::string> values ) {
     this->screen_width                  = Tools::toint(values["screen_width"]);
     this->screen_height                 = Tools::toint(values["screen_height"]);

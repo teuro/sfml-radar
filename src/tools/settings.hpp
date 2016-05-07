@@ -4,15 +4,12 @@
 #include <map>
 #include <string>
 #include "tools.hpp"
-#include "../models/coordinate.hpp"
 
 class Settings {
 public:
 	Settings();
 	~Settings();
 	void set_values(std::map <std::string, std::string> values);
-	void set_cp(Coordinate& cp);
-	Coordinate centerpoint;
 
     int screen_width;
     int screen_height;
