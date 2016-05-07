@@ -6,6 +6,7 @@
 #include "../models/game.hpp"
 #include "../models/atis.hpp"
 #include "../models/menu.hpp"
+#include "../tools/tools.hpp"
 #include "../views/game/game_view.hpp"
 #include "controller.hpp"
 

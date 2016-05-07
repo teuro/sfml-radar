@@ -16,7 +16,7 @@ std::string Gamecontroller::handle_function_keys(int action) {
 
 void Gamecontroller::handle_mouse_release(Point& mouse_start, Point& mouse_end) {
     double distance_px  = Tools::distancePX(mouse_end, mouse_start);
-    double angle_rad    = Tools::angle(mouse_end, mouse_start) - (3.1415927 / 2.0);
+    double angle_rad    = Tools::angle(mouse_end, mouse_start) - (Tools::get_PI() / 2.0);
     double distance_nm  = Tools::distanceNM(distance_px, this->settings.zoom, this->settings.screen_width);
 
     Coordinate center = Tools::calculate(this->game.get_centerpoint(), angle_rad, distance_nm);
