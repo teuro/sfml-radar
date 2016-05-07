@@ -2,6 +2,7 @@
 #define ATISCONTROLLER_HPP
 
 #include <algorithm>
+#include <list>
 
 #include "../models/atis.hpp"
 #include "../models/airfield.hpp"
@@ -36,7 +37,7 @@ private:
     Atisview& atisview;
     Atis& atis;
     std::string input;
-	std::map <int, std::string> airfields;
+	std::list <std::string> runways;
 	void select_departure(Point& mouse);
 	void select_landing(Point& mouse);
 };

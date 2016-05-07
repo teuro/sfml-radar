@@ -15,7 +15,7 @@ public:
 	Atisview(Drawsurface& d, Settings& s);
 	~Atisview();
 	void draw();
-	void draw_airfields(std::map <int, std::string>& airfields);
+	void draw_runways(std::list <std::string>& runways);
 private:
     Settings& settings;
     void load();

@@ -14,11 +14,18 @@ void Atisview::draw() {
     View::draw();
 }
 
-void Atisview::draw_airfields(std::map <int, std::string>& airfields) {
+void Atisview::draw_runways(std::list <std::string>& runways) {
 	Point p1(250, 150);
+	Point p2(450, 150);
 	
-	for (std::map<int, std::string>::iterator it = airfields.begin(); it != airfields.end(); ++it) {
-		drawer.draw_text(it->second, p1, "red");
+	drawer.draw_text("departure", p1, "red");
+	drawer.draw_text("landing", p2, "red");
+	
+	for (std::list<std::string>::iterator it = runways.begin(); it != runways.end(); ++it) {
 		p1.change_y(drawer.get_fontsize());
+		p2.change_y(drawer.get_fontsize());
+		
+		drawer.draw_text(*it, p1, "red");
+		drawer.draw_text(*it, p2, "red");
 	}
 }

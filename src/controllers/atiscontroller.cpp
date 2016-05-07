@@ -42,7 +42,7 @@ void Atiscontroller::update(double elapsed, bool draw) {
 	if (draw) {
 		this->atisview.clear_screen();
 		this->atisview.draw();
-		this->atisview.draw_airfields(this->airfields);
+		this->atisview.draw_runways(this->runways);
 		this->atisview.render();
 	}
 }
@@ -56,10 +56,10 @@ void Atiscontroller::load() {
 	std::clog << "Atiscontroller::load()" << std::endl;
 	
 	try {
-		Queryresult fields = Database::get_result("SELECT ROWID, ICAO FROM airfields WHERE ICAO LIKE 'EF%K'");
+		Queryresult rwys = Database::get_result("SELECT ROWID, name FROM runways WHERE airfield_id = 38");
 		
-		for (unsigned int i = 0; i < fields.size(); ++i) {
-			this->airfields[Tools::tonumber<int>(fields(i, 0))] = fields(i, 1);
+		for (unsigned int i = 0; i < rwys.size(); ++i) {
+			this->runways.push_back(rwys(i, 1));
 		}
 	} catch ( std::runtime_error& e ) {
 		throw;
