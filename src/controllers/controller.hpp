@@ -16,6 +16,7 @@ public:
     virtual void handle_text_input() = 0;
     virtual void update_command(std::string text) = 0;
     virtual bool is_ok() = 0;
+	virtual void load() = 0;
 	//virtual std::string get_input() = 0;
 protected:
     Controller(Settings& s) : settings(s) { }
