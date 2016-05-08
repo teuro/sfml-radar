@@ -7,13 +7,14 @@ sfml_drawsurface::sfml_drawsurface(sf::RenderWindow& w) : window(w) {
 	this->active = sf::Color(80, 60, 80);
 	this->failure = sf::Color(130, 90, 80);
 
-	this->colors["red"]     = sf::Color(255, 0, 0);
 	this->colors["green"]   = sf::Color(0, 255, 0);
+	this->colors["red"]     = sf::Color(255, 0, 0);
 	this->colors["black"]   = sf::Color(0, 0, 0);
 	this->colors["white"]   = sf::Color(255, 255, 255);
 	this->colors["brown"]   = sf::Color(128, 64, 0);
-	this->colors["blue"]   = sf::Color(0, 0, 255);
+	this->colors["blue"]	= sf::Color(0, 0, 255);
 }
+
 sfml_drawsurface::~sfml_drawsurface() { }
 
 void sfml_drawsurface::circleColor(Point& a, unsigned int radius, std::string color) {
@@ -42,8 +43,10 @@ void sfml_drawsurface::draw_picture(std::string file, Point& a, bool center) {
 }
 
 void sfml_drawsurface::draw_text(std::string text, Point& a, std::string color, int font_size) {
+	this->font_size = font_size;
+	
 	if (!font_loaded) {
-		this->load_font("arial.ttf", 24);
+		this->load_font("arial.ttf", this->font_size);
 	}
 
 	sf::Text _text;
@@ -51,15 +54,16 @@ void sfml_drawsurface::draw_text(std::string text, Point& a, std::string color, 
 	_text.setCharacterSize(font_size);
 	_text.setString(text);
 	_text.setPosition(sf::Vector2f(a.get_x(), a.get_y()));
-
 	_text.setColor(this->colors[color]);
 
 	this->window.draw(_text);
 }
 
 void sfml_drawsurface::draw_text(std::string text, Point& a, int red, int green, int blue, int font_size) {
+	this->font_size = font_size;
+	
 	if (!font_loaded) {
-		this->load_font("arial.ttf", 24);
+		this->load_font("arial.ttf", this->font_size);
 	}
 
 	sf::Text _text;

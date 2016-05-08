@@ -39,7 +39,7 @@ public:
 
     void draw_picture(std::string tiedosto, Point& a, bool center = false);
 
-    void draw_text(std::string text, Point& a, std::string color = "black", int font_size = 16);
+    void draw_text(std::string text, Point& a, std::string color = "green", int font_size = 16);
     void draw_text(std::string text, Point& a, int red, int green, int blue, int font_size = 16);
 
 	unsigned int get_fontsize();
