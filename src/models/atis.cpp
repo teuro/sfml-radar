@@ -1,6 +1,11 @@
 #include "atis.hpp"
 
-Atis::Atis(Settings& s) : settings(s) { }
+Atis::Atis(Settings& s) : settings(s) { 
+	this->transition_level = 0;
+    this->transition_altitude = 0;
+    this->departure_runway = "";
+    this->landing_runway = "";
+}
 
 Atis::~Atis() {
 
@@ -40,12 +45,4 @@ int Atis::get_transition_level() {
 
 int Atis::get_transition_altitude() {
     return this->transition_altitude;
-}
-
-void Atis::set_command(std::string command) {
-    this->command = command;
-}
-
-std::string Atis::get_command() {
-    return this->command;
 }

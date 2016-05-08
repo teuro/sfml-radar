@@ -31,9 +31,6 @@ public:
     std::string get_landing_runway();
     int get_transition_level();
     int get_transition_altitude();
-
-    void set_command(std::string command);
-    std::string get_command();
 protected:
 private:
     Settings& settings;
@@ -41,7 +38,6 @@ private:
     int transition_altitude;
     std::string departure_runway;
     std::string landing_runway;
-    std::string command;
 };
 
 
