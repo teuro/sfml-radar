@@ -15,6 +15,7 @@ public:
 
     double get_length();
     double get_heading();
+	double get_glidepath();
 
     std::string get_name();
     bool operator ==(const std::string name);

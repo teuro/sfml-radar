@@ -30,3 +30,7 @@ std::string Runway::get_name() {
 bool Runway::operator ==(std::string name) {
     return this->name == name;
 }
+
+double Runway::get_glidepath() {
+	return 3.0;
+}
