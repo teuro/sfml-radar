@@ -177,7 +177,7 @@ void Game::create_plane() {
 	double heading = this->departure.get_heading();
 	
     int type = Tools::rnd(1, 100);
-	type = 51;
+	type = 49;
 
     std::string t_callsign = airlines(Tools::rnd(0, airlines.size()), "ICAO") + Tools::tostr(Tools::rnd(1, 999));
 	
@@ -187,7 +187,8 @@ void Game::create_plane() {
 		plane = new Aircraft(t_callsign, 120.0, heading, this->active_field->get_altitude(), this->departure.get_start_place(), type, this->settings, this->landing);
 		this->holdings.push(plane);
 	} else {
-	
+		plane = new Aircraft(t_callsign, 250.0, heading, 10000, t_outpoint.get_place(), type, this->settings, this->landing);
+		this->aircrafts.push_back(plane);
 	}
 }
 
@@ -290,5 +291,6 @@ void Game::build_clearance(std::string command) {
 		this->selected->set_clearance_speed(spd);
 	} else if (tmp[0] == "approach") {
 		rwy = tmp.back();
+		this->selected->set_clearance_approach();
 	}
 }
