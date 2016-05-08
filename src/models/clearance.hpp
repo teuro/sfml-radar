@@ -1,14 +1,11 @@
 #ifndef _CLEARANCE_HPP
 #define _CLEARANCE_HPP
 
-#include "runway.hpp"
-
 #include <string>
 
 class Clearance {
 public:
-    Clearance(int spd, int alt, int hdg, int trn);
-    Clearance(Runway*& lnd);
+    Clearance(int spd, int alt, int hdg, int trn, bool approach);
     Clearance();
     ~Clearance();
 
@@ -16,13 +13,13 @@ public:
     int get_altitude();
     int get_heading();
     int get_turn();
-    Runway*& get_landing();
+	bool get_approach();
 private:
     int speed;
     int altitude;
     int heading;
     int turn;
-    Runway* landing;
+	bool approach;
 };
 
 #endif // _CLEARANCE_HPP

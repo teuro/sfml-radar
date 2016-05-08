@@ -59,6 +59,7 @@ void Gamecontroller::load() {
 
 void Gamecontroller::handle_text_input() {
     std::string t_command = this->command;
+	this->game.build_clearance(command);
 }
 
 void Gamecontroller::update_command(std::string command) {

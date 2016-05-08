@@ -12,7 +12,6 @@ Aircraft::Aircraft(std::string name, double speed, double heading, double altitu
 
     this->separation_error = false;
     this->type = type;
-    this->landing = NULL;
     this->target = NULL;
     this->approach = false;
     this->turn = -1;
@@ -50,10 +49,6 @@ void Aircraft::update(double elapsed) {
     this->heading   = change_parameter(elapsed, this->heading, this->clearance_heading, Tools::deg2rad(3.0), this->turn);
 	
     this->place = Tools::calculate(this->place, this->heading, distance);
-
-    if (this->approach) {
-        std::clog << "Approaching " << this->landing->get_name() << std::endl;
-    }
 }
 
 Coordinate& Aircraft::get_place() {
@@ -69,12 +64,6 @@ void Aircraft::handle_clearance(Clearance& ac) {
     this->clearance_altitude    = ac.get_altitude();
     this->clearance_heading     = ac.get_heading();
     this->turn                  = ac.get_turn();
-    this->landing               = ac.get_landing();
-	
-    if (this->landing != NULL) {
-        std::clog << this->landing->get_name() << std::endl;
-        this->approach = true;
-    }
 }
 
 double Aircraft::change_parameter(double elapsed, double actual_value, double clearance_value, double change, int turn) {

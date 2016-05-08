@@ -17,6 +17,7 @@
 #include "aircraft.hpp"
 #include "airfield.hpp"
 #include "../tools/settings.hpp"
+#include "../tools/tools.hpp"
 #include "database.hpp"
 
 /**
@@ -108,6 +109,7 @@ public:
 	
 	void create_plane();
 	std::string get_metar();
+	void build_clearance(std::string command);
 private:
     void load_airfield(std::string icao);
     void check_collision();

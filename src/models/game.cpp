@@ -264,3 +264,34 @@ Aircraft* Game::get_selected() {
 std::string Game::get_metar() {
 	return "EFHK ...";
 }
+
+void Game::build_clearance(std::string command) {
+	std::clog << "Game::build_clearance(" << command << ")" << std::endl;
+	
+	std::vector <std::string> tmp = Tools::split(" ", command);
+	std::clog << "vector tmp has " << tmp.size() << " items" << std::endl;
+	int turn = 0;
+	int hdg;
+	int spd;
+	int alt;
+	std::string rwy;
+	
+	if (tmp[0] == "turn") {
+		turn = (tmp[1] == "right") ? 1 : -1;
+		hdg = Tools::tonumber<int>(tmp.back());
+		
+		std::clog << "turn " << turn << " heading " << hdg << std::endl;
+	} else if (tmp[0] == "climb" || tmp[0] == "descent") {
+		alt = Tools::tonumber<int>(tmp.back());
+		
+		std::clog << tmp[0] << " " << alt << std::endl;
+	} else if (tmp[0] == "speed") {
+		spd = Tools::tonumber<int>(tmp.back());
+		
+		std::clog << tmp[0] << " " << spd << std::endl;
+	} else if (tmp[0] == "approach") {
+		rwy = tmp.back();
+		
+		std::clog << tmp[0] << " runway " << rwy << std::endl;
+	}
+}
