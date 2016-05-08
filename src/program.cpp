@@ -89,6 +89,7 @@ bool Program::handle_event(sf::Event& event) {
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return)) {
                 this->ctrl->handle_text_input();
                 this->input_string = "";
+				this->ctrl->update_command(this->input_string);
             } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
                 this->window.close();
                 return false;
@@ -105,16 +106,16 @@ bool Program::handle_event(sf::Event& event) {
             return true;
         case sf::Event::TextEntered:
             if (event.text.unicode == 8 && this->input_string.length()) {
-                input_string = input_string.erase(input_string.length()-1, 1);
+                this->input_string = this->input_string.erase(input_string.length()-1, 1);
             } else if (
 				((event.text.unicode >= 65 && event.text.unicode <= 122) ||
 				(event.text.unicode >= 48 && event.text.unicode <= 57) ||
 				(event.text.unicode == 32 || event.text.unicode == 58)) && 
 				event.text.unicode != 13 && event.text.unicode != 8) {
-                input_string += sf::String(event.text.unicode);
+                this->input_string += sf::String(event.text.unicode);
             }
-
-            this->ctrl->update_command(this->input_string);
+			
+			this->ctrl->update_command(this->input_string);
             return true;
         case sf::Event::MouseWheelMoved:
             this->ctrl->handle_mouse_wheel(event.mouseWheel.delta);
