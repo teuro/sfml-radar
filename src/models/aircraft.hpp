@@ -4,12 +4,13 @@
 #include "navpoint.hpp"
 #include "../tools/tools.hpp"
 #include "../tools/settings.hpp"
+#include "runway.hpp"
 
 #include <stack>
 
 class Aircraft {
 public:
-    Aircraft(std::string name, double speed, double heading, double altitude, Coordinate p, int type, Settings& s);
+    Aircraft(std::string name, double speed, double heading, double altitude, Coordinate p, int type, Settings& s, Runway& land);
     ~Aircraft();
     void update(double elapsed);
 
@@ -57,6 +58,7 @@ private:
     Navpoint* target;
     bool approach;
     Settings& settings;
+	Runway& landing;
 };
 
 

@@ -184,7 +184,7 @@ void Game::create_plane() {
 	Aircraft* plane;
 	
 	if (type >= 50) {
-		plane = new Aircraft(t_callsign, 120.0, heading, this->active_field->get_altitude(), this->departure.get_start_place(), type, this->settings);
+		plane = new Aircraft(t_callsign, 120.0, heading, this->active_field->get_altitude(), this->departure.get_start_place(), type, this->settings, this->landing);
 		this->holdings.push(plane);
 	} else {
 	
