@@ -283,10 +283,10 @@ void Game::build_clearance(std::string command) {
 		std::clog << "turn " << turn << " heading " << hdg << std::endl;
 		this->selected->set_clearance_heading(Tools::deg2rad(hdg), turn);
 	} else if (tmp[0] == "climb" || tmp[0] == "descent") {
-		alt = Tools::tonumber<int>(tmp.back());
+		alt = Tools::toint(tmp.back());
 		this->selected->set_clearance_altitude(alt);
 	} else if (tmp[0] == "speed") {
-		spd = Tools::tonumber<int>(tmp.back());
+		spd = Tools::toint(tmp.back());
 		this->selected->set_clearance_speed(spd);
 	} else if (tmp[0] == "approach") {
 		rwy = tmp.back();
