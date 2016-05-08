@@ -129,8 +129,8 @@ namespace Tools {
         return tmp;
 	}
 
-
-	bool on_area(Point& mouse, Point& aircraft);
+	bool on_area(Point& mouse, Point& target, int buffer = 5);
+	bool on_area(Point& mouse, Point& target_lu, Point& target_rd);
 	bool on_area(Coordinate& a, Coordinate& b);
 
 	std::vector <std::string> split(std::string delimiter, std::string input);

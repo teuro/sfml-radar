@@ -114,11 +114,18 @@ Coordinate Tools::calculate(Coordinate& cp, double bearing, double d) {
     return tmp;
 }
 
-bool Tools::on_area(Point& mouse, Point& aircraft) {
-    bool x = mouse.get_x() > (aircraft.get_x()-5) && mouse.get_x() < (aircraft.get_x()+5);
-    bool y = mouse.get_y() > (aircraft.get_y()-5) && mouse.get_y() < (aircraft.get_y()+5);
+bool Tools::on_area(Point& mouse, Point& target, int buffer) {
+	bool x = mouse.get_x() > (target.get_x() - buffer) && mouse.get_x() < (target.get_x() + buffer);
+	bool y = mouse.get_y() > (target.get_y() - buffer) && mouse.get_y() < (target.get_y() + buffer);
 
     return (x && y);
+}
+
+bool Tools::on_area(Point& mouse, Point& target_lu, Point& target_rd) {
+	bool x = mouse.get_x() > target_lu.get_x() && mouse.get_x() < target_rd.get_x();
+	bool y = mouse.get_y() > target_lu.get_y() && mouse.get_y() < target_rd.get_y();
+	
+	return (x && y);
 }
 
 bool Tools::on_area(Coordinate& a, Coordinate& b) {
