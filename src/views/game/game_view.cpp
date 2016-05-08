@@ -20,10 +20,11 @@ void Gameview::draw_plane(Aircraft*& plane, Point& center_point, std::string col
 	
 	double minute_px        = Tools::distancePX(plane->get_speed() * (1.0 / 60.0), this->settings.zoom, this->settings.screen_width);
     double separation_ring  = Tools::distancePX(settings.separation_horizontal / 2.0, this->settings.zoom, this->settings.screen_width);
-
-    Point end_point = Tools::calculate(aircraft_place, plane->get_heading(), minute_px, true);
 	
-    drawer.lineColor(aircraft_place, end_point, color);
+	Coordinate end_point_c = Tools::calculate(plane->get_place(), plane->get_heading(), plane->get_speed() * (1.0 / 60.0));
+	Point end_point_p = Tools::calculate(this->center_point, this->centerpoint, end_point_c, this->settings.zoom);
+	
+    drawer.lineColor(aircraft_place, end_point_p, color);
     drawer.circleColor(aircraft_place, separation_ring, color);
     drawer.rectangleColor(aircraft_place, 10, color);
     aircraft_place.change_x(10);
@@ -31,7 +32,7 @@ void Gameview::draw_plane(Aircraft*& plane, Point& center_point, std::string col
     aircraft_place.change_y(20);
     drawer.draw_text(Tools::tostr(plane->get_speed()), aircraft_place, color);
     aircraft_place.change_y(20);
-    drawer.draw_text(Tools::tostr(plane->get_heading()), aircraft_place, color);
+    drawer.draw_text(Tools::tostr(Tools::rad2deg(plane->get_heading())), aircraft_place, color);
     aircraft_place.change_y(20);
     drawer.draw_text(Tools::tostr(plane->get_altitude()), aircraft_place, color);
 }
