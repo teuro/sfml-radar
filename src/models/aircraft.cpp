@@ -78,22 +78,6 @@ double Aircraft::get_altitude() {
     return this->altitude;
 }
 
-int Aircraft::get_turn() {
-    return this->turn;
-}
-
-double Aircraft::get_clearance_speed() {
-    return this->clearance_speed;
-}
-
-double Aircraft::get_clearance_heading() {
-    return this->clearance_heading;
-}
-
-double Aircraft::get_clearance_altitude() {
-    return this->clearance_altitude;
-}
-
 void Aircraft::set_separation_error(bool t) {
     this->separation_error = t;
 }
