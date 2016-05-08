@@ -6,6 +6,7 @@
 
 #include "../models/atis.hpp"
 #include "../models/airfield.hpp"
+#include "../models/metar.hpp"
 #include "../views/atis/atis_view.hpp"
 #include "../tools/tools.hpp"
 #include "controller.hpp"
@@ -36,6 +37,7 @@ private:
 	double calculate_backwind(double wind, double runway);
     Atisview& atisview;
     Atis& atis;
+	Metar* metar;
     std::string command;
 	std::list <std::string> runways;
 	void select_departure(Point& mouse);

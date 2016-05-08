@@ -4,7 +4,9 @@ Gamecontroller::Gamecontroller(Gameview& gv, Settings& s, Game& g, Atis& a) : Co
 	this->metar = new Metar;
 }
 
-Gamecontroller::~Gamecontroller() { }
+Gamecontroller::~Gamecontroller() { 
+	delete this->metar;
+}
 
 std::string Gamecontroller::handle_function_keys(int action) {
 	if (action == Tools::RIGHT) {

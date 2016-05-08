@@ -2,7 +2,6 @@
 <layout>
     <elements>
         <element id="metar" class="data" name="Metar">
-            <metar>EFHK 301250 27006KT 2000 +RA BKN012 03/02 Q0998</metar>
         </element>
         <element id="input" class="data" name="Input">
             <input></input>

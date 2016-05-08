@@ -1,8 +1,12 @@
 #include "atiscontroller.hpp"
 
-Atiscontroller::Atiscontroller(Atisview& av, Settings& s, Atis& a) : Controller(s), atisview(av), atis(a) { }
+Atiscontroller::Atiscontroller(Atisview& av, Settings& s, Atis& a) : Controller(s), atisview(av), atis(a) { 
+	this->metar = new Metar;
+}
 
-Atiscontroller::~Atiscontroller() { }
+Atiscontroller::~Atiscontroller() { 
+	delete this->metar;
+}
 
 void Atiscontroller::handle_mouse_click(Point& mouse) {
 	this->select_departure(mouse);
@@ -51,10 +55,12 @@ void Atiscontroller::handle_text_input() {
 
 void Atiscontroller::update(double elapsed, bool draw) {
     this->atis.update(elapsed);
+    this->metar->update("EFHK");
 	
 	if (draw) {
 		this->atisview.clear_screen();
 		this->atisview.add_element("Input", "input", "data", this->command);
+		this->atisview.add_element("Metar", "metar", "data", this->metar->get_metar());
 		this->atisview.draw();
 		this->atisview.draw_runways(this->runways);
 		this->atisview.render();
