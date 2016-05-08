@@ -172,28 +172,22 @@ void Game::select_aircraft(std::string callsign) {
 void Game::create_plane() {
 	std::clog << "Game::create_plane()" << std::endl;
     Queryresult airlines = Database::get_result("SELECT ICAO FROM airlines");
-	std::clog << "Airlines ok" << std::endl;
-    Inpoint t_inpoint = this->inpoints[Tools::rnd(0, (int)this->inpoints.size()-1)];
-	std::clog << "Inpoint ok" << std::endl;
-    Outpoint t_outpoint = this->outpoints[Tools::rnd(0, (int)this->outpoints.size()-1)];
-	std::clog << "Outpoint ok" << std::endl;
+	Inpoint t_inpoint = this->inpoints[Tools::rnd(0, (int)this->inpoints.size()-1)];
+	Outpoint t_outpoint = this->outpoints[Tools::rnd(0, (int)this->outpoints.size()-1)];
 	double heading = this->departure.get_heading();
-	std::clog << "Departing runway " << this->departure.get_name() << " is " << Tools::rad2deg(this->departure.get_heading()) << std::endl;
-
+	
     int type = Tools::rnd(1, 100);
 	type = 51;
 
     std::string t_callsign = airlines(Tools::rnd(0, airlines.size()), "ICAO") + Tools::tostr(Tools::rnd(1, 999));
 	
-	std::clog << "Plane " << t_callsign << " created type is " << type << std::endl;
 	Aircraft* plane;
 	
 	if (type >= 50) {
-		std::clog << "Create departure plane towards " << t_outpoint.get_name() << std::endl;
 		plane = new Aircraft(t_callsign, 120.0, heading, this->active_field->get_altitude(), this->departure.get_start_place(), type, this->settings);
 		this->holdings.push(plane);
 	} else {
-		std::clog << "Create arrival plane from " << t_inpoint.get_name() << std::endl;
+	
 	}
 }
 
