@@ -22,7 +22,7 @@ public:
     Metar();
     ~Metar();
     std::string get_metar();
-    void update();
+    void update(std::string icao);
     int get_pressure();
     int get_wind_direction();
     int get_temperature();
@@ -37,7 +37,7 @@ private:
     int visibility;
     std::list <Cloud> clouds;
     Wind wind;
-    std::string ICAO;
+    std::string icao;
 };
 
 #endif // METAR_HPP

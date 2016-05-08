@@ -5,7 +5,7 @@
 
 #include "../models/game.hpp"
 #include "../models/atis.hpp"
-#include "../models/menu.hpp"
+#include "../models/metar.hpp"
 #include "../tools/tools.hpp"
 #include "../views/game/game_view.hpp"
 #include "controller.hpp"
@@ -54,6 +54,7 @@ private:
     Gameview& gameview;
     Game& game;
     Atis& atis;
+	Metar* metar;
     int function_key;
 };
 

@@ -1,6 +1,8 @@
 #include "gamecontroller.hpp"
 
-Gamecontroller::Gamecontroller(Gameview& gv, Settings& s, Game& g, Atis& a) : Controller(s), gameview(gv), game(g), atis(a) { }
+Gamecontroller::Gamecontroller(Gameview& gv, Settings& s, Game& g, Atis& a) : Controller(s), gameview(gv), game(g), atis(a) { 
+	this->metar = new Metar;
+}
 
 Gamecontroller::~Gamecontroller() { }
 
@@ -33,12 +35,13 @@ void Gamecontroller::handle_mouse_wheel(int amount) {
 
 void Gamecontroller::update(double elapsed, bool draw) {
 	this->game.update(elapsed);
+	this->metar->update("EFHK");
 	
 	if (draw) {
 		this->gameview.load();
 		this->gameview.set_centerpoint(this->game.get_centerpoint());
 		this->gameview.clear_screen();
-		this->gameview.add_element("Metar", "metar", "data", this->game.get_metar());
+		this->gameview.add_element("Metar", "metar", "data", this->metar->get_metar());
 		this->gameview.add_element("Input", "input", "data", this->command);
 		this->gameview.draw();
 		this->gameview.draw_planes(this->game.get_aircrafts(), this->game.get_selected());
