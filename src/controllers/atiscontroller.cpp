@@ -7,17 +7,22 @@ Atiscontroller::~Atiscontroller() { }
 void Atiscontroller::handle_mouse_click(Point& mouse) {
 	this->select_departure(mouse);
 	this->select_landing(mouse);
-
-    this->atis.set_transition_level(55);
-    this->atis.set_transition_altitude(5000);
 }
 
 void Atiscontroller::select_departure(Point& mouse) {
-	this->atis.set_departure_runway("22L");
+	std::string tmp = this->atisview.get_dep_runway_name(mouse);
+	
+	if (tmp.length() > 0) {
+		this->atis.set_departure_runway(tmp);
+	}
 }
 
 void Atiscontroller::select_landing(Point& mouse) {
-	this->atis.set_landing_runway("22L");
+	std::string tmp = this->atisview.get_lnd_runway_name(mouse);
+	
+	if (tmp.length() > 0) {
+		this->atis.set_landing_runway(tmp);
+	}
 }
 
 void Atiscontroller::handle_mouse_release(Point& mouse_start, Point& mouse_end) {
@@ -29,11 +34,19 @@ void Atiscontroller::handle_mouse_wheel(int amount) {
 }
 
 std::string Atiscontroller::handle_function_keys(int key) {
-	return "";
+	return this->command;
 }
 
 void Atiscontroller::handle_text_input() {
-
+	std::vector <std::string> tmp = Tools::split(" ", this->command);
+	
+	if (tmp.size() == 2) {
+		if (tmp[0] == "trlevel") {
+			this->atis.set_transition_level(Tools::tonumber<int>(tmp[1]));
+		} else if (tmp[0] == "tralt") {
+			this->atis.set_transition_altitude(Tools::tonumber<int>(tmp[1]));
+		}
+	}
 }
 
 void Atiscontroller::update(double elapsed, bool draw) {
@@ -41,15 +54,15 @@ void Atiscontroller::update(double elapsed, bool draw) {
 	
 	if (draw) {
 		this->atisview.clear_screen();
+		this->atisview.add_element("Input", "input", "data", this->command);
 		this->atisview.draw();
 		this->atisview.draw_runways(this->runways);
 		this->atisview.render();
 	}
 }
 
-void Atiscontroller::update_command(std::string command) {
-    this->atis.set_command("");
-    this->atis.set_command(command);
+void Atiscontroller::update_command(std::string input) {
+	this->command = input;
 }
 
 void Atiscontroller::load() {

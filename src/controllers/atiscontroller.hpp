@@ -36,7 +36,7 @@ private:
 	double calculate_backwind(double wind, double runway);
     Atisview& atisview;
     Atis& atis;
-    std::string input;
+    std::string command;
 	std::list <std::string> runways;
 	void select_departure(Point& mouse);
 	void select_landing(Point& mouse);
