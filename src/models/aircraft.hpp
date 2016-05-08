@@ -29,6 +29,7 @@ public:
 	void set_clearance_speed(double cl_spd);
     void set_clearance_heading(double cl_hdg, int turn = -1);
     void set_clearance_altitude(double cl_alt);
+    void set_clearance_approach();
 
     void set_separation_error(bool t);
     void set_target(Navpoint* target);

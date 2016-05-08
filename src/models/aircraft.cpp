@@ -20,24 +20,39 @@ Aircraft::Aircraft(std::string name, double speed, double heading, double altitu
 Aircraft::~Aircraft() { }
 
 void Aircraft::update(double elapsed) {
-	if (this->type >= 50 && this->speed > 130 && this->altitude < 1000) {
-		this->set_clearance_altitude(1500);
+	while (this->heading > 2 * Tools::get_PI()) {
+		this->heading -= 2 * Tools::get_PI();
+	}
+	
+	while (this->heading < 0) {
+		this->heading += 2 * Tools::get_PI();
 	}
 
-    if (this->target != NULL) {
-        this->clearance_heading = Tools::angle(this->place, this->target->get_place());
+	if (this->approach) {
+		double t_angle = Tools::angle(this->place, this->landing.get_start_place());
+		double t_distance = Tools::distanceNM(this->place, this->landing.get_start_place()) * 6076.11549;
+		double t_required_altitude = std::tan(Tools::deg2rad(this->landing.get_glidepath())) * t_distance;
+		
+		this->clearance_heading = t_angle;
+	} else {
+		if (this->type >= 50 && this->speed > 130 && this->altitude < 1000) {
+			this->set_clearance_altitude(1500);
+		}
 
-        if (Tools::on_area(this->place, this->target->get_place())) {
-            this->target = NULL;
-        }
-    }
+		if (this->target != NULL) {
+			this->clearance_heading = Tools::angle(this->place, this->target->get_place());
 
-    double distance = this->speed * (elapsed / 1000) / 3600;
-
-    this->altitude  = change_parameter(elapsed, this->altitude, this->clearance_altitude, 30.0, 0);
-    this->speed     = change_parameter(elapsed, this->speed, this->clearance_speed, 3.0, 0);
-    this->heading   = change_parameter(elapsed, this->heading, this->clearance_heading, Tools::deg2rad(3.0), this->turn);
+			if (Tools::on_area(this->place, this->target->get_place())) {
+				this->target = NULL;
+			}
+		}
+	}
 	
+	this->altitude  = change_parameter(elapsed, this->altitude, this->clearance_altitude, 	30.0, 0);
+	this->speed     = change_parameter(elapsed, this->speed, 	this->clearance_speed, 		3.0, 0);
+	this->heading   = change_parameter(elapsed, this->heading, 	this->clearance_heading, 	Tools::deg2rad(3.0), this->turn);
+	
+	double distance = this->speed * (elapsed / 1000) / 3600;
     this->place = Tools::calculate(this->place, this->heading, distance);
 }
 
@@ -109,4 +124,8 @@ void Aircraft::set_clearance_heading(double cl_hdg, int turn) {
 
 void Aircraft::set_clearance_altitude(double cl_alt) {
 	this->clearance_altitude = cl_alt;
+}
+
+void Aircraft::set_clearance_approach() {
+	this->approach = true;
 }
