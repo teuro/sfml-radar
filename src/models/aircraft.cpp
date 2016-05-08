@@ -24,17 +24,7 @@ void Aircraft::update(double elapsed) {
 		this->set_clearance_altitude(1500);
 	}
 
-    while (this->clearances.size()) {
-        Clearance active;
-        std::clog << this->clearances.size() << " clearances on stack" << std::endl;
-        active = this->clearances.top();
-        this->clearances.pop();
-
-        this->handle_clearance(active);
-    }
-
     if (this->target != NULL) {
-        //std::clog << this->name << " direct to " << this->target->get_name() << " " << this->target->get_place().get_latitude() << ", " << this->target->get_place().get_longitude() << std::endl;
         this->clearance_heading = Tools::angle(this->place, this->target->get_place());
 
         if (Tools::on_area(this->place, this->target->get_place())) {
@@ -44,7 +34,7 @@ void Aircraft::update(double elapsed) {
 
     double distance = this->speed * (elapsed / 1000) / 3600;
 
-    this->altitude  = change_parameter(elapsed, this->altitude, this->clearance_altitude, 55.0, 0);
+    this->altitude  = change_parameter(elapsed, this->altitude, this->clearance_altitude, 30.0, 0);
     this->speed     = change_parameter(elapsed, this->speed, this->clearance_speed, 3.0, 0);
     this->heading   = change_parameter(elapsed, this->heading, this->clearance_heading, Tools::deg2rad(3.0), this->turn);
 	
@@ -59,34 +49,21 @@ std::string Aircraft::get_name() {
     return this->name;
 }
 
-void Aircraft::handle_clearance(Clearance& ac) {
-    this->clearance_speed       = ac.get_speed();
-    this->clearance_altitude    = ac.get_altitude();
-    this->clearance_heading     = ac.get_heading();
-    this->turn                  = ac.get_turn();
-}
-
 double Aircraft::change_parameter(double elapsed, double actual_value, double clearance_value, double change, int turn) {
-    elapsed /= 1000;
-    double add = (clearance_value > actual_value) ? 1.0 : -1.0;
-    //std::clog << "Aircraft::change_parameter(" << elapsed << ", " << actual_value << ", " << clearance_value << ", " << change << ", " << turn << ")" << std::endl;
-    if (std::abs(actual_value - clearance_value) < 1.3) {
-        //std::clog << "Actual value is closer to clearance value than 1.3 unit " << std::endl;
+    elapsed /= 1000.0;
+	double add = turn;
+	
+	if (add == 0) {
+		add = (clearance_value > actual_value) ? 1.0 : -1.0;
+	}
+	
+    if (std::abs(actual_value - clearance_value) < (0.01 * clearance_value)) {
         return clearance_value;
-    } else if (turn != 0) {
-        //std::clog << "Turn is " << turn << std::endl;
-        actual_value += elapsed * change * (double)turn;
-        //std::clog << "Turn is not 0 " << actual_value << std::endl;
     } else {
         actual_value += elapsed * change * add;
-        //std::clog << "Speed or altitude" << actual_value << std::endl;
     }
 
     return actual_value;
-}
-
-void Aircraft::set_clearance(Clearance& cl) {
-    this->clearances.push(cl);
 }
 
 double Aircraft::get_speed() {
@@ -141,8 +118,9 @@ void Aircraft::set_clearance_speed(double cl_spd) {
 	this->clearance_speed = cl_spd;
 }
 
-void Aircraft::set_clearance_heading(double cl_hdg) {
+void Aircraft::set_clearance_heading(double cl_hdg, int turn) {
 	this->clearance_heading = cl_hdg;
+	this->turn = turn;
 }
 
 void Aircraft::set_clearance_altitude(double cl_alt) {

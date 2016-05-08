@@ -4,7 +4,6 @@
 #include "navpoint.hpp"
 #include "../tools/tools.hpp"
 #include "../tools/settings.hpp"
-#include "clearance.hpp"
 
 #include <stack>
 
@@ -16,7 +15,6 @@ public:
 
     Coordinate& get_place();
     std::string get_name();
-    void set_clearance(Clearance& cl);
 
     double get_speed();
     double get_heading();
@@ -28,7 +26,7 @@ public:
     double get_clearance_altitude();
 	
 	void set_clearance_speed(double cl_spd);
-    void set_clearance_heading(double cl_hdg);
+    void set_clearance_heading(double cl_hdg, int turn = -1);
     void set_clearance_altitude(double cl_alt);
 
     void set_separation_error(bool t);
@@ -51,9 +49,6 @@ private:
     double clearance_heading;
     int turn;
 
-    std::stack <Clearance> clearances;
-
-    void handle_clearance(Clearance& ac);
     void change_speed();
     void change_altitude(double elapsed);
     void change_heading();
