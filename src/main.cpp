@@ -1,12 +1,11 @@
-#include <ctime>
 #include <iostream>
-#include <cstdlib>
 #include <stdexcept>
 
 #include "program.hpp"
 
 int main(){
-    std::srand(std::time(NULL));
+	Tools::init_random();
+
     try {
         sf::RenderWindow window(sf::VideoMode(800, 600), "ATC-radar");
         sfml_drawsurface drawer(window);

@@ -10,6 +10,8 @@
 #include <functional>
 #include <cctype>
 #include <locale>
+#include <cstdlib>
+#include <ctime>
 
 #include "../models/coordinate.hpp"
 #include "../models/point.hpp"
@@ -71,7 +73,10 @@ namespace Tools {
 	
 	/**
 		* angle
-		* Calculates angle between two
+		* Calculates angle between two screen points
+		* @param Point& a reference point
+		* @param Point& b reference point
+		* @return double
 	**/
 	
 	double angle(Point& a, Point& b);
@@ -89,16 +94,66 @@ namespace Tools {
 	
 	/**
 		* calculate
-		* Calculates new 
+		* Calculates new screen point
+		* @param Point center_point_screen
+		* @param Coordinate center_point_map
+		* @param Coordinate target
+		* @param int zoom
 	**/
 
 	Point calculate(Point& center_point_screen, Coordinate& center_point_map, Coordinate& target, int zoom);
-	Point calculate(Point& sp, double angle, double length, bool rad);
-	Coordinate calculate(Coordinate& cp, double angle, double length);
+	
+	/**
+		* calculate
+		* Calculates new screen point
+		* @param Point start_point
+		* @param double angle radians from point
+		* @param double length
+		* @param bool rad
+		* @return Point
+	**/
+	
+	Point calculate(Point& start_point, double angle, double length, bool rad);
+	
+	/**
+		* calculate
+		* Calculates new screen point
+		* @param Coordinate start_point
+		* @param double angle radians from point
+		* @param double length
+		* @param bool rad
+		* @return Coordinate
+	**/
+	
+	Coordinate calculate(Coordinate& start_point, double angle, double length);
+	
+	/**
+		* is_match
+		* Checks if two strings are similar
+		* @param std::String a
+		* @param std::String b
+		* @return bool
+	**/
+	
 	bool is_match(std::string a, std::string b);
-
+	
+	/**
+		* rnd
+		* Returns pseudo random integer
+		* @param int a lower bound
+		* @param int b upper bound
+		* @return int
+	**/
+		
 	int rnd(int a, int b);
 
+	/**
+		* tostr
+		* converts numbers to string
+		* @param T might bee any numbers
+		* @return std::string
+	**/
+	
 	template <class T>
 	std::string tostr(T a) {
         std::ostringstream os;
@@ -107,7 +162,14 @@ namespace Tools {
 
         return os.str();
 	}
-
+	
+	/**
+		* toint
+		* converts string to int. This is just more easier instead of use tonumber<int>()
+		* @param std::string
+		* @return int
+	**/
+	
 	template <class T>
 	int toint(T a) {
         std::istringstream is(a);
@@ -117,6 +179,13 @@ namespace Tools {
 
         return tmp;
 	}
+	
+	/**
+		* tonumber
+		* converts string to int. This is just more flexibile instead of use toint()
+		* @param std::string
+		* @return number
+	**/
 
 	template <class T>
 	T tonumber(std::string a) {
@@ -128,19 +197,99 @@ namespace Tools {
 
         return tmp;
 	}
+	
+	/**
+		* on_area
+		* Checks if mouse is inside of an area
+		* @param Point mouse
+		* @param Point target
+		* @param int buffer
+		* @return bool
+	**/
 
 	bool on_area(Point& mouse, Point& target, int buffer = 5);
-	bool on_area(Point& mouse, Point& target_lu, Point& target_rd);
+	
+	/**
+		* on_area
+		* Checks if mouse is inside of an area
+		* @param Point mouse
+		* @param Point target_left_upper
+		* @param Point target_right_lower
+		* @return bool
+	**/
+	
+	bool on_area(Point& mouse, Point& target_left_upper, Point& target_right_lower);
+	
+	/**
+		* on_area
+		* Checks if plane is inside of an area
+		* @param Coordinate a
+		* @param Coordinate b
+		* @return bool
+	**/
+	
 	bool on_area(Coordinate& a, Coordinate& b);
-
+	
+	/**
+		* split
+		* explodes string to pieces
+		* @param std::string delimiter
+		* @param std::string input
+		* @return std::vector <std::string>
+	**/
+	
 	std::vector <std::string> split(std::string delimiter, std::string input);
+	
+	/**
+		* function keys declared
+	**/
+	
 	enum function_keys {UP = 1, DOWN, LEFT, RIGHT, NONE = -1};
+	
+	/**
+		* ltrim
+		* trims spaces from start of string
+		* @param std::string s
+		* @return std::string
+	**/
 
 	std::string ltrim(std::string s);
+	
+	/**
+		* ltrim
+		* trims spaces from end of string
+		* @param std::string s
+		* @return std::string
+	**/
+	
 	std::string rtrim(std::string s);
+	
+	/**
+		* ltrim
+		* trims spaces from start and end of string
+		* @param std::string s
+		* @return std::string
+	**/
+	
 	std::string trim(std::string s);
+	
+	/**
+		* get_PI
+		* returns constant value 3.1415...
+		* @param void
+		* @return double
+	**/
 
     double get_PI();
+	
+	/**
+		* init_randorm
+		* initialize pseudo random generator
+		* @param void
+		* @return void
+	**/
+	
+	void init_random();
 }
 
 #endif // _TOOLS_HPP

@@ -77,11 +77,20 @@ Point Tools::calculate(Point& sp, double bearing, double length, bool rad) {
 	if (!rad) {
         bearing = deg2rad(bearing);
     }
-
+	
+	while (bearing < 0.0) {
+		bearing += 2 * PI;
+	}
+	
+	while (bearing > 2 * PI) {
+		bearing -= 2 * PI;
+	}
+	
     double tmpx = sp.get_x() + std::cos(bearing) * length;
     double tmpy = sp.get_y() - std::sin(bearing) * length;
+	
+	Point tmp(tmpx, tmpy);
 
-    Point tmp(tmpx, tmpy);
     return tmp;
 }
 
@@ -173,4 +182,8 @@ bool Tools::is_match(std::string a, std::string b) {
 	}
 	
 	return true;
+}
+
+void Tools::init_random() {
+	std::srand(std::time(NULL));
 }
