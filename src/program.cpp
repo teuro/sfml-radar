@@ -13,15 +13,15 @@ Program::~Program() { }
 
 void Program::init() {
     std::clog << "Program::init()" << std::endl;
+	
+	Queryresult qrslt = Database::get_result("SELECT setting_name, setting_value FROM settings");
+	std::map <std::string, std::string> tmp;
 
-    Queryresult qrslt = Database::get_result("SELECT setting_name, setting_value FROM settings");
-    std::map <std::string, std::string> tmp;
+	for (unsigned int i = 0; i < qrslt.size(); ++i) {
+		tmp[qrslt(i, "setting_name")] = qrslt(i, "setting_value");
+	}
 
-    for (unsigned int i = 0; i < qrslt.size(); ++i) {
-        tmp[qrslt(i, "setting_name")] = qrslt(i, "setting_value");
-    }
-
-    this->settings.set_values(tmp);
+	settings.set_values(tmp);
 
     this->window.setTitle(this->settings.program_name);
 }

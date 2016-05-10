@@ -7,7 +7,7 @@ int main(){
 	Tools::init_random();
 
     try {
-        sf::RenderWindow window(sf::VideoMode(800, 600), "ATC-radar");
+		sf::RenderWindow window(sf::VideoMode(800, 600), "ATC-radar");
         sfml_drawsurface drawer(window);
 
         Settings settings;
@@ -25,8 +25,10 @@ int main(){
         Playercontroller    playercontroller(   playerview,     settings, player);
 
         Program program(gamecontroller, atiscontroller, playercontroller, window, settings);
-
-        program.init();
+		program.init();
+		
+		std::clog << "Main " << settings.max_approach_height << " ft " << std::endl;
+		
         while (program.run()) { }
 
         program.close();
