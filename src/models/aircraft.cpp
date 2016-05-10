@@ -31,7 +31,17 @@ void Aircraft::update(double elapsed) {
 	if (this->approach) {
 		double t_angle = Tools::angle(this->place, this->landing.get_start_place());
 		double t_distance = Tools::distanceNM(this->place, this->landing.get_start_place()) * 6076.11549;
-		double t_required_altitude = std::tan(Tools::deg2rad(this->landing.get_glidepath())) * t_distance;
+		double maximum_approach_altitude = std::tan(Tools::deg2rad(this->landing.get_glidepath())) * t_distance;
+		double min_approach_angle = this->landing.get_heading() - Tools::deg2rad(this->settings.approach_angle);
+		double max_approach_angle = this->landing.get_heading() + Tools::deg2rad(this->settings.approach_angle);
+		
+		std::clog << this->settings.max_approach_height << " " << this->altitude << std::endl;
+		
+		if (this->altitude > this->settings.max_approach_height || this->heading > max_approach_angle || this->heading <  min_approach_angle || this->speed > this->settings.max_approach_speed) {
+			std::cerr << "Plane must be " << this->settings.max_approach_height << ", speed must max " << this->settings.max_approach_speed << " kt and approach angle must be between " << Tools::rad2deg(min_approach_angle) << " and " << Tools::rad2deg(max_approach_angle) << std::endl;
+			this->approach = false;
+			return;
+		}
 		
 		this->clearance_heading = t_angle;
 	} else {
