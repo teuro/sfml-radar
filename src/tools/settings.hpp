@@ -33,7 +33,7 @@ public:
     int max_separation_errors;
     int max_approach_speed;
     int approach_angle;
-    int max_approach_height;
+    int max_approach_altitude;
     int approach_speed;
     int final_approach_speed;
     int glide_slope;
@@ -58,6 +58,7 @@ public:
     int cloud_count_upper;
     int departure_separation;
     int zoom;
+	int airfield_altitude;
     std::string program_name;
     std::string database_name;
     std::string search_term;

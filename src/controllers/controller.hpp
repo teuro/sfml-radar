@@ -1,9 +1,6 @@
 #ifndef CONTROLLER_HPP
 #define CONTROLLER_HPP
 
-#include <tinyxml/tinyxml.h>
-#include <tinyxpath/xpath_processor.h>
-
 #include "../views/view.hpp"
 
 class Controller {
@@ -19,9 +16,11 @@ public:
 	virtual void load() = 0;
 	//virtual std::string get_input() = 0;
 protected:
-    Controller(Settings& s) : settings(s) { }
+    Controller(Settings& s, Drawsurface& d) : settings(s), drawer(d) { }
     ~Controller() { }
     Settings& settings;
+	Drawsurface& drawer;
+	std::string command;
 private:
 };
 

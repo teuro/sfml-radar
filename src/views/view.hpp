@@ -23,7 +23,6 @@ public:
 	void add_element(std::string key, std::string id, std::string cl, std::string value);
 protected:
     Drawsurface& drawer;
-    TiXmlDocument document;
     std::list <Style> styles;
     std::map <std::string, Layout_element> layout_elements;
     void draw_element(Layout_element& layout_element);

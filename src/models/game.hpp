@@ -7,8 +7,6 @@
 #include <map>
 #include <fstream>
 #include <stdexcept>
-#include <dirent.h>
-#include <tinyxml/tinyxml.h>
 #include <queue>
 #include <algorithm>
 
@@ -104,8 +102,6 @@ public:
 
 	Aircraft* get_selected();
 	Airfield* get_active_field();
-
-    TiXmlDocument document;
 	
 	void create_plane();
 	std::string get_metar();

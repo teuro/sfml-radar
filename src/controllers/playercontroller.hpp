@@ -7,7 +7,7 @@
 
 class Playercontroller : public Controller {
 public:
-    Playercontroller(Playerview& pv, Settings& s, Player& p);
+    Playercontroller(Drawsurface& d, Settings& s);
     ~Playercontroller();
     void handle_mouse_click(Point& mouse);
     void handle_mouse_release(Point& mouse_start, Point& mouse_end);
@@ -20,8 +20,8 @@ public:
 	void load();
 protected:
 private:
-    Playerview& playerview;
-    Player& player;
+    Playerview* playerview;
+    Player* player;
 };
 
 

@@ -17,7 +17,7 @@
 
 class Gamecontroller : public Controller {
 public:
-    Gamecontroller(Gameview& gv, Settings& s, Game& g, Atis& a);
+    Gamecontroller(Drawsurface& d, Settings& s, Atis& a);
     ~Gamecontroller();
 	/**
 		* handle_function_keys
@@ -48,11 +48,10 @@ public:
 	//std::string get_input();
 protected:
 private:
-	std::string command;
 	std::list <std::string> quicklist;
 	std::list <std::string> matching_elements(std::string input);
-    Gameview& gameview;
-    Game& game;
+    Gameview* gameview;
+    Game* game;
     Atis& atis;
 	Metar* metar;
     int function_key;

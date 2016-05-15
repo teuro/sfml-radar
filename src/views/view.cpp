@@ -1,8 +1,7 @@
 #include "view.hpp"
 
 View::View(Drawsurface& d) : drawer(d) { 
-	this->styles = parse_css::parse("style.css");
-    this->document.LoadFile("layout.xml");
+	this->styles = parse_css::parse("styles/style.css");
 }
 
 View::~View() { }
@@ -17,40 +16,8 @@ int count_childs(TiXmlNode* crnt) {
     return count;
 }
 
-void View::iterate(TiXmlNode* el) {
-    for (TiXmlNode* node = el->FirstChild(); node; node = node->NextSibling()) {
-        std::string node_name = node->Value();
-
-        if (node_name == "element") {
-            TiXmlElement* pr = node->ToElement();
-
-            if (pr->Attribute("id") && pr->Attribute("class") && pr->Attribute("name")) {
-                std::string name    = pr->Attribute("name");
-                std::string id      = pr->Attribute("id");
-                std::string cl      = pr->Attribute("class");
-
-                Layout_element tmp(name, id, cl);
-                View::layout_elements[name] = tmp;
-                TiXmlNode* ch = node->FirstChild();
-
-                for (int i = 0; i < count_childs(node); ++i) {
-                    if (!ch->NoChildren()) {
-                        //std::clog << ch->FirstChild()->Value() << std::endl;
-                        this->layout_elements[name].set_content(ch->FirstChild()->Value());
-                    }
-                    ch = ch->NextSibling();
-                }
-            }
-        }
-
-        iterate(node);
-    }
-}
-
 void View::load() {
     this->layout_elements.clear();
-
-    View::iterate(this->document.RootElement());
 
     std::map <std::string, Layout_element> :: iterator le;
 

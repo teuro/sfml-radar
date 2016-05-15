@@ -1,11 +1,13 @@
 #include "atiscontroller.hpp"
 
-Atiscontroller::Atiscontroller(Atisview& av, Settings& s, Atis& a) : Controller(s), atisview(av), atis(a) { 
+Atiscontroller::Atiscontroller(Drawsurface& d, Settings& s, Atis& a) : Controller(s, d), atis(a) { 
 	this->metar = new Metar;
+	this->atisview = new Atisview(this->drawer, this->settings);
 }
 
 Atiscontroller::~Atiscontroller() { 
 	delete this->metar;
+	delete this->atisview;
 }
 
 void Atiscontroller::handle_mouse_click(Point& mouse) {
@@ -14,7 +16,7 @@ void Atiscontroller::handle_mouse_click(Point& mouse) {
 }
 
 void Atiscontroller::select_departure(Point& mouse) {
-	std::string tmp = this->atisview.get_dep_runway_name(mouse);
+	std::string tmp = this->atisview->get_dep_runway_name(mouse);
 	
 	if (tmp.length() > 0) {
 		this->atis.set_departure_runway(tmp);
@@ -22,7 +24,7 @@ void Atiscontroller::select_departure(Point& mouse) {
 }
 
 void Atiscontroller::select_landing(Point& mouse) {
-	std::string tmp = this->atisview.get_lnd_runway_name(mouse);
+	std::string tmp = this->atisview->get_lnd_runway_name(mouse);
 	
 	if (tmp.length() > 0) {
 		this->atis.set_landing_runway(tmp);
@@ -58,12 +60,12 @@ void Atiscontroller::update(double elapsed, bool draw) {
     this->metar->update("EFHK");
 	
 	if (draw) {
-		this->atisview.clear_screen();
-		this->atisview.add_element("Input", "input", "data", this->command);
-		this->atisview.add_element("Metar", "metar", "data", this->metar->get_metar());
-		this->atisview.draw();
-		this->atisview.draw_runways(this->runways);
-		this->atisview.render();
+		this->atisview->clear_screen();
+		this->atisview->add_element("Input", "input", "data", this->command);
+		this->atisview->add_element("Metar", "metar", "data", this->metar->get_metar());
+		this->atisview->draw();
+		this->atisview->draw_runways(this->runways);
+		this->atisview->render();
 	}
 }
 

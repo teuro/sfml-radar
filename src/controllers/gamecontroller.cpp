@@ -1,11 +1,14 @@
 #include "gamecontroller.hpp"
 
-Gamecontroller::Gamecontroller(Gameview& gv, Settings& s, Game& g, Atis& a) : Controller(s), gameview(gv), game(g), atis(a) { 
+Gamecontroller::Gamecontroller(Drawsurface& d, Settings& s, Atis& a) : Controller(s, d), atis(a) { 
 	this->metar = new Metar;
+	this->gameview = new Gameview(this->drawer, this->settings);
+	this->game = new Game(this->settings);
 }
 
 Gamecontroller::~Gamecontroller() { 
 	delete this->metar;
+	delete this->gameview;
 }
 
 std::string Gamecontroller::handle_function_keys(int action) {
@@ -23,8 +26,8 @@ void Gamecontroller::handle_mouse_release(Point& mouse_start, Point& mouse_end) 
     double angle_rad    = Tools::angle(mouse_end, mouse_start) - (Tools::get_PI() / 2.0);
     double distance_nm  = Tools::distanceNM(distance_px, this->settings.zoom, this->settings.screen_width);
 
-    Coordinate center = Tools::calculate(this->game.get_centerpoint(), angle_rad, distance_nm);
-    this->game.set_centerpoint(center);
+    Coordinate center = Tools::calculate(this->game->get_centerpoint(), angle_rad, distance_nm);
+    this->game->set_centerpoint(center);
 }
 
 void Gamecontroller::handle_mouse_wheel(int amount) {
@@ -36,35 +39,35 @@ void Gamecontroller::handle_mouse_wheel(int amount) {
 }
 
 void Gamecontroller::update(double elapsed, bool draw) {
-	this->game.update(elapsed);
+	this->game->update(elapsed);
 	this->metar->update("EFHK");
 	
 	if (draw) {
-		this->gameview.load();
-		this->gameview.set_centerpoint(this->game.get_centerpoint());
-		this->gameview.clear_screen();
-		this->gameview.add_element("Metar", "metar", "data", this->metar->get_metar());
-		this->gameview.add_element("Input", "input", "data", this->command);
-		this->gameview.draw();
-		this->gameview.draw_planes(this->game.get_aircrafts(), this->game.get_selected());
-		this->gameview.draw_navpoints(this->game.get_navpoints());
-		this->gameview.draw_airfield(this->game.get_active_field());
-		this->gameview.render();
+		this->gameview->load();
+		this->gameview->set_centerpoint(this->game->get_centerpoint());
+		this->gameview->clear_screen();
+		this->gameview->add_element("Metar", "metar", "data", this->metar->get_metar());
+		this->gameview->add_element("Input", "input", "data", this->command);
+		this->gameview->draw();
+		this->gameview->draw_planes(this->game->get_aircrafts(), this->game->get_selected());
+		this->gameview->draw_navpoints(this->game->get_navpoints());
+		this->gameview->draw_airfield(this->game->get_active_field());
+		this->gameview->render();
 	}
 }
 
 void Gamecontroller::handle_mouse_click(Point& mouse) {
-	this->game.select_aircraft(mouse);
+	this->game->select_aircraft(mouse);
 }
 
 void Gamecontroller::load() {
 	std::clog << "Gamecontroller::load()" << std::endl;
-	this->game.load("EFHK", this->atis.get_departure_runway(), this->atis.get_landing_runway());
+	this->game->load("EFHK", this->atis.get_departure_runway(), this->atis.get_landing_runway());
 }
 
 void Gamecontroller::handle_text_input() {
     std::string t_command = this->command;
-	this->game.build_clearance(command);
+	this->game->build_clearance(command);
 }
 
 void Gamecontroller::update_command(std::string command) {

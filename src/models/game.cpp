@@ -193,7 +193,7 @@ void Game::create_plane() {
 }
 
 void Game::load_airfield(std::string icao) {
-    Queryresult airport = Database::get_result("SELECT ROWID AS airfield_id, ICAO, latitude, longitude FROM airfields WHERE ICAO = '" + icao + "'");
+    Queryresult airport = Database::get_result("SELECT ROWID AS airfield_id, ICAO, latitude, longitude, altitude FROM airfields WHERE ICAO = '" + icao + "'");
 
     std::map <std::string, std::string> variables;
 	
@@ -202,6 +202,7 @@ void Game::load_airfield(std::string icao) {
     Coordinate place(Tools::tonumber<double>(airport(0, "latitude")), Tools::tonumber<double>(airport(0, "longitude")));
 
     this->active_field = new Airfield(airport(0, "ICAO"), place);
+	this->settings.airfield_altitude = Tools::toint(airport(0, "altitude"));
 	
 	try {
 		std::string query = Database::bind_param("SELECT name, latitude, longitude, altitude, heading, type FROM navpoints WHERE ? = ?", variables);

@@ -1,7 +1,7 @@
 #include "settings.hpp"
 
 Settings::Settings() { 
-	this->database_name = "radar.db"; 
+	this->database_name = "databases/radar.db"; 
 	this->search_term = "? = ?"; 
 	this->bind_term = " = "; 
 }
@@ -31,7 +31,7 @@ void Settings::set_values(std::map<std::string, std::string> values ) {
     this->max_separation_errors         = Tools::toint(values["max_separation_errors"]);
     this->max_approach_speed            = Tools::toint(values["max_approach_speed"]);
     this->approach_angle                = Tools::toint(values["approach_angle"]);
-    this->max_approach_height           = Tools::toint(values["max_approach_height"]);
+    this->max_approach_altitude         = Tools::toint(values["max_approach_height"]);
     this->approach_speed                = Tools::toint(values["approach_speed"]);
     this->final_approach_speed          = Tools::toint(values["final_approach_speed"]);
     this->glide_slope                   = Tools::toint(values["glide_slope"]);

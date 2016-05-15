@@ -21,7 +21,7 @@ struct pressure_limit {
 
 class Atiscontroller : public Controller {
 public:
-    Atiscontroller(Atisview& av, Settings& s, Atis& a);
+    Atiscontroller(Drawsurface& d, Settings& s, Atis& a);
     ~Atiscontroller();
     void handle_mouse_click(Point& mouse);
     void handle_mouse_release(Point& mouse_start, Point& mouse_end);
@@ -35,10 +35,9 @@ public:
 protected:
 private:
 	double calculate_backwind(double wind, double runway);
-    Atisview& atisview;
+    Atisview* atisview;
     Atis& atis;
 	Metar* metar;
-    std::string command;
 	std::list <std::string> runways;
 	void select_departure(Point& mouse);
 	void select_landing(Point& mouse);

@@ -13,21 +13,13 @@ int main(){
         Settings settings;
 	
         Atis    atis    (settings);
-        Game    game    (settings);
-        Player  player  (settings);
-
-        Gameview    gameview(drawer, settings);
-        Atisview    atisview(drawer, settings);
-        Playerview  playerview(drawer, settings);
-
-        Gamecontroller      gamecontroller(     gameview,       settings, game, atis);
-        Atiscontroller      atiscontroller(     atisview,       settings, atis);
-        Playercontroller    playercontroller(   playerview,     settings, player);
+		
+        Gamecontroller      gamecontroller(drawer, settings, atis);
+        Atiscontroller      atiscontroller(drawer, settings, atis);
+        Playercontroller    playercontroller(drawer, settings);
 
         Program program(gamecontroller, atiscontroller, playercontroller, window, settings);
 		program.init();
-		
-		std::clog << "Main " << settings.max_approach_height << " ft " << std::endl;
 		
         while (program.run()) { }
 
@@ -41,6 +33,7 @@ int main(){
         return 1;
     } catch (std::bad_alloc& e) {
         std::cerr << e.what() << std::endl;
+		return 1;
     } catch ( ... ) {
         std::cerr << "Unknown error" << std::endl;
         return 1;

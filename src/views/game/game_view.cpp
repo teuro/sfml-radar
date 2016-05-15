@@ -17,8 +17,7 @@ void Gameview::draw() {
 
 void Gameview::draw_plane(Aircraft*& plane, Point& center_point, std::string color) {
 	Point aircraft_place = Tools::calculate(this->center_point, this->centerpoint, plane->get_place(), this->settings.zoom);
-	
-	double minute_px        = Tools::distancePX(plane->get_speed() * (1.0 / 60.0), this->settings.zoom, this->settings.screen_width);
+
     double separation_ring  = Tools::distancePX(settings.separation_horizontal / 2.0, this->settings.zoom, this->settings.screen_width);
 	
 	Coordinate end_point_c = Tools::calculate(plane->get_place(), plane->get_heading(), plane->get_speed() * (1.0 / 60.0));

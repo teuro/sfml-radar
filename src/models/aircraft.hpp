@@ -58,6 +58,7 @@ private:
     int type;
     Navpoint* target;
     bool approach;
+    bool landed;
     Settings& settings;
 	Runway& landing;
 };
