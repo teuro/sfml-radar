@@ -28,6 +28,8 @@ public:
     bool operator ==(std::string id) { return (this->id == id); }
     std::string get_class() { return this->s_class; }
     std::vector <std::string> get_content();
+	void set_text_colors(int color);
+	void set_background_colors(int color);
     
     int t_red;
     int t_green;

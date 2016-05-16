@@ -62,3 +62,21 @@ void Layout_element::add_content(std::string content) {
 void Layout_element::update_content(std::string content) {
     this->set_content(content);
 }
+
+void Layout_element::set_text_colors(int color) {
+	this->t_blue = color % 256;
+	color /= 256;
+	this->t_red = color / 256;
+	this->t_green = color % 256;
+
+	this->t_color_setted = true;
+}
+
+void Layout_element::set_background_colors(int color) {
+	this->b_blue = color % 256;
+	color /= 256;
+	this->b_red = color / 256;
+	this->b_green = color % 256;
+
+	this->b_color_setted = true;
+}

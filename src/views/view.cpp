@@ -35,8 +35,7 @@ void View::render() {
 }
 
 void View::draw_element(Layout_element& layout_element) {
-	//std::clog << "View::draw_element(" << layout_element.get_name() << ")" << std::endl;
-    if (layout_element.b_color_setted) {
+	if (layout_element.b_color_setted) {
         drawer.rectangleColor(layout_element.get_top_left(), layout_element.get_bottom_right(), layout_element.b_red, layout_element.b_green, layout_element.b_blue, true);
     } else {
         drawer.rectangleColor(layout_element.get_top_left(), layout_element.get_bottom_right(), "black", true);
@@ -77,37 +76,16 @@ void View::style(Layout_element& le) {
 	        Point p(t_style->get_left(), t_style->get_top());
             le.set_place(p);
 
-            int t_color = t_style->get_t_color();
-            int b_color = t_style->get_b_color();
+            if (t_style->get_t_color() >= 0) {
+				le.set_text_colors(t_style->get_t_color());
+			}
 
-            if (t_color >= 0) {
-                int blue = t_color % 256;
-                t_color /= 256;
-                int red = t_color / 256;
-                int green = t_color % 256;
-
-                le.t_red = red;
-                le.t_green = green;
-                le.t_blue = blue;
-
-                le.t_color_setted = true;
-            }
-
-            if (b_color >= 0) {
-                int blue = b_color % 256;
-                b_color /= 256;
-                int red = b_color / 256;
-                int green = b_color % 256;
-
-                le.b_red = red;
-                le.b_green = green;
-                le.b_blue = blue;
-
-                le.b_color_setted = true;
+            if (t_style->get_b_color() >= 0) {
+                le.set_background_colors(t_style->get_b_color());
             }
 
             if (le.get_content().size() * drawer.get_fontsize() > t_style->get_height()) {
-                t_style->set_height((le.get_content().size()-1) * drawer.get_fontsize() + 30);
+                t_style->set_height(le.get_content().size() * drawer.get_fontsize() + 30);
             }
 
             std::vector <std::string> lines = le.get_content();
@@ -116,15 +94,15 @@ void View::style(Layout_element& le) {
 
             if (lines.size() == 0) {
                 longest_line = "";
-            } else if (lines.size() < 2) {
+            } else if (lines.size() == 1) {
                 longest_line = lines[0];
             } else {
                 longest = std::max_element(lines.begin(), lines.end(), compare_length);
                 longest_line = *longest;
             }
-
-            if (longest_line.length() * (drawer.get_fontsize()/3) > t_style->get_width()) {
-                t_style->set_width(longest_line.length() * (drawer.get_fontsize()/3)+40);
+			
+            if (longest_line.length() * drawer.get_fontsize() > t_style->get_width()) {
+                t_style->set_width(longest_line.length() * drawer.get_fontsize()/1.75);
             }
 
             le.set_size(t_style->get_width(), t_style->get_height());
