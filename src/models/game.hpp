@@ -16,7 +16,7 @@
 #include "airfield.hpp"
 #include "../tools/settings.hpp"
 #include "../tools/tools.hpp"
-#include "database.hpp"
+#include "../tools/database/database.hpp"
 
 /**
     * Game very low-level on MVC model

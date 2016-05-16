@@ -21,7 +21,7 @@
 #include "models/point.hpp"
 #include "tools/settings.hpp"
 #include "tools/database/queryresult.hpp"
-#include "models/database.hpp"
+#include "tools/database/database.hpp"
 
 /**
  * @file

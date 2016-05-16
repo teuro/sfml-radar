@@ -5,8 +5,8 @@
 #include <string>
 #include <stdexcept>
 
-#include "../tools/database/queryresult.hpp"
-#include "../tools/settings.hpp"
+#include "queryresult.hpp"
+#include "../settings.hpp"
 
 /**
     * namespace Database

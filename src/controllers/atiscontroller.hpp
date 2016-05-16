@@ -10,7 +10,7 @@
 #include "../views/atis/atis_view.hpp"
 #include "../tools/tools.hpp"
 #include "controller.hpp"
-#include "../models/database.hpp"
+#include "../tools/database/database.hpp"
 
 struct pressure_limit {
     int lower_limit;
