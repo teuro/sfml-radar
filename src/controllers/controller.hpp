@@ -17,7 +17,7 @@ public:
 	//virtual std::string get_input() = 0;
 protected:
     Controller(Settings& s, Drawsurface& d) : settings(s), drawer(d) { }
-    ~Controller() { }
+    virtual ~Controller() { }
     Settings& settings;
 	Drawsurface& drawer;
 	std::string command;

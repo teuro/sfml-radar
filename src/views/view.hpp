@@ -15,7 +15,7 @@
 class View {
 public:
 	View(Drawsurface& d);
-	~View();
+	virtual ~View() = 0;
 	virtual void draw();
 	void render();
 	void clear_screen();
