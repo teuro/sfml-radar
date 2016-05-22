@@ -268,30 +268,32 @@ std::string Game::get_metar() {
 }
 
 void Game::build_clearance(std::string command) {
-	std::clog << "Game::build_clearance(" << command << ")" << std::endl;
-	
 	std::vector <std::string> tmp = Tools::split(" ", command);
-	std::clog << "vector tmp has " << tmp.size() << " items" << std::endl;
-	int turn = 0;
-	int hdg;
-	int spd;
-	int alt;
-	std::string rwy;
 	
-	if (tmp[0] == "turn") {
-		turn = (tmp[1] == "right") ? 1 : -1;
-		hdg = Tools::tonumber<int>(tmp.back());
+	if (this->selected != NULL) {
+		int value = Tools::tonumber<int>(tmp.back());
 		
-		std::clog << "turn " << turn << " heading " << hdg << std::endl;
-		this->selected->set_clearance_heading(Tools::deg2rad(hdg), turn);
-	} else if (tmp[0] == "climb" || tmp[0] == "descent") {
-		alt = Tools::toint(tmp.back());
-		this->selected->set_clearance_altitude(alt);
-	} else if (tmp[0] == "speed") {
-		spd = Tools::toint(tmp.back());
-		this->selected->set_clearance_speed(spd);
-	} else if (tmp[0] == "approach") {
-		rwy = tmp.back();
-		this->selected->set_clearance_approach();
+		if (tmp[0] == "turn") {
+			int turn = (tmp[1] == "right") ? 1 : -1;
+			this->selected->set_clearance_heading(Tools::deg2rad(value), turn);
+		} else if (tmp[0] == "climb") {
+			if (this->get_altitude() > value) {
+				std::cerr << "Can't climb, because altitude " << this->get_altitude() << " ft is higher than " << value << " ft" << std::endl;
+			} else {
+				this->selected->set_clearance_altitude(value);
+			}
+		} else if (tmp[0] == "descent") {
+			if (this->get_altitude() < value) {
+				std::cerr << "Can't descent, because altitude " << this->get_altitude() << " ft is lower than " << value << " ft" << std::endl;
+			} else {
+				this->selected->set_clearance_altitude(value);
+			}
+		} else if (tmp[0] == "speed") {
+			this->selected->set_clearance_speed(value);
+		} else if (tmp[0] == "approach") {
+			this->selected->set_clearance_approach();
+		}
+	} else {
+		std::cerr << "No selected plane" << std::endl;
 	}
 }
