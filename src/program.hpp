@@ -10,17 +10,8 @@
 #include <sqlite3pp.h>
 
 #include "controllers/gamecontroller.hpp"
-#include "controllers/atiscontroller.hpp"
-#include "controllers/playercontroller.hpp"
-#include "models/game.hpp"
-#include "models/atis.hpp"
-#include "models/player.hpp"
-#include "views/game/game_view.hpp"
-#include "views/atis/atis_view.hpp"
-#include "views/player/player_view.hpp"
 #include "models/point.hpp"
 #include "tools/settings.hpp"
-#include "tools/database/queryresult.hpp"
 #include "tools/database/database.hpp"
 
 /**
@@ -56,17 +47,17 @@
  */
 class Program {
 public:
-    Program(Gamecontroller& gc, Atiscontroller& ac, Playercontroller& pc, sf::RenderWindow& w, Settings& s);
+    Program();
     ~Program();
 
     /**
         * Run main method runs until receive quit event
         * @param none
-        * @return bool
+        * @return void
         *
         *
     **/
-    bool run();
+    void run();
 
     /**
         * init
@@ -91,17 +82,12 @@ public:
     unsigned int screen_width;
     unsigned int screen_height;
     std::string program_name;
+	Settings settings;
 protected:
 private:
-    Gamecontroller& gamecontroller;
-    Atiscontroller& atiscontroller;
-    Playercontroller& playercontroller;
-
-    sf::RenderWindow& window;
-    Settings& settings;
     sf::Clock clock;
 
-    bool handle_event(sf::Event& event);
+    bool handle_event(sf::Event& event, Controller& ctrl, sf::RenderWindow& window);
 
     enum types {PLAYER, ATIS, GAME};
 
@@ -117,7 +103,9 @@ private:
     int counter;
     std::string input_string;
     int input_action;
-    Controller* ctrl;
+	
+	bool is_drawable();
+	bool handle_events(Controller& ctrl, sf::RenderWindow& window);
 };
 
 
