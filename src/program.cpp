@@ -60,7 +60,7 @@ void Program::run() {
 	
 	sf::Time elapsed = this->clock.restart();
 	
-	Gamecontroller gamecontroller(drawer, this->settings);
+	Gamecontroller gamecontroller(this->settings, drawer);
 	gamecontroller.load();
 	
 	while (this->handle_events(gamecontroller, window)) {
