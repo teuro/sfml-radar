@@ -10,7 +10,6 @@ void Gameview::load() {
 }
 
 void Gameview::draw() {
-    //std::clog << "Gameview::draw()" << std::endl;
 	Point logo_place(this->settings.screen_width-160, 5);
 	this->drawer.draw_picture("images/logo.jpg", logo_place, false);
 	
