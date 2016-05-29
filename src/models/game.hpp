@@ -80,7 +80,7 @@ public:
 	void load(std::string airfield, std::string dep, std::string lnd);
 
     /**
-        Calculate new state of game
+        * Calculate new state of game
         * @param double elapsed
         * @return void
     **/

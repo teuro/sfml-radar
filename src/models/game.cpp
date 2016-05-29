@@ -29,6 +29,10 @@ Coordinate& Game::get_centerpoint() {
 }
 
 Airfield* Game::get_active_field() {
+	if (this->active_field == NULL) {
+		throw std::logic_error("Game::get_active_field() line 36 this->active_field == NULL");
+	}
+	
     return this->active_field;
 }
 
@@ -94,7 +98,6 @@ void Game::handle_holdings() {
         std::list <Aircraft*> :: iterator plane = this->aircrafts.begin();
 
         while (plane != this->aircrafts.end()) {
-			//std::clog << (*plane)->get_name() << " " << (*plane)->get_altitude() << std::endl;
             if ((*plane)->get_altitude() < 1000) {
                 return;
             }
@@ -104,8 +107,6 @@ void Game::handle_holdings() {
 
         Aircraft* t = this->holdings.front();
         t->set_place(this->departure.get_start_place());
-		
-		//std::clog << "Departure heading is " << Tools::rad2deg(this->departure->get_heading()+3.14/2.0) << std::endl;
         t->set_clearance_speed(160);
 		this->aircrafts.push_back(t);
         this->holdings.pop();
@@ -129,7 +130,7 @@ void Game::update(double elapsed) {
     if (this->duration > this->new_plane) {
         create_plane();
         double t = Tools::rnd(this->settings.new_plane_lower * 1000, this->settings.new_plane_upper * 1000);
-        this->new_plane += t;
+		this->new_plane += t;
     }
 }
 
@@ -193,6 +194,7 @@ void Game::create_plane() {
 }
 
 void Game::load_airfield(std::string icao) {
+	std::clog << "Game::load_airfield(" << icao << ")" << std::endl;
     Queryresult airport = Database::get_result("SELECT ROWID AS airfield_id, ICAO, latitude, longitude, altitude FROM airfields WHERE ICAO = '" + icao + "'");
 
     std::map <std::string, std::string> variables;
@@ -215,7 +217,7 @@ void Game::load_airfield(std::string icao) {
 
 			Coordinate t_place(t_lat, t_lon);
 			std::string t_name  = q_navpoints(i, "name");
-			int type = Tools::tonumber<int>(q_navpoints(i, "type"));
+			int type = Tools::toint(q_navpoints(i, "type"));
 
 			if (type == 2) {
 				double t_altitude   = Tools::tonumber<double>(q_navpoints(i, "altitude"));
@@ -277,14 +279,14 @@ void Game::build_clearance(std::string command) {
 			int turn = (tmp[1] == "right") ? 1 : -1;
 			this->selected->set_clearance_heading(Tools::deg2rad(value), turn);
 		} else if (tmp[0] == "climb") {
-			if (this->get_altitude() > value) {
-				std::cerr << "Can't climb, because altitude " << this->get_altitude() << " ft is higher than " << value << " ft" << std::endl;
+			if (this->selected->get_altitude() > value) {
+				std::cerr << "Can't climb, because altitude " << this->selected->get_altitude() << " ft is higher than " << value << " ft" << std::endl;
 			} else {
 				this->selected->set_clearance_altitude(value);
 			}
 		} else if (tmp[0] == "descent") {
-			if (this->get_altitude() < value) {
-				std::cerr << "Can't descent, because altitude " << this->get_altitude() << " ft is lower than " << value << " ft" << std::endl;
+			if (this->selected->get_altitude() < value) {
+				std::cerr << "Can't descent, because altitude " << this->selected->get_altitude() << " ft is lower than " << value << " ft" << std::endl;
 			} else {
 				this->selected->set_clearance_altitude(value);
 			}
