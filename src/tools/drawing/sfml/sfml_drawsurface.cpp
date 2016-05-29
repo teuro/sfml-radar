@@ -37,9 +37,15 @@ void sfml_drawsurface::circleColor(Point& a, unsigned int radius, int red, int g
 	this->window.draw(circle);
 }
 
-
 void sfml_drawsurface::draw_picture(std::string file, Point& a, bool center) {
-
+	sf::Texture image;
+	sf::Sprite sprite;
+	
+	image.loadFromFile(file);
+	sprite.setTexture(image);
+	sprite.setPosition(sf::Vector2f(a.get_x(), a.get_y()));
+	
+	this->window.draw(sprite);
 }
 
 void sfml_drawsurface::draw_text(std::string text, Point& a, std::string color, int font_size) {
