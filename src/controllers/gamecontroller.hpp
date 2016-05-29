@@ -17,7 +17,7 @@
 
 class Gamecontroller : public Controller {
 public:
-    Gamecontroller(Drawsurface& d, Settings& s);
+    Gamecontroller(Settings& s, Drawsurface& d);
     ~Gamecontroller();
 	/**
 		* handle_function_keys
