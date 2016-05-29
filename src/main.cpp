@@ -4,27 +4,14 @@
 #include "program.hpp"
 
 int main(){
-	Tools::init_random();
-
     try {
-		sf::RenderWindow window(sf::VideoMode(800, 600), "ATC-radar");
-        sfml_drawsurface drawer(window);
-
-        Settings settings;
-	
-        Atis    atis    (settings);
+        Program program;
 		
-        Gamecontroller      gamecontroller(drawer, settings, atis);
-        Atiscontroller      atiscontroller(drawer, settings, atis);
-        Playercontroller    playercontroller(drawer, settings);
-
-        Program program(gamecontroller, atiscontroller, playercontroller, window, settings);
 		program.init();
 		
-        while (program.run()) { }
+        program.run();
 
         program.close();
-
     } catch (std::runtime_error& e) {
         std::cerr << e.what() << std::endl;
         return 1;
