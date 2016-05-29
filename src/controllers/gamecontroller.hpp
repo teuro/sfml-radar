@@ -17,7 +17,7 @@
 
 class Gamecontroller : public Controller {
 public:
-    Gamecontroller(Drawsurface& d, Settings& s, Atis& a);
+    Gamecontroller(Drawsurface& d, Settings& s);
     ~Gamecontroller();
 	/**
 		* handle_function_keys
@@ -52,8 +52,8 @@ private:
 	std::list <std::string> matching_elements(std::string input);
     Gameview* gameview;
     Game* game;
-    Atis& atis;
 	Metar* metar;
+	Atis* atis;
     int function_key;
 };
 

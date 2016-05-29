@@ -18,7 +18,7 @@ public:
 protected:
     Controller(Settings& s, Drawsurface& d) : settings(s), drawer(d) { }
     virtual ~Controller() { }
-    Settings& settings;
+	Settings& settings;
 	Drawsurface& drawer;
 	std::string command;
 private:

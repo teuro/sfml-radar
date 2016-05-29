@@ -1,14 +1,17 @@
 #include "gamecontroller.hpp"
 
-Gamecontroller::Gamecontroller(Drawsurface& d, Settings& s, Atis& a) : Controller(s, d), atis(a) { 
+Gamecontroller::Gamecontroller(Settings& s, Drawsurface& d) : Controller(s, d) { 
 	this->metar = new Metar;
 	this->gameview = new Gameview(this->drawer, this->settings);
 	this->game = new Game(this->settings);
+	this->atis = new Atis(this->settings);
 }
 
 Gamecontroller::~Gamecontroller() { 
 	delete this->metar;
 	delete this->gameview;
+	delete this->game;
+	delete this->atis;
 }
 
 std::string Gamecontroller::handle_function_keys(int action) {
@@ -62,7 +65,7 @@ void Gamecontroller::handle_mouse_click(Point& mouse) {
 
 void Gamecontroller::load() {
 	std::clog << "Gamecontroller::load()" << std::endl;
-	this->game->load("EFHK", this->atis.get_departure_runway(), this->atis.get_landing_runway());
+	this->game->load("EFHK", this->atis->get_departure_runway(), this->atis->get_landing_runway());
 }
 
 void Gamecontroller::handle_text_input() {
