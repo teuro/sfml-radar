@@ -37,14 +37,15 @@ void sfml_drawsurface::circleColor(Point& a, unsigned int radius, int red, int g
 	this->window.draw(circle);
 }
 
-void sfml_drawsurface::draw_picture(std::string file, Point& a, bool center) {
+void sfml_drawsurface::draw_picture(std::string file, Point& a) {
 	sf::Texture image;
 	sf::Sprite sprite;
+	sf::Vector2f place(a.get_x(), a.get_y());
 	
 	image.loadFromFile(file);
 	sprite.setTexture(image);
-	sprite.setPosition(sf::Vector2f(a.get_x(), a.get_y()));
 	
+	sprite.setPosition(place);
 	this->window.draw(sprite);
 }
 
@@ -164,6 +165,11 @@ void sfml_drawsurface::rectangleColor(Point& a, unsigned int length, int red, in
 
 	sf::RectangleShape rect(sf::Vector2f(length, length));
 	rect.setOutlineColor(color);
+	
+	if (border) {
+        rect.setOutlineColor(this->colors["red"]);
+        rect.setOutlineThickness(2);
+	}
 
 	rect.setPosition(sf::Vector2f(a.get_x()-length/2.0, a.get_y()-length/2.0));
 
@@ -171,7 +177,7 @@ void sfml_drawsurface::rectangleColor(Point& a, unsigned int length, int red, in
 }
 
 
-void sfml_drawsurface::trigonColor(Point& a, Point& b, Point& c, std::string color) {
+void sfml_drawsurface::trigonColor(Point& a, Point& b, Point& c) {
 	sf::VertexArray triangle(sf::Triangles, 3);
 
 	// define the position of the triangle's points
@@ -195,12 +201,12 @@ void sfml_drawsurface::trigonColor(Point& a, Point& b, Point& c, int red, int gr
 	window.draw(triangle);
 }
 
-void sfml_drawsurface::trigonColor(Point& a, unsigned int size, std::string color) {
+void sfml_drawsurface::trigonColor(Point& a, unsigned int size) {
 	Point a1(a.get_x(), a.get_y() - size);
 	Point a2(a.get_x() - size, a.get_y() + size);
 	Point a3(a.get_x() + size, a.get_y() + size);
 
-	trigonColor(a1, a2, a3, color);
+	trigonColor(a1, a2, a3);
 }
 
 void sfml_drawsurface::trigonColor(Point& a, unsigned int size, int red, int green, int blue) {

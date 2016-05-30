@@ -4,7 +4,7 @@ Player::Player(Settings& s) : settings(s) { }
 
 Player::~Player() { }
 
-void Player::update(double elapsed) { }
+void Player::update() { }
 
 void Player::set_firstname(std::string firstname) 	{ this->firstname = firstname; }
 void Player::set_surname(std::string surname) 		{ this->surname = surname; }

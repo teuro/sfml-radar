@@ -21,7 +21,7 @@ public:
         * @param double elapsed
         * @return void
     **/
-    void update(double elapsed);
+    void update();
     void set_departure_runway(std::string dep_rwy);
     void set_landing_runway(std::string lnd_rwy);
     void set_transition_level(int tr_lvl);

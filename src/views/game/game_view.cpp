@@ -11,12 +11,12 @@ void Gameview::load() {
 
 void Gameview::draw() {
 	Point logo_place(this->settings.screen_width-160, 5);
-	this->drawer.draw_picture("images/logo.jpg", logo_place, false);
+	this->drawer.draw_picture("images/logo.jpg", logo_place);
 	
 	this->View::draw();
 }
 
-void Gameview::draw_plane(Aircraft*& plane, Point& center_point, std::string color) {
+void Gameview::draw_plane(Aircraft*& plane, std::string color) {
 	Point aircraft_place = Tools::calculate(this->center_point, this->centerpoint, plane->get_place(), this->settings.zoom);
 
     double separation_ring  = Tools::distancePX(settings.separation_horizontal / 2.0, this->settings.zoom, this->settings.screen_width);
@@ -41,7 +41,7 @@ void Gameview::draw_navpoints(std::vector <Navpoint>& navpoints) {
     for (unsigned int i = 0; i < navpoints.size(); ++i) {
         Point place_screen = Tools::calculate(this->center_point, this->centerpoint, navpoints[i].get_place(), this->settings.zoom);
 
-        this->drawer.trigonColor(place_screen, 5, "green");
+        this->drawer.trigonColor(place_screen, 5);
         this->drawer.draw_text(navpoints[i].get_name(), place_screen, "green");
     }
 }
@@ -57,7 +57,7 @@ void Gameview::draw_planes(std::list <Aircraft*> planes, Aircraft* selected) {
             color = "white";
         }
 
-        this->draw_plane((*plane), this->center_point, color);
+        this->draw_plane((*plane), color);
 
         ++plane;
     }

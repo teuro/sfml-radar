@@ -27,14 +27,14 @@ public:
     virtual void circleColor(Point& a, unsigned int rad, std::string color) = 0;
     virtual void circleColor(Point& a, unsigned int rad, int red, int green, int blue) = 0;
 
-    virtual void trigonColor(Point& a, Point& b, Point& c, std::string color) = 0;
+    virtual void trigonColor(Point& a, Point& b, Point& c) = 0;
     virtual void trigonColor(Point& a, Point& b, Point& c, int red, int green, int blue) = 0;
-    virtual void trigonColor(Point& a, unsigned int size, std::string color) = 0;
+    virtual void trigonColor(Point& a, unsigned int size) = 0;
     virtual void trigonColor(Point& a, unsigned int size, int red, int green, int blue) = 0;
 
     virtual void load_font(std::string font, unsigned int font_size) = 0;
 
-    virtual void draw_picture(std::string tiedosto, Point& a, bool center = false) = 0;
+    virtual void draw_picture(std::string tiedosto, Point& a) = 0;
     virtual void draw_text(std::string text, Point& a, std::string color = "black", int font_size = 16) = 0;
     virtual void draw_text(std::string text, Point& a, int red, int green, int blue, int font_size = 16) = 0;
 

@@ -11,8 +11,8 @@ Atis::~Atis() {
 
 }
 
-void Atis::update(double elapsed) {
-
+void Atis::update() {
+	
 }
 
 void Atis::set_departure_runway(std::string dep_rwy) {

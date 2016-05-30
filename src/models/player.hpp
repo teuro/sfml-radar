@@ -7,7 +7,7 @@ class Player {
 public:
     Player(Settings& s);
     ~Player();
-    void update(double elapsed);
+    void update();
 	
 	void set_firstname(std::string firstname);
 	void set_surname(std::string surname);

@@ -30,14 +30,14 @@ public:
     void circleColor(Point& a, unsigned int rad, std::string color);
     void circleColor(Point& a, unsigned int rad, int red, int green, int blue);
 
-    void trigonColor(Point& a, Point& b, Point& c, std::string color);
+    void trigonColor(Point& a, Point& b, Point& c);
     void trigonColor(Point& a, Point& b, Point& c, int red, int green, int blue);
-    void trigonColor(Point& a, unsigned int size, std::string color);
+    void trigonColor(Point& a, unsigned int size);
     void trigonColor(Point& a, unsigned int size, int red, int green, int blue);
 
     void load_font(std::string font, unsigned int font_size);
 
-    void draw_picture(std::string tiedosto, Point& a, bool center = false);
+    void draw_picture(std::string tiedosto, Point& a);
 
     void draw_text(std::string text, Point& a, std::string color = "green", int font_size = 16);
     void draw_text(std::string text, Point& a, int red, int green, int blue, int font_size = 16);
