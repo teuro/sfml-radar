@@ -258,7 +258,6 @@ void Game::load_airfield(std::string icao) {
 	}
 	
     this->centerpoint = this->active_field->get_place();
-	std::clog << "Game::load_airfield(" << icao << ") => " << this->centerpoint << std::endl; 
 }
 
 Aircraft* Game::get_selected() {
