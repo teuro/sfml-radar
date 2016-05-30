@@ -33,7 +33,7 @@ public:
 private:
     Settings& settings;
 
-    void draw_plane(Aircraft*& plane, Point& center_point, std::string color);
+    void draw_plane(Aircraft*& plane, std::string color);
     void read_data(std::string datafile);
 	Coordinate centerpoint;
 };

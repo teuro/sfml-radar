@@ -6,8 +6,6 @@
 #include "../tools/settings.hpp"
 #include "runway.hpp"
 
-#include <stack>
-
 class Aircraft {
 public:
     Aircraft(std::string name, double speed, double heading, double altitude, Coordinate p, int type, Settings& s, Runway& land);
