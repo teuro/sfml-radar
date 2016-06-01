@@ -28,7 +28,6 @@ public:
 	std::string get_dep_runway_name(Point& mouse);
 	std::string get_lnd_runway_name(Point& mouse);
 private:
-    Settings& settings;
     void load();
 	
 	std::vector <Rwy> land;

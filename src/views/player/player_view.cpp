@@ -1,6 +1,6 @@
 #include "player_view.hpp"
 
-Playerview::Playerview(Drawsurface& d, Settings& s) : View(d), settings(s) { }
+Playerview::Playerview(Drawsurface& d, Settings& s) : View(d, s) { }
 
 Playerview::~Playerview() { }
 

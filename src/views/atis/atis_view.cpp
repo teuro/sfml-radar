@@ -2,7 +2,7 @@
 
 Rwy::Rwy(std::string n, Point p1, Point p2) : name(n), place_lu(p1), place_rd(p2) { }
 
-Atisview::Atisview(Drawsurface& d, Settings& s) : View(d), settings(s) {
+Atisview::Atisview(Drawsurface& d, Settings& s) : View(d, s) {
     this->load();
 }
 

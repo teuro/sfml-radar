@@ -15,8 +15,6 @@ public:
 	Playerview(Drawsurface& d, Settings& s);
 	~Playerview();
 	void draw();
-private:
-    Settings& settings;
 };
 
 #endif // PLAYER_VIEW

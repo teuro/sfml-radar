@@ -1,6 +1,6 @@
 #include "view.hpp"
 
-View::View(Drawsurface& d) : drawer(d) { 
+View::View(Drawsurface& d, Settings& s) : drawer(d), settings(s) { 
 	this->styles = parse_css::parse("styles/style.css");
 }
 
@@ -17,7 +17,15 @@ int count_childs(TiXmlNode* crnt) {
 }
 
 void View::load() {
+	std::clog << "View::load()" << std::endl;
     this->layout_elements.clear();
+	
+	TiXmlDocument doc(this->settings.layout_file_name.c_str());
+	bool load_ok = doc.LoadFile();
+	
+	if (!load_ok) {
+		throw std::logic_error("layout-file " + this->settings.layout_file_name + " not found");
+	}
 
     std::map <std::string, Layout_element> :: iterator le;
 
@@ -123,12 +131,9 @@ void View::draw() {
 
 void View::add_element(std::string name, std::string id, std::string cl, std::string value) {
 	if (this->layout_elements.find(name) == this->layout_elements.end()) {
-		//std::clog << "Not found '" << id << "' let's insert" << std::endl;
 		Layout_element le(name, id, cl);
 		this->layout_elements[name] = le;
-	} else {
-		//std::clog << "Found '" << id << "' let's modify content" << std::endl;
-	}
+	} 
 	
     this->layout_elements[name].set_content(value);
 }
