@@ -78,7 +78,8 @@ public:
         * @todo Close open items
     **/
     void close();
-
+	
+	
     unsigned int screen_width;
     unsigned int screen_height;
     std::string program_name;

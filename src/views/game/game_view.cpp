@@ -1,18 +1,16 @@
 #include "game_view.hpp"
 
-Gameview::Gameview(Drawsurface& d, Settings& s) : View(d), settings(s) { }
+Gameview::Gameview(Drawsurface& d, Settings& s) : View(d, s) { }
 
 Gameview::~Gameview() { }
 
 void Gameview::load() {
-    this->center_point.set_place(this->settings.screen_width / 2, this->settings.screen_height/2);
-    View::load();
+	std::clog << "Gameview::load()" << std::endl;
+	View::load();
 }
 
 void Gameview::draw() {
-	Point logo_place(this->settings.screen_width-160, 5);
-	this->drawer.draw_picture("images/logo.jpg", logo_place);
-	
+	this->center_point.set_place(this->settings.screen_width / 2, this->settings.screen_height/2);
 	this->View::draw();
 }
 
@@ -51,7 +49,7 @@ void Gameview::draw_planes(std::list <Aircraft*> planes, Aircraft* selected) {
     std::string color = "blue";
 
     while (plane != planes.end()) {
-        color = "blue";
+        color = "green";
 
         if (selected != NULL && (*plane) == selected) {
             color = "white";
@@ -74,6 +72,6 @@ void Gameview::draw_airfield(Airfield* airfield) {
     }
 }
 
-void Gameview::set_centerpoint(Coordinate& cp) {
-	this->centerpoint = cp;
+void Gameview::set_centerpoint(Coordinate& centerpoint) {
+	this->centerpoint = centerpoint;
 }

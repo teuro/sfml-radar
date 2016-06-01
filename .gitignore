@@ -2,5 +2,7 @@
 *.exe
 *.xml
 *.css
+*.dep
+*.log
 *.o
 backup/*

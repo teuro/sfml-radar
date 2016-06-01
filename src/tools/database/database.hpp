@@ -16,10 +16,9 @@
 
 namespace Database {
 	/**
-        * get_result
         * Make a query and returns data
 		* Makes absolutely anything to results, so You receive raw data from database
-        * @param std::string query
+        * @param query
         * @return Queryresult
     **/
 	
@@ -30,8 +29,8 @@ namespace Database {
         * Adds specified variables to query string
 		* You may specify Your own search term and bind term if it's nessecery, but defaults works just fine as well.
 		* Technically it would be better to define search and bind terms somewhere else, but for now this is more than enough
-        * @param std::string query
-        * @param std::stack variables
+        * @param query_string
+        * @param variables
         * @return std::string
     **/
 

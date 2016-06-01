@@ -2,6 +2,7 @@
 
 Settings::Settings() { 
 	this->database_name = "databases/radar.db"; 
+	this->layout_file_name = "layouts/layout.xml"; 
 	this->search_term = "? = ?"; 
 	this->bind_term = " = "; 
 }

@@ -46,7 +46,6 @@ void Gamecontroller::update(double elapsed, bool draw) {
 	this->metar->update("EFHK");
 	
 	if (draw) {
-		this->gameview->load();
 		this->gameview->set_centerpoint(this->game->get_centerpoint());
 		this->gameview->clear_screen();
 		this->gameview->add_element("Metar", "metar", "data", this->metar->get_metar());
@@ -66,6 +65,7 @@ void Gamecontroller::handle_mouse_click(Point& mouse) {
 void Gamecontroller::load() {
 	std::clog << "Gamecontroller::load()" << std::endl;
 	this->game->load("EFHK", this->atis->get_departure_runway(), this->atis->get_landing_runway());
+	this->gameview->load();
 }
 
 void Gamecontroller::handle_text_input() {

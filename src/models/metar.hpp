@@ -7,13 +7,26 @@
 #include "../tools/tools.hpp"
 #include "../tools/database/database.hpp"
 
+/**
+	* Cloud represent abstract base of clouds
+	* @var type
+	* @var	altitude
+**/
+
 struct Cloud {
     std::string type;
     int altitude;
 };
 
+/**
+	* \struct Wind represent abstract base of winds
+**/
+
 struct Wind {
+	/** \var direction **/
     int direction;
+	
+	/** \var speed **/
     int speed;
 };
 

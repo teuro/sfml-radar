@@ -63,6 +63,7 @@ public:
     std::string database_name;
     std::string search_term;
     std::string bind_term;
+	std::string layout_file_name;
 };
 
 
