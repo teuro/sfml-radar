@@ -3,15 +3,21 @@
 
 #include <iostream>
 #include <tinyxml/tinyxml.h>
-#include <tinyxpath/xpath_processor.h>
 
 #include "../tools/drawing/sfml/sfml_drawsurface.hpp"
 #include <map>
+#include <vector>
 #include <list>
 #include "layout/layout_element.hpp"
 #include "layout/style.hpp"
 #include "../tools/style/parse_css.hpp"
 #include "../tools/settings.hpp"
+
+struct Image {
+	std::string source;
+	std::string id;
+	Point place;
+};
 
 class View {
 public:
@@ -28,13 +34,17 @@ protected:
     std::list <Style> styles;
     std::map <std::string, Layout_element> layout_elements;
     void draw_element(Layout_element& layout_element);
+    void draw_element(Image& img);
     void style(Layout_element& le);
+	void style(Image& img);
+	
 	/**
 		@todo load all element from xml 
 	**/
     void load();
     Layout_element& get_element(std::string name);
     Point center_point;
+	std::vector <Image> images;
 };
 
 

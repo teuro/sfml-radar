@@ -6,16 +6,6 @@ View::View(Drawsurface& d, Settings& s) : drawer(d), settings(s) {
 
 View::~View() { }
 
-int count_childs(TiXmlNode* crnt) {
-    int count = 0;
-
-    for(TiXmlNode* child = crnt->FirstChild(); child; child = child->NextSibling() ) {
-        count++;
-    }
-
-    return count;
-}
-
 void View::load() {
 	std::clog << "View::load()" << std::endl;
     this->layout_elements.clear();
@@ -25,10 +15,33 @@ void View::load() {
 	
 	if (!load_ok) {
 		throw std::logic_error("layout-file " + this->settings.layout_file_name + " not found");
+	} 
+	
+    TiXmlElement *pRoot, *pParm;
+    pRoot = doc.FirstChildElement("layout");
+	
+    if (pRoot) {
+        pParm = pRoot->FirstChildElement();
+        int i = 0; // for sorting the entries
+		
+        while (pParm) {
+			if (pParm->Value() == std::string("img")) {
+				std::string src = pParm->Attribute("src");
+				std::string id = pParm->Attribute("id");
+				Point place(0, 0);
+				
+				struct Image img = {src, id, place};
+				
+				this->images.push_back(img);
+			}
+			
+            pParm = pParm->NextSiblingElement();
+            ++i;
+        }
 	}
 
     std::map <std::string, Layout_element> :: iterator le;
-
+	
     for (le = this->layout_elements.begin(); le != this->layout_elements.end(); ++le) {
         this->style(le->second);
     }
@@ -71,6 +84,10 @@ void View::draw_element(Layout_element& layout_element) {
 
         t.change_y(drawer.get_fontsize());
     }
+}
+
+void View::draw_element(Image& img) {
+	this->drawer.draw_picture(img.source, img.place);
 }
 
 bool compare_length(std::string const& lhs, std::string const& rhs) {
@@ -120,12 +137,30 @@ void View::style(Layout_element& le) {
     }
 }
 
+void View::style(Image& img) {
+    std::list <Style> :: iterator t_style = this->styles.begin();
+	
+    while (t_style != this->styles.end()) {
+		if (img.id == t_style->get_id()) {
+	        Point p(t_style->get_left(), t_style->get_top());
+            img.place = p;
+        }
+
+        ++t_style;
+    }
+}
+
 void View::draw() {
     std::map <std::string, Layout_element> :: iterator element;
-
+ 
     for (element = layout_elements.begin(); element != layout_elements.end(); ++element) {
         style(element->second);
         draw_element(element->second);
+    }
+	
+	for (unsigned int i = 0; i < this->images.size(); ++i) {
+		style(this->images[i]);
+        draw_element(this->images[i]);
     }
 }
 
