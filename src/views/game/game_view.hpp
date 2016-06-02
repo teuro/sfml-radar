@@ -90,6 +90,7 @@ public:
 	**/
 	
 	void set_centerpoint(Coordinate& centerpoint);
+	void set_plane_progress(int handled, int required);
 private:
 	/**
 		* Gameview centerpoint

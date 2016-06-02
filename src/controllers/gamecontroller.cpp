@@ -47,6 +47,7 @@ void Gamecontroller::update(double elapsed, bool draw) {
 	
 	if (draw) {
 		this->gameview->set_centerpoint(this->game->get_centerpoint());
+		this->gameview->set_plane_progress(this->game->get_handled_planes(), this->game->get_required_planes());
 		this->gameview->clear_screen();
 		this->gameview->add_element("Input", "input", "data", this->command);
 		this->gameview->draw();

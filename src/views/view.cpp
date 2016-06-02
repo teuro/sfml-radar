@@ -23,10 +23,6 @@ void View::load() {
     if (pRoot) {
         pParm = pRoot->FirstChildElement();
         int i = 0; // for sorting the entries
-		std::map <std::string, std::string> repl;
-		repl["[PLH]"] = "2";
-		repl["[RQD]"] = "15";
-		repl["[METAR]"] = "EFHK...";
 		
         while (pParm) {
 			if (pParm->Value() == std::string("img")) {
@@ -40,7 +36,6 @@ void View::load() {
 			} else if (pParm->Value() == std::string("p")) {
 				std::string id = pParm->Attribute("id");
 				std::string c = pParm->GetText();
-				c = Tools::replace(c, repl);
 				Point place(0, 0);
 				
 				Paragraph p = {c, id, place};
@@ -171,6 +166,7 @@ void View::style(Paragraph& p) {
 	
     while (t_style != this->styles.end()) {
 		if (p.id == t_style->get_id()) {
+			p.content = Tools::replace(p.content, repl);
 	        Point pl(t_style->get_left(), t_style->get_top());
             p.place = pl;
         }
@@ -180,6 +176,10 @@ void View::style(Paragraph& p) {
 }
 
 void View::draw() {
+	repl["[PLH]"] = Tools::tostr(this->handled);
+	repl["[RQD]"] = Tools::tostr(this->required);
+	repl["[METAR]"] = this->metar;
+		
     std::map <std::string, Layout_element> :: iterator element;
  
     for (element = layout_elements.begin(); element != layout_elements.end(); ++element) {

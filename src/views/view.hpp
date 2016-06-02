@@ -34,6 +34,10 @@ public:
 	void clear_screen();
 	void iterate(TiXmlNode* el);
 	void add_element(std::string key, std::string id, std::string cl, std::string value);
+	int handled;
+	int required;
+	std::string metar;
+	std::map <std::string, std::string> repl;
 protected:
     Drawsurface& drawer;
     Settings& settings;
@@ -54,6 +58,8 @@ protected:
     Point center_point;
 	std::vector <Image> images;
 	std::vector <Paragraph> paragraphs;
+private:
+	
 };
 
 

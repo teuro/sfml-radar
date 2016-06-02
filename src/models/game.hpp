@@ -106,6 +106,9 @@ public:
 	void create_plane();
 	std::string get_metar();
 	void build_clearance(std::string command);
+	
+	int get_required_planes();
+	int get_handled_planes();
 private:
     void load_airfield(std::string icao);
     void check_collision();
@@ -132,6 +135,8 @@ private:
     double duration;
     int separation_errors;
     int new_plane;
+	int required_planes;
+	int handled_planes;
 	
 	enum turn {LEFT = -1, RIGHT = 1};
 };
