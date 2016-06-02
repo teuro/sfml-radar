@@ -48,7 +48,6 @@ void Gamecontroller::update(double elapsed, bool draw) {
 	if (draw) {
 		this->gameview->set_centerpoint(this->game->get_centerpoint());
 		this->gameview->clear_screen();
-		this->gameview->add_element("Metar", "metar", "data", this->metar->get_metar());
 		this->gameview->add_element("Input", "input", "data", this->command);
 		this->gameview->draw();
 		this->gameview->draw_planes(this->game->get_aircrafts(), this->game->get_selected());
