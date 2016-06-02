@@ -187,3 +187,29 @@ bool Tools::is_match(std::string a, std::string b) {
 void Tools::init_random() {
 	std::srand(std::time(NULL));
 }
+
+std::string Tools::replace(std::string original, std::map <std::string, std::string> repl) {
+	std::map <std::string, std::string> :: iterator it;
+	
+    for (it = repl.begin(); it != repl.end(); ++it) {
+		original = replace(original, it->first, it->second);
+    }
+	
+	return original;
+}
+
+std::string Tools::replace(std::string original, std::string find, std::string replace) {
+	std::string::size_type pos = original.find(find, 0);
+		
+	if (pos != std::string::npos) {
+		std::string part1 = original.substr(0, pos);
+		std::string part2 = original.substr(pos, find.length());
+		std::string part3 = original.substr(pos + find.length());
+		
+		part2 = replace;
+		
+		original = part1 + part2 + part3;
+	}
+	
+	return original;
+}

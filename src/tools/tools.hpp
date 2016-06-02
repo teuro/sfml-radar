@@ -12,6 +12,7 @@
 #include <locale>
 #include <cstdlib>
 #include <ctime>
+#include <map>
 
 #include "../models/coordinate.hpp"
 #include "../models/point.hpp"
@@ -290,6 +291,9 @@ namespace Tools {
 	**/
 	
 	void init_random();
+	
+	std::string replace(std::string original, std::map <std::string, std::string> repl);
+	std::string replace(std::string original, std::string find, std::string replace);
 }
 
 #endif // _TOOLS_HPP

@@ -19,6 +19,12 @@ struct Image {
 	Point place;
 };
 
+struct Paragraph {
+	std::string content;
+	std::string id;
+	Point place;
+};
+
 class View {
 public:
 	View(Drawsurface& d, Settings& s);
@@ -35,8 +41,10 @@ protected:
     std::map <std::string, Layout_element> layout_elements;
     void draw_element(Layout_element& layout_element);
     void draw_element(Image& img);
+    void draw_element(Paragraph& p);
     void style(Layout_element& le);
 	void style(Image& img);
+	void style(Paragraph& p);
 	
 	/**
 		@todo load all element from xml 
@@ -45,6 +53,7 @@ protected:
     Layout_element& get_element(std::string name);
     Point center_point;
 	std::vector <Image> images;
+	std::vector <Paragraph> paragraphs;
 };
 
 

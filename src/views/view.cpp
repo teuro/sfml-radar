@@ -23,6 +23,10 @@ void View::load() {
     if (pRoot) {
         pParm = pRoot->FirstChildElement();
         int i = 0; // for sorting the entries
+		std::map <std::string, std::string> repl;
+		repl["[PLH]"] = "2";
+		repl["[RQD]"] = "15";
+		repl["[METAR]"] = "EFHK...";
 		
         while (pParm) {
 			if (pParm->Value() == std::string("img")) {
@@ -33,6 +37,14 @@ void View::load() {
 				struct Image img = {src, id, place};
 				
 				this->images.push_back(img);
+			} else if (pParm->Value() == std::string("p")) {
+				std::string id = pParm->Attribute("id");
+				std::string c = pParm->GetText();
+				c = Tools::replace(c, repl);
+				Point place(0, 0);
+				
+				Paragraph p = {c, id, place};
+				this->paragraphs.push_back(p);
 			}
 			
             pParm = pParm->NextSiblingElement();
@@ -88,6 +100,10 @@ void View::draw_element(Layout_element& layout_element) {
 
 void View::draw_element(Image& img) {
 	this->drawer.draw_picture(img.source, img.place);
+}
+
+void View::draw_element(Paragraph& p) {
+	this->drawer.draw_text(p.content, p.place, "red");
 }
 
 bool compare_length(std::string const& lhs, std::string const& rhs) {
@@ -150,6 +166,19 @@ void View::style(Image& img) {
     }
 }
 
+void View::style(Paragraph& p) {
+    std::list <Style> :: iterator t_style = this->styles.begin();
+	
+    while (t_style != this->styles.end()) {
+		if (p.id == t_style->get_id()) {
+	        Point pl(t_style->get_left(), t_style->get_top());
+            p.place = pl;
+        }
+
+        ++t_style;
+    }
+}
+
 void View::draw() {
     std::map <std::string, Layout_element> :: iterator element;
  
@@ -161,6 +190,11 @@ void View::draw() {
 	for (unsigned int i = 0; i < this->images.size(); ++i) {
 		style(this->images[i]);
         draw_element(this->images[i]);
+    }
+	
+	for (unsigned int i = 0; i < this->paragraphs.size(); ++i) {
+		style(this->paragraphs[i]);
+        draw_element(this->paragraphs[i]);
     }
 }
 

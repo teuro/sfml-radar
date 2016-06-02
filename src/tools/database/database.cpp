@@ -20,19 +20,8 @@ std::string Database::bind_param(std::string query_string, std::map <std::string
 	}
 	
 	for (const auto& item : variables) {
-		std::string::size_type pos = query_string.find(s.search_term, 0);
-		
-		if (pos == std::string::npos) {
-			throw std::logic_error("Query string '" + query_string + "' does not contain more " + s.search_term + " check Your querys");
-		}
-		
-		std::string part1 = query_string.substr(0, pos);
-		std::string part2 = query_string.substr(pos, s.search_term.length());
-		std::string part3 = query_string.substr(pos + s.search_term.length());
-		
-		part2 = item.first + s.bind_term + item.second;
-		
-		query_string = part1 + part2 + part3;
+		std::string replace = item.first + s.bind_term + item.second;
+		query_string = Tools::replace(query_string, s.search_term, replace);
 	}
 	
 	return query_string;
