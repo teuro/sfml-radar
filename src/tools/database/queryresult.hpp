@@ -17,6 +17,7 @@ public:
         * @return none
     **/
     Queryresult(sqlite3pp::query& query);
+    Queryresult();
 
     ~Queryresult();
 

@@ -18,6 +18,7 @@ Queryresult::Queryresult(sqlite3pp::query& qry) {
     }
 }
 
+Queryresult::Queryresult() { }
 Queryresult::~Queryresult() { }
 
 std::string Queryresult::operator()(unsigned int row, std::string s) {
