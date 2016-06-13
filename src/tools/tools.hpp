@@ -165,6 +165,12 @@ namespace Tools {
 	}
 	
 	/**
+		* totime
+		* converts double to time :)
+	**/
+	std::string totime(double milliseconds);
+	
+	/**
 		* toint
 		* converts string to int. This is just more easier instead of use tonumber<int>()
 		* @param std::string

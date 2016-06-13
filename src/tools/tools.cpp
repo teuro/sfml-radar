@@ -213,3 +213,16 @@ std::string Tools::replace(std::string original, std::string find, std::string r
 	
 	return original;
 }
+
+std::string Tools::totime(double milliseconds) {
+		std::string time_string;
+		int seconds = milliseconds / 1000;
+		int hours = seconds / 3600;
+		seconds -= hours * 3600;
+		int minutes = seconds / 60;
+		seconds -= minutes * 60;
+		
+		time_string = tostr(hours) + ":" + tostr(minutes) + ":" + tostr(seconds);
+		
+		return time_string;
+	}

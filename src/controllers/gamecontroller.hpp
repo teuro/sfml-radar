@@ -55,6 +55,7 @@ private:
 	Metar* metar;
 	Atis* atis;
     int function_key;
+	double game_time;
 };
 
 

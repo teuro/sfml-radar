@@ -29,7 +29,7 @@ class View {
 public:
 	View(Drawsurface& d, Settings& s);
 	virtual ~View() = 0;
-	virtual void draw();
+	void draw();
 	void render();
 	void clear_screen();
 	void iterate(TiXmlNode* el);

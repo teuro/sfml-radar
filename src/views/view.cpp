@@ -98,7 +98,7 @@ void View::draw_element(Image& img) {
 }
 
 void View::draw_element(Paragraph& p) {
-	this->drawer.draw_text(p.content, p.place, "red");
+	this->drawer.draw_text(Tools::replace(p.content, repl), p.place, "red");
 }
 
 bool compare_length(std::string const& lhs, std::string const& rhs) {
@@ -166,7 +166,6 @@ void View::style(Paragraph& p) {
 	
     while (t_style != this->styles.end()) {
 		if (p.id == t_style->get_id()) {
-			p.content = Tools::replace(p.content, repl);
 	        Point pl(t_style->get_left(), t_style->get_top());
             p.place = pl;
         }
@@ -176,9 +175,7 @@ void View::style(Paragraph& p) {
 }
 
 void View::draw() {
-	repl["[PLH]"] = Tools::tostr(this->handled);
-	repl["[RQD]"] = Tools::tostr(this->required);
-	repl["[METAR]"] = this->metar;
+	this->repl["[RQD]"] = Tools::tostr(this->settings.required_handled);
 		
     std::map <std::string, Layout_element> :: iterator element;
  

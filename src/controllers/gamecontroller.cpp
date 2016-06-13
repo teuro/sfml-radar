@@ -42,12 +42,16 @@ void Gamecontroller::handle_mouse_wheel(int amount) {
 }
 
 void Gamecontroller::update(double elapsed, bool draw) {
+	this->game_time += elapsed;
 	this->game->update(elapsed);
 	this->metar->update("EFHK");
 	
 	if (draw) {
+		this->gameview->repl["[PLH]"] = Tools::tostr(this->game->get_handled_planes());
+		this->gameview->repl["[METAR]"] = this->metar->to_string();
+		this->gameview->repl["[TIME]"] = Tools::totime(this->game_time);
+		
 		this->gameview->set_centerpoint(this->game->get_centerpoint());
-		this->gameview->set_plane_progress(this->game->get_handled_planes(), this->game->get_required_planes());
 		this->gameview->clear_screen();
 		this->gameview->add_element("Input", "input", "data", this->command);
 		this->gameview->draw();

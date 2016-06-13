@@ -75,8 +75,3 @@ void Gameview::draw_airfield(Airfield* airfield) {
 void Gameview::set_centerpoint(Coordinate& centerpoint) {
 	this->centerpoint = centerpoint;
 }
-
-void Gameview::set_plane_progress(int handled, int required) {
-	View::required = required;
-	View::handled = handled;
-}
