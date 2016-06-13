@@ -5,7 +5,7 @@ Game::Game(Settings& s) : settings(s) {
     this->separation_errors = 0;
     this->new_plane = 5000;
 	this->handled_planes = 2;
-	this->required_planes = 15;
+	this->airlines = Database::get_result("SELECT ICAO FROM airlines");
 }
 
 Game::~Game() { }
@@ -18,8 +18,6 @@ void Game::load(std::string airfield, std::string dep, std::string lnd) {
     this->duration = 0;
 	this->departure = this->active_field->get_runway(dep);
 	this->landing = this->active_field->get_runway(lnd);
-	
-	std::clog << "Game is loaded" << std::endl;
 }
 
 void Game::set_centerpoint(Coordinate& cp) {
@@ -32,7 +30,7 @@ Coordinate& Game::get_centerpoint() {
 
 Airfield* Game::get_active_field() {
 	if (this->active_field == NULL) {
-		throw std::logic_error("Game::get_active_field() line 36 this->active_field == NULL");
+		throw std::logic_error("Game::get_active_field() this->active_field == NULL");
 	}
 	
     return this->active_field;
@@ -123,6 +121,11 @@ void Game::update(double elapsed) {
     for (std::list <Aircraft*> :: iterator it = this->aircrafts.begin(); it != this->aircrafts.end(); ++it) {
         (*it)->set_separation_error(false);
         (*it)->update(elapsed);
+		
+		if ((*it)->get_speed() < 100) {
+			it = this->aircrafts.erase(it);
+			++this->handled_planes;
+		}
     }
 
     for (std::list <Aircraft*> :: iterator it = errors.begin(); it != errors.end(); ++it) {
@@ -174,7 +177,6 @@ void Game::select_aircraft(std::string callsign) {
 
 void Game::create_plane() {
 	std::clog << "Game::create_plane()" << std::endl;
-    Queryresult airlines = Database::get_result("SELECT ICAO FROM airlines");
 	Inpoint t_inpoint = this->inpoints[Tools::rnd(0, (int)this->inpoints.size()-1)];
 	Outpoint t_outpoint = this->outpoints[Tools::rnd(0, (int)this->outpoints.size()-1)];
 	double heading = this->departure.get_heading();
@@ -182,7 +184,7 @@ void Game::create_plane() {
     int type = Tools::rnd(1, 100);
 	type = 49;
 
-    std::string t_callsign = airlines(Tools::rnd(0, airlines.size()), "ICAO") + Tools::tostr(Tools::rnd(1, 999));
+    std::string t_callsign = this->airlines(Tools::rnd(0, this->airlines.size()), "ICAO") + Tools::tostr(Tools::rnd(1, 999));
 	
 	Aircraft* plane;
 	
@@ -190,7 +192,7 @@ void Game::create_plane() {
 		plane = new Aircraft(t_callsign, 120.0, heading, this->active_field->get_altitude(), this->departure.get_start_place(), type, this->settings, this->landing);
 		this->holdings.push(plane);
 	} else {
-		plane = new Aircraft(t_callsign, 250.0, heading, 10000, t_outpoint.get_place(), type, this->settings, this->landing);
+		plane = new Aircraft(t_callsign, 120, heading, 10000, t_outpoint.get_place(), type, this->settings, this->landing);
 		this->aircrafts.push_back(plane);
 	}
 }
@@ -299,10 +301,6 @@ void Game::build_clearance(std::string command) {
 	} else {
 		std::cerr << "No selected plane" << std::endl;
 	}
-}
-
-int Game::get_required_planes() {
-	return this->required_planes;
 }
 
 int Game::get_handled_planes() {
