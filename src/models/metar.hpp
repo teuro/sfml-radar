@@ -34,7 +34,7 @@ class Metar {
 public:
     Metar();
     ~Metar();
-    std::string get_metar();
+    std::string to_string();
     void update(std::string icao);
     int get_pressure();
     int get_wind_direction();
@@ -51,6 +51,7 @@ private:
     std::list <Cloud> clouds;
     Wind wind;
     std::string icao;
+	void generate_clouds();
 };
 
 #endif // METAR_HPP

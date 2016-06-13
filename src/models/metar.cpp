@@ -4,21 +4,34 @@ Metar::Metar() { }
 
 Metar::~Metar() { }
 
-std::string Metar::get_metar() {
-    return this->icao + " 301250z " + Tools::tostr(wind.direction) + Tools::tostr(wind.speed) + " KT " + Tools::tostr(visibility) + " " + Tools::tostr(temperature) + "/" + Tools::tostr(devpoint) + " Q" + Tools::tostr(pressure);
+std::string Metar::to_string() {
+	std::string clouds;
+	
+	std::list <Cloud> :: iterator ci;
+	
+	for (ci = this->clouds.begin(); ci != this->clouds.end(); ++ci) {
+		clouds += ci->type + Tools::tostr(ci->altitude) + " ";
+	}
+	
+    return this->icao + " 301250z " + Tools::tostr(wind.direction) + Tools::tostr(wind.speed) + " KT " + Tools::tostr(visibility) + " " + clouds + " " + Tools::tostr(temperature) + "/" + Tools::tostr(devpoint) + " Q" + Tools::tostr(pressure);
 }
 
 void Metar::update(std::string icao) {
+	this->clouds.clear();
     this->pressure = 1013;
     this->humidity = 65;
     this->visibility = 8500;
     this->wind.direction = 250;
     this->wind.speed = 12;
-    Cloud cld {"BKN", 030};
-    this->clouds.push_back(cld);
     this->devpoint = 03;
     this->temperature = 02;
 	this->icao = icao;
+	this->generate_clouds();
+}
+
+void Metar::generate_clouds() {
+	Cloud cld {"BKN", 30};
+    this->clouds.push_back(cld);
 }
 
 int Metar::get_pressure() {
