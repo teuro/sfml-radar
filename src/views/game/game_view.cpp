@@ -7,6 +7,28 @@ Gameview::~Gameview() { }
 void Gameview::load() {
 	std::clog << "Gameview::load()" << std::endl;
 	View::load();
+	
+	std::ifstream in_file("templates/plane.tpl", std::ios::in);
+	std::string name;
+	int x;
+	int y;
+	
+	while (in_file >> name >> x >> y) {
+		Point tmp(x, y);
+		name = Tools::trim(name);
+				
+		if (name == "CALLSIGN") {
+			this->callsign = tmp;
+		} else if (name == "SPEED") {
+			this->speed = tmp;
+		} else if (name == "ALTITUDE") {
+			this->altitude = tmp;
+		} else if (name == "HEADING") {
+			this->heading = tmp;
+		}
+	}
+	
+	in_file.close();
 }
 
 void Gameview::draw() {
@@ -16,23 +38,28 @@ void Gameview::draw() {
 
 void Gameview::draw_plane(Aircraft*& plane, std::string color) {
 	Point aircraft_place = Tools::calculate(this->center_point, this->centerpoint, plane->get_place(), this->settings.zoom);
+	Point draw;
 
     double separation_ring  = Tools::distancePX(settings.separation_horizontal / 2.0, this->settings.zoom, this->settings.screen_width);
 	
 	Coordinate end_point_c = Tools::calculate(plane->get_place(), plane->get_heading(), plane->get_speed() * (1.0 / 60.0));
-	Point end_point_p = Tools::calculate(this->center_point, this->centerpoint, end_point_c, this->settings.zoom);
+	draw = Tools::calculate(this->center_point, this->centerpoint, end_point_c, this->settings.zoom);
 	
-    drawer.lineColor(aircraft_place, end_point_p, color);
+    drawer.lineColor(aircraft_place, draw, color);
     drawer.circleColor(aircraft_place, separation_ring, color);
     drawer.rectangleColor(aircraft_place, 10, color);
-    aircraft_place.change_x(10);
-    drawer.draw_text(plane->get_name(), aircraft_place, color);
-    aircraft_place.change_y(20);
-    drawer.draw_text(Tools::tostr(plane->get_speed()), aircraft_place, color);
-    aircraft_place.change_y(20);
-    drawer.draw_text(Tools::tostr(Tools::rad2deg(plane->get_heading())), aircraft_place, color);
-    aircraft_place.change_y(20);
-    drawer.draw_text(Tools::tostr(plane->get_altitude()), aircraft_place, color);
+	
+	draw = this->callsign + aircraft_place;
+    drawer.draw_text(plane->get_name(), draw, color);
+	
+	draw = this->speed + aircraft_place;
+    drawer.draw_text(Tools::tostr(plane->get_speed()), draw, color);
+	
+	draw = this->heading + aircraft_place;
+    drawer.draw_text(Tools::tostr(Tools::rad2deg(plane->get_heading())), draw, color);
+	
+	draw = this->altitude + aircraft_place;
+    drawer.draw_text(Tools::tostr(plane->get_altitude()), draw, color);
 }
 
 void Gameview::draw_navpoints(std::vector <Navpoint>& navpoints) {

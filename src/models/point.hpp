@@ -25,6 +25,10 @@ public:
 
 	void change_y(int amount);
 	void change_x(int amount);
+	
+	Point operator +(Point& b) {
+		return Point(this->x + b.get_x(), this->y + b.get_y());
+	}
 
 	friend std::ostream& operator << (std::ostream& stream, const Point& point);
 protected:

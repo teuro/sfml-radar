@@ -8,6 +8,7 @@
 #include <map>
 #include <vector>
 #include <list>
+#include <fstream>
 #include "layout/layout_element.hpp"
 #include "layout/style.hpp"
 #include "../tools/style/parse_css.hpp"

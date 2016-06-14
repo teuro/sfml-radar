@@ -107,6 +107,10 @@ private:
 	**/
 	
     void draw_plane(Aircraft*& plane, std::string color);
+	Point callsign;
+	Point speed;
+	Point altitude;
+	Point heading;
 };
 
 #endif // _GAME_VIEW_HPP
