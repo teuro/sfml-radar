@@ -10,15 +10,15 @@ std::string Metar::to_string() {
 	std::list <Cloud> :: iterator ci;
 	
 	for (ci = this->clouds.begin(); ci != this->clouds.end(); ++ci) {
-		clouds += ci->type + Tools::tostr(ci->altitude) + " ";
+		clouds += ci->type + Tools::tostr(ci->altitude, 3) + " ";
 	}
 	
-    return this->icao + " 301250z " + Tools::tostr(wind.direction) + Tools::tostr(wind.speed) + " KT " + Tools::tostr(visibility) + " " + clouds + " " + Tools::tostr(temperature) + "/" + Tools::tostr(devpoint) + " Q" + Tools::tostr(pressure);
+    return this->icao + " 301250z " + Tools::tostr(wind.direction, 3) + "/" + Tools::tostr(wind.speed, 2) + " KT " + Tools::tostr(visibility) + " " + clouds + " " + Tools::tostr(temperature, 2) + "/" + Tools::tostr(devpoint, 2) + " Q" + Tools::tostr(pressure, 4);
 }
 
 void Metar::update(std::string icao) {
 	this->clouds.clear();
-    this->pressure = 1013;
+    this->pressure = 997;
     this->humidity = 65;
     this->visibility = 8500;
     this->wind.direction = 250;
