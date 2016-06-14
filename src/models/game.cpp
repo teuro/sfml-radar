@@ -4,7 +4,7 @@ Game::Game(Settings& s) : settings(s) {
     this->duration = 0;
     this->separation_errors = 0;
     this->new_plane = 5000;
-	this->handled_planes = 2;
+	this->handled_planes = 0;
 	this->airlines = Database::get_result("SELECT ICAO FROM airlines");
 }
 
@@ -305,4 +305,8 @@ void Game::build_clearance(std::string command) {
 
 int Game::get_handled_planes() {
 	return this->handled_planes;
+}
+
+int Game::get_planes_count() {
+	return this->aircrafts.size();
 }
