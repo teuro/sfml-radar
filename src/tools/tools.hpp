@@ -164,11 +164,36 @@ namespace Tools {
         return os.str();
 	}
 	
+	template <class T>
+	std::string tostr(T a, unsigned int n) {
+        std::ostringstream os;
+
+        os << a;
+		
+		std::string t = os.str();
+		
+		if (t.length() < n) {
+			unsigned int required = n - t.length();
+			std::string fill_zeros;
+			
+			for ( unsigned int i = 0; i < required; ++i) {
+				fill_zeros += "0";
+			}
+			
+			t = fill_zeros + t;
+		}
+
+        return t;
+	}
+	
 	/**
 		* totime
 		* converts double to time :)
 	**/
+	
 	std::string totime(double milliseconds);
+	
+	std::string totime(double milliseconds, std::string format = "H:i:s");
 	
 	/**
 		* toint
