@@ -108,6 +108,7 @@ public:
 	void build_clearance(std::string command);
 	
 	int get_handled_planes();
+	int get_planes_count();
 private:
     void load_airfield(std::string icao);
     void check_collision();
