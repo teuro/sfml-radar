@@ -2,10 +2,6 @@
 
 Game::Game(Settings& s) : settings(s) {
     this->duration = 0;
-    this->separation_errors = 0;
-    this->new_plane = 5000;
-	this->handled_planes = 0;
-	this->airlines = Database::get_result("SELECT ICAO FROM airlines");
 }
 
 Game::~Game() { }
@@ -18,6 +14,11 @@ void Game::load(std::string airfield, std::string dep, std::string lnd) {
     this->duration = 0;
 	this->departure = this->active_field->get_runway(dep);
 	this->landing = this->active_field->get_runway(lnd);
+	
+	this->separation_errors = 0;
+    this->new_plane = 5000;
+	this->handled_planes = 0;
+	this->airlines = Database::get_result("SELECT ICAO FROM airlines");
 }
 
 void Game::set_centerpoint(Coordinate& cp) {
@@ -309,4 +310,12 @@ int Game::get_handled_planes() {
 
 int Game::get_planes_count() {
 	return this->aircrafts.size();
+}
+
+int Game::get_separation_errors() {
+	return this->separation_errors;
+}
+
+int Game::get_new_plane() {
+	return this->new_plane;
 }

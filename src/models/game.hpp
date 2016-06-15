@@ -109,6 +109,8 @@ public:
 	
 	int get_handled_planes();
 	int get_planes_count();
+	int get_separation_errors();
+	int get_new_plane();
 private:
     void load_airfield(std::string icao);
     void check_collision();

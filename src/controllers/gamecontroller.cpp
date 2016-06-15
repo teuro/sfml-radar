@@ -51,6 +51,9 @@ void Gamecontroller::update(double elapsed, bool draw) {
 		this->gameview->repl["[METAR]"] = this->metar->to_string();
 		this->gameview->repl["[TIME]"] = Tools::totime(this->game_time, "H:i:s");
 		this->gameview->repl["[PLC]"] = Tools::tostr(this->game->get_planes_count());
+		this->gameview->repl["[SPE]"] = Tools::tostr(this->game->get_separation_errors());
+		this->gameview->repl["[PLN]"] = Tools::totime(this->game->get_new_plane() - this->game_time, "i:s");
+		this->gameview->repl["[SPK]"] = Tools::tostr(this->settings.max_separation_errors);
 		
 		this->gameview->set_centerpoint(this->game->get_centerpoint());
 		this->gameview->clear_screen();
