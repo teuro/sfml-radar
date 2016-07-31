@@ -89,14 +89,14 @@ public:
 		* @return void
 	**/
 	
-	void set_centerpoint(Coordinate& centerpoint);
+	void set_centerpoint_map(Coordinate& centerpoint_map);
 private:
 	/**
 		* Gameview centerpoint
 		* Centerpoint on map
 	**/
 	
-	Coordinate centerpoint;
+	Coordinate centerpoint_map;
 	
 	/**
 		* Gameview draw_plane
@@ -107,10 +107,10 @@ private:
 	**/
 	
     void draw_plane(Aircraft*& plane, std::string color);
-	Point callsign;
-	Point speed;
-	Point altitude;
-	Point heading;
+	Point text_callsign;
+	Point text_speed;
+	Point text_altitude;
+	Point text_heading;
 };
 
 #endif // _GAME_VIEW_HPP

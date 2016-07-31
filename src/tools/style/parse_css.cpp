@@ -15,10 +15,10 @@ std::list <Style> parse_css::parse(std::string file) {
 			} else {
 				id = line.substr(0, found-1);
 			}
+			
 			id = Tools::trim(id);
             Style t(id);
-			//std::clog << "nimi on " << id << std::endl;
-
+			
             tmp.push_back(t);
         } else if (line.substr(0, 1) != "}" && line != "") {
             std::string key     = Tools::trim(line.substr(0, line.find(":")));

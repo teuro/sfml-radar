@@ -18,13 +18,13 @@ void Gameview::load() {
 		name = Tools::trim(name);
 				
 		if (name == "CALLSIGN") {
-			this->callsign = tmp;
+			this->text_callsign = tmp;
 		} else if (name == "SPEED") {
-			this->speed = tmp;
+			this->text_speed = tmp;
 		} else if (name == "ALTITUDE") {
-			this->altitude = tmp;
+			this->text_altitude = tmp;
 		} else if (name == "HEADING") {
-			this->heading = tmp;
+			this->text_heading = tmp;
 		}
 	}
 	
@@ -32,39 +32,40 @@ void Gameview::load() {
 }
 
 void Gameview::draw() {
-	this->center_point.set_place(this->settings.screen_width / 2, this->settings.screen_height/2);
+	this->centerpoint_screen.set_place(this->settings.screen_width / 2, this->settings.screen_height/2);
 	this->View::draw();
 }
 
 void Gameview::draw_plane(Aircraft*& plane, std::string color) {
-	Point aircraft_place = Tools::calculate(this->center_point, this->centerpoint, plane->get_place(), this->settings.zoom);
+	Point aircraft_place = Tools::calculate(this->centerpoint_screen, this->centerpoint_map, plane->get_place(), this->settings.zoom, this->settings.screen_width);
 	Point draw;
 
-    double separation_ring  = Tools::distancePX(settings.separation_horizontal / 2.0, this->settings.zoom, this->settings.screen_width);
+    double separation_ring = Tools::distancePX(settings.separation_horizontal / 2.0, this->settings.zoom, this->settings.screen_width);
 	
-	Coordinate end_point_c = Tools::calculate(plane->get_place(), plane->get_heading(), plane->get_speed() * (1.0 / 60.0));
-	draw = Tools::calculate(this->center_point, this->centerpoint, end_point_c, this->settings.zoom);
+	//std::clog << plane->get_name() << " heading " << Tools::rad2deg(plane->get_heading()) << " degreess" << std::endl;
 	
-    drawer.lineColor(aircraft_place, draw, color);
+	Point end_point_c = Tools::calculate(aircraft_place, plane->get_heading(), Tools::distancePX(plane->get_speed() * (1.0 / 60.0), this->settings.zoom, this->settings.screen_width));
+	
+    drawer.lineColor(aircraft_place, end_point_c, color);
     drawer.circleColor(aircraft_place, separation_ring, color);
     drawer.rectangleColor(aircraft_place, 10, color);
 	
-	draw = this->callsign + aircraft_place;
+	draw = this->text_callsign + aircraft_place;
     drawer.draw_text(plane->get_name(), draw, color);
 	
-	draw = this->speed + aircraft_place;
+	draw = this->text_speed + aircraft_place;
     drawer.draw_text(Tools::tostr(plane->get_speed()), draw, color);
 	
-	draw = this->heading + aircraft_place;
+	draw = this->text_heading + aircraft_place;
     drawer.draw_text(Tools::tostr(Tools::rad2deg(plane->get_heading())), draw, color);
 	
-	draw = this->altitude + aircraft_place;
+	draw = this->text_altitude + aircraft_place;
     drawer.draw_text(Tools::tostr(plane->get_altitude()), draw, color);
 }
 
 void Gameview::draw_navpoints(std::vector <Navpoint>& navpoints) {
     for (unsigned int i = 0; i < navpoints.size(); ++i) {
-        Point place_screen = Tools::calculate(this->center_point, this->centerpoint, navpoints[i].get_place(), this->settings.zoom);
+        Point place_screen = Tools::calculate(this->centerpoint_screen, this->centerpoint_map, navpoints[i].get_place(), this->settings.zoom, this->settings.screen_width);
 
         this->drawer.trigonColor(place_screen, 5);
         this->drawer.draw_text(navpoints[i].get_name(), place_screen, "green");
@@ -92,13 +93,13 @@ void Gameview::draw_airfield(Airfield* airfield) {
     std::vector <Runway> runways = airfield->get_runways();
 	
     for (unsigned int i = 0; i < runways.size(); i+=2) {
-		Point rwys = Tools::calculate(this->center_point, this->centerpoint, runways[i].get_start_place(), this->settings.zoom);
-		Point rwye = Tools::calculate(this->center_point, this->centerpoint, runways[i].get_end_place(), this->settings.zoom);
+		Point rwys = Tools::calculate(this->centerpoint_screen, this->centerpoint_map, runways[i].get_start_place(), this->settings.zoom, this->settings.screen_width);
+		Point rwye = Tools::calculate(this->centerpoint_screen, this->centerpoint_map, runways[i].get_end_place(), this->settings.zoom, this->settings.screen_width);
 		
         this->drawer.lineColor(rwys, rwye, "white");
     }
 }
 
-void Gameview::set_centerpoint(Coordinate& centerpoint) {
-	this->centerpoint = centerpoint;
+void Gameview::set_centerpoint_map(Coordinate& centerpoint_map) {
+	this->centerpoint_map = centerpoint_map;
 }

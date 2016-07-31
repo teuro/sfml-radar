@@ -59,6 +59,7 @@ public:
     int departure_separation;
     int zoom;
 	int airfield_altitude;
+	int sleep;
     std::string program_name;
     std::string database_name;
     std::string search_term;

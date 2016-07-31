@@ -5,7 +5,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <cstdio>
-#include "../../tools/tools.hpp"
+#include "../tools.hpp"
 
 class Style {
 public:

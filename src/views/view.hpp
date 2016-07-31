@@ -10,8 +10,8 @@
 #include <list>
 #include <fstream>
 #include "layout/layout_element.hpp"
-#include "layout/style.hpp"
 #include "../tools/style/parse_css.hpp"
+#include "../tools/style/style.hpp"
 #include "../tools/settings.hpp"
 
 struct Image {
@@ -56,7 +56,7 @@ protected:
 	**/
     void load();
     Layout_element& get_element(std::string name);
-    Point center_point;
+    Point centerpoint_screen;
 	std::vector <Image> images;
 	std::vector <Paragraph> paragraphs;
 private:

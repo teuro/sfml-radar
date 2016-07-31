@@ -87,6 +87,7 @@ public:
 protected:
 private:
     sf::Clock clock;
+	sf::Time time_change;
 
     bool handle_event(sf::Event& event, Controller& ctrl, sf::RenderWindow& window);
 

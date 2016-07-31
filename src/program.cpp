@@ -2,7 +2,7 @@
 
 Program::Program(){
     this->load();
-    this->counter = 30;
+	this->time_change = sf::milliseconds(50);
 }
 
 Program::~Program() { }
@@ -30,19 +30,6 @@ void Program::close() {
     std::clog << "Program::close()" << std::endl;
 }
 
-bool Program::is_drawable() {
-	if (this->counter > 20 && !this->draw) {
-		this->counter = 0;
-		this->draw = true;
-	} else {
-		sf::sleep(sf::milliseconds(50));
-		++this->counter;
-		this->draw = false;
-	}
-	
-	return this->draw;
-}
-
 bool Program::handle_events(Controller& ctrl, sf::RenderWindow& window) {
 	sf::Event event;
 
@@ -58,13 +45,14 @@ void Program::run() {
 	sfml_drawsurface drawer(window);
 	window.setTitle(this->settings.program_name);
 	
-	sf::Time elapsed = this->clock.restart();
-	
 	Gamecontroller gamecontroller(this->settings, drawer);
 	gamecontroller.load();
+	sf::Time time_now;
 	
 	while (this->handle_events(gamecontroller, window)) {
-		gamecontroller.update(elapsed.asMilliseconds(), this->is_drawable());
+		time_now = this->clock.restart();
+		gamecontroller.update(time_now.asMilliseconds(), true);
+		sf::sleep(time_change - time_now);	
 	}
 	
 	window.close();

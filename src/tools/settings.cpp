@@ -5,6 +5,7 @@ Settings::Settings() {
 	this->layout_file_name = "layouts/layout.xml"; 
 	this->search_term = "? = ?"; 
 	this->bind_term = " = "; 
+	this->sleep = 50;
 }
 
 Settings::~Settings() { }

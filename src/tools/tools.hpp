@@ -102,7 +102,7 @@ namespace Tools {
 		* @param int zoom
 	**/
 
-	Point calculate(Point& center_point_screen, Coordinate& center_point_map, Coordinate& target, int zoom);
+	Point calculate(Point& center_point_screen, Coordinate& center_point_map, Coordinate& target, int zoom, int screen_width);
 	
 	/**
 		* calculate
@@ -114,7 +114,7 @@ namespace Tools {
 		* @return Point
 	**/
 	
-	Point calculate(Point& start_point, double angle, double length, bool rad);
+	Point calculate(Point& start_point, double angle, double length);
 	
 	/**
 		* calculate
@@ -325,6 +325,8 @@ namespace Tools {
 	
 	std::string replace(std::string original, std::map <std::string, std::string> repl);
 	std::string replace(std::string original, std::string find, std::string replace);
+	
+	double fix_angle(double angle);
 }
 
 #endif // _TOOLS_HPP

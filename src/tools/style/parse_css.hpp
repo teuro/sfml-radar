@@ -3,7 +3,7 @@
 
 #include <list>
 
-#include "../../views/layout/style.hpp"
+#include "style.hpp"
 #include "../tools.hpp"
 
 namespace parse_css {

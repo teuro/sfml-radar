@@ -107,8 +107,9 @@ bool compare_length(std::string const& lhs, std::string const& rhs) {
 
 void View::style(Layout_element& le) {
     std::list <Style> :: iterator t_style = this->styles.begin();
+	
     while (t_style != this->styles.end()) {
-		if (le.get_id() == t_style->get_id()) {
+		if (le.get_id() == t_style->get_id() || le.get_class() == t_style->get_id()) {
 	        Point p(t_style->get_left(), t_style->get_top());
             le.set_place(p);
 

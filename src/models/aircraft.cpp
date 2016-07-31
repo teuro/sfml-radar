@@ -7,7 +7,7 @@ Aircraft::Aircraft(std::string name, double speed, double heading, double altitu
     this->speed = speed;
 
     this->clearance_altitude = altitude;
-    this->clearance_heading = heading;
+    this->clearance_heading = this->heading;
     this->clearance_speed = speed;
 
     this->separation_error = false;
@@ -20,27 +20,23 @@ Aircraft::Aircraft(std::string name, double speed, double heading, double altitu
 Aircraft::~Aircraft() { }
 
 void Aircraft::update(double elapsed) {
-	while (this->heading > 2 * Tools::get_PI()) {
-		this->heading -= 2 * Tools::get_PI();
-	}
+	this->heading = Tools::fix_angle(this->heading);
 	
-	while (this->heading < 0) {
-		this->heading += 2 * Tools::get_PI();
-	}
-
 	if (this->approach) {
 		if (this->landed == false) {
+			this->turn = 1;
 			double t_angle = Tools::angle(this->place, this->landing.get_start_place());
+			//std::clog << this->place << " <=> " << this->landing.get_start_place() << " = " << t_angle << std::endl;
 			double t_distance = Tools::distanceNM(this->place, this->landing.get_start_place()) * 6076.11549;
 			double target_approach_altitude = std::tan(Tools::deg2rad(this->landing.get_glidepath())) * t_distance;
-			double min_approach_angle = this->landing.get_heading() - Tools::deg2rad(this->settings.approach_angle);
-			double max_approach_angle = this->landing.get_heading() + Tools::deg2rad(this->settings.approach_angle);
-		
+			//double min_approach_angle = this->landing.get_heading() - Tools::deg2rad(this->settings.approach_angle);
+			//double max_approach_angle = this->landing.get_heading() + Tools::deg2rad(this->settings.approach_angle);
+		/*
 			if (this->altitude > this->settings.max_approach_altitude || this->heading > max_approach_angle || this->heading <  min_approach_angle || this->speed > this->settings.max_approach_speed) {
 				std::cerr << "Plane must be " << this->settings.max_approach_altitude << ", speed must max " << this->settings.max_approach_speed << " kt and approach angle must be between " << Tools::rad2deg(min_approach_angle) << " and " << Tools::rad2deg(max_approach_angle) << std::endl;
-				this->approach = false;
+				//this->approach = false;
 				return;
-			}
+			}*/
 		
 			if (this->altitude < this->settings.max_approach_altitude && this->altitude > target_approach_altitude) {
 				if (this->altitude < this->settings.airfield_altitude) {
@@ -74,6 +70,7 @@ void Aircraft::update(double elapsed) {
 	this->heading   = change_parameter(elapsed, this->heading, 	this->clearance_heading, 	Tools::deg2rad(3.0), this->turn);
 	
 	double distance = this->speed * (elapsed / 1000) / 3600;
+	
     this->place = Tools::calculate(this->place, this->heading, distance);
 }
 
@@ -89,16 +86,16 @@ double Aircraft::change_parameter(double elapsed, double actual_value, double cl
     elapsed /= 1000.0;
 	double add = turn;
 	
-	if (add == 0) {
+	if ((int)add == 0) {
 		add = (clearance_value > actual_value) ? 1.0 : -1.0;
 	}
 	
     if (std::abs(actual_value - clearance_value) < (0.01 * clearance_value)) {
         return clearance_value;
     } else {
-        actual_value += elapsed * change * add;
+		actual_value += elapsed * change * add;
     }
-
+	
     return actual_value;
 }
 
@@ -106,8 +103,8 @@ double Aircraft::get_speed() {
     return this->speed;
 }
 
-double Aircraft::get_heading() {
-    return this->heading;
+double Aircraft::get_heading() {	
+	return this->heading;
 }
 
 double Aircraft::get_altitude() {
@@ -140,6 +137,15 @@ void Aircraft::set_clearance_speed(double cl_spd) {
 
 void Aircraft::set_clearance_heading(double cl_hdg, int turn) {
 	this->clearance_heading = cl_hdg;
+	std::clog << "Aircraft::set:clearance_heading(" << cl_hdg << ", " << turn << ")" << std::endl;
+	std::string t_turn = (turn == -1) ? "left" : "right";
+	
+	std::clog << this->name << " heading is " << Tools::rad2deg(this->heading) << " degrees" << std::endl;
+	std::clog << this->name << " clearance heading is " << Tools::rad2deg(this->clearance_heading) << " degrees" << std::endl;
+	std::clog << this->name << " turning " << t_turn << std::endl;
+	
+	this->clearance_heading = Tools::fix_angle(this->clearance_heading);
+	
 	this->turn = turn;
 }
 
