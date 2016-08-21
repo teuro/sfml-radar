@@ -26,13 +26,10 @@ std::string Gamecontroller::handle_function_keys(int action) {
 
 void Gamecontroller::handle_mouse_release(Point& mouse_start, Point& mouse_end) {
     double distance_px  = Tools::distancePX(mouse_end, mouse_start);
-	/** Fix screen coorninates to map coordinates **/
-    double angle_rad    = Tools::angle(mouse_start, mouse_end) - Tools::get_PI() / 2.0;
-    double distance_nm  = Tools::distanceNM(distance_px, this->settings.zoom, this->settings.screen_width);
+    double angle_rad    = Tools::angle(mouse_end, mouse_start);
+    double distance_nm  = Tools::distanceNM(distance_px, this->settings.zoom);
 	
     Coordinate center = Tools::calculate(this->game->get_centerpoint(), angle_rad, distance_nm);
-	
-	//std::clog << "moving " << this->game->get_centerpoint() << " " << (distance_nm / 1.85200) << " km to " << Tools::rad2deg(angle_rad) << " degrees to " << center << std::endl;
 	
     this->game->set_centerpoint(center);
 }
