@@ -177,8 +177,6 @@ void View::style(Paragraph& p) {
 }
 
 void View::draw() {
-	this->repl["[RQD]"] = Tools::tostr(this->settings.required_handled);
-		
     std::map <std::string, Layout_element> :: iterator element;
  
     for (element = layout_elements.begin(); element != layout_elements.end(); ++element) {

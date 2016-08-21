@@ -55,6 +55,11 @@ void Gamecontroller::update(double elapsed, bool draw) {
 		this->gameview->repl["[SPE]"] = Tools::tostr(this->game->get_separation_errors());
 		this->gameview->repl["[PLN]"] = Tools::totime(this->game->get_new_plane() - this->game_time, "i:s");
 		this->gameview->repl["[SPK]"] = Tools::tostr(this->settings.max_separation_errors);
+		this->gameview->repl["[RQD]"] = Tools::tostr(this->settings.required_handled);
+		this->gameview->repl["[DEP]"] = Tools::tostr(this->atis->get_departure_runway());
+		this->gameview->repl["[LND]"] = Tools::tostr(this->atis->get_landing_runway());
+		this->gameview->repl["[TRL]"] = Tools::tostr(this->atis->get_transition_level());
+		this->gameview->repl["[TRA]"] = Tools::tostr(this->atis->get_transition_altitude());
 		
 		this->gameview->set_centerpoint_map(this->game->get_centerpoint());
 		this->gameview->clear_screen();

@@ -50,17 +50,12 @@ protected:
     void style(Layout_element& le);
 	void style(Image& img);
 	void style(Paragraph& p);
-	
-	/**
-		@todo load all element from xml 
-	**/
     void load();
     Layout_element& get_element(std::string name);
     Point centerpoint_screen;
 	std::vector <Image> images;
 	std::vector <Paragraph> paragraphs;
 private:
-	
 };
 
 
