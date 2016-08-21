@@ -156,7 +156,7 @@ void Game::select_aircraft(Point& mouse) {
 
     for (plane = this->aircrafts.begin(); plane != this->aircrafts.end(); ++plane) {
         Point tmp(this->settings.screen_width/2, this->settings.screen_height/2);
-        Point aircraft = Tools::calculate(tmp, this->centerpoint, (*plane)->get_place(), this->settings.zoom, this->settings.screen_width);
+        Point aircraft = Tools::calculate(tmp, this->centerpoint, (*plane)->get_place(), this->settings.zoom);
 
         if (Tools::on_area(mouse, aircraft)) {
             this->selected = (*plane);
@@ -283,7 +283,7 @@ void Game::build_clearance(std::string command) {
 		int value = Tools::tonumber<int>(tmp.back());
 
 		if (Tools::trim(tmp[0]) == "turn") {
-			int turn = (Tools::trim(tmp[1]) == "right") ? -1 : 1;
+			int turn = (Tools::trim(tmp[1]) == "right") ? 1 : -1;
 			
 			this->selected->set_clearance_heading(Tools::deg2rad(value), turn);
 		} else if (Tools::trim(tmp[0]) == "climb") {
