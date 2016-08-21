@@ -48,10 +48,9 @@ namespace Tools {
 		* Converts pixels to nautical miles 
 		* @parameter double px
 		* @parameter double zoom
-		* @parameter double screen_width
 		* @return double
 	**/
-	double distanceNM(double px, double zoom, double screen_width = 800);
+	double distanceNM(double px, double zoom);
 	
 	/**
 		* distancePX
@@ -67,10 +66,9 @@ namespace Tools {
 		* Converts nautcal miles to pixels
 		* @parameter double nm
 		* @parameter double zoom
-		* @parameter double screen_width
 		* @return double
 	**/
-	double distancePX(double nm, double zoom, double screen_width = 800);
+	double distancePX(double nm, double zoom);
 	
 	/**
 		* angle
@@ -102,7 +100,7 @@ namespace Tools {
 		* @param int zoom
 	**/
 
-	Point calculate(Point& center_point_screen, Coordinate& center_point_map, Coordinate& target, int zoom, int screen_width);
+	Point calculate(Point& center_point_screen, Coordinate& center_point_map, Coordinate& target, int zoom);
 	
 	/**
 		* calculate
@@ -327,6 +325,8 @@ namespace Tools {
 	std::string replace(std::string original, std::string find, std::string replace);
 	
 	double fix_angle(double angle);
+	
+	double CalcGeograpicAngle(double arith);
 }
 
 #endif // _TOOLS_HPP

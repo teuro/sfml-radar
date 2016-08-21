@@ -3,6 +3,8 @@
 namespace Tools {
 	const double PI = 3.14151927;
 	const double earth_radius = 3440;
+	static double scale_px = 1.0 / 40.0;
+	static double scale_nm = 40.0;
 }
 
 double Tools::get_PI() {
@@ -41,29 +43,19 @@ double Tools::distancePX(Point& a, Point& b) {
     return std::sqrt(std::pow(dx, 2.0) + std::pow(dy, 2.0));
 }
 
-double Tools::distanceNM(double px, double zoom, double screen_width) {
-    return (px * zoom / screen_width);
+double Tools::distanceNM(double px, double zoom) {
+    return px * (scale_px * zoom);
 }
 
-double Tools::distancePX(double nm, double zoom, double screen_width) {
-    return (screen_width * nm) / zoom;
+double Tools::distancePX(double nm, double zoom) {
+    return nm * (scale_nm / zoom);
 }
 
 double Tools::angle(Point& a, Point& b) {
     int dx = a.get_x() - b.get_x();
     int dy = a.get_y() - b.get_y();
 
-    double tmp_angle = std::atan2(dy, dx);
-	
-	while (tmp_angle < 0.0) {
-		tmp_angle += 2 * PI;
-	}
-	
-	while (tmp_angle > 2 * PI) {
-		tmp_angle -= 2 * PI;
-	}
-
-   return tmp_angle;
+	return std::atan2(dy, dx);
 }
 
 double Tools::angle(Coordinate& a, Coordinate& b) {
@@ -96,7 +88,7 @@ Point Tools::calculate(Point& sp, double bearing, double length) {
     return tmp;
 }
 
-Point Tools::calculate(Point& centerpoint_screen, Coordinate& centerpoint_map, Coordinate& target, int zoom, int screen_width) {
+Point Tools::calculate(Point& centerpoint_screen, Coordinate& centerpoint_map, Coordinate& target, int zoom) {
 	/** centerpoint_screen 	= {400, 300} 			**/
 	/** centerpoint_screen 	= {60.3172, 24.9633} 	**/
 	/** target 				= {60.3071, 24.9881} 	**/
@@ -105,10 +97,10 @@ Point Tools::calculate(Point& centerpoint_screen, Coordinate& centerpoint_map, C
     double tmp_length = Tools::distanceNM(centerpoint_map, target);
     //std::clog << "Distance between " << centerpoint_map.get_latitude() << ", " << centerpoint_map.get_longitude() << " and " << target.get_latitude() << ", " << target.get_longitude() << " is " << tmp_l << " nm" << std::endl;
     
-	double tmp_angle = Tools::angle(centerpoint_map, target);
+	double tmp_angle = Tools::CalcGeograpicAngle(Tools::angle(centerpoint_map, target));
 	//std::clog << "Bearing is " << rad2deg(tmp_angle) << " degrees " << std::endl;
 
-    int distance_pixels = Tools::distancePX(tmp_length, zoom, screen_width);
+    int distance_pixels = Tools::distancePX(tmp_length, zoom);
     //std::clog << "Distance in pixels is " << distance_pixels << std::endl;
 
 	return Tools::calculate(centerpoint_screen, tmp_angle, distance_pixels);
@@ -254,4 +246,12 @@ double Tools::fix_angle(double angle) {
 	}
 	
 	return angle;
+}
+
+double Tools::CalcGeograpicAngle(double arith) {
+	if (arith > ((PI / 2.0) && arith < (2 * PI))) {
+		return ((2 * PI) - arith + (PI / 2.0));
+	} 
+	
+	return (arith * (-1.0) + (PI / 2.0));
 }

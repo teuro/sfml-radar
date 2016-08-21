@@ -6,6 +6,7 @@ Gameview::~Gameview() { }
 
 void Gameview::load() {
 	std::clog << "Gameview::load()" << std::endl;
+	
 	View::load();
 	
 	std::ifstream in_file("templates/plane.tpl", std::ios::in);
@@ -37,14 +38,12 @@ void Gameview::draw() {
 }
 
 void Gameview::draw_plane(Aircraft*& plane, std::string color) {
-	Point aircraft_place = Tools::calculate(this->centerpoint_screen, this->centerpoint_map, plane->get_place(), this->settings.zoom, this->settings.screen_width);
+	Point aircraft_place = Tools::calculate(this->centerpoint_screen, this->centerpoint_map, plane->get_place(), this->settings.zoom);
 	Point draw;
 
-    double separation_ring = Tools::distancePX(settings.separation_horizontal / 2.0, this->settings.zoom, this->settings.screen_width);
+    double separation_ring = Tools::distancePX(settings.separation_horizontal / 2.0, this->settings.zoom);
 	
-	//std::clog << plane->get_name() << " heading " << Tools::rad2deg(plane->get_heading()) << " degreess" << std::endl;
-	
-	Point end_point_c = Tools::calculate(aircraft_place, plane->get_heading(), Tools::distancePX(plane->get_speed() * (1.0 / 60.0), this->settings.zoom, this->settings.screen_width));
+	Point end_point_c = Tools::calculate(aircraft_place, Tools::CalcGeograpicAngle(plane->get_heading()), Tools::distancePX(plane->get_speed() * (1.0 / 60.0), this->settings.zoom));
 	
     drawer.lineColor(aircraft_place, end_point_c, color);
     drawer.circleColor(aircraft_place, separation_ring, color);
@@ -65,7 +64,7 @@ void Gameview::draw_plane(Aircraft*& plane, std::string color) {
 
 void Gameview::draw_navpoints(std::vector <Navpoint>& navpoints) {
     for (unsigned int i = 0; i < navpoints.size(); ++i) {
-        Point place_screen = Tools::calculate(this->centerpoint_screen, this->centerpoint_map, navpoints[i].get_place(), this->settings.zoom, this->settings.screen_width);
+        Point place_screen = Tools::calculate(this->centerpoint_screen, this->centerpoint_map, navpoints[i].get_place(), this->settings.zoom);
 
         this->drawer.trigonColor(place_screen, 5);
         this->drawer.draw_text(navpoints[i].get_name(), place_screen, "green");
@@ -93,8 +92,8 @@ void Gameview::draw_airfield(Airfield* airfield) {
     std::vector <Runway> runways = airfield->get_runways();
 	
     for (unsigned int i = 0; i < runways.size(); i+=2) {
-		Point rwys = Tools::calculate(this->centerpoint_screen, this->centerpoint_map, runways[i].get_start_place(), this->settings.zoom, this->settings.screen_width);
-		Point rwye = Tools::calculate(this->centerpoint_screen, this->centerpoint_map, runways[i].get_end_place(), this->settings.zoom, this->settings.screen_width);
+		Point rwys = Tools::calculate(this->centerpoint_screen, this->centerpoint_map, runways[i].get_start_place(), this->settings.zoom);
+		Point rwye = Tools::calculate(this->centerpoint_screen, this->centerpoint_map, runways[i].get_end_place(), this->settings.zoom);
 		
         this->drawer.lineColor(rwys, rwye, "white");
     }
