@@ -1,0 +1,5 @@
+<?xml version="1.0" ?>
+<layout>
+	<p id="gametime" class="time">Game time [TIME]</p>
+	<p id="planes" class="count">Planes in area [PLC]</p>
+</layout>
