@@ -169,6 +169,7 @@ void View::style(Paragraph& p) {
 		if (p.id == t_style->get_id()) {
 	        Point pl(t_style->get_left(), t_style->get_top());
             p.place = pl;
+			break;
         }
 
         ++t_style;
