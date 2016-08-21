@@ -71,7 +71,7 @@ void Aircraft::update(double elapsed) {
 	
 	double distance = this->speed * (elapsed / 1000) / 3600;
 	
-    this->place = Tools::calculate(this->place, this->heading, distance);
+    this->place = Tools::calculate(this->place, Tools::CalcGeograpicAngle(this->heading), distance);
 }
 
 Coordinate& Aircraft::get_place() {

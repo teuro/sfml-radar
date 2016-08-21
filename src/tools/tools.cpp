@@ -3,8 +3,8 @@
 namespace Tools {
 	const double PI = 3.14151927;
 	const double earth_radius = 3440;
-	static double scale_px = 1.0 / 40.0;
-	static double scale_nm = 40.0;
+	static double scale_px = 1.0 / 200.0;
+	static double scale_nm = 1 / scale_px;
 }
 
 double Tools::get_PI() {
