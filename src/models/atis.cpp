@@ -1,8 +1,8 @@
 #include "atis.hpp"
 
 Atis::Atis(Settings& s) : settings(s) { 
-	this->transition_level = 5000;
-    this->transition_altitude = 55;
+	this->transition_level = 55;
+    this->transition_altitude = 5000;
     this->departure_runway = "22R";
     this->landing_runway = "22L";
 }
