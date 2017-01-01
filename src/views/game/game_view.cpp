@@ -65,8 +65,7 @@ void Gameview::draw_plane(Aircraft*& plane, std::string color) {
 void Gameview::draw_navpoints(std::vector <Navpoint>& navpoints) {
     for (unsigned int i = 0; i < navpoints.size(); ++i) {
         Point place_screen = Tools::calculate(navpoints[i].get_place(), this->settings.zoom);
-		std::clog << navpoints[i].get_name() << " " << navpoints[i].get_place() << " => " << place_screen << std::endl;
-
+		
         this->drawer.trigonColor(place_screen, 5);
         this->drawer.draw_text(navpoints[i].get_name(), place_screen, "green");
     }
