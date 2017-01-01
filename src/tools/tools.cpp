@@ -16,7 +16,9 @@ double Tools::deg2rad(double deg) {
 }
 
 double Tools::rad2deg(double rad) {
-    return (rad * 180.0) / Tools::PI;
+	rad = fix_angle(rad);
+	
+	return rad * 180.0 / Tools::PI;
 }
 
 double Tools::distanceNM(Coordinate& a, Coordinate& b) {
@@ -28,8 +30,8 @@ double Tools::distanceNM(Coordinate& a, Coordinate& b) {
     double dlong = deg2rad(lon2 - lon1);
     double dlat  = deg2rad(lat2 - lat1);
 
-    double a1 = std::sin(dlat/2)*std::sin(dlat/2) + std::cos(lat1)*std::cos(lat2)*std::sin(dlong/2)*std::sin(dlong/2);
-    double c = 2 * std::atan2(std::sqrt(a1), std::sqrt(1-a1));
+    double a1 = std::sin(dlat/2.0)*std::sin(dlat/2.0) + std::cos(lat1)*std::cos(lat2)*std::sin(dlong/2)*std::sin(dlong/2);
+    double c = 2 * std::atan2(std::sqrt(a1), std::sqrt(1.0-a1));
     double d = earth_radius * c;
 
     return d;
@@ -59,8 +61,7 @@ double Tools::angle(Point& a, Point& b) {
 
 double Tools::angle(Coordinate& a, Coordinate& b) {
 	double fLat = a.get_latitude();
-    double fLng = a.get_longitude();
-    double tLat = b.get_latitude();
+    double fLng = a.get_longitude();    double tLat = b.get_latitude();
     double tLng = b.get_longitude();
 	
 	double y = std::sin(tLng-fLng) * std::cos(tLat);
@@ -81,14 +82,17 @@ Point Tools::calculate(Point& sp, double bearing, double length) {
     return tmp;
 }
 
-Point Tools::calculate(Point& centerpoint_screen, Coordinate& centerpoint_map, Coordinate& target, int zoom) {
-    double tmp_length = Tools::distanceNM(centerpoint_map, target);
-    
-	double tmp_angle = Tools::CalcGeograpicAngle(Tools::angle(centerpoint_map, target));
+Point Tools::calculate(Coordinate& target, int zoom, bool print) {
+	int pixelY = ((target.get_latitude() - 58.0) / (62.0 - 58.0)) * 600.0;
+	int pixelX = ((target.get_longitude() - 20.0) / (28.0 - 20.0)) * 800.0;
 	
-    int distance_pixels = Tools::distancePX(tmp_length, zoom);
-    
-	return Tools::calculate(centerpoint_screen, tmp_angle, distance_pixels);
+	Point t(pixelX, pixelY);
+	
+	if (print) {
+		std::clog << target.get_latitude() << " " << target.get_longitude() << " => " << t << std::endl;
+	}
+	
+	return t;
 }
 
 Coordinate Tools::calculate(Coordinate& cp, double bearing, double d) {

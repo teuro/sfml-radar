@@ -22,7 +22,6 @@ void Game::load(std::string airfield, std::string dep, std::string lnd) {
 }
 
 void Game::set_centerpoint(Coordinate& cp) {
-	std::clog << "Game::set_centerpoint(Coordinate& " << this->centerpoint << ")" << Tools::distanceNM(cp, this->centerpoint) << " nm " << Tools::angle(cp, this->centerpoint) <<" rad" << std::endl;
 	this->centerpoint = cp;
 }
 
@@ -156,7 +155,7 @@ void Game::select_aircraft(Point& mouse) {
 
     for (plane = this->aircrafts.begin(); plane != this->aircrafts.end(); ++plane) {
         Point tmp(this->settings.screen_width/2, this->settings.screen_height/2);
-        Point aircraft = Tools::calculate(tmp, this->centerpoint, (*plane)->get_place(), this->settings.zoom);
+        Point aircraft = Tools::calculate((*plane)->get_place(), this->settings.zoom);
 
         if (Tools::on_area(mouse, aircraft)) {
             this->selected = (*plane);

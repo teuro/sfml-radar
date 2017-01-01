@@ -100,7 +100,7 @@ namespace Tools {
 		* @param int zoom
 	**/
 
-	Point calculate(Point& center_point_screen, Coordinate& center_point_map, Coordinate& target, int zoom);
+	Point calculate(Coordinate& target, int zoom, bool print = false);
 	
 	/**
 		* calculate
