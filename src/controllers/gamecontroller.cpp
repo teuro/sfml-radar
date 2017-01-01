@@ -25,13 +25,15 @@ std::string Gamecontroller::handle_function_keys(int action) {
 }
 
 void Gamecontroller::handle_mouse_release(Point& mouse_start, Point& mouse_end) {
-    double distance_px  = Tools::distancePX(mouse_end, mouse_start);
-    double angle_rad    = Tools::angle(mouse_end, mouse_start);
+    double distance_px  = Tools::distancePX(mouse_start, mouse_end);
+    double angle_rad    = Tools::angle(mouse_start, mouse_end);
     double distance_nm  = Tools::distanceNM(distance_px, this->settings.zoom);
 	
     Coordinate center = Tools::calculate(this->game->get_centerpoint(), angle_rad, distance_nm);
 	
+	std::clog << "Game::get_centerpoint() " << this->game->get_centerpoint() << std::endl;
     this->game->set_centerpoint(center);
+	std::clog << "Game::get_centerpoint() " << this->game->get_centerpoint() << std::endl;
 }
 
 void Gamecontroller::handle_mouse_wheel(int amount) {
