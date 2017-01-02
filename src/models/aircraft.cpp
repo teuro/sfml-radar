@@ -136,12 +136,7 @@ void Aircraft::set_clearance_speed(double cl_spd) {
 
 void Aircraft::set_clearance_heading(double cl_hdg, int turn) {
 	this->clearance_heading = cl_hdg;
-	std::clog << "Aircraft::set:clearance_heading(" << cl_hdg << ", " << turn << ")" << std::endl;
 	std::string t_turn = (turn == -1) ? "left" : "right";
-	
-	std::clog << this->name << " heading is " << Tools::rad2deg(this->heading) << " degrees" << std::endl;
-	std::clog << this->name << " clearance heading is " << Tools::rad2deg(this->clearance_heading) << " degrees" << std::endl;
-	std::clog << this->name << " turning " << t_turn << std::endl;
 	
 	this->clearance_heading = Tools::fix_angle(this->clearance_heading);
 	
