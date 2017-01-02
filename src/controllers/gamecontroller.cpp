@@ -31,9 +31,7 @@ void Gamecontroller::handle_mouse_release(Point& mouse_start, Point& mouse_end) 
 	
     Coordinate center = Tools::calculate(this->game->get_centerpoint(), angle_rad, distance_nm);
 	
-	std::clog << "Game::get_centerpoint() " << this->game->get_centerpoint() << std::endl;
-    this->game->set_centerpoint(center);
-	std::clog << "Game::get_centerpoint() " << this->game->get_centerpoint() << std::endl;
+	this->game->set_centerpoint(center);
 }
 
 void Gamecontroller::handle_mouse_wheel(int amount) {
@@ -75,7 +73,18 @@ void Gamecontroller::update(double elapsed, bool draw) {
 }
 
 void Gamecontroller::handle_mouse_click(Point& mouse) {
-	this->game->select_aircraft(mouse);
+	this->game->selected = NULL;
+
+    std::list <Aircraft*> :: iterator plane;
+    std::list <Aircraft*> aircrafts = this->game->get_aircrafts();
+
+    for (plane = aircrafts.begin(); plane != aircrafts.end(); ++plane) {
+        Point aircraft = this->gameview->calculate((*plane)->get_place());
+
+        if (Tools::on_area(mouse, aircraft)) {
+            this->game->selected = (*plane);
+        }
+    }
 }
 
 void Gamecontroller::load() {

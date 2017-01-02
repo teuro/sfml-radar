@@ -57,6 +57,8 @@ public:
 	std::vector <Navpoint>& get_navpoints();
 	std::list <Aircraft*> get_aircrafts();
 	std::vector <Airfield>& get_airfields();
+	
+	Aircraft* selected;
 
     /**
         Get's game duration pure value
@@ -130,7 +132,6 @@ private:
 	std::string command;
 
     Airfield* active_field;
-    Aircraft* selected;
     Runway departure;
     Runway landing;
 

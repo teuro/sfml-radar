@@ -94,17 +94,6 @@ namespace Tools {
 	/**
 		* calculate
 		* Calculates new screen point
-		* @param Point center_point_screen
-		* @param Coordinate center_point_map
-		* @param Coordinate target
-		* @param int zoom
-	**/
-
-	Point calculate(Coordinate& target, int zoom, bool print = false);
-	
-	/**
-		* calculate
-		* Calculates new screen point
 		* @param Point start_point
 		* @param double angle radians from point
 		* @param double length

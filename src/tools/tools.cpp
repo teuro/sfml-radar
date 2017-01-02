@@ -5,10 +5,6 @@ namespace Tools {
 	const double earth_radius = 3440;
 	static double scale_px = 1.0 / 200.0;
 	static double scale_nm = 1 / scale_px;
-	static double min_lat = 59.5;
-	static double max_lat = 61.5;
-	static double min_lon = 23.0;
-	static double max_lon = 26.0;
 }
 
 double Tools::get_PI() {
@@ -84,15 +80,6 @@ Point Tools::calculate(Point& sp, double bearing, double length) {
 	Point tmp(tmpx, tmpy);
 
     return tmp;
-}
-
-Point Tools::calculate(Coordinate& target, int zoom, bool print) {
-	int pixelY = 600 - ((target.get_latitude() - min_lat) / (max_lat - min_lat)) * 600.0;
-	int pixelX = ((target.get_longitude() - min_lon) / (max_lon - min_lon)) * 800.0;
-	
-	Point t(pixelX, pixelY);
-	
-	return t;
 }
 
 Coordinate Tools::calculate(Coordinate& cp, double bearing, double d) {

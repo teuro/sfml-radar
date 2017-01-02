@@ -90,6 +90,17 @@ public:
 	**/
 	
 	void set_centerpoint_map(Coordinate& centerpoint_map);
+	
+	/**
+		* calculate
+		* Calculates new screen point
+		* @param Point center_point_screen
+		* @param Coordinate center_point_map
+		* @param Coordinate target
+		* @param int zoom
+	**/
+	
+	Point calculate(Coordinate& target);
 private:
 	/**
 		* Gameview centerpoint
@@ -107,6 +118,7 @@ private:
 	**/
 	
     void draw_plane(Aircraft*& plane, std::string color);
+	
 	Point text_callsign;
 	Point text_speed;
 	Point text_altitude;

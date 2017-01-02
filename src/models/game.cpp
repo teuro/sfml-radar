@@ -149,18 +149,7 @@ double Game::get_duration() {
 }
 
 void Game::select_aircraft(Point& mouse) {
-    this->selected = NULL;
-
-    std::list <Aircraft*> :: iterator plane;
-
-    for (plane = this->aircrafts.begin(); plane != this->aircrafts.end(); ++plane) {
-        Point tmp(this->settings.screen_width/2, this->settings.screen_height/2);
-        Point aircraft = Tools::calculate((*plane)->get_place(), this->settings.zoom);
-
-        if (Tools::on_area(mouse, aircraft)) {
-            this->selected = (*plane);
-        }
-    }
+    
 }
 
 void Game::select_aircraft(std::string callsign) {
