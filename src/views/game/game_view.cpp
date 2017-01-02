@@ -1,9 +1,9 @@
 #include "game_view.hpp"
 
-static double min_lat = 59.5;
-static double max_lat = 61.5;
-static double min_lon = 23.0;
-static double max_lon = 26.0;
+double min_lat = 59.5;
+double max_lat = 61.5;
+double min_lon = 23.0;
+double max_lon = 26.0;
 
 Gameview::Gameview(Drawsurface& d, Settings& s) : View(d, s) { }
 
@@ -108,6 +108,22 @@ void Gameview::draw_airfield(Airfield* airfield) {
 }
 
 void Gameview::set_centerpoint_map(Coordinate& centerpoint_map) {
+	double distanceNM = Tools::distanceNM(centerpoint_map, this->centerpoint_map);
+	double angle_rad = Tools::angle(centerpoint_map, this->centerpoint_map);
+	
+	Coordinate a(min_lat, min_lon);
+	Coordinate b(max_lat, max_lon);
+	
+	if (distanceNM > 0.0) {
+		a = Tools::calculate(a, angle_rad, distanceNM);
+		b = Tools::calculate(b, angle_rad, distanceNM);
+	}
+	
+	min_lat = a.get_latitude();
+	min_lon = a.get_longitude();
+	max_lat = b.get_latitude();
+	max_lon = b.get_longitude();
+	
 	this->centerpoint_map = centerpoint_map;
 }
 
