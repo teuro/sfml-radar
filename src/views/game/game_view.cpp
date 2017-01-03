@@ -109,7 +109,7 @@ void Gameview::draw_airfield(Airfield* airfield) {
 
 void Gameview::set_centerpoint_map(Coordinate& centerpoint_map) {
 	double distanceNM = Tools::distanceNM(centerpoint_map, this->centerpoint_map);
-	double angle_rad = Tools::angle(centerpoint_map, this->centerpoint_map);
+	double angle_rad = Tools::CalcGeograpicAngle(Tools::fix_angle(Tools::angle(centerpoint_map, this->centerpoint_map) + Tools::get_PI()));
 	
 	Coordinate a(min_lat, min_lon);
 	Coordinate b(max_lat, max_lon);
