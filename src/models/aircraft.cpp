@@ -24,19 +24,33 @@ void Aircraft::update(double elapsed) {
 	
 	if (this->approach) {
 		if (this->landed == false) {
-			this->turn = 1;
 			double t_angle = Tools::angle(this->place, this->landing.get_start_place());
-			//std::clog << this->place << " <=> " << this->landing.get_start_place() << " = " << t_angle << std::endl;
+			/** Distance from planes position to runway in feets **/
 			double t_distance = Tools::distanceNM(this->place, this->landing.get_start_place()) * 6076.11549;
 			double target_approach_altitude = std::tan(Tools::deg2rad(this->landing.get_glidepath())) * t_distance;
-			//double min_approach_angle = this->landing.get_heading() - Tools::deg2rad(this->settings.approach_angle);
-			//double max_approach_angle = this->landing.get_heading() + Tools::deg2rad(this->settings.approach_angle);
-		/*
-			if (this->altitude > this->settings.max_approach_altitude || this->heading > max_approach_angle || this->heading <  min_approach_angle || this->speed > this->settings.max_approach_speed) {
-				std::cerr << "Plane must be " << this->settings.max_approach_altitude << ", speed must max " << this->settings.max_approach_speed << " kt and approach angle must be between " << Tools::rad2deg(min_approach_angle) << " and " << Tools::rad2deg(max_approach_angle) << std::endl;
-				//this->approach = false;
+			double min_approach_angle = this->landing.get_heading() - Tools::deg2rad(this->settings.approach_angle);
+			double max_approach_angle = this->landing.get_heading() + Tools::deg2rad(this->settings.approach_angle);
+		
+			if (this->altitude > this->settings.max_approach_altitude) {
+				std::clog << "plane altitude is " << this->altitude << " ft " << this->settings.max_approach_altitude << " ft" << std::endl;
+				this->approach = false;
 				return;
-			}*/
+				if (this->heading > max_approach_angle) {
+					std::clog << "max approach angle " << Tools::rad2deg(max_approach_angle) << " < " << Tools::rad2deg(this->heading) << std::endl;
+					this->approach = false;
+					return;
+					if (this->heading <  min_approach_angle) {
+						std::clog << "min approach angle " << Tools::rad2deg(min_approach_angle) << " < " << Tools::rad2deg(this->heading) << std::endl;
+						this->approach = false;
+						return;
+						if (this->speed > this->settings.max_approach_speed) {
+							std::clog << "plane speed is " << this->speed << " kt <=> " << this->settings.max_approach_speed << " kt" << std::endl;				
+							this->approach = false;
+							return;
+						}
+					}
+				}
+			}
 		
 			if (this->altitude < this->settings.max_approach_altitude && this->altitude > target_approach_altitude) {
 				if (this->altitude < this->settings.airfield_altitude) {

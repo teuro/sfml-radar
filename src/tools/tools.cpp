@@ -60,15 +60,16 @@ double Tools::angle(Point& a, Point& b) {
 }
 
 double Tools::angle(Coordinate& a, Coordinate& b) {
-	double fLat = a.get_latitude();
-    double fLng = a.get_longitude();    double tLat = b.get_latitude();
-    double tLng = b.get_longitude();
+	double fLat = deg2rad(a.get_latitude());
+    double fLng = deg2rad(a.get_longitude());    
+	double tLat = deg2rad(b.get_latitude());
+    double tLng = deg2rad(b.get_longitude());
 	
 	double y = std::sin(tLng-fLng) * std::cos(tLat);
 	double x = std::cos(fLat)*std::sin(tLat) - std::sin(fLat)*std::cos(tLat)*std::cos(tLng-fLng);
 	double brng = std::atan2(y, x);
 	
-	return (double)(std::fmod(2.0 * PI + brng, 2.0 * PI));
+	return brng;
 }
 
 Point Tools::calculate(Point& sp, double bearing, double length) {

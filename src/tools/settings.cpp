@@ -59,4 +59,5 @@ void Settings::set_values(std::map<std::string, std::string> values ) {
     this->departure_separation          = Tools::toint(values["departure_separation"]);
     this->zoom                          = 10;
     this->program_name                  = values["program_name"];
+	this->centerpoint					= Coordinate(60, 25);
 }

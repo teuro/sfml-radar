@@ -91,6 +91,8 @@ public:
 	
 	void set_centerpoint_map(Coordinate& centerpoint_map);
 	
+	void set_zoom(int zoom);
+	
 	/**
 		* calculate
 		* Calculates new screen point

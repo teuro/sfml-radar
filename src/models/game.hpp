@@ -88,13 +88,6 @@ public:
     **/
 	void update(double elapsed);
 
-    /**
-        * Select a plane
-        * @param Point& mouse
-        * @return void
-    **/
-	void select_aircraft(Point& mouse);
-
 	/**
         * Select a plane
         * @param std::string callsign

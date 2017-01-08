@@ -148,10 +148,6 @@ double Game::get_duration() {
     return this->duration;
 }
 
-void Game::select_aircraft(Point& mouse) {
-    
-}
-
 void Game::select_aircraft(std::string callsign) {
     this->selected = NULL;
 
@@ -168,9 +164,9 @@ void Game::select_aircraft(std::string callsign) {
 void Game::create_plane() {
 	std::clog << "Game::create_plane()" << std::endl;
 	/** Number 5 is VEPIN **/
-	Inpoint t_inpoint = this->inpoints[5];
+	Inpoint t_inpoint = this->inpoints[Tools::rnd(0, (int)this->inpoints.size()-1)];
 	Outpoint t_outpoint = this->outpoints[Tools::rnd(0, (int)this->outpoints.size()-1)];
-	double heading = Tools::get_PI()-0.3578;
+	double heading = Tools::get_PI();
 	
     int type = Tools::rnd(1, 100);
 	type = 49;
@@ -180,10 +176,10 @@ void Game::create_plane() {
 	Aircraft* plane;
 	
 	if (type >= 50) {
-		plane = new Aircraft(t_callsign, 200.0, heading, this->active_field->get_altitude(), this->departure.get_start_place(), type, this->settings, this->landing);
+		plane = new Aircraft(t_callsign, 0.0, heading, this->active_field->get_altitude(), this->departure.get_start_place(), type, this->settings, this->landing);
 		this->holdings.push(plane);
 	} else {
-		plane = new Aircraft(t_callsign, 200, heading, 2000, t_inpoint.get_place(), type, this->settings, this->landing);
+		plane = new Aircraft(t_callsign, 200, heading, 2500, t_inpoint.get_place(), type, this->settings, this->landing);
 		this->aircrafts.push_back(plane);
 	}
 }
@@ -248,6 +244,7 @@ void Game::load_airfield(std::string icao) {
 			Runway rwy(q_runways(i, "name"), start_p, end_p);
 			
 			this->active_field->add_runway(rwy);
+			std::clog << rwy.get_name() << " " << Tools::rad2deg(rwy.get_heading()) <<  std::endl;
 		}
 	} catch ( ... ) {
 		throw;
