@@ -32,6 +32,7 @@ public:
 		* Moves center point 
 		* @parameter Point mouse_start point where mouse left button was pushed
 		* @parameter Point mouse_end point where mouse left button was released
+		* @todo This should reflect actual zoom. ATM it's always 7 nm
 		* @return void
 	**/
     void handle_mouse_release(Point& mouse_start, Point& mouse_end);

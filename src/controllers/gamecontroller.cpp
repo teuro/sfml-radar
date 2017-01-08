@@ -5,6 +5,7 @@ Gamecontroller::Gamecontroller(Settings& s, Drawsurface& d) : Controller(s, d) {
 	this->gameview = new Gameview(this->drawer, this->settings);
 	this->game = new Game(this->settings);
 	this->atis = new Atis(this->settings);
+	this->settings.zoom = 110;
 }
 
 Gamecontroller::~Gamecontroller() { 
@@ -27,7 +28,11 @@ std::string Gamecontroller::handle_function_keys(int action) {
 void Gamecontroller::handle_mouse_release(Point& mouse_start, Point& mouse_end) {
     double distance_px  = Tools::distancePX(mouse_start, mouse_end);
     double angle_rad    = Tools::angle(mouse_start, mouse_end);
-    double distance_nm  = Tools::distanceNM(distance_px, this->settings.zoom);
+    double distance_nm  = 7;
+	
+	if (distance_px == 0) {
+		distance_nm = 0;
+	}
 	
     Coordinate center = Tools::calculate(this->game->get_centerpoint(), angle_rad, distance_nm);
 	
@@ -37,9 +42,13 @@ void Gamecontroller::handle_mouse_release(Point& mouse_start, Point& mouse_end) 
 void Gamecontroller::handle_mouse_wheel(int amount) {
     this->settings.zoom += (-amount * 10);
 
-    if (this->settings.zoom < 10) {
-        this->settings.zoom = 10;
-    }
+    if (this->settings.zoom < 30) {
+        this->settings.zoom = 30;
+    } else if (this->settings.zoom > 110) {
+		this->settings.zoom = 110;
+	}
+	
+	this->gameview->set_zoom(this->settings.zoom);
 }
 
 void Gamecontroller::update(double elapsed, bool draw) {
@@ -95,6 +104,12 @@ void Gamecontroller::load() {
 
 void Gamecontroller::handle_text_input() {
     std::string t_command = this->command;
+	
+	if (t_command == "reset") {
+		this->game->set_centerpoint(this->settings.centerpoint);
+		return;
+	}
+	
 	this->game->build_clearance(command);
 }
 

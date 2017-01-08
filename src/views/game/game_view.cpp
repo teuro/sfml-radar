@@ -107,6 +107,22 @@ void Gameview::draw_airfield(Airfield* airfield) {
     }
 }
 
+void Gameview::set_zoom(int zoom) {
+	Coordinate a(min_lat, min_lon);
+	Coordinate b(max_lat, max_lon);
+	
+	double distance = zoom / 2.0;
+	
+	Coordinate c(Tools::calculate(this->centerpoint_map, Tools::deg2rad(315.0), std::sqrt(std::pow(distance, 2.0) + std::pow(distance, 2.0))));
+	Coordinate d(Tools::calculate(this->centerpoint_map, Tools::deg2rad(135.0), std::sqrt(std::pow(distance, 2.0) + std::pow(distance, 2.0))));
+	
+	min_lat = d.get_latitude();
+	max_lat = c.get_latitude();
+	
+	min_lon = c.get_longitude();
+	max_lon = d.get_longitude();
+}
+
 void Gameview::set_centerpoint_map(Coordinate& centerpoint_map) {
 	double distanceNM = Tools::distanceNM(centerpoint_map, this->centerpoint_map);
 	double angle_rad = Tools::CalcGeograpicAngle(Tools::fix_angle(Tools::angle(centerpoint_map, this->centerpoint_map) + Tools::get_PI()));
