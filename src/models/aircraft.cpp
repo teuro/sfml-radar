@@ -21,10 +21,16 @@ Aircraft::~Aircraft() { }
 
 void Aircraft::update(double elapsed) {
 	this->heading = Tools::fix_angle(this->heading);
+	double t_angle;
 	
 	if (this->approach) {
 		if (this->landed == false) {
-			double t_angle = Tools::angle(this->place, this->landing.get_start_place());
+			t_angle = Tools::angle(this->place, this->landing.get_start_place());
+			
+			if (std::abs(this->heading - t_angle) > 0.5) {
+				this->heading = t_angle;
+			}
+			
 			/** Distance from planes position to runway in feets **/
 			double t_distance = Tools::distanceNM(this->place, this->landing.get_start_place()) * 6076.11549;
 			double target_approach_altitude = std::tan(Tools::deg2rad(this->landing.get_glidepath())) * t_distance;
@@ -51,7 +57,11 @@ void Aircraft::update(double elapsed) {
 					}
 				}
 			}
-		
+			
+			if (this->altitude - this->settings.airfield_altitude < 1000) {
+				this->clearance_speed = 135;
+			}
+			
 			if (this->altitude < this->settings.max_approach_altitude && this->altitude > target_approach_altitude) {
 				if (this->altitude < this->settings.airfield_altitude) {
 					this->altitude = this->settings.airfield_altitude;
@@ -62,22 +72,13 @@ void Aircraft::update(double elapsed) {
 			}
 		
 			this->clearance_heading = t_angle;
+			this->turn = (this->heading < this->clearance_heading) ? 1 : -1;
 		} else {
 			this->clearance_speed = 0;
+			this->heading = this->landing.get_heading();
+			this->altitude = this->settings.airfield_altitude;
 		}
-	} else {
-		if (this->type >= 50 && this->speed > 130 && this->altitude < 1000) {
-			this->set_clearance_altitude(1500);
-		}
-
-		if (this->target != NULL) {
-			this->clearance_heading = Tools::angle(this->place, this->target->get_place());
-
-			if (Tools::on_area(this->place, this->target->get_place())) {
-				this->target = NULL;
-			}
-		}
-	}
+	} 
 	
 	this->altitude  = change_parameter(elapsed, this->altitude, this->clearance_altitude, 	30.0, 0);
 	this->speed     = change_parameter(elapsed, this->speed, 	this->clearance_speed, 		3.0, 0);

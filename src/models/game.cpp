@@ -123,7 +123,7 @@ void Game::update(double elapsed) {
         (*it)->set_separation_error(false);
         (*it)->update(elapsed);
 		
-		if ((*it)->get_speed() < 100) {
+		if ((*it)->get_speed() < 20) {
 			it = this->aircrafts.erase(it);
 			++this->handled_planes;
 		}
@@ -163,10 +163,12 @@ void Game::select_aircraft(std::string callsign) {
 
 void Game::create_plane() {
 	std::clog << "Game::create_plane()" << std::endl;
-	/** Number 5 is VEPIN **/
+
 	Inpoint t_inpoint = this->inpoints[Tools::rnd(0, (int)this->inpoints.size()-1)];
 	Outpoint t_outpoint = this->outpoints[Tools::rnd(0, (int)this->outpoints.size()-1)];
-	double heading = Tools::get_PI();
+	double heading = Tools::deg2rad(227);
+	
+	Coordinate test(60.46015, 25.2663);
 	
     int type = Tools::rnd(1, 100);
 	type = 49;
@@ -179,7 +181,7 @@ void Game::create_plane() {
 		plane = new Aircraft(t_callsign, 0.0, heading, this->active_field->get_altitude(), this->departure.get_start_place(), type, this->settings, this->landing);
 		this->holdings.push(plane);
 	} else {
-		plane = new Aircraft(t_callsign, 200, heading, 2500, t_inpoint.get_place(), type, this->settings, this->landing);
+		plane = new Aircraft(t_callsign, 200, heading, 2500, test, type, this->settings, this->landing);
 		this->aircrafts.push_back(plane);
 	}
 }
