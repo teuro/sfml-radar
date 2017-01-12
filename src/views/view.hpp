@@ -10,20 +10,29 @@
 #include <list>
 #include <fstream>
 #include "layout/layout_element.hpp"
+#include "layout/drawable_element.hpp"
 #include "../tools/style/parse_css.hpp"
 #include "../tools/style/style.hpp"
 #include "../tools/settings.hpp"
 
-struct Image {
+class Image : public Drawable_element {
+public:
+	Image(std::string src, std::string tid, Point place);
+	
+	std::string get_source();
+	void set_source(std::string src);
+private:
 	std::string source;
-	std::string id;
-	Point place;
 };
 
-struct Paragraph {
+class Paragraph : public Drawable_element {
+public:
+	Paragraph(std::string cnt, std::string id, Point place);
+	
+	std::string get_content();
+	void set_content(std::string cnt);
+private:
 	std::string content;
-	std::string id;
-	Point place;
 };
 
 class View {

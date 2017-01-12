@@ -1,5 +1,25 @@
 #include "view.hpp"
 
+Image::Image(std::string src, std::string tid, Point place) : Drawable_element(tid, place), source(src) { }
+
+std::string Image::get_source() {
+	return this->source;
+}
+	
+void Image::set_source(std::string src) {
+	this->source = src;
+}
+
+Paragraph::Paragraph(std::string cnt, std::string tid, Point place) : Drawable_element(tid, place), content(cnt) { }
+
+std::string Paragraph::get_content() {
+	return this->content;
+}
+
+void Paragraph::set_content(std::string cnt) {
+	this->content = cnt;
+}
+
 View::View(Drawsurface& d, Settings& s) : drawer(d), settings(s) { 
 	this->styles = parse_css::parse("styles/style.css");
 }
@@ -30,7 +50,7 @@ void View::load() {
 				std::string id = pParm->Attribute("id");
 				Point place(0, 0);
 				
-				struct Image img = {src, id, place};
+				Image img(src, id, place);
 				
 				this->images.push_back(img);
 			} else if (pParm->Value() == std::string("p")) {
@@ -38,7 +58,7 @@ void View::load() {
 				std::string c = pParm->GetText();
 				Point place(0, 0);
 				
-				Paragraph p = {c, id, place};
+				Paragraph p(c, id, place);
 				this->paragraphs.push_back(p);
 			}
 			
@@ -94,11 +114,11 @@ void View::draw_element(Layout_element& layout_element) {
 }
 
 void View::draw_element(Image& img) {
-	this->drawer.draw_picture(img.source, img.place);
+	this->drawer.draw_picture(img.get_source(), img.get_place());
 }
 
 void View::draw_element(Paragraph& p) {
-	this->drawer.draw_text(Tools::replace(p.content, repl), p.place, "red");
+	this->drawer.draw_text(Tools::replace(p.get_content(), repl), p.get_place(), "red");
 }
 
 bool compare_length(std::string const& lhs, std::string const& rhs) {
@@ -153,9 +173,9 @@ void View::style(Image& img) {
     std::list <Style> :: iterator t_style = this->styles.begin();
 	
     while (t_style != this->styles.end()) {
-		if (img.id == t_style->get_id()) {
+		if (img.get_id() == t_style->get_id()) {
 	        Point p(t_style->get_left(), t_style->get_top());
-            img.place = p;
+            img.set_place(p);
         }
 
         ++t_style;
@@ -166,9 +186,9 @@ void View::style(Paragraph& p) {
     std::list <Style> :: iterator t_style = this->styles.begin();
 	
     while (t_style != this->styles.end()) {
-		if (p.id == t_style->get_id()) {
+		if (p.get_id() == t_style->get_id()) {
 	        Point pl(t_style->get_left(), t_style->get_top());
-            p.place = pl;
+            p.set_place(pl);
 			break;
         }
 
