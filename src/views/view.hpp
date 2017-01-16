@@ -17,7 +17,7 @@
 
 class Image : public Drawable_element {
 public:
-	Image(std::string src, std::string tid, Point place);
+	Image(std::string source, std::string t_name, std::string t_class, std::string t_id);
 	
 	std::string get_source();
 	void set_source(std::string src);
@@ -27,10 +27,19 @@ private:
 
 class Paragraph : public Drawable_element {
 public:
-	Paragraph(std::string cnt, std::string id, Point place);
+	Paragraph(std::string content, std::string t_name, std::string t_class, std::string t_id);
 	
 	std::string get_content();
 	void set_content(std::string cnt);
+private:
+	std::string content;
+};
+
+class Input : public Drawable_element {
+public:
+	Input(std::string t_name, std::string t_class, std::string t_id);
+	void set_content(std::string cnt);
+	std::string get_content();
 private:
 	std::string content;
 };
@@ -64,6 +73,7 @@ protected:
     Point centerpoint_screen;
 	std::vector <Image> images;
 	std::vector <Paragraph> paragraphs;
+	std::vector <Input> inputs;
 private:
 };
 

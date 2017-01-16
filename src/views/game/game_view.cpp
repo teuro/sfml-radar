@@ -42,7 +42,8 @@ void Gameview::draw() {
 	this->View::draw();
 }
 
-void Gameview::draw_plane(Aircraft*& plane, std::string color) {
+void Gameview::draw_plane(Aircraft*& plane) {
+	std::string color = "green";
 	Point aircraft_place = this->calculate(plane->get_place());
 	Point draw;
 
@@ -81,17 +82,9 @@ void Gameview::draw_navpoints(std::vector <Navpoint>& navpoints) {
 
 void Gameview::draw_planes(std::list <Aircraft*> planes, Aircraft* selected) {
     std::list <Aircraft*> :: iterator plane = planes.begin();
-    std::string color = "blue";
-
+    
     while (plane != planes.end()) {
-        color = "green";
-
-        if (selected != NULL && (*plane) == selected) {
-            color = "white";
-        }
-
-        this->draw_plane((*plane), color);
-
+        this->draw_plane((*plane));
         ++plane;
     }
 }

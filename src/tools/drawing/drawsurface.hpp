@@ -17,6 +17,7 @@ public:
 	bool font_loaded;
 	unsigned int font_size;
     virtual void rectangleColor(Point& a, Point& b, std::string color, bool border) = 0;
+    virtual void rectangleColor(Point& a, Point& b, int color, bool border) = 0;
     virtual void rectangleColor(Point& a, Point& b, int red, int green, int blue, bool border) = 0;
     virtual void rectangleColor(Point& a, unsigned int lenght, std::string color) = 0;
     virtual void rectangleColor(Point& a, unsigned int length, int red, int green, int blue, bool border) = 0;
@@ -37,6 +38,7 @@ public:
     virtual void draw_picture(std::string tiedosto, Point& a) = 0;
     virtual void draw_text(std::string text, Point& a, std::string color = "black", int font_size = 16) = 0;
     virtual void draw_text(std::string text, Point& a, int red, int green, int blue, int font_size = 16) = 0;
+    virtual void draw_text(std::string text, Point& a, int color, int font_size = 16) = 0;
 
 	virtual unsigned int get_fontsize() = 0;
 	virtual void flip() = 0;

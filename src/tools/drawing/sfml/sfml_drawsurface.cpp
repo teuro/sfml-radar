@@ -85,6 +85,17 @@ void sfml_drawsurface::draw_text(std::string text, Point& a, int red, int green,
 	this->window.draw(_text);
 }
 
+void sfml_drawsurface::draw_text(std::string text, Point& a, int color, int font_size) {
+	int red, green, blue;
+	
+	blue = color % 256;
+	color /= 256;
+	red = color / 256;
+	green = color % 256;
+	
+	sfml_drawsurface::draw_text(text, a, red, green, blue, font_size);
+}
+
 void sfml_drawsurface::load_font(std::string _font, unsigned int font_size) {
 	if (!this->font.loadFromFile("fonts/" + _font)) {
 		std::logic_error("Requested font " + _font + " is not available");
@@ -127,7 +138,7 @@ void sfml_drawsurface::rectangleColor(Point& a, Point& b, std::string color, boo
 
     if (border) {
         rect.setOutlineColor(this->colors["red"]);
-        rect.setOutlineThickness(2);
+        rect.setOutlineThickness(1);
 	}
 
 	rect.setPosition(sf::Vector2f(a.get_x(), a.get_y()));
@@ -149,6 +160,17 @@ void sfml_drawsurface::rectangleColor(Point& a, Point& b, int red, int green, in
 	rect.setPosition(sf::Vector2f(a.get_x(), a.get_y()));
 
 	this->window.draw(rect);
+}
+
+void sfml_drawsurface::rectangleColor(Point& a, Point& b, int color, bool border) {
+	int red, green, blue;
+	
+	blue = color % 256;
+	color /= 256;
+	red = color / 256;
+	green = color % 256;
+	
+	sfml_drawsurface::rectangleColor(a, b, red, green, blue, border);
 }
 
 void sfml_drawsurface::rectangleColor(Point& a, unsigned int length, std::string color) {

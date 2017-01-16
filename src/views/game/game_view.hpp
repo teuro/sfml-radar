@@ -119,7 +119,7 @@ private:
 		* @return void
 	**/
 	
-    void draw_plane(Aircraft*& plane, std::string color);
+    void draw_plane(Aircraft*& plane);
 	
 	Point text_callsign;
 	Point text_speed;

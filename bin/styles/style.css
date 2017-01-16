@@ -55,16 +55,24 @@
 	height: 150px;
 }
 
-plane {
-	color: rgb(200, 200, 200);
+#selected {
+	color: rgb(50, 60, 60);
+}
+
+#planes {
+	top: 55px;
+	left: 30px;
+	color: rgb(50, 225, 158);
+	background-color: rgb(150, 150, 150);
+	width: 150px;
+	height: 30px;
 }
 
 #gametime {
 	top: 15px;
 	left: 30px;
-}
-
-#planes {
-	top: 35px;
-	left: 30px;
+	width: 150px;
+	height: 30px;
+	color: rgb(100, 150, 16);
+	background-color: rgb(150, 150, 150);
 }

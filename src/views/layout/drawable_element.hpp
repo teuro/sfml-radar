@@ -2,21 +2,29 @@
 #define DRAWABLE_ELEMENT
 
 #include <string>
+#include <map>
 #include "../../models/point.hpp"
+#include "../../tools/tools.hpp"
+#include "../../tools/style/style.hpp"
 
 struct Drawable_element {
 private:
 	std::string id;
-	Point place;
+	std::string s_class;
+	std::string name;
 protected:
-	Drawable_element(std::string i, Point p);
+	std::map <std::string, int> styles;
+	
+	Drawable_element(std::string t_name, std::string t_class = "", std::string t_id = "");
 	~Drawable_element();
 public:
-	void set_id(std::string id);
-	void set_place(Point& p);
+	void set_style(Style& style);
+	void set_style(std::string key, int value);
+	int get_style(std::string key);
 	
 	std::string get_id();
-	Point& get_place();
+	std::string get_class();
+	std::string get_name();
 };
 
 #endif

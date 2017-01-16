@@ -17,6 +17,9 @@ public:
     Point& get_bottom_right();
     std::string get_name();
     std::string get_id();
+    std::string get_class();
+	std::string get_color();
+	void set_id(std::string tid);
 
     void set_place(Point& p);
     void set_size(int width, int height);
@@ -26,7 +29,6 @@ public:
     void update_content(std::string content);
 
     bool operator ==(std::string id) { return (this->id == id); }
-    std::string get_class() { return this->s_class; }
     std::vector <std::string> get_content();
 	void set_text_colors(int color);
 	void set_background_colors(int color);

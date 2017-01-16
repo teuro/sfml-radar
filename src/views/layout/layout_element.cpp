@@ -32,8 +32,11 @@ std::string Layout_element::get_id() {
     return this->id;
 }
 
+std::string Layout_element::get_class() {
+    return this->s_class;
+}
+
 void Layout_element::set_place(Point& p) {
-    //std::clog << this->name << " place is " << p.get_x() << ", " << p.get_y() << std::endl;
     this->p1 = p;
 }
 
@@ -79,4 +82,12 @@ void Layout_element::set_background_colors(int color) {
 	this->b_green = color % 256;
 
 	this->b_color_setted = true;
+}
+
+void Layout_element::set_id(std::string tid) {
+	this->id = tid;
+}
+
+std::string Layout_element::get_color() {
+	return Tools::tostr(this->t_red) + ", " + Tools::tostr(this->t_green) + ", " + Tools::tostr(this->t_blue);
 }

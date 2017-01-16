@@ -20,6 +20,7 @@ public:
 	~sfml_drawsurface();
 
 	void rectangleColor(Point& a, Point& b, std::string color, bool border);
+	void rectangleColor(Point& a, Point& b, int color, bool border);
     void rectangleColor(Point& a, Point& b, int red, int green, int blue, bool border);
     void rectangleColor(Point& a, unsigned int lenght, std::string color);
     void rectangleColor(Point& a, unsigned int length, int red, int green, int blue, bool border);
@@ -41,6 +42,7 @@ public:
 
     void draw_text(std::string text, Point& a, std::string color = "green", int font_size = 16);
     void draw_text(std::string text, Point& a, int red, int green, int blue, int font_size = 16);
+    void draw_text(std::string text, Point& a, int color, int font_size = 16);
 
 	unsigned int get_fontsize();
 	void flip();

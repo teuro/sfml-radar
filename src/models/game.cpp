@@ -217,7 +217,6 @@ void Game::load_airfield(std::string icao) {
 				double t_heading    = Tools::tonumber<double>(q_navpoints(i, "heading"));
 
 				this->inpoints.push_back(Inpoint(t_name, t_place, 250, t_altitude, t_heading));
-				//std::clog << i << " " << t_name << std::endl;
 			} else {
 				this->outpoints.push_back((Outpoint(t_name, t_place)));
 			}
@@ -246,7 +245,6 @@ void Game::load_airfield(std::string icao) {
 			Runway rwy(q_runways(i, "name"), start_p, end_p);
 			
 			this->active_field->add_runway(rwy);
-			std::clog << rwy.get_name() << " " << Tools::rad2deg(rwy.get_heading()) <<  std::endl;
 		}
 	} catch ( ... ) {
 		throw;
