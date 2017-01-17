@@ -1,78 +1,25 @@
-#planelist {
-    top: 150px;
-    left: 10px;
-    width: 100px;
-    height: 50px;
-    color: rgb(150, 22, 98);
-    background-color: rgb(15, 20, 20);
-}
-
-#metar {
-    top: 10px;
-    left: 10px;
-    width: 80px;
-    height: 20px;
-    color: rgb(25, 180, 35);
-    background-color: rgb(15, 20, 20);
-}
-
-#input {
-    top: 550px;
-    left: 10px;
-    height: 30px;
-    width: 600px;
-    color: rgb(30, 125, 210);
-    background-color: rgb(156, 68, 37);
-}
-
-#departure {
-    top: 60px;
-    left: 50px;
-    width: 50px;
-    height: 30px;
-}
-
-#atis-box {
-    top: 30px;
-    left: 600px;
-    width: 85px;
-    height: 100px;
-    color: rgb(60, 60, 60);
-    background-color: rgb(185, 185 ,185);
-}
-
-#atis {
-    top: 150px;
-    left: 30px;
-    width: 200px;
-    height: 120px;
-}
-
-#depmenu {
-	top: 250px;
-	left: 150px;
-	width: 200px;
-	height: 150px;
-}
-
-#selected {
-	color: rgb(50, 60, 60);
-}
-
 #planes {
 	top: 55px;
 	left: 30px;
-	color: rgb(50, 225, 158);
-	background-color: rgb(150, 150, 150);
-	width: 150px;
-	height: 30px;
 }
 
 #gametime {
 	top: 15px;
 	left: 30px;
-	width: 150px;
+}
+
+p {
+	width: 180px;
 	height: 30px;
 	color: rgb(100, 150, 16);
-	background-color: rgb(150, 150, 150);
+	background-color: rgb(210, 160, 150);
+}
+
+.count {
+	
+}
+
+#errors {
+	top: 95px;
+	left: 30px;
 }
