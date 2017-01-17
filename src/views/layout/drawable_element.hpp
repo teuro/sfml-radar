@@ -9,9 +9,9 @@
 
 struct Drawable_element {
 private:
-	std::string id;
-	std::string s_class;
 	std::string name;
+	std::string s_class;
+	std::string id;
 protected:
 	std::map <std::string, int> styles;
 	
