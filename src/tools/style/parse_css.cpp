@@ -12,22 +12,21 @@ std::list <Style> parse_css::parse(std::string file) {
     while (std::getline(fin, line)) {
 		size_t found = line.find("{");
         if (found != std::string::npos) {
+			Style t;
+			
 			if (line.substr(0, 1) == "#") {
 				id = line.substr(1, found-1);
+				id = Tools::trim(id);
+				t.set_attribute("id", id);
 			} else if (line.substr(0, 1) == ".") {
 				s_class = line.substr(1, found-1);
+				s_class = Tools::trim(s_class);
+				t.set_attribute("class", s_class);
 			} else {
 				name = line.substr(0, found-1);
+				name = Tools::trim(name);
+				t.set_attribute("name", name);
 			}
-			
-			id = Tools::trim(id);
-			s_class = Tools::trim(s_class);
-			name = Tools::trim(name);
-            Style t;
-			
-			t.set_attribute("id", id);
-			t.set_attribute("class", s_class);
-			t.set_attribute("name", name);
 			
 			tmp.push_back(t);
         } else if (line.substr(0, 1) != "}" && line != "") {
