@@ -18,7 +18,8 @@ class sfml_drawsurface : public Drawsurface {
 public:
 	sfml_drawsurface(sf::RenderWindow& window);
 	~sfml_drawsurface();
-
+	
+	void convert (int color);
 	void rectangleColor(Point& a, Point& b, std::string color, bool border);
 	void rectangleColor(Point& a, Point& b, int color, bool border);
     void rectangleColor(Point& a, Point& b, int red, int green, int blue, bool border);

@@ -86,12 +86,7 @@ void sfml_drawsurface::draw_text(std::string text, Point& a, int red, int green,
 }
 
 void sfml_drawsurface::draw_text(std::string text, Point& a, int color, int font_size) {
-	int red, green, blue;
-	
-	blue = color % 256;
-	color /= 256;
-	red = color / 256;
-	green = color % 256;
+	this->convert(color);
 	
 	sfml_drawsurface::draw_text(text, a, red, green, blue, font_size);
 }
@@ -163,12 +158,7 @@ void sfml_drawsurface::rectangleColor(Point& a, Point& b, int red, int green, in
 }
 
 void sfml_drawsurface::rectangleColor(Point& a, Point& b, int color, bool border) {
-	int red, green, blue;
-	
-	blue = color % 256;
-	color /= 256;
-	red = color / 256;
-	green = color % 256;
+	this->convert(color);
 	
 	sfml_drawsurface::rectangleColor(a, b, red, green, blue, border);
 }
@@ -245,4 +235,11 @@ unsigned int sfml_drawsurface::get_fontsize() {
 
 void sfml_drawsurface::clear_screen() {
 	this->window.clear();
+}
+
+void sfml_drawsurface::convert(int color) {
+	blue = color % 256;
+	color /= 256;
+	red = color / 256;
+	green = color % 256;
 }

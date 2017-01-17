@@ -13,9 +13,15 @@
 #include "../../models/point.hpp"
 
 class Drawsurface {
+protected:
+	int red, green, blue;
+	
+	virtual void convert(int color) = 0;
 public:
 	bool font_loaded;
 	unsigned int font_size;
+	
+	
     virtual void rectangleColor(Point& a, Point& b, std::string color, bool border) = 0;
     virtual void rectangleColor(Point& a, Point& b, int color, bool border) = 0;
     virtual void rectangleColor(Point& a, Point& b, int red, int green, int blue, bool border) = 0;
