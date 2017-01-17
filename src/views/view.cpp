@@ -72,7 +72,8 @@ void View::load() {
 				std::string content = Tools::trim(pParm->GetText());
 			
 				Paragraph p(content, t_name, t_class, t_id);
-			
+				
+				this->style(p);
 				this->paragraphs.push_back(p);
 			} else if (pParm->Value() == std::string("input")) {
 				std::string id = Tools::trim(pParm->Attribute("id"));
@@ -135,8 +136,6 @@ void View::draw_element(Image& img) {
 }
 
 void View::draw_element(Paragraph& p) {
-	this->style(p);
-		
 	int color = p.get_style("text-color");
 	int background_color = p.get_style("background-color");
 	
@@ -167,7 +166,27 @@ void View::style(Paragraph& p) {
     std::list <Style> :: iterator t_style = this->styles.begin();
 	
     while (t_style != this->styles.end()) {
-		if (t_style->get_name() == p.get_name() || t_style->get_class() == p.get_class() || t_style->get_id() == p.get_id()) {
+		if (t_style->get_name() == p.get_name()) {
+			p.set_style((*t_style));
+		}
+		
+		++t_style;
+	}
+	
+	t_style = this->styles.begin();
+	
+	while (t_style != this->styles.end()) {
+		if (t_style->get_class() == p.get_class()) {
+			p.set_style((*t_style));
+		}
+		
+		++t_style;
+	}
+	
+	t_style = this->styles.begin();
+	
+	while (t_style != this->styles.end()) {
+		if (t_style->get_id() == p.get_id()) {
 			p.set_style((*t_style));
 		}
 		
