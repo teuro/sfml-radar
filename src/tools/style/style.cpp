@@ -1,6 +1,13 @@
 #include "style.hpp"
 
-Style::Style() { }
+Style::Style() { 
+	this->place.set_x(0);
+	this->place.set_y(0);
+	this->width = 0;
+	this->height = 0;
+	this->text_color = 0;
+	this->background_color = 0;
+}
 
 Style::~Style() { }
 
