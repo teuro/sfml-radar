@@ -6,7 +6,7 @@ Style::Style() {
 	this->width = 0;
 	this->height = 0;
 	this->text_color = 0;
-	this->background_color = 0;
+	this->background_color = 250254;
 }
 
 Style::~Style() { }
