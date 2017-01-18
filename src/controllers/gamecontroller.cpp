@@ -72,9 +72,8 @@ void Gamecontroller::update(double elapsed, bool draw) {
 		
 		this->gameview->set_centerpoint_map(this->game->get_centerpoint());
 		this->gameview->clear_screen();
-		//this->gameview->add_element("Input", "input", "data", this->command);
 		this->gameview->draw();
-		this->gameview->draw_planes(this->game->get_aircrafts(), this->game->get_selected());
+		this->gameview->draw_planes(this->game->get_aircrafts());
 		this->gameview->draw_navpoints(this->game->get_navpoints());
 		this->gameview->draw_airfield(this->game->get_active_field());
 		this->gameview->render();

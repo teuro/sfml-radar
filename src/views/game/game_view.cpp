@@ -80,9 +80,9 @@ void Gameview::draw_navpoints(std::vector <Navpoint>& navpoints) {
     }
 }
 
-void Gameview::draw_planes(std::list <Aircraft*> planes, Aircraft* selected) {
+void Gameview::draw_planes(std::list <Aircraft*> planes) {
     std::list <Aircraft*> :: iterator plane = planes.begin();
-    
+    	
     while (plane != planes.end()) {
         this->draw_plane((*plane));
         ++plane;

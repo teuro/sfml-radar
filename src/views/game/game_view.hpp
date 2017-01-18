@@ -80,7 +80,7 @@ public:
 		* @return void
 	**/
 	
-	void draw_planes(std::list <Aircraft*> planes, Aircraft* selected);
+	void draw_planes(std::list <Aircraft*> planes);
 	
 	/**
 		* Gameview set_centerpoint
