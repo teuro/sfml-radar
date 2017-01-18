@@ -131,7 +131,7 @@ void View::draw_element(Layout_element& layout_element) {
 }
 
 void View::draw_element(Image& img) {
-	Point place(15, 60);
+	Point place(img.get_style("left"), img.get_style("top"));
 	this->drawer.draw_picture(img.get_source(), place);
 }
 
