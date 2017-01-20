@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <layout>
 	<p id="planes" class="count">Planes in area [PLC]</p>
+	<p id="sep_errors" class="count">Game errors [SPE]</p>
 	<p id="gametime" class="time">Game time [TIME]</p>
-	<p id="errors" class="count">Game errors [SPE]</p>
 	<input type="text" name="input" id="userinput" />
 </layout>
