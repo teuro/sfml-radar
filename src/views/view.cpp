@@ -1,5 +1,19 @@
 #include "view.hpp"
 
+Drawable_list::Drawable_list(std::string t_name, std::string t_class, std::string t_id) :  Drawable_element(t_name, t_class, t_id) { }
+
+void Drawable_list::add_element(std::string content) {
+	this->elements.push_back(content);
+}
+
+void Drawable_list::clear_content() {
+	this->elements.clear();
+}
+
+std::list <std::string> Drawable_list::get_elements() {
+	return this->elements;
+}
+
 Image::Image(std::string src, std::string t_name, std::string t_class, std::string t_id) : Drawable_element(t_name, t_class, t_id), source(src) { }
 
 std::string Image::get_source() {
@@ -152,17 +166,8 @@ void View::draw_element(Paragraph& p) {
 bool compare_length(std::string const& lhs, std::string const& rhs) {
     return lhs.size() < rhs.size();
 }
-/*
-void View::style(Layout_element& le) {
-    std::list <Style> :: iterator t_style = this->styles.begin();
-	
-    while (t_style != this->styles.end()) {
-		
-        ++t_style;
-    }
-}
-*/
-void View::style(Paragraph& p) {
+
+void View::style(Drawable_element& p) {
     std::list <Style> :: iterator t_style = this->styles.begin();
 	
     while (t_style != this->styles.end()) {
