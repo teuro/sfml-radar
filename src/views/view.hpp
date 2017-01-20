@@ -15,6 +15,16 @@
 #include "../tools/style/style.hpp"
 #include "../tools/settings.hpp"
 
+class Drawable_list : public Drawable_element {
+public:
+	Drawable_list(std::string t_name, std::string t_class, std::string t_id);
+	void add_element(std::string content);
+	std::list <std::string> get_elements();
+	void clear_content();
+private:
+	std::list <std::string> elements;
+};
+
 class Image : public Drawable_element {
 public:
 	Image(std::string source, std::string t_name, std::string t_class, std::string t_id);
@@ -65,9 +75,9 @@ protected:
     void draw_element(Layout_element& layout_element);
     void draw_element(Image& img);
     void draw_element(Paragraph& p);
-    void style(Layout_element& le);
-	void style(Image& img);
-	void style(Paragraph& p);
+    void draw_element(Drawable_element& de);
+
+	void style(Drawable_element& de);
     void load();
     Layout_element& get_element(std::string name);
     Point centerpoint_screen;
