@@ -5,6 +5,16 @@ double max_lat = 61.5;
 double min_lon = 23.0;
 double max_lon = 26.0;
 
+Drawable_plane::Drawable_plane(std::string call, std::string t_name, std::string t_class, std::string t_id) : Drawable_element(t_name, t_class, t_id), callsign(call) { }
+
+std::string Drawable_plane::get_callsign() {
+	return this->callsign;
+}
+	
+void Drawable_plane::set_callsign(std::string call) {
+	this->callsign = call;
+}
+
 Gameview::Gameview(Drawsurface& d, Settings& s) : View(d, s) { }
 
 Gameview::~Gameview() { }
@@ -13,28 +23,6 @@ void Gameview::load() {
 	std::clog << "Gameview::load()" << std::endl;
 	
 	View::load();
-	
-	std::ifstream in_file("templates/plane.tpl", std::ios::in);
-	std::string name;
-	int x;
-	int y;
-	
-	while (in_file >> name >> x >> y) {
-		Point tmp(x, y);
-		name = Tools::trim(name);
-				
-		if (name == "CALLSIGN") {
-			this->text_callsign = tmp;
-		} else if (name == "SPEED") {
-			this->text_speed = tmp;
-		} else if (name == "ALTITUDE") {
-			this->text_altitude = tmp;
-		} else if (name == "HEADING") {
-			this->text_heading = tmp;
-		}
-	}
-	
-	in_file.close();
 }
 
 void Gameview::draw() {
@@ -42,7 +30,7 @@ void Gameview::draw() {
 	this->View::draw();
 }
 
-void Gameview::draw_plane(Aircraft*& plane) {
+void Gameview::draw_plane(Aircraft*& plane, Aircraft* selected) {
 	std::string color = "green";
 	Point aircraft_place = this->calculate(plane->get_place());
 	Point draw;
@@ -56,19 +44,29 @@ void Gameview::draw_plane(Aircraft*& plane) {
 	
     drawer.lineColor(aircraft_place, end_point_place_p, color);
     drawer.circleColor(aircraft_place, separation_ring, color);
-    drawer.rectangleColor(aircraft_place, 10, color);
 	
-	draw = this->text_callsign + aircraft_place;
-    drawer.draw_text(plane->get_name(), draw, color);
+	Drawable_plane dplane("plane", "plane", "", "");
+	Drawable_list info_list("ul", "list", "");
 	
-	draw = this->text_speed + aircraft_place;
-    drawer.draw_text(Tools::tostr(plane->get_speed()), draw, color);
+	info_list.add_element(plane->get_name());
+	info_list.add_element(Tools::tostr(plane->get_speed()));
+	info_list.add_element(Tools::tostr(Tools::rad2deg(plane->get_heading())));
+	info_list.add_element(Tools::tostr(plane->get_altitude()));
 	
-	draw = this->text_heading + aircraft_place;
-    drawer.draw_text(Tools::tostr(Tools::rad2deg(plane->get_heading())), draw, color);
+	if (plane == selected) {
+		info_list.set_id("selected");
+	}
 	
-	draw = this->text_altitude + aircraft_place;
-    drawer.draw_text(Tools::tostr(plane->get_altitude()), draw, color);
+	this->style(dplane);
+	this->style(info_list);
+	
+	dplane.set_style("left", aircraft_place.get_x());
+	dplane.set_style("top", aircraft_place.get_y());
+	
+	this->draw_element(dplane);
+	this->draw_element(info_list, aircraft_place);
+	
+	info_list.clear_content();
 }
 
 void Gameview::draw_navpoints(std::vector <Navpoint>& navpoints) {
@@ -80,11 +78,11 @@ void Gameview::draw_navpoints(std::vector <Navpoint>& navpoints) {
     }
 }
 
-void Gameview::draw_planes(std::list <Aircraft*> planes) {
+void Gameview::draw_planes(std::list <Aircraft*> planes, Aircraft* selected) {
     std::list <Aircraft*> :: iterator plane = planes.begin();
     	
     while (plane != planes.end()) {
-        this->draw_plane((*plane));
+        this->draw_plane((*plane), selected);
         ++plane;
     }
 }
@@ -143,4 +141,28 @@ Point Gameview::calculate(Coordinate& target) {
 	Point t(pixelX, pixelY);
 	
 	return t;
+}
+
+void Gameview::draw_element(Drawable_element& de) {
+	int color = de.get_style("text-color");
+	
+	Point place_a(de.get_style("left"), de.get_style("top"));
+	
+	Point place_b(place_a.get_x() + de.get_style("width"), place_a.get_y() + de.get_style("height"));
+	
+	this->drawer.rectangleColor(place_a, place_b, 10, color);
+}
+
+void Gameview::draw_element(Drawable_list& dl, Point& place) {
+	int color = dl.get_style("text-color");
+	
+	std::list <std::string> t_list = dl.get_elements();
+	std::list <std::string> :: iterator it = t_list.begin();
+	
+	Point place_a(place.get_x() + dl.get_style("left"), place.get_y() + dl.get_style("top"));
+	
+	for (it = t_list.begin(); it != t_list.end(); ++it) {
+		this->drawer.draw_text((*it), place_a, color);
+		place_a.change_y(20);
+	}
 }

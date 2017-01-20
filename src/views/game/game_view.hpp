@@ -14,6 +14,15 @@
 #include "../../models/aircraft.hpp"
 #include "../../models/airfield.hpp"
 
+class Drawable_plane : public Drawable_element {
+public:
+	Drawable_plane(std::string callsign, std::string t_name, std::string t_class, std::string t_id);
+	void set_callsign(std::string);
+	std::string get_callsign();
+private:
+	std::string callsign;
+};
+
 /**
 	* Gameview is responsible to render game to screen.
 	* view 
@@ -80,7 +89,7 @@ public:
 		* @return void
 	**/
 	
-	void draw_planes(std::list <Aircraft*> planes);
+	void draw_planes(std::list <Aircraft*> planes, Aircraft* selected);
 	
 	/**
 		* Gameview set_centerpoint
@@ -103,6 +112,13 @@ public:
 	**/
 	
 	Point calculate(Coordinate& target);
+	
+	/**
+		draw many elements
+	**/
+	
+	 void draw_element(Drawable_element& de);
+	 void draw_element(Drawable_list& de, Point& place);
 private:
 	/**
 		* Gameview centerpoint
@@ -119,7 +135,7 @@ private:
 		* @return void
 	**/
 	
-    void draw_plane(Aircraft*& plane);
+    void draw_plane(Aircraft*& plane, Aircraft* selected);
 	
 	Point text_callsign;
 	Point text_speed;
