@@ -33,3 +33,15 @@ std::string Drawable_element::get_class() {
 std::string Drawable_element::get_name() {
 	return this->name;
 }
+
+void Drawable_element::set_id(std::string t_id) {
+	this->id = t_id;
+}
+
+void Drawable_element::set_class(std::string t_class) {
+	this->s_class = t_class;
+}
+
+void Drawable_element::set_name(std::string t_name) {
+	this->name = t_name;
+}

@@ -25,6 +25,10 @@ public:
 	std::string get_id();
 	std::string get_class();
 	std::string get_name();
+	
+	void set_id(std::string t_id);
+	void set_class(std::string t_class);
+	void set_name(std::string t_name);
 };
 
 #endif
