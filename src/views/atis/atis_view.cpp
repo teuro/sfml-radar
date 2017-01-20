@@ -77,3 +77,7 @@ void Atisview::calculate_places(std::list <std::string>& runways) {
 		land.push_back(Rwy(*it, p2, p2rd));
 	}
 }
+
+void Atisview::style(Drawable_element& de) {
+
+}

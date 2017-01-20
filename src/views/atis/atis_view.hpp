@@ -27,6 +27,7 @@ public:
 	void calculate_places(std::list <std::string>& runways);
 	std::string get_dep_runway_name(Point& mouse);
 	std::string get_lnd_runway_name(Point& mouse);
+	void style(Drawable_element&);
 private:
     void load();
 	
