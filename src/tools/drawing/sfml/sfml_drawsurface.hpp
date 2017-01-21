@@ -20,16 +20,14 @@ public:
 	~sfml_drawsurface();
 	
 	void convert (int color);
-	void rectangleColor(Point& a, Point& b, std::string color, bool border);
-	void rectangleColor(Point& a, Point& b, int color, bool border);
-    void rectangleColor(Point& a, Point& b, int red, int green, int blue, bool border);
-    void rectangleColor(Point& a, unsigned int lenght, std::string color);
-    void rectangleColor(Point& a, unsigned int length, int red, int green, int blue, bool border);
+	void rectangleColor(Point& a, Point& b, int color);
+    void rectangleColor(Point& a, Point& b, int red, int green, int blue);
+    void rectangleColor(Point& a, unsigned int length, int red, int green, int blue);
 
-    void lineColor(Point& a, Point& b, std::string color);
+    void lineColor(Point& a, Point& b, int color);
     void lineColor(Point& a, Point& b, int red, int green, int blue);
 
-    void circleColor(Point& a, unsigned int rad, std::string color);
+    void circleColor(Point& a, unsigned int radius, int color);
     void circleColor(Point& a, unsigned int rad, int red, int green, int blue);
 
     void trigonColor(Point& a, Point& b, Point& c);
@@ -52,12 +50,6 @@ protected:
 private:
 	sf::RenderWindow& window;
 	sf::Font font;
-
-    sf::Color active;
-    sf::Color normal;
-    sf::Color failure;
-
-    std::map <std::string, sf::Color> colors;
 };
 
 #endif // SFML_DRAWSURFACE_HPP
