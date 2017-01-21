@@ -3,5 +3,5 @@
 	<p id="planes" class="count">Planes in area [PLC]</p>
 	<p id="sep_errors" class="count">Game errors [SPE]</p>
 	<p id="gametime" class="time">Game time [TIME]</p>
-	<input type="text" name="input" id="userinput" />
+	<input type="text" name="input" class="userinput" id="clearance_input" />
 </layout>

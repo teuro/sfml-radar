@@ -15,6 +15,15 @@
 #include "../tools/style/style.hpp"
 #include "../tools/settings.hpp"
 
+class Drawable_input : public Drawable_element {
+public:
+	Drawable_input(std::string value, std::string t_name, std::string t_class, std::string t_id);
+	void set_value(std::string value);
+	std::string set_value();
+private:
+	std::string value;
+};
+
 class Drawable_list : public Drawable_element {
 public:
 	Drawable_list(std::string t_name, std::string t_class, std::string t_id);
@@ -76,6 +85,7 @@ protected:
     void draw_element(Image& img);
     void draw_element(Paragraph& p);
     void draw_element(Drawable_element& de);
+    void draw_element(Drawable_input& di);
 
 	void style(Drawable_element& de);
     void load();
@@ -83,7 +93,7 @@ protected:
     Point centerpoint_screen;
 	std::vector <Image> images;
 	std::vector <Paragraph> paragraphs;
-	std::vector <Input> inputs;
+	std::vector <Drawable_input> inputs;
 private:
 };
 

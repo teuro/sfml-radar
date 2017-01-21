@@ -1,6 +1,16 @@
 #include "view.hpp"
 
-Drawable_list::Drawable_list(std::string t_name, std::string t_class, std::string t_id) :  Drawable_element(t_name, t_class, t_id) { }
+Drawable_input::Drawable_input(std::string val, std::string t_name, std::string t_class, std::string t_id) : Drawable_element(t_name, t_class, t_id), value(val) { }
+
+void Drawable_input::set_value(std::string val) {
+	this->value = val;
+}
+
+std::string Drawable_input::set_value() {
+	return this->value;
+}
+
+Drawable_list::Drawable_list(std::string t_name, std::string t_class, std::string t_id) : Drawable_element(t_name, t_class, t_id) { }
 
 void Drawable_list::add_element(std::string content) {
 	this->elements.push_back(content);
@@ -77,11 +87,12 @@ void View::load() {
 				
 				Image img(t_name, t_class, t_id, source);
 				
+				this->style(img);
 				this->images.push_back(img);
 			} else if (pParm->Value() == std::string("p")) {
 				std::string t_id = Tools::trim(pParm->Attribute("id"));
 				std::string t_class = Tools::trim(pParm->Attribute("class"));
-				std::string t_name = pParm->Value();;
+				std::string t_name = pParm->Value();
 				
 				std::string content = Tools::trim(pParm->GetText());
 			
@@ -90,8 +101,15 @@ void View::load() {
 				this->style(p);
 				this->paragraphs.push_back(p);
 			} else if (pParm->Value() == std::string("input")) {
-				std::string id = Tools::trim(pParm->Attribute("id"));
-			}
+				std::string t_id = Tools::trim(pParm->Attribute("id"));
+				std::string t_class = Tools::trim(pParm->Attribute("class"));
+				std::string t_name = pParm->Value();
+				
+				Drawable_input input("", t_name, t_class, t_id);
+				
+				this->style(input);
+				this->inputs.push_back(input);
+			} 
 			
             pParm = pParm->NextSiblingElement();
             ++i;
@@ -113,37 +131,6 @@ void View::render() {
     drawer.flip();
 }
 
-void View::draw_element(Layout_element& layout_element) {
-	if (layout_element.b_color_setted) {
-        drawer.rectangleColor(layout_element.get_top_left(), layout_element.get_bottom_right(), layout_element.b_red, layout_element.b_green, layout_element.b_blue, true);
-    } else {
-        drawer.rectangleColor(layout_element.get_top_left(), layout_element.get_bottom_right(), "black", true);
-    }
-
-    Point t = layout_element.get_top_left();
-    t.change_y(-8);
-
-    if (layout_element.t_color_setted) {
-        drawer.draw_text(layout_element.get_name(), t, layout_element.t_red, layout_element.t_green, layout_element.t_blue, 10);
-    } else {
-        drawer.draw_text(layout_element.get_name(), t, "blue", 10);
-    }
-
-    t.change_y(8);
-
-    std::vector <std::string> content = layout_element.get_content();
-	
-    for (unsigned int i = 0; i < content.size(); ++i) {
-	   if (layout_element.t_color_setted) {
-            drawer.draw_text(content[i], t, layout_element.t_red, layout_element.t_green, layout_element.t_blue);
-        } else {
-            drawer.draw_text(content[i], t, "blue");
-        }
-
-        t.change_y(drawer.get_fontsize());
-    }
-}
-
 void View::draw_element(Image& img) {
 	Point place(img.get_style("left"), img.get_style("top"));
 	this->drawer.draw_picture(img.get_source(), place);
@@ -157,7 +144,7 @@ void View::draw_element(Paragraph& p) {
 	
 	if (background_color > 0) {
 		Point place_b(place_a.get_x() + p.get_style("width"), place_a.get_y() + p.get_style("height"));
-		this->drawer.rectangleColor(place_a, place_b, background_color, false);
+		this->drawer.rectangleColor(place_a, place_b, background_color);
 	}
 	
 	this->drawer.draw_text(Tools::replace(p.get_content(), repl), place_a, color);
@@ -203,10 +190,6 @@ void View::draw() {
     std::map <std::string, Layout_element> :: iterator element;
     std::vector <Image> :: iterator image;
     std::vector <Paragraph> :: iterator paragraph;
- 
-    for (element = layout_elements.begin(); element != layout_elements.end(); ++element) {
-        draw_element(element->second);
-    }
 	
 	for (image = this->images.begin(); image !=  this->images.end(); ++image) {
         draw_element(*image);

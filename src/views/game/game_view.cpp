@@ -31,7 +31,6 @@ void Gameview::draw() {
 }
 
 void Gameview::draw_plane(Aircraft*& plane, Aircraft* selected) {
-	std::string color = "green";
 	Point aircraft_place = this->calculate(plane->get_place());
 	Point draw;
 
@@ -42,9 +41,6 @@ void Gameview::draw_plane(Aircraft*& plane, Aircraft* selected) {
 	Coordinate end_point_place_c = Tools::calculate(plane->get_place(), plane->get_heading(), plane->get_speed() * (1.0 / 60.0));
 	Point end_point_place_p = this->calculate(end_point_place_c);
 	
-    drawer.lineColor(aircraft_place, end_point_place_p, color);
-    drawer.circleColor(aircraft_place, separation_ring, color);
-	
 	Drawable_plane dplane("plane", "plane", "", "");
 	Drawable_list info_list("ul", "list", "");
 	
@@ -53,6 +49,8 @@ void Gameview::draw_plane(Aircraft*& plane, Aircraft* selected) {
 	info_list.add_element(Tools::tostr(Tools::rad2deg(plane->get_heading())));
 	info_list.add_element(Tools::tostr(plane->get_altitude()));
 	
+	info_list.set_id("");
+	
 	if (plane == selected) {
 		info_list.set_id("selected");
 	}
@@ -60,8 +58,11 @@ void Gameview::draw_plane(Aircraft*& plane, Aircraft* selected) {
 	this->style(dplane);
 	this->style(info_list);
 	
-	dplane.set_style("left", aircraft_place.get_x());
-	dplane.set_style("top", aircraft_place.get_y());
+	drawer.lineColor(aircraft_place, end_point_place_p, dplane.get_style("text-color"));
+    drawer.circleColor(aircraft_place, separation_ring, dplane.get_style("text-color"));
+	
+	dplane.set_style("left", aircraft_place.get_x() + info_list.get_style("left"));
+	dplane.set_style("top", aircraft_place.get_y() + info_list.get_style("top"));
 	
 	this->draw_element(dplane);
 	this->draw_element(info_list, aircraft_place);
@@ -74,7 +75,7 @@ void Gameview::draw_navpoints(std::vector <Navpoint>& navpoints) {
         Point place_screen = this->calculate(navpoints[i].get_place());
 		
         this->drawer.trigonColor(place_screen, 5);
-        this->drawer.draw_text(navpoints[i].get_name(), place_screen, "green");
+        this->drawer.draw_text(navpoints[i].get_name(), place_screen, 15264587);
     }
 }
 
@@ -94,7 +95,7 @@ void Gameview::draw_airfield(Airfield* airfield) {
 		Point rwys = this->calculate(runways[i].get_start_place());
 		Point rwye = this->calculate(runways[i].get_end_place());
 		
-        this->drawer.lineColor(rwys, rwye, "white");
+        this->drawer.lineColor(rwys, rwye, 1524875);
     }
 }
 
@@ -144,13 +145,13 @@ Point Gameview::calculate(Coordinate& target) {
 }
 
 void Gameview::draw_element(Drawable_element& de) {
-	int color = de.get_style("text-color");
+	int background_color = de.get_style("background-color");
 	
 	Point place_a(de.get_style("left"), de.get_style("top"));
 	
 	Point place_b(place_a.get_x() + de.get_style("width"), place_a.get_y() + de.get_style("height"));
 	
-	this->drawer.rectangleColor(place_a, place_b, 10, color);
+	this->drawer.rectangleColor(place_a, place_b, background_color);
 }
 
 void Gameview::draw_element(Drawable_list& dl, Point& place) {

@@ -10,6 +10,10 @@
 	top: 70px;
 }
 
+#selected {
+	color: rgb(160, 160, 250);
+}
+
 p {
 	left: 30px;
 	width: 160px;
@@ -19,23 +23,13 @@ p {
 }
 
 plane {
-	color: rgb(250, 25, 20);
+	color: rgb(60, 160, 250);
 	width: 80px;
 	height: 100px;
-	top: 15px;
-	left: 20px;
 }
 
 ul {
-	color: rgb(60, 250, 60);
-	top: 15px;
-	left: 15px;
-}
-
-.error {
-	color: rgb(250, 60, 60);
-}
-
-#selected {
 	color: rgb(60, 160, 250);
+	left: 15px;
+	top: 15px;
 }

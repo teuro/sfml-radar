@@ -2,39 +2,23 @@
 
 sfml_drawsurface::sfml_drawsurface(sf::RenderWindow& w) : window(w) {
 	font_loaded = false;
-
-	this->normal = sf::Color(160, 180, 180);
-	this->active = sf::Color(80, 60, 80);
-	this->failure = sf::Color(130, 90, 80);
-
-	this->colors["green"]   = sf::Color(0, 255, 0);
-	this->colors["red"]     = sf::Color(255, 0, 0);
-	this->colors["black"]   = sf::Color(0, 0, 0);
-	this->colors["white"]   = sf::Color(255, 255, 255);
-	this->colors["brown"]   = sf::Color(128, 64, 0);
-	this->colors["blue"]	= sf::Color(0, 0, 255);
 }
 
 sfml_drawsurface::~sfml_drawsurface() { }
-
-void sfml_drawsurface::circleColor(Point& a, unsigned int radius, std::string color) {
-	sf::CircleShape circle(radius);
-	circle.setOutlineColor(this->colors[color]);
-	circle.setOutlineThickness(2.0);
-	circle.setFillColor(this->colors["black"]);
-	circle.setPosition(sf::Vector2f(a.get_x()-radius, a.get_y()-radius));
-
-	this->window.draw(circle);
-}
 
 void sfml_drawsurface::circleColor(Point& a, unsigned int radius, int red, int green, int blue) {
 	sf::CircleShape circle(radius);
 	circle.setOutlineColor(sf::Color(red, green, blue));
 	circle.setOutlineThickness(2.0);
-	circle.setFillColor(this->colors["black"]);
 	circle.setPosition(sf::Vector2f(a.get_x()-radius, a.get_y()-radius));
 
 	this->window.draw(circle);
+}
+
+void sfml_drawsurface::circleColor(Point& a, unsigned int radius, int color) {
+	this->convert(color);
+	
+	circleColor(a, radius, this->red, this->green, this->blue);
 }
 
 void sfml_drawsurface::draw_picture(std::string file, Point& a) {
@@ -47,23 +31,6 @@ void sfml_drawsurface::draw_picture(std::string file, Point& a) {
 	
 	sprite.setPosition(place);
 	this->window.draw(sprite);
-}
-
-void sfml_drawsurface::draw_text(std::string text, Point& a, std::string color, int font_size) {
-	this->font_size = font_size;
-	
-	if (!font_loaded) {
-		this->load_font("arial.ttf", this->font_size);
-	}
-
-	sf::Text _text;
-	_text.setFont(this->font);
-	_text.setCharacterSize(font_size);
-	_text.setString(text);
-	_text.setPosition(sf::Vector2f(a.get_x(), a.get_y()));
-	_text.setColor(this->colors[color]);
-
-	this->window.draw(_text);
 }
 
 void sfml_drawsurface::draw_text(std::string text, Point& a, int red, int green, int blue, int font_size) {
@@ -105,13 +72,10 @@ void sfml_drawsurface::flip() {
 	this->window.display();
 }
 
-void sfml_drawsurface::lineColor(Point& a, Point& b, std::string color) {
-	sf::Vertex line[] = {
-		sf::Vertex(sf::Vector2f(a.get_x(), a.get_y()), this->colors[color]),
-		sf::Vertex(sf::Vector2f(b.get_x(), b.get_y()), this->colors[color])
-	};
-
-	window.draw(line, 2, sf::Lines);
+void sfml_drawsurface::lineColor(Point& a, Point& b, int color) {
+	this->convert(color);
+	
+	lineColor(a, b, this->red, this->green, this->blue);
 }
 
 void sfml_drawsurface::lineColor(Point& a, Point& b, int red, int green, int blue) {
@@ -125,63 +89,28 @@ void sfml_drawsurface::lineColor(Point& a, Point& b, int red, int green, int blu
 	window.draw(line, 2, sf::Lines);
 }
 
-
-void sfml_drawsurface::rectangleColor(Point& a, Point& b, std::string color, bool border) {
-	sf::RectangleShape rect(sf::Vector2f(b.get_x()-a.get_x(), b.get_y()-a.get_y()));
-
-    rect.setFillColor(this->colors[color]);
-
-    if (border) {
-        rect.setOutlineColor(this->colors["red"]);
-        rect.setOutlineThickness(1);
-	}
-
-	rect.setPosition(sf::Vector2f(a.get_x(), a.get_y()));
-
-	this->window.draw(rect);
-}
-
-void sfml_drawsurface::rectangleColor(Point& a, Point& b, int red, int green, int blue, bool border) {
+void sfml_drawsurface::rectangleColor(Point& a, Point& b, int red, int green, int blue) {
 	sf::RectangleShape rect(sf::Vector2f(b.get_x()-a.get_x(), b.get_y()-a.get_y()));
 
     sf::Color fclr(red, green, blue);
     rect.setFillColor(fclr);
 
-    if (border) {
-        rect.setOutlineColor(this->colors["red"]);
-        rect.setOutlineThickness(2);
-	}
-
 	rect.setPosition(sf::Vector2f(a.get_x(), a.get_y()));
 
 	this->window.draw(rect);
 }
 
-void sfml_drawsurface::rectangleColor(Point& a, Point& b, int color, bool border) {
+void sfml_drawsurface::rectangleColor(Point& a, Point& b, int color) {
 	this->convert(color);
 	
-	sfml_drawsurface::rectangleColor(a, b, red, green, blue, border);
+	sfml_drawsurface::rectangleColor(a, b, red, green, blue);
 }
 
-void sfml_drawsurface::rectangleColor(Point& a, unsigned int length, std::string color) {
-	sf::RectangleShape rect(sf::Vector2f(length, length));
-	rect.setOutlineColor(this->colors[color]);
-
-	rect.setPosition(sf::Vector2f(a.get_x()-length/2.0, a.get_y()-length/2.0));
-
-	this->window.draw(rect);
-}
-
-void sfml_drawsurface::rectangleColor(Point& a, unsigned int length, int red, int green, int blue, bool border) {
+void sfml_drawsurface::rectangleColor(Point& a, unsigned int length, int red, int green, int blue) {
     sf::Color color(red, green, blue);
 
 	sf::RectangleShape rect(sf::Vector2f(length, length));
 	rect.setOutlineColor(color);
-	
-	if (border) {
-        rect.setOutlineColor(this->colors["red"]);
-        rect.setOutlineThickness(2);
-	}
 
 	rect.setPosition(sf::Vector2f(a.get_x()-length/2.0, a.get_y()-length/2.0));
 
