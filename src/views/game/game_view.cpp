@@ -25,8 +25,13 @@ void Gameview::load() {
 	View::load();
 }
 
+void Gameview::update_command(std::string t_command) {
+	this->command = t_command;
+}
+
 void Gameview::draw() {
-	this->centerpoint_screen.set_place(this->settings.screen_width / 2, this->settings.screen_height/2);
+	this->centerpoint_screen.set_place(this->settings.screen_width / 2, this->settings.screen_height / 2);
+	this->inputs.back().set_value(this->command);
 	this->View::draw();
 }
 
@@ -42,30 +47,23 @@ void Gameview::draw_plane(Aircraft*& plane, Aircraft* selected) {
 	Point end_point_place_p = this->calculate(end_point_place_c);
 	
 	Drawable_plane dplane("plane", "plane", "", "");
-	Drawable_list info_list("ul", "list", "");
+	Drawable_list info_list("ul", "infolist", "");
 	
 	info_list.add_element(plane->get_name());
 	info_list.add_element(Tools::tostr(plane->get_speed()));
 	info_list.add_element(Tools::tostr(Tools::rad2deg(plane->get_heading())));
 	info_list.add_element(Tools::tostr(plane->get_altitude()));
 	
-	info_list.set_id("");
-	
-	if (plane == selected) {
-		info_list.set_id("selected");
-	}
-	
 	this->style(dplane);
 	this->style(info_list);
 	
-	drawer.lineColor(aircraft_place, end_point_place_p, dplane.get_style("text-color"));
-    drawer.circleColor(aircraft_place, separation_ring, dplane.get_style("text-color"));
+	info_list.get_style().set_place(aircraft_place);
 	
-	dplane.set_style("left", aircraft_place.get_x() + info_list.get_style("left"));
-	dplane.set_style("top", aircraft_place.get_y() + info_list.get_style("top"));
+	drawer.lineColor(aircraft_place, end_point_place_p, dplane.get_style().get_text_color());
+    drawer.circleColor(aircraft_place, separation_ring, dplane.get_style().get_text_color());
 	
 	this->draw_element(dplane);
-	this->draw_element(info_list, aircraft_place);
+	this->draw_element(info_list);
 	
 	info_list.clear_content();
 }
@@ -74,7 +72,7 @@ void Gameview::draw_navpoints(std::vector <Navpoint>& navpoints) {
     for (unsigned int i = 0; i < navpoints.size(); ++i) {
         Point place_screen = this->calculate(navpoints[i].get_place());
 		
-        this->drawer.trigonColor(place_screen, 5);
+        this->drawer.trigonColor(place_screen, 15, 15245785);
         this->drawer.draw_text(navpoints[i].get_name(), place_screen, 15264587);
     }
 }
@@ -145,25 +143,29 @@ Point Gameview::calculate(Coordinate& target) {
 }
 
 void Gameview::draw_element(Drawable_element& de) {
-	int background_color = de.get_style("background-color");
+	int background_color = de.get_style().get_background_color();
+	std::string shape = de.get_style().get_shape();
 	
-	Point place_a(de.get_style("left"), de.get_style("top"));
+	Point place_a = de.get_style().get_place();
+	Point place_b(place_a.get_x() + de.get_style().get_width(), place_a.get_y() + de.get_style().get_height());
 	
-	Point place_b(place_a.get_x() + de.get_style("width"), place_a.get_y() + de.get_style("height"));
-	
-	this->drawer.rectangleColor(place_a, place_b, background_color);
+	if (shape == "rectangle") {
+		this->drawer.rectangleColor(place_a, place_b, background_color);
+	} else if (shape == "triangle") {
+		this->drawer.trigonColor(place_a, 30, background_color);
+	}
 }
 
-void Gameview::draw_element(Drawable_list& dl, Point& place) {
-	int color = dl.get_style("text-color");
+void Gameview::draw_element(Drawable_list& dl) {
+	int color = dl.get_style().get_text_color();
 	
 	std::list <std::string> t_list = dl.get_elements();
 	std::list <std::string> :: iterator it = t_list.begin();
 	
-	Point place_a(place.get_x() + dl.get_style("left"), place.get_y() + dl.get_style("top"));
-	
+	Point place = dl.get_style().get_place();
+
 	for (it = t_list.begin(); it != t_list.end(); ++it) {
-		this->drawer.draw_text((*it), place_a, color);
-		place_a.change_y(20);
+		this->drawer.draw_text((*it), place, color);
+		place.change_y(20);
 	}
 }

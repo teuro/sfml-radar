@@ -6,7 +6,7 @@ void Drawable_input::set_value(std::string val) {
 	this->value = val;
 }
 
-std::string Drawable_input::set_value() {
+std::string Drawable_input::get_value() {
 	return this->value;
 }
 
@@ -41,16 +41,6 @@ std::string Paragraph::get_content() {
 }
 
 void Paragraph::set_content(std::string cnt) {
-	this->content = cnt;
-}
-
-Input::Input(std::string t_name, std::string t_class, std::string t_id) : Drawable_element(t_name, t_class, t_id) { }
-
-std::string Input::get_content() {
-	return this->content;
-}
-
-void Input::set_content(std::string cnt) {
 	this->content = cnt;
 }
 
@@ -132,34 +122,46 @@ void View::render() {
 }
 
 void View::draw_element(Image& img) {
-	Point place(img.get_style("left"), img.get_style("top"));
+	Point place = img.get_style().get_place();
 	this->drawer.draw_picture(img.get_source(), place);
 }
 
 void View::draw_element(Paragraph& p) {
-	int color = p.get_style("text-color");
-	int background_color = p.get_style("background-color");
+	Style st = p.get_style();
+	int color = st.get_text_color();
+	int background_color = st.get_background_color();
 	
-	Point place_a(p.get_style("left"), p.get_style("top"));
+	Point place_a = st.get_place();
 	
 	if (background_color > 0) {
-		Point place_b(place_a.get_x() + p.get_style("width"), place_a.get_y() + p.get_style("height"));
+		Point place_b(place_a.get_x() + st.get_width(), place_a.get_y() + st.get_height());
 		this->drawer.rectangleColor(place_a, place_b, background_color);
 	}
 	
 	this->drawer.draw_text(Tools::replace(p.get_content(), repl), place_a, color);
 }
 
-bool compare_length(std::string const& lhs, std::string const& rhs) {
-    return lhs.size() < rhs.size();
+void View::draw_element(Drawable_input& i) {
+	Style st = i.get_style();
+	int color = st.get_text_color();
+	int background_color = st.get_background_color();
+	
+	Point place_a = st.get_place();
+	
+	if (background_color > 0) {
+		Point place_b(place_a.get_x() + st.get_width(), place_a.get_y() + st.get_height());
+		this->drawer.rectangleColor(place_a, place_b, background_color);
+	}
+	
+	this->drawer.draw_text(i.get_value(), place_a, color);
 }
 
-void View::style(Drawable_element& p) {
+void View::style(Drawable_element& de) {
     std::list <Style> :: iterator t_style = this->styles.begin();
 	
     while (t_style != this->styles.end()) {
-		if (t_style->get_name() == p.get_name()) {
-			p.set_style((*t_style));
+		if (t_style->get_name() == de.get_name()) {
+			de.set_style((*t_style));
 		}
 		
 		++t_style;
@@ -168,8 +170,8 @@ void View::style(Drawable_element& p) {
 	t_style = this->styles.begin();
 	
 	while (t_style != this->styles.end()) {
-		if (t_style->get_class() == p.get_class()) {
-			p.set_style((*t_style));
+		if (t_style->get_class() == de.get_class()) {
+			de.set_style((*t_style));
 		}
 		
 		++t_style;
@@ -178,8 +180,8 @@ void View::style(Drawable_element& p) {
 	t_style = this->styles.begin();
 	
 	while (t_style != this->styles.end()) {
-		if (t_style->get_id() == p.get_id()) {
-			p.set_style((*t_style));
+		if (t_style->get_id() == de.get_id()) {
+			de.set_style((*t_style));
 		}
 		
 		++t_style;
@@ -190,6 +192,7 @@ void View::draw() {
     std::map <std::string, Layout_element> :: iterator element;
     std::vector <Image> :: iterator image;
     std::vector <Paragraph> :: iterator paragraph;
+    std::vector <Drawable_input> :: iterator input;
 	
 	for (image = this->images.begin(); image !=  this->images.end(); ++image) {
         draw_element(*image);
@@ -197,6 +200,10 @@ void View::draw() {
 	
 	for (paragraph = this->paragraphs.begin(); paragraph !=  this->paragraphs.end(); ++paragraph) {
         draw_element(*paragraph);
+    }
+	
+	for (input = this->inputs.begin(); input !=  this->inputs.end(); ++input) {
+        draw_element(*input);
     }
 }
 

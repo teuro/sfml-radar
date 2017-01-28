@@ -117,45 +117,18 @@ void sfml_drawsurface::rectangleColor(Point& a, unsigned int length, int red, in
 	this->window.draw(rect);
 }
 
-
-void sfml_drawsurface::trigonColor(Point& a, Point& b, Point& c) {
-	sf::VertexArray triangle(sf::Triangles, 3);
-
-	// define the position of the triangle's points
-	triangle[0].position = sf::Vector2f(a.get_x(), a.get_y());
-	triangle[1].position = sf::Vector2f(b.get_x(), b.get_y());
-	triangle[2].position = sf::Vector2f(c.get_x(), c.get_y());
-
-	window.draw(triangle);
-}
-
-void sfml_drawsurface::trigonColor(Point& a, Point& b, Point& c, int red, int green, int blue) {
-    sf::Color color(red, green, blue);
-
-	sf::VertexArray triangle(sf::Triangles, 3);
-
-	// define the position of the triangle's points
-	triangle[0].position = sf::Vector2f(a.get_x(), a.get_y());
-	triangle[1].position = sf::Vector2f(b.get_x(), b.get_y());
-	triangle[2].position = sf::Vector2f(c.get_x(), c.get_y());
-
-	window.draw(triangle);
-}
-
-void sfml_drawsurface::trigonColor(Point& a, unsigned int size) {
-	Point a1(a.get_x(), a.get_y() - size);
-	Point a2(a.get_x() - size, a.get_y() + size);
-	Point a3(a.get_x() + size, a.get_y() + size);
-
-	trigonColor(a1, a2, a3);
+void sfml_drawsurface::trigonColor(Point& a, unsigned int size, int color) {
+	this->convert(color);
+	
+	trigonColor(a, size, this->red, this->green, this->blue);
 }
 
 void sfml_drawsurface::trigonColor(Point& a, unsigned int size, int red, int green, int blue) {
-	Point a1(a.get_x(), a.get_y() - size);
-	Point a2(a.get_x() - size, a.get_y() + size);
-	Point a3(a.get_x() + size, a.get_y() + size);
-
-	trigonColor(a1, a2, a3, red, green, blue);
+	sf::CircleShape triangle(size, 3);
+	triangle.setOutlineColor(sf::Color(red, green, blue));
+	triangle.setPosition(a.get_x(), a.get_y());
+	
+	this->window.draw(triangle);
 }
 
 unsigned int sfml_drawsurface::get_fontsize() {

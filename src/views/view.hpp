@@ -19,7 +19,7 @@ class Drawable_input : public Drawable_element {
 public:
 	Drawable_input(std::string value, std::string t_name, std::string t_class, std::string t_id);
 	void set_value(std::string value);
-	std::string set_value();
+	std::string get_value();
 private:
 	std::string value;
 };
@@ -50,15 +50,6 @@ public:
 	
 	std::string get_content();
 	void set_content(std::string cnt);
-private:
-	std::string content;
-};
-
-class Input : public Drawable_element {
-public:
-	Input(std::string t_name, std::string t_class, std::string t_id);
-	void set_content(std::string cnt);
-	std::string get_content();
 private:
 	std::string content;
 };

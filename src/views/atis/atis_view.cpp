@@ -16,23 +16,3 @@ void Atisview::draw() {
     View::draw();
 }
 
-std::string Atisview::get_dep_runway_name(Point& mouse) {
-	
-	return "";
-}
-
-std::string Atisview::get_lnd_runway_name(Point& mouse) {
-	return "";
-}
-
-void Atisview::draw_runways(std::list <std::string>& runways) {
-	this->calculate_places(runways);
-}
-
-void Atisview::calculate_places(std::list <std::string>& runways) {
-	
-}
-
-void Atisview::style(Drawable_element& de) {
-
-}

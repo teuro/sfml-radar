@@ -118,7 +118,8 @@ public:
 	**/
 	
 	 void draw_element(Drawable_element& de);
-	 void draw_element(Drawable_list& de, Point& place);
+	 void draw_element(Drawable_list& de);
+	 void update_command(std::string command);
 private:
 	/**
 		* Gameview centerpoint
@@ -136,11 +137,7 @@ private:
 	**/
 	
     void draw_plane(Aircraft*& plane, Aircraft* selected);
-	
-	Point text_callsign;
-	Point text_speed;
-	Point text_altitude;
-	Point text_heading;
+	std::string command;
 };
 
 #endif // _GAME_VIEW_HPP

@@ -31,9 +31,7 @@ public:
     virtual void circleColor(Point& a, unsigned int radius, int red, int green, int blue) = 0;
     virtual void circleColor(Point& a, unsigned int radius, int color) = 0;
 
-    virtual void trigonColor(Point& a, Point& b, Point& c) = 0;
-    virtual void trigonColor(Point& a, Point& b, Point& c, int red, int green, int blue) = 0;
-    virtual void trigonColor(Point& a, unsigned int size) = 0;
+    virtual void trigonColor(Point& a, unsigned int size, int color) = 0;
     virtual void trigonColor(Point& a, unsigned int size, int red, int green, int blue) = 0;
 
     virtual void load_font(std::string font, unsigned int font_size) = 0;

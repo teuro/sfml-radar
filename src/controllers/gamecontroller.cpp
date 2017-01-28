@@ -72,6 +72,7 @@ void Gamecontroller::update(double elapsed, bool draw) {
 		
 		this->gameview->set_centerpoint_map(this->game->get_centerpoint());
 		this->gameview->clear_screen();
+		this->gameview->update_command(this->command);
 		this->gameview->draw();
 		this->gameview->draw_planes(this->game->get_aircrafts(), this->game->get_selected());
 		this->gameview->draw_navpoints(this->game->get_navpoints());
@@ -90,6 +91,7 @@ void Gamecontroller::handle_mouse_click(Point& mouse) {
         Point aircraft = this->gameview->calculate((*plane)->get_place());
 
         if (Tools::on_area(mouse, aircraft)) {
+			//std::clog << (*plane)->get_name() << " selected" << std::endl;
             this->game->selected = (*plane);
         }
     }

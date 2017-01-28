@@ -3,23 +3,13 @@ Drawable_element::Drawable_element(std::string t_name, std::string t_class, std:
 
 Drawable_element::~Drawable_element() { }
 
-void Drawable_element::set_style(std::string key, int value) {
-	if (value > 0 ) {
-		this->styles[key] = value;
-	}
+void Drawable_element::set_style(Style& stle) {
+	this->styles.push_back(stle);
+	this->calculate_styles();
 }
 
-void Drawable_element::set_style(Style& style) {
-	this->set_style("left", style.get_place().get_x());
-	this->set_style("top", style.get_place().get_y());
-	this->set_style("width", style.get_width());
-	this->set_style("height", style.get_height());
-	this->set_style("text-color", style.get_text_color());
-	this->set_style("background-color", style.get_background_color());
-}
-
-int Drawable_element::get_style(std::string key) {
-	return this->styles[key];
+Style& Drawable_element::get_style() {
+	return this->style;
 }
 
 std::string Drawable_element::get_id() {
@@ -34,14 +24,20 @@ std::string Drawable_element::get_name() {
 	return this->name;
 }
 
-void Drawable_element::set_id(std::string t_id) {
-	this->id = t_id;
+
+void Drawable_element::calculate_styles() {
+	std::list <Style> :: iterator style = this->styles.begin();
+	 
+	while (style != this->styles.end()) {
+		this->style.set_attribute("left", (*style).get_left());
+		this->style.set_attribute("top", (*style).get_top());
+		this->style.set_attribute("width", (*style).get_width());
+		this->style.set_attribute("height", (*style).get_height());
+		this->style.set_attribute("color", (*style).get_text_color());
+		this->style.set_attribute("background-color", (*style).get_background_color());
+		this->style.set_attribute("shape", (*style).get_shape());
+		
+		++style;
+	 }
 }
 
-void Drawable_element::set_class(std::string t_class) {
-	this->s_class = t_class;
-}
-
-void Drawable_element::set_name(std::string t_name) {
-	this->name = t_name;
-}

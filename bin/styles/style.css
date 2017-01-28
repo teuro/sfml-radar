@@ -26,10 +26,28 @@ plane {
 	color: rgb(60, 160, 250);
 	width: 80px;
 	height: 100px;
+	shape: rectangle;
 }
 
 ul {
 	color: rgb(60, 160, 250);
-	left: 15px;
-	top: 15px;
+}
+
+.infolist {
+	position: relative;
+	top: 10px;
+	left: 20px;
+}
+
+input {
+	color: rgb(20, 30 ,30);
+	background-color: rgb(150, 150, 250);
+}
+
+.userinput {
+	top: 550px;
+	left: 30px;
+	width: 550px;
+	height: 30px;
+	color: rgb(200, 20, 20);
 }
