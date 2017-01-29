@@ -38,6 +38,7 @@ void Gameview::draw() {
 void Gameview::draw_plane(Aircraft*& plane, Aircraft* selected) {
 	Point aircraft_place = this->calculate(plane->get_place());
 	Point draw;
+	std::string id = "";
 
     Coordinate separation_ring_place_c = Tools::calculate(plane->get_place(), settings.separation_horizontal / 2.0, 1);
 	Point separation_ring_place_p = this->calculate(separation_ring_place_c);
@@ -46,8 +47,12 @@ void Gameview::draw_plane(Aircraft*& plane, Aircraft* selected) {
 	Coordinate end_point_place_c = Tools::calculate(plane->get_place(), plane->get_heading(), plane->get_speed() * (1.0 / 60.0));
 	Point end_point_place_p = this->calculate(end_point_place_c);
 	
-	Drawable_plane dplane("plane", "plane", "", "");
-	Drawable_list info_list("ul", "infolist", "");
+	if (plane == selected) {
+		id = "selected";
+	}
+	
+	Drawable_plane dplane("plane", "plane", "", id);
+	Drawable_list info_list("ul", "infolist", id);
 	
 	info_list.add_element(plane->get_name());
 	info_list.add_element(Tools::tostr(plane->get_speed()));
@@ -73,7 +78,8 @@ void Gameview::draw_navpoints(std::vector <Navpoint>& navpoints) {
         Point place_screen = this->calculate(navpoints[i].get_place());
 		
         this->drawer.trigonColor(place_screen, 15, 15245785);
-        this->drawer.draw_text(navpoints[i].get_name(), place_screen, 15264587);
+		place_screen.change_x(40);
+		this->drawer.draw_text(navpoints[i].get_name(), place_screen, 15264587);
     }
 }
 
@@ -144,6 +150,7 @@ Point Gameview::calculate(Coordinate& target) {
 
 void Gameview::draw_element(Drawable_element& de) {
 	int background_color = de.get_style().get_background_color();
+	int border_color = de.get_style().get_border_color();
 	std::string shape = de.get_style().get_shape();
 	
 	Point place_a = de.get_style().get_place();
