@@ -43,6 +43,7 @@ private:
 	std::string name;
 	std::string position;
 	std::string shape;
+	std::string border;
 	
     int width;
     int height;
