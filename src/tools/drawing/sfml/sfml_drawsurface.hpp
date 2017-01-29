@@ -19,10 +19,11 @@ public:
 	sfml_drawsurface(sf::RenderWindow& window);
 	~sfml_drawsurface();
 	
-	void convert (int color);
-	void rectangleColor(Point& a, Point& b, int color);
-    void rectangleColor(Point& a, Point& b, int red, int green, int blue);
-    void rectangleColor(Point& a, unsigned int length, int red, int green, int blue);
+	std::vector <int> convert (int color);
+	
+	void rectangleColor(Point& a, Point& b, int color, int border_color = 0);
+    void rectangleColor(Point& a, Point& b, int red, int green, int blue, int border_color = 0);
+    void rectangleColor(Point& a, unsigned int length, int red, int green, int blue, int border_color = 0);
 
     void lineColor(Point& a, Point& b, int color);
     void lineColor(Point& a, Point& b, int red, int green, int blue);

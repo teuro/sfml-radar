@@ -16,9 +16,9 @@ void sfml_drawsurface::circleColor(Point& a, unsigned int radius, int red, int g
 }
 
 void sfml_drawsurface::circleColor(Point& a, unsigned int radius, int color) {
-	this->convert(color);
+	this->colors = this->convert(color);
 	
-	circleColor(a, radius, this->red, this->green, this->blue);
+	circleColor(a, radius, this->colors[0], this->colors[1], this->colors[2]);
 }
 
 void sfml_drawsurface::draw_picture(std::string file, Point& a) {
@@ -53,9 +53,9 @@ void sfml_drawsurface::draw_text(std::string text, Point& a, int red, int green,
 }
 
 void sfml_drawsurface::draw_text(std::string text, Point& a, int color, int font_size) {
-	this->convert(color);
+	this->colors = this->convert(color);
 	
-	sfml_drawsurface::draw_text(text, a, red, green, blue, font_size);
+	sfml_drawsurface::draw_text(text, a, this->colors[0], this->colors[1], this->colors[2], font_size);
 }
 
 void sfml_drawsurface::load_font(std::string _font, unsigned int font_size) {
@@ -73,9 +73,9 @@ void sfml_drawsurface::flip() {
 }
 
 void sfml_drawsurface::lineColor(Point& a, Point& b, int color) {
-	this->convert(color);
+	this->colors = this->convert(color);
 	
-	lineColor(a, b, this->red, this->green, this->blue);
+	lineColor(a, b, this->colors[0], this->colors[1], this->colors[2]);
 }
 
 void sfml_drawsurface::lineColor(Point& a, Point& b, int red, int green, int blue) {
@@ -89,38 +89,42 @@ void sfml_drawsurface::lineColor(Point& a, Point& b, int red, int green, int blu
 	window.draw(line, 2, sf::Lines);
 }
 
-void sfml_drawsurface::rectangleColor(Point& a, Point& b, int red, int green, int blue) {
+void sfml_drawsurface::rectangleColor(Point& a, Point& b, int red, int green, int blue, int border_color) {
 	sf::RectangleShape rect(sf::Vector2f(b.get_x()-a.get_x(), b.get_y()-a.get_y()));
 
     sf::Color fclr(red, green, blue);
-    rect.setFillColor(fclr);
-
+	
+	int o_blue = border_color % 256;
+	border_color /= 256;
+	int o_red = border_color / 256;
+	int o_green = border_color % 256;
+	
+    sf::Color oclr(o_red, o_green, o_blue);
+	
+    rect.setOutlineColor(oclr);
+    rect.setOutlineThickness(5);
+	rect.setFillColor(fclr);
+	
 	rect.setPosition(sf::Vector2f(a.get_x(), a.get_y()));
 
 	this->window.draw(rect);
 }
 
-void sfml_drawsurface::rectangleColor(Point& a, Point& b, int color) {
-	this->convert(color);
+void sfml_drawsurface::rectangleColor(Point& a, Point& b, int color, int border_color) {
+	this->colors = this->convert(color);
 	
-	sfml_drawsurface::rectangleColor(a, b, red, green, blue);
+	sfml_drawsurface::rectangleColor(a, b, this->colors[0], this->colors[1], this->colors[2], border_color);
 }
 
-void sfml_drawsurface::rectangleColor(Point& a, unsigned int length, int red, int green, int blue) {
-    sf::Color color(red, green, blue);
-
-	sf::RectangleShape rect(sf::Vector2f(length, length));
-	rect.setOutlineColor(color);
-
-	rect.setPosition(sf::Vector2f(a.get_x()-length/2.0, a.get_y()-length/2.0));
-
-	this->window.draw(rect);
+void sfml_drawsurface::rectangleColor(Point& a, unsigned int length, int red, int green, int blue, int border_color) {
+	Point b(a.get_x() + length, a.get_y() + length);
+	sfml_drawsurface::rectangleColor(a, b, red, green, blue, border_color);
 }
 
 void sfml_drawsurface::trigonColor(Point& a, unsigned int size, int color) {
-	this->convert(color);
+	this->colors = this->convert(color);
 	
-	trigonColor(a, size, this->red, this->green, this->blue);
+	trigonColor(a, size, this->colors[0], this->colors[1], this->colors[2]);
 }
 
 void sfml_drawsurface::trigonColor(Point& a, unsigned int size, int red, int green, int blue) {
@@ -139,9 +143,16 @@ void sfml_drawsurface::clear_screen() {
 	this->window.clear();
 }
 
-void sfml_drawsurface::convert(int color) {
-	blue = color % 256;
+std::vector <int> sfml_drawsurface::convert(int color) {
+	std::vector <int> t;
+	int blue = color % 256;
 	color /= 256;
-	red = color / 256;
-	green = color % 256;
+	int red = color / 256;
+	int green = color % 256;
+	
+	t.push_back(red);
+	t.push_back(green);
+	t.push_back(blue);
+	
+	return t;
 }

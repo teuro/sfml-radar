@@ -20,6 +20,7 @@ p {
 	height: 25px;
 	color: rgb(250, 25, 25);
 	background-color: rgb(210, 160, 150);
+	border: rgb(150, 15, 15);
 }
 
 plane {

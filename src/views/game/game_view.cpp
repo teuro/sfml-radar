@@ -157,7 +157,7 @@ void Gameview::draw_element(Drawable_element& de) {
 	Point place_b(place_a.get_x() + de.get_style().get_width(), place_a.get_y() + de.get_style().get_height());
 	
 	if (shape == "rectangle") {
-		this->drawer.rectangleColor(place_a, place_b, background_color);
+		this->drawer.rectangleColor(place_a, place_b, background_color, border_color);
 	} else if (shape == "triangle") {
 		this->drawer.trigonColor(place_a, 30, background_color);
 	}

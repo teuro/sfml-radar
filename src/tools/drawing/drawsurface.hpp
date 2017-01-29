@@ -9,21 +9,21 @@
 #define _DRAWSURFACE_HPP
 
 #include <string>
+#include <vector>
 
 #include "../../models/point.hpp"
 
 class Drawsurface {
 protected:
-	int red, green, blue;
-	
-	virtual void convert(int color) = 0;
+	std::vector <int> colors;
+	virtual std::vector <int> convert(int color) = 0;
 public:
 	bool font_loaded;
 	unsigned int font_size;
 		
-    virtual void rectangleColor(Point& a, Point& b, int color) = 0;
-    virtual void rectangleColor(Point& a, Point& b, int red, int green, int blue) = 0;
-    virtual void rectangleColor(Point& a, unsigned int length, int red, int green, int blue) = 0;
+    virtual void rectangleColor(Point& a, Point& b, int color, int border_color = 0) = 0;
+    virtual void rectangleColor(Point& a, Point& b, int red, int green, int blue, int border_color = 0) = 0;
+    virtual void rectangleColor(Point& a, unsigned int length, int red, int green, int blue, int border_color = 0) = 0;
 
     virtual void lineColor(Point& a, Point& b, int red, int green, int blue) = 0;
     virtual void lineColor(Point& a, Point& b, int color) = 0;
