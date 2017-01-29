@@ -42,13 +42,16 @@ private:
 	std::string name;
 	std::string position;
 	std::string shape;
+	std::string border;
 	
     int width;
     int height;
     int text_color;
     int background_color;
+    int border_color;
 	int left;
 	int top;
+	int border_thickness;
 
 	int r, g, b; /* pure help variables */
 };

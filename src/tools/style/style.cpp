@@ -19,6 +19,8 @@ void Style::set_attribute(std::string key, int value) {
 			this->text_color = value;
 		} else if (key == "background-color") {
 			this->background_color = value;
+		} else if (key == "border") {
+			this->border_color = value;
 		} else { 
 			this->set_attribute(key, Tools::tostr(value));
 		}
@@ -52,6 +54,9 @@ void Style::set_attribute(std::string key, std::string value) {
 		this->shape = value;
 	} else if (key == "position") {
 		this->position = value;
+	} else if (key == "border") {
+		std::sscanf(value.c_str(), "rgb(%i, %i, %i);", &r, &g, &b);
+        this->border_color = (r * 256 + g) * 256 + b;
 	}
 }
 
