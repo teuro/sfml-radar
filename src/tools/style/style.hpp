@@ -27,6 +27,7 @@ public:
     unsigned int get_height();
     unsigned int get_text_color();
     unsigned int get_background_color();
+    unsigned int get_border_color();
 	
     void set_attribute(std::string key, std::string value);
     void set_attribute(std::string key, int value);
@@ -47,9 +48,10 @@ private:
     int height;
     int text_color;
     int background_color;
+    int border_color;
 	int left;
 	int top;
-
+	
 	int r, g, b; /* pure help variables */
 };
 
