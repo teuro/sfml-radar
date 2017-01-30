@@ -7,11 +7,17 @@
 }
 
 #sep_errors {
-	top: 70px;
+	top: 40px;
+	left: 200px;
 }
 
 #selected {
 	color: rgb(160, 160, 250);
+}
+
+#fps {
+	top: 10px;
+	left: 200px;
 }
 
 p {

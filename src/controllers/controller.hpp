@@ -21,6 +21,8 @@ protected:
 	Settings& settings;
 	Drawsurface& drawer;
 	std::string command;
+	int fps;
+	double frames;
 private:
 };
 

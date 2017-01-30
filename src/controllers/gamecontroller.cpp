@@ -6,6 +6,7 @@ Gamecontroller::Gamecontroller(Settings& s, Drawsurface& d) : Controller(s, d) {
 	this->game = new Game(this->settings);
 	this->atis = new Atis(this->settings);
 	this->settings.zoom = 110;
+	this->frames = 0;
 }
 
 Gamecontroller::~Gamecontroller() { 
@@ -57,6 +58,8 @@ void Gamecontroller::update(double elapsed, bool draw) {
 	this->metar->update("EFHK");
 	
 	if (draw) {
+		++this->frames;
+		this->fps = this->frames / (this->game_time / 1000.0);
 		this->gameview->repl["[PLH]"] = Tools::tostr(this->game->get_handled_planes());
 		this->gameview->repl["[METAR]"] = this->metar->to_string();
 		this->gameview->repl["[TIME]"] = Tools::totime(this->game_time, "H:i:s");
@@ -69,6 +72,7 @@ void Gamecontroller::update(double elapsed, bool draw) {
 		this->gameview->repl["[LND]"] = Tools::tostr(this->atis->get_landing_runway());
 		this->gameview->repl["[TRL]"] = Tools::tostr(this->atis->get_transition_level());
 		this->gameview->repl["[TRA]"] = Tools::tostr(this->atis->get_transition_altitude());
+		this->gameview->repl["[FPS]"] = Tools::tostr(this->fps);
 		
 		this->gameview->set_centerpoint_map(this->game->get_centerpoint());
 		this->gameview->clear_screen();
