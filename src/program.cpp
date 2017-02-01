@@ -41,9 +41,8 @@ bool Program::handle_events(Controller& ctrl, sf::RenderWindow& window) {
 }
 
 void Program::run() {
-	sf::RenderWindow window(sf::VideoMode(800, 600), "ATC-radar");
+	sf::RenderWindow window(sf::VideoMode(this->settings.screen_width, this->settings.screen_height), this->settings.program_name);
 	sfml_drawsurface drawer(window);
-	window.setTitle(this->settings.program_name);
 	
 	Gamecontroller gamecontroller(this->settings, drawer);
 	gamecontroller.load();
@@ -51,7 +50,7 @@ void Program::run() {
 	
 	while (this->handle_events(gamecontroller, window)) {
 		time_now = this->clock.restart();
-		gamecontroller.update(time_now.asMilliseconds(), true);
+		gamecontroller.update(time_now.asMilliseconds());
 		sf::sleep(time_change - time_now);	
 	}
 	
