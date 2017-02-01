@@ -22,6 +22,11 @@ int Airfield::get_altitude() {
     return this->altitude;
 }
 
+std::string Airfield::get_name() {
+    return this->name;
+}
+
+
 Runway& Airfield::get_runway(std::string name) {
 	for (unsigned int i = 0; i < this->runways.size(); ++i) {
 		if (this->runways[i].get_name() == name) {
