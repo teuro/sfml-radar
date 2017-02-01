@@ -6,14 +6,14 @@ Game::Game(Settings& s) : settings(s) {
 
 Game::~Game() { }
 
-void Game::load(std::string airfield, std::string dep, std::string lnd) {
-    std::clog << "Game::load(" << airfield << ", " << dep << ", " << lnd << ")" << std::endl;
+void Game::load(std::string airfield, std::string t_departure, std::string t_landing) {
+    std::clog << "Game::load(" << airfield << ", " << t_departure << ", " << t_landing << ")" << std::endl;
 
     this->load_airfield(airfield);
 
     this->duration = 0;
-	this->departure = this->active_field->get_runway(dep);
-	this->landing = this->active_field->get_runway(lnd);
+	this->departure = this->active_field->get_runway(t_departure);
+	this->landing = this->active_field->get_runway(t_landing);
 	
 	this->separation_errors = 0;
     this->new_plane = 5000;
@@ -135,8 +135,8 @@ void Game::update(double elapsed) {
 
     if (this->duration > this->new_plane) {
         create_plane();
-        double t = Tools::rnd(this->settings.new_plane_lower * 1000, this->settings.new_plane_upper * 1000);
-		this->new_plane += t;
+        double time_for_next_plane = Tools::rnd(this->settings.new_plane_lower * 1000, this->settings.new_plane_upper * 1000);
+		this->new_plane += time_for_next_plane;
     }
 }
 
