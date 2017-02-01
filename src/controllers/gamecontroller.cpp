@@ -100,6 +100,9 @@ void Gamecontroller::update(double elapsed) {
 	this->game->update(elapsed);
 	this->metar->update(this->game->get_active_field()->get_name());
 	this->draw_logic();
+	/**
+		* @todo check if handled_planes >= required_planes and plane_list is empty
+	**/
 }
 
 void Gamecontroller::handle_mouse_click(Point& mouse) {
@@ -112,7 +115,6 @@ void Gamecontroller::handle_mouse_click(Point& mouse) {
         Point aircraft = this->gameview->calculate((*plane)->get_place());
 
         if (Tools::on_area(mouse, aircraft)) {
-			//std::clog << (*plane)->get_name() << " selected" << std::endl;
             this->game->selected = (*plane);
         }
     }
