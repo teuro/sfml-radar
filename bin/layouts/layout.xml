@@ -6,5 +6,6 @@
 	<p id="fps" class="count">FPS [FPS]</p>
 	<p id="nextplane" class="time">Next plane [PLN]</p>
 	<p id="handled" class="count">Planes handled [PLH]</p>
+	<p id="clearances" class="count">Clearances relayed [CLRC]</p>
 	<input type="text" name="input" class="userinput" id="clearance_input" />
 </layout>
