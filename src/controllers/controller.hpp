@@ -9,7 +9,7 @@ public:
     virtual void handle_mouse_click(Point& mouse) = 0;
     virtual void handle_mouse_release(Point& mouse_start, Point& mouse_end) = 0;
     virtual void handle_mouse_wheel(int amount) = 0;
-    virtual void update(double elapsed, bool draw) = 0;
+    virtual void update(double elapsed) = 0;
     virtual void handle_text_input() = 0;
     virtual void update_command(std::string text) = 0;
     virtual bool is_ok() = 0;
@@ -23,6 +23,8 @@ protected:
 	std::string command;
 	int fps;
 	double frames;
+	double fps_time;
+	double fps_end_time;
 private:
 };
 

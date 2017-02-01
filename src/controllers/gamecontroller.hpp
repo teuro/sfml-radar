@@ -10,6 +10,12 @@
 #include "../views/game/game_view.hpp"
 #include "controller.hpp"
 
+struct Clearance {
+	double time;
+	std::string plane;
+	std::string clearance;
+};
+
 /**
 	* Gamecontroller
 	* Responsible for linking gameview and model together
@@ -39,7 +45,7 @@ public:
     void handle_mouse_wheel(int amount);
     void set_centerpoint(Coordinate& cp);
     Coordinate& get_centerpoint();
-    void update(double elapsed,  bool draw);
+    void update(double elapsed);
     void handle_mouse_click(Point& mouse);
     void load();
     void handle_text_input();
@@ -49,6 +55,7 @@ public:
 	//std::string get_input();
 protected:
 private:
+	std::list <Clearance> clearances;
 	std::list <std::string> quicklist;
 	std::list <std::string> matching_elements(std::string input);
     Gameview* gameview;
