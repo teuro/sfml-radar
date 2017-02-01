@@ -8,7 +8,7 @@
 
 #sep_errors {
 	top: 40px;
-	left: 200px;
+	left: 180px;
 }
 
 #selected {
@@ -17,7 +17,7 @@
 
 #fps {
 	top: 10px;
-	left: 200px;
+	left: 180px;
 }
 
 #nextplane {
@@ -26,11 +26,16 @@
 
 #handled {
 	top: 70px;
-	left: 200px;
+	left: 180px;
+}
+
+#clearances {
+	top: 10px;
+	left: 350px;
 }
 
 p {
-	left: 30px;
+	left: 10px;
 	width: 160px;
 	height: 25px;
 	color: rgb(250, 25, 25);
