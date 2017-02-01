@@ -53,20 +53,7 @@ void Gamecontroller::handle_mouse_wheel(int amount) {
 	this->gameview->set_zoom(this->settings.zoom);
 }
 
-void Gamecontroller::update(double elapsed) {
-	this->game_time += elapsed;
-	
-	if (this->game_time > this->fps_end_time) {
-		this->fps = this->frames / (fps_time / 1000.0);
-		this->fps_end_time += this->fps_time;
-		this->frames = 0;
-	}
-	
-	this->game->update(elapsed);
-	this->metar->update("EFHK");
-	
-	++this->frames;
-	
+void Gamecontroller::set_variables() {
 	this->gameview->repl["[PLH]"] = Tools::tostr(this->game->get_handled_planes());
 	this->gameview->repl["[METAR]"] = this->metar->to_string();
 	this->gameview->repl["[TIME]"] = Tools::totime(this->game_time, "H:i:s");
@@ -81,6 +68,18 @@ void Gamecontroller::update(double elapsed) {
 	this->gameview->repl["[TRA]"] = Tools::tostr(this->atis->get_transition_altitude());
 	this->gameview->repl["[FPS]"] = Tools::tostr(this->fps);
 	this->gameview->repl["[CLRC]"] = Tools::tostr(this->clearances.size());
+}
+
+void Gamecontroller::calculate_fps() {
+	if (this->game_time > this->fps_end_time) {
+		this->fps = this->frames / (fps_time / 1000.0);
+		this->fps_end_time += this->fps_time;
+		this->frames = 0;
+	}
+}
+
+void Gamecontroller::draw_logic() {
+	++this->frames;
 	
 	this->gameview->set_centerpoint_map(this->game->get_centerpoint());
 	this->gameview->clear_screen();
@@ -90,6 +89,17 @@ void Gamecontroller::update(double elapsed) {
 	this->gameview->draw_navpoints(this->game->get_navpoints());
 	this->gameview->draw_airfield(this->game->get_active_field());
 	this->gameview->render();
+}
+
+void Gamecontroller::update(double elapsed) {
+	this->game_time += elapsed;
+	
+	this->calculate_fps();
+	this->set_variables();
+	
+	this->game->update(elapsed);
+	this->metar->update(this->game->get_active_field()->get_name());
+	this->draw_logic();
 }
 
 void Gamecontroller::handle_mouse_click(Point& mouse) {

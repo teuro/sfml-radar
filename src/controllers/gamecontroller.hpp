@@ -55,6 +55,10 @@ public:
 	//std::string get_input();
 protected:
 private:
+	void set_variables();
+	void calculate_fps();
+	void draw_logic();
+
 	std::list <Clearance> clearances;
 	std::list <std::string> quicklist;
 	std::list <std::string> matching_elements(std::string input);
