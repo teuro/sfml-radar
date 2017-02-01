@@ -9,7 +9,6 @@
 #include <vector>
 #include <list>
 #include <fstream>
-#include "layout/layout_element.hpp"
 #include "layout/drawable_element.hpp"
 #include "../tools/style/parse_css.hpp"
 #include "../tools/style/style.hpp"
@@ -71,8 +70,6 @@ protected:
     Drawsurface& drawer;
     Settings& settings;
     std::list <Style> styles;
-    std::map <std::string, Layout_element> layout_elements;
-    void draw_element(Layout_element& layout_element);
     void draw_element(Image& img);
     void draw_element(Paragraph& p);
     void draw_element(Drawable_element& de);
@@ -80,7 +77,6 @@ protected:
 
 	void style(Drawable_element& de);
     void load();
-    Layout_element& get_element(std::string name);
     Point centerpoint_screen;
 	std::vector <Image> images;
 	std::vector <Paragraph> paragraphs;

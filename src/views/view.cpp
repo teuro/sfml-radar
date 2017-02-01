@@ -52,7 +52,6 @@ View::~View() { }
 
 void View::load() {
 	std::clog << "View::load()" << std::endl;
-    this->layout_elements.clear();
 	
 	TiXmlDocument doc(this->settings.layout_file_name.c_str());
 	bool load_ok = doc.LoadFile();
@@ -105,12 +104,6 @@ void View::load() {
             ++i;
         }
 	}
-
-    std::map <std::string, Layout_element> :: iterator le;
-	
-    for (le = this->layout_elements.begin(); le != this->layout_elements.end(); ++le) {
-        //this->style(le->second);
-    }
 }
 
 void View::clear_screen() {
@@ -189,7 +182,6 @@ void View::style(Drawable_element& de) {
 }
 
 void View::draw() {
-    std::map <std::string, Layout_element> :: iterator element;
     std::vector <Image> :: iterator image;
     std::vector <Paragraph> :: iterator paragraph;
     std::vector <Drawable_input> :: iterator input;
@@ -205,13 +197,4 @@ void View::draw() {
 	for (input = this->inputs.begin(); input !=  this->inputs.end(); ++input) {
         draw_element(*input);
     }
-}
-
-void View::add_element(std::string name, std::string id, std::string cl, std::string value) {
-	if (this->layout_elements.find(name) == this->layout_elements.end()) {
-		Layout_element le(name, id, cl);
-		this->layout_elements[name] = le;
-	} 
-	
-    this->layout_elements[name].set_content(value);
 }
