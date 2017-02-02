@@ -3,6 +3,7 @@
 Gamecontroller::Gamecontroller(Settings& s, Drawsurface& d) : Controller(s, d) { 
 	this->metar = new Metar;
 	this->gameview = new Gameview(this->drawer, this->settings);
+	this->atisview = new Atisview(this->drawer, this->settings);
 	this->game = new Game(this->settings);
 	this->atis = new Atis(this->settings);
 	this->settings.zoom = 110;
@@ -13,6 +14,7 @@ Gamecontroller::Gamecontroller(Settings& s, Drawsurface& d) : Controller(s, d) {
 Gamecontroller::~Gamecontroller() { 
 	delete this->metar;
 	delete this->gameview;
+	delete this->atisview;
 	delete this->game;
 	delete this->atis;
 }

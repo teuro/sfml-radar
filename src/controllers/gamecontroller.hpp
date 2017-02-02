@@ -8,6 +8,7 @@
 #include "../models/metar.hpp"
 #include "../tools/tools.hpp"
 #include "../views/game/game_view.hpp"
+#include "../views/atis/atis_view.hpp"
 #include "controller.hpp"
 
 struct Clearance {
@@ -63,6 +64,7 @@ private:
 	std::list <std::string> quicklist;
 	std::list <std::string> matching_elements(std::string input);
     Gameview* gameview;
+    Atisview* atisview;
     Game* game;
 	Metar* metar;
 	Atis* atis;
