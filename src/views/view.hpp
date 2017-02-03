@@ -76,7 +76,7 @@ protected:
     void draw_element(Drawable_input& di);
 
 	void style(Drawable_element& de);
-    void load();
+    void load(std::string state);
     Point centerpoint_screen;
 	std::vector <Image> images;
 	std::vector <Paragraph> paragraphs;

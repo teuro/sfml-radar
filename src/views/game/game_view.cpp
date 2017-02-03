@@ -22,7 +22,7 @@ Gameview::~Gameview() { }
 void Gameview::load() {
 	std::clog << "Gameview::load()" << std::endl;
 	
-	View::load();
+	View::load("game");
 }
 
 void Gameview::update_command(std::string t_command) {

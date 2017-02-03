@@ -50,14 +50,24 @@ View::View(Drawsurface& d, Settings& s) : drawer(d), settings(s) {
 
 View::~View() { }
 
-void View::load() {
+void View::load(std::string state) {
 	std::clog << "View::load()" << std::endl;
 	
-	TiXmlDocument doc(this->settings.layout_file_name.c_str());
-	bool load_ok = doc.LoadFile();
+	std::string file_name;
+	
+	TiXmlDocument doc;
+	bool load_ok; 
+	
+	if (state == "game") {
+		file_name = this->settings.layout_game_file_name;
+		load_ok = doc.LoadFile(file_name.c_str());
+	} else if (state == "atis") {
+		file_name = this->settings.layout_atis_file_name;
+		load_ok = doc.LoadFile(file_name.c_str());
+	}	
 	
 	if (!load_ok) {
-		throw std::logic_error("layout-file " + this->settings.layout_file_name + " not found");
+		throw std::logic_error("layout-file " + file_name + " not found");
 	} 
 	
     TiXmlElement *pRoot, *pParm;

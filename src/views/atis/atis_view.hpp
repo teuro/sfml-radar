@@ -27,7 +27,6 @@ public:
 	Atisview(Drawsurface& d, Settings& s);
 	~Atisview();
 	void draw();
-private:
     void load();
 };
 

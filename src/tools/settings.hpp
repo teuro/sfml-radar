@@ -64,7 +64,8 @@ public:
     std::string database_name;
     std::string search_term;
     std::string bind_term;
-	std::string layout_file_name;
+	std::string layout_game_file_name;
+	std::string layout_atis_file_name;
 	Coordinate centerpoint;
 };
 

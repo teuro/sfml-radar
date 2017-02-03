@@ -9,7 +9,7 @@ Atisview::Atisview(Drawsurface& d, Settings& s) : View(d, s) {
 Atisview::~Atisview() { }
 
 void Atisview::load() {
-    View::load();
+    View::load("atis");
 }
 
 void Atisview::draw() {
