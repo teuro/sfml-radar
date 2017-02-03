@@ -9,6 +9,7 @@ Gamecontroller::Gamecontroller(Settings& s, Drawsurface& d) : Controller(s, d) {
 	this->settings.zoom = 110;
 	this->frames = 0;
 	this->fps_time = 5000;
+	this->state = ATIS;
 }
 
 Gamecontroller::~Gamecontroller() { 
@@ -83,14 +84,20 @@ void Gamecontroller::calculate_fps() {
 void Gamecontroller::draw_logic() {
 	++this->frames;
 	
-	this->gameview->set_centerpoint_map(this->game->get_centerpoint());
-	this->gameview->clear_screen();
-	this->gameview->update_command(this->command);
-	this->gameview->draw();
-	this->gameview->draw_planes(this->game->get_aircrafts(), this->game->get_selected());
-	this->gameview->draw_navpoints(this->game->get_navpoints());
-	this->gameview->draw_airfield(this->game->get_active_field());
-	this->gameview->render();
+	if (this->state == GAME) {	
+		this->gameview->set_centerpoint_map(this->game->get_centerpoint());
+		this->gameview->clear_screen();
+		this->gameview->update_command(this->command);
+		this->gameview->draw();
+		this->gameview->draw_planes(this->game->get_aircrafts(), this->game->get_selected());
+		this->gameview->draw_navpoints(this->game->get_navpoints());
+		this->gameview->draw_airfield(this->game->get_active_field());
+		this->gameview->render();
+	} else if (this->state == ATIS) {
+		this->atisview->clear_screen();
+		this->atisview->draw();
+		this->atisview->render();
+	}
 }
 
 void Gamecontroller::update(double elapsed) {

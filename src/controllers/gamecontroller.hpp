@@ -70,6 +70,8 @@ private:
 	Atis* atis;
     int function_key;
 	double game_time;
+	enum states {PLAYER, ATIS, GAME, STATISTIS};
+	int state;
 };
 
 
