@@ -3,7 +3,7 @@
 Atisview::Atisview(Drawsurface& d, Settings& s, Atis*& a) : View(d, s), atis(a) {
     this->load();
 	this->place_d.set_place(50, 80);
-	this->place_l.set_place(220, 80);
+	this->place_l.set_place(100, 80);
 	this->place_a.set_place(400, 80);
 	this->place_lv.set_place(500, 80);
 	this->color = 152468;
@@ -30,8 +30,8 @@ void Atisview::draw() {
 		this->drawer.draw_text(Tools::tostr(i * 5 + 35), place_lv, this->color);
 	}
 		
-	this->place_a.set_place(400, 80);
-	this->place_lv.set_place(500, 80);
+	this->place_a.set_place(230, 80);
+	this->place_lv.set_place(350, 80);
 }
 
 std::string Atisview::get_type(Point& mouse) {
@@ -101,5 +101,5 @@ void Atisview::draw_runways(std::vector <Runway> runways) {
 	}	
 	
 	this->place_d.set_place(50, 80);
-	this->place_l.set_place(220, 80);
+	this->place_l.set_place(150, 80);
 }
