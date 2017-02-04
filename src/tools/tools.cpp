@@ -185,7 +185,7 @@ std::string Tools::replace(std::string original, std::string find, std::string r
 		
 		original = part1 + part2 + part3;
 	}
-	
+
 	return original;
 }
 

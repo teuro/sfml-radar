@@ -34,6 +34,10 @@
 	left: 350px;
 }
 
+#metar {
+	width: 400px;
+}
+
 p {
 	left: 10px;
 	width: 160px;
@@ -63,6 +67,33 @@ ul {
 input {
 	color: rgb(20, 30 ,30);
 	background-color: rgb(150, 150, 250);
+}
+
+#atis {
+	top: 50px;
+	left: 50px;
+	width: 330px;
+}
+
+#departure {
+	top: 250px;
+}
+
+#landing {
+	top: 280px;
+}
+
+#level {
+	top: 310px;
+}
+
+#altitude {
+	top: 340px;
+}
+
+.input {
+	left: 50px;
+	width: 170px;
 }
 
 .userinput {

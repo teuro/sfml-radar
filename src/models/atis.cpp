@@ -4,7 +4,7 @@ Atis::Atis(Settings& s) : settings(s) {
 	this->transition_level = 55;
     this->transition_altitude = 5000;
     this->departure_runway = "22R";
-    this->landing_runway = "22L";
+    this->landing_runway = "15";
 }
 
 Atis::~Atis() {
