@@ -238,6 +238,7 @@ namespace Tools {
 	**/
 	
 	bool on_area(Point& mouse, Point& target_left_upper, Point& target_right_lower);
+	bool on_area(Point& mouse, Point& target_left_upper, int width, int height);
 	
 	/**
 		* on_area

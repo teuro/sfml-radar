@@ -2,7 +2,7 @@
 <layout>
 	<p id="metar" class="info">[METAR]</p>
 	
-	<p id="atis" class="input">Select proper runway for departure and landing</p>
+	<p id="atis" class="input">Select proper runway for departure and landing. Select altitude and level</p>
 	
 	<p id="departure" class="input">Departure [DEPARTURE]</p>
 	<p id="landing" class="input">Landing [LANDING]</p>

@@ -72,7 +72,7 @@ input {
 #atis {
 	top: 50px;
 	left: 50px;
-	width: 330px;
+	width: 500px;
 }
 
 #departure {
@@ -91,9 +91,24 @@ input {
 	top: 340px;
 }
 
-.input {
+.strorage {
+	top: 80px;
+}
+
+#runway-list-departure {
 	left: 50px;
-	width: 170px;
+}
+
+#runway-list-landing {
+	left: 100px;
+}
+
+#transfer-altitude {
+	left: 150px;
+}
+
+#transfer-level {
+	left: 200px;
 }
 
 .userinput {

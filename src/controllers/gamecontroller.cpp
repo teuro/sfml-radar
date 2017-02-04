@@ -102,7 +102,6 @@ void Gamecontroller::draw_logic() {
 	} else if (this->state == ATIS) {
 		this->atisview->clear_screen();
 		this->atisview->draw();
-		this->atisview->draw_runways(this->game->get_active_field()->get_runways());
 		this->atisview->render();
 	}
 }
@@ -140,21 +139,30 @@ void Gamecontroller::handle_mouse_click(Point& mouse) {
 			}
 		}
 	} else if (this->state == ATIS) {
-		std::string type 	= this->atisview->get_type(mouse);
-		std::string runway 	= this->atisview->get_runway(this->game->get_active_field()->get_runways(), mouse);
-		int level			= this->atisview->get_level(mouse);
-		int altitude 		= this->atisview->get_altitude(mouse);
+		std::string value = this->atisview->get_value(mouse);
 		
-		//std::clog << "type = " << type << std::endl;
+		std::vector <std::string> t = Tools::split("|", value);
 		
-		if (type == "departure") {
-			this->atis->set_departure_runway(runway);
-		} else if (type == "landing") {
-			this->atis->set_landing_runway(runway);
-		} else if (type == "level") {
-			this->atis->set_transition_level(level);
-		} else if (type == "altitude") {
-			this->atis->set_transition_altitude(altitude);
+		if (t.size() != 2) {
+			return;
+		} 
+		
+		int type = Tools::toint(Tools::trim(t[0]));
+		std::string t_value = Tools::trim(t[1]);
+		
+		switch (type) {
+		case 0:
+			this->atis->set_departure_runway(t_value);
+			break;
+		case 1:
+			this->atis->set_landing_runway(t_value);
+			break;
+		case 2:
+			this->atis->set_transition_altitude(Tools::toint(t_value));
+			break;
+		case 3:
+			this->atis->set_transition_level(Tools::toint(t_value));
+			break;
 		}
 	}
 }
@@ -163,7 +171,7 @@ void Gamecontroller::load() {
 	std::clog << "Gamecontroller::load()" << std::endl;
 	this->game->load("EFHK", this->atis->get_departure_runway(), this->atis->get_landing_runway());
 	this->gameview->load();
-	this->atisview->load();
+	this->atisview->load(this->game->get_active_field()->get_runways());
 }
 
 void Gamecontroller::handle_text_input() {

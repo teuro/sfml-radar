@@ -1,105 +1,67 @@
 #include "atis_view.hpp"
 
-Atisview::Atisview(Drawsurface& d, Settings& s, Atis*& a) : View(d, s), atis(a) {
-    this->load();
-	this->place_d.set_place(50, 80);
-	this->place_l.set_place(100, 80);
-	this->place_a.set_place(400, 80);
-	this->place_lv.set_place(500, 80);
-	this->color = 152468;
-}
+Atisview::Atisview(Drawsurface& d, Settings& s, Atis*& a) : View(d, s), atis(a) { }
 
 Atisview::~Atisview() { }
 
-void Atisview::load() {
+void Atisview::load(std::vector <Runway> runways) {
     View::load("atis");
+	
+	lists.clear();
+	
+	Drawable_list runway_list_dep("ul", "strorage", "runway-list-departure");
+	Drawable_list runway_list_lnd("ul", "strorage", "runway-list-landing");
+	Drawable_list transfer_level("ul", "strorage", "transfer-altitude");
+	Drawable_list transfer_altitude("ul", "strorage", "transfer-level");
+	
+	for (unsigned int i = 0; i < runways.size(); ++i) {
+		runway_list_dep.add_element(runways[i].get_name());
+		runway_list_lnd.add_element(runways[i].get_name());
+	}
+	
+	for (int i = -2; i < 3; ++i) {
+		transfer_altitude.add_element(Tools::tostr(i * 1000 + 5000));
+	}
+	
+	for (int i = 0; i < 7; ++i) {
+		transfer_level.add_element(Tools::tostr(i * 5 + 35));
+	}
+	
+	lists.push_back(runway_list_dep);
+	lists.push_back(runway_list_lnd);
+	lists.push_back(transfer_altitude);
+	lists.push_back(transfer_level);
 }
 
 void Atisview::draw() {
     View::draw();
-	this->drawer.draw_text("altitude", place_a, this->color);
-	this->drawer.draw_text("level", place_lv, this->color);
-
-	for (int i = -2; i < 3; ++i) {
-		place_a.change_y(15);
-		this->drawer.draw_text(Tools::tostr(i * 1000 + 5000), place_a, this->color);
-	}
 	
-	for (int i = 0; i < 5; ++i) {
-		place_lv.change_y(15);
-		this->drawer.draw_text(Tools::tostr(i * 5 + 35), place_lv, this->color);
+	for (unsigned int i = 0; i < this->lists.size(); ++i) {
+		this->style(this->lists[i]);
+		this->draw_element(this->lists[i]);
 	}
-		
-	this->place_a.set_place(230, 80);
-	this->place_lv.set_place(350, 80);
 }
 
-std::string Atisview::get_type(Point& mouse) {
-	if (mouse.get_x() > this->place_d.get_x() && mouse.get_x() < this->place_d.get_x() + 50 && mouse.get_y() > this->place_d.get_y() && mouse.get_y() < this->place_d.get_y() + 550) {
-		return "departure";
-	} else if (mouse.get_x() > this->place_l.get_x() && mouse.get_x() < this->place_l.get_x() + 100 && mouse.get_y() > this->place_d.get_y() && mouse.get_y() < this->place_d.get_y() + 550) {
-		return "landing";
-	} else if (mouse.get_x() > this->place_a.get_x() && mouse.get_x() < this->place_a.get_x() + 100 && mouse.get_y() > this->place_a.get_y()-15 && mouse.get_y() < this->place_d.get_y() + 150) {
-		return "altitude";
-	} else if (mouse.get_x() > this->place_lv.get_x() && mouse.get_x() < this->place_lv.get_x() + 100 && mouse.get_y() > this->place_lv.get_y()-15 && mouse.get_y() < this->place_lv.get_y() + 150) {
-		return "level";
-	}
+std::string Atisview::get_value(Point& mouse) {
+	std::list <std::string> t_list;
+	std::list <std::string> :: iterator list_item;
 	
-	return "";
-}
-
-std::string Atisview::get_runway(std::vector <Runway> runways, Point& mouse) {
-	for (unsigned int i = 0; i < runways.size(); ++i) {
-		this->place_d.change_y(15);
+	for (unsigned int i = 0; i < this->lists.size(); ++i) {
+		t_list = this->lists[i].get_elements();
+		list_item = t_list.begin();
+		Point place = this->lists[i].get_style().get_place();
 		
-		if (mouse.get_x() > this->place_d.get_x() && mouse.get_x() < this->place_l.get_x() + 150 && mouse.get_y() > this->place_d.get_y() && mouse.get_y() < this->place_d.get_y() + 15) {
-			return runways[i].get_name();
+		while (list_item != t_list.end()) {
+			if (Tools::on_area(mouse, place, 50, 10)) {
+				std::string t = Tools::tostr(i) + "|" + (*list_item); 
+				return t;
+			}
+			
+			place.change_y(20);
+			
+			++list_item;
 		}
 	}
 	
 	return "";
-}
-
-int Atisview::get_altitude(Point& mouse) {
-	this->place_a.change_y(15);
-	
-	for (int i = -2; i < 3; ++i) {
-		this->place_a.change_y(15);
-		
-		if (mouse.get_x() > this->place_a.get_x() && mouse.get_x() < this->place_a.get_x() + 50 && mouse.get_y() > this->place_a.get_y()-15 && mouse.get_y() < this->place_a.get_y()) {
-			return i * 1000 + 5000;
-		}
-	}
-	
-	return 0;
-}
-
-int Atisview::get_level(Point& mouse) {
-	this->place_lv.change_y(15);
-	
-	for (unsigned int i = 0; i < 5; ++i) {
-		this->place_lv.change_y(15);
-		
-		if (mouse.get_x() > this->place_lv.get_x() && mouse.get_x() < this->place_lv.get_x() + 50 && mouse.get_y() > this->place_lv.get_y()-15 && mouse.get_y() < this->place_lv.get_y()) {
-			return i * 5 + 35;
-		}
-	}
-	
-	return 0;
-}
-
-void Atisview::draw_runways(std::vector <Runway> runways) {
-	this->drawer.draw_text("departure", this->place_d, this->color);
-	this->drawer.draw_text("landings", place_l, this->color);
-	
-	for (unsigned int i = 0; i < runways.size(); ++i) {
-		place_d.change_y(15);
-		place_l.change_y(15);
-
-		this->drawer.draw_text(runways[i].get_name(), place_d, this->color);
-		this->drawer.draw_text(runways[i].get_name(), place_l, this->color);
-	}	
-	
-	this->place_d.set_place(50, 80);
-	this->place_l.set_place(150, 80);
 }

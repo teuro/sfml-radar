@@ -105,6 +105,13 @@ bool Tools::on_area(Point& mouse, Point& target, int buffer) {
     return (x && y);
 }
 
+bool Tools::on_area(Point& mouse, Point& target, int width, int height) {
+	bool x = mouse.get_x() > (target.get_x()) && mouse.get_x() < (target.get_x() + width);
+	bool y = mouse.get_y() > (target.get_y()) && mouse.get_y() < (target.get_y() + height);
+
+    return (x && y);
+}
+
 bool Tools::on_area(Point& mouse, Point& target_lu, Point& target_rd) {
 	bool x = mouse.get_x() > target_lu.get_x() && mouse.get_x() < target_rd.get_x();
 	bool y = mouse.get_y() > target_lu.get_y() && mouse.get_y() < target_rd.get_y();
