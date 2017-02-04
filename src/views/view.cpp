@@ -208,3 +208,17 @@ void View::draw() {
         draw_element(*input);
     }
 }
+
+void View::draw_element(Drawable_list& dl) {
+	int color = dl.get_style().get_text_color();
+	
+	std::list <std::string> t_list = dl.get_elements();
+	std::list <std::string> :: iterator it = t_list.begin();
+	
+	Point place = dl.get_style().get_place();
+
+	for (it = t_list.begin(); it != t_list.end(); ++it) {
+		this->drawer.draw_text((*it), place, color);
+		place.change_y(20);
+	}
+}

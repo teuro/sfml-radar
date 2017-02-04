@@ -118,7 +118,6 @@ public:
 	**/
 	
 	 void draw_element(Drawable_element& de);
-	 void draw_element(Drawable_list& de);
 	 void update_command(std::string command);
 private:
 	/**

@@ -74,6 +74,7 @@ protected:
     void draw_element(Paragraph& p);
     void draw_element(Drawable_element& de);
     void draw_element(Drawable_input& di);
+	void draw_element(Drawable_list& dl);
 
 	void style(Drawable_element& de);
     void load(std::string state);
