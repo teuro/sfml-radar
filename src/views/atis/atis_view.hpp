@@ -25,10 +25,10 @@ private:
 	Atis* atis;
 	
 	Point place_d;
-	Point place_r;
 	Point place_l;
 	Point place_a;
 	Point place_lv;
+	int color;
 };
 
 #endif // ATIS_VIEW

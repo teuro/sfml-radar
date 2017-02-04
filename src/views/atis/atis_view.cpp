@@ -3,10 +3,10 @@
 Atisview::Atisview(Drawsurface& d, Settings& s, Atis*& a) : View(d, s), atis(a) {
     this->load();
 	this->place_d.set_place(50, 80);
-	this->place_r.set_place(150, 80);
 	this->place_l.set_place(220, 80);
 	this->place_a.set_place(400, 80);
 	this->place_lv.set_place(500, 80);
+	this->color = 152468;
 }
 
 Atisview::~Atisview() { }
@@ -17,17 +17,17 @@ void Atisview::load() {
 
 void Atisview::draw() {
     View::draw();
-	this->drawer.draw_text("altitude", place_a, 152468);
-	this->drawer.draw_text("level", place_lv, 152468);
+	this->drawer.draw_text("altitude", place_a, this->color);
+	this->drawer.draw_text("level", place_lv, this->color);
 
 	for (int i = -2; i < 3; ++i) {
 		place_a.change_y(15);
-		this->drawer.draw_text(Tools::tostr(i * 1000 + 5000), place_a, 152468);
+		this->drawer.draw_text(Tools::tostr(i * 1000 + 5000), place_a, this->color);
 	}
 	
 	for (int i = 0; i < 5; ++i) {
 		place_lv.change_y(15);
-		this->drawer.draw_text(Tools::tostr(i * 5 + 35), place_lv, 152468);
+		this->drawer.draw_text(Tools::tostr(i * 5 + 35), place_lv, this->color);
 	}
 		
 	this->place_a.set_place(400, 80);
@@ -35,7 +35,7 @@ void Atisview::draw() {
 }
 
 std::string Atisview::get_type(Point& mouse) {
-	if (mouse.get_x() > this->place_d.get_x() && mouse.get_x() < this->place_r.get_x() && mouse.get_y() > this->place_d.get_y() && mouse.get_y() < this->place_d.get_y() + 550) {
+	if (mouse.get_x() > this->place_d.get_x() && mouse.get_x() < this->place_d.get_x() + 50 && mouse.get_y() > this->place_d.get_y() && mouse.get_y() < this->place_d.get_y() + 550) {
 		return "departure";
 	} else if (mouse.get_x() > this->place_l.get_x() && mouse.get_x() < this->place_l.get_x() + 100 && mouse.get_y() > this->place_d.get_y() && mouse.get_y() < this->place_d.get_y() + 550) {
 		return "landing";
@@ -89,44 +89,17 @@ int Atisview::get_level(Point& mouse) {
 }
 
 void Atisview::draw_runways(std::vector <Runway> runways) {
-	int color_l = 16543467;
-	int color_r = 16543467;
-	int color_d = 16543467;
-	
-	std::string info_l;
-	std::string info_d;
-	
-	this->drawer.draw_text("departure", this->place_d, color_d);
-	this->drawer.draw_text("runways", place_r, color_r);
-	this->drawer.draw_text("landings", place_l, color_l);
+	this->drawer.draw_text("departure", this->place_d, this->color);
+	this->drawer.draw_text("landings", place_l, this->color);
 	
 	for (unsigned int i = 0; i < runways.size(); ++i) {
 		place_d.change_y(15);
-		place_r.change_y(15);
 		place_l.change_y(15);
-	
-		if (runways[i].get_name() == this->atis->get_departure_runway()) {
-			color_d = 154875;
-			info_d = "selected";
-		} else {
-			color_d = 16543467;
-			info_d = "not selected";
-		}
-		
-		if (runways[i].get_name() == this->atis->get_landing_runway()) {
-			color_l = 154875;
-			info_l = "selected";
-		} else {
-			color_l = 16543467;
-			info_l = "not selected";
-		}
-		
-		this->drawer.draw_text(info_d, place_d, color_d);
-		this->drawer.draw_text(runways[i].get_name(), place_r, color_r);
-		this->drawer.draw_text(info_l, place_l, color_l);
-	}
+
+		this->drawer.draw_text(runways[i].get_name(), place_d, this->color);
+		this->drawer.draw_text(runways[i].get_name(), place_l, this->color);
+	}	
 	
 	this->place_d.set_place(50, 80);
-	this->place_r.set_place(150, 80);
 	this->place_l.set_place(220, 80);
 }
