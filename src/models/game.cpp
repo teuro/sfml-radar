@@ -6,19 +6,22 @@ Game::Game(Settings& s) : settings(s) {
 
 Game::~Game() { }
 
-void Game::load(std::string airfield, std::string t_departure, std::string t_landing) {
-    std::clog << "Game::load(" << airfield << ", " << t_departure << ", " << t_landing << ")" << std::endl;
+void Game::load(std::string airfield) {
+    std::clog << "Game::load(" << airfield << ")" << std::endl;
 
     this->load_airfield(airfield);
 
     this->duration = 0;
-	this->departure = this->active_field->get_runway(t_departure);
-	this->landing = this->active_field->get_runway(t_landing);
 	
 	this->separation_errors = 0;
     this->new_plane = 5000;
 	this->handled_planes = 0;
 	this->airlines = Database::get_result("SELECT ICAO FROM airlines");
+}
+
+void Game::set_runways(std::string t_departure, std::string t_landing) {
+	this->departure = this->active_field->get_runway(t_departure);
+	this->landing = this->active_field->get_runway(t_landing);
 }
 
 void Game::set_centerpoint(Coordinate& cp) {
@@ -181,10 +184,10 @@ void Game::create_plane() {
 	Aircraft* plane;
 	
 	if (type >= 50) {
-		plane = new Aircraft(t_callsign, 0.0, heading, this->active_field->get_altitude(), this->departure.get_start_place(), type, this->settings, this->landing);
+		plane = new Aircraft(t_callsign, 0.0, this->departure.get_heading(), this->active_field->get_altitude(), this->departure.get_start_place(), type, this->settings, this->landing);
 		this->holdings.push(plane);
 	} else {
-		plane = new Aircraft(t_callsign, 200, heading, 2500, t_inpoint.get_place(), type, this->settings, this->landing);
+		plane = new Aircraft(t_callsign, 250, heading, 10000, t_inpoint.get_place(), type, this->settings, this->landing);
 		this->aircrafts.push_back(plane);
 	}
 }
