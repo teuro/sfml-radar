@@ -49,9 +49,6 @@ p {
 
 plane {
 	color: rgb(60, 160, 250);
-	width: 80px;
-	height: 100px;
-	shape: rectangle;
 }
 
 ul {
@@ -59,7 +56,6 @@ ul {
 }
 
 .infolist {
-	position: relative;
 	top: 10px;
 	left: 20px;
 }
