@@ -1,12 +1,12 @@
 #include "atis.hpp"
 
 Atis::Atis(Settings& s) : settings(s) { 
-/*
+
 	this->departure_runway = "04R";
 	this->landing_runway = "04L";
 	this->transition_altitude = 5000;
 	this->transition_level = 55;
-	*/
+	
 }
 
 Atis::~Atis() { }
