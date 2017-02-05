@@ -263,10 +263,6 @@ Aircraft* Game::get_selected() {
     return this->selected;
 }
 
-std::string Game::get_metar() {
-	return "EFHK ...";
-}
-
 void Game::build_clearance(std::string command) {
 	std::vector <std::string> tmp = Tools::split(" ", command);
 	

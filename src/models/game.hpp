@@ -101,7 +101,6 @@ public:
 	Airfield* get_active_field();
 	
 	void create_plane();
-	std::string get_metar();
 	void build_clearance(std::string command);
 	
 	int get_handled_planes();
