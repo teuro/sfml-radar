@@ -1,6 +1,6 @@
 #include "aircraft.hpp"
 
-Aircraft::Aircraft(std::string name, double speed, double heading, double altitude, Coordinate p, int type, Settings& s, Runway& land) : place(p), settings(s), landing(land) {
+Aircraft::Aircraft(std::string name, double speed, double heading, double altitude, Coordinate p, int type, Settings& s, Runway& land, Navpoint& out) : place(p), settings(s), target(out), landing(land) {
     this->name = name;
     this->heading = heading;
     this->altitude = altitude;
@@ -12,8 +12,8 @@ Aircraft::Aircraft(std::string name, double speed, double heading, double altitu
 
     this->separation_error = false;
     this->type = type;
-    this->target = NULL;
     this->approach = false;
+    this->direct = false;
     this->turn = -1;
 }
 
@@ -78,7 +78,16 @@ void Aircraft::update(double elapsed) {
 			this->heading = this->landing.get_heading();
 			this->altitude = this->settings.airfield_altitude;
 		}
-	} 
+	} else if (this->direct) {
+		t_angle = Tools::angle(this->place, this->target.get_place());
+			
+		if (std::abs(this->heading - t_angle) > 0.5) {
+			this->heading = t_angle;
+		}
+		
+		this->clearance_heading = t_angle;
+		this->turn = (this->heading < this->clearance_heading) ? 1 : -1;
+	}
 	
 	this->altitude  = change_parameter(elapsed, this->altitude, this->clearance_altitude, 	30.0, 0);
 	this->speed     = change_parameter(elapsed, this->speed, 	this->clearance_speed, 		3.0, 0);
@@ -90,6 +99,10 @@ void Aircraft::update(double elapsed) {
 
 Coordinate& Aircraft::get_place() {
     return this->place;
+}
+
+Navpoint& Aircraft::get_target() {
+	return this->target;
 }
 
 std::string Aircraft::get_name() {
@@ -137,10 +150,6 @@ int Aircraft::get_type() {
     return this->type;
 }
 
-void Aircraft::set_target(Navpoint* target) {
-    this->target = target;
-}
-
 void Aircraft::set_place(Coordinate& place) {
     this->place = place;
 }
@@ -164,4 +173,8 @@ void Aircraft::set_clearance_altitude(double cl_alt) {
 
 void Aircraft::set_clearance_approach() {
 	this->approach = true;
+}
+
+void Aircraft::set_clearance_direct() {
+	this->direct = true;
 }

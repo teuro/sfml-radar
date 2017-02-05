@@ -1,6 +1,8 @@
 #ifndef _AIRCRAFT_HPP
 #define _AIRCRAFT_HPP
 
+#include <iostream>
+
 #include "navpoint.hpp"
 #include "../tools/tools.hpp"
 #include "../tools/settings.hpp"
@@ -8,11 +10,12 @@
 
 class Aircraft {
 public:
-    Aircraft(std::string name, double speed, double heading, double altitude, Coordinate p, int type, Settings& s, Runway& land);
+    Aircraft(std::string name, double speed, double heading, double altitude, Coordinate p, int type, Settings& s, Runway& land, Navpoint& out);
     ~Aircraft();
     void update(double elapsed);
 
     Coordinate& get_place();
+	Navpoint& get_target();
     std::string get_name();
 
     double get_speed();
@@ -28,9 +31,9 @@ public:
     void set_clearance_heading(double cl_hdg, int turn = -1);
     void set_clearance_altitude(double cl_alt);
     void set_clearance_approach();
+    void set_clearance_direct();
 
     void set_separation_error(bool t);
-    void set_target(Navpoint* target);
     bool get_separation_error();
     void set_place(Coordinate& place);
     int get_type();
@@ -54,10 +57,11 @@ private:
     void change_heading();
     double change_parameter(double elapsed, double value, double _value, double change, int turn = 0);
     int type;
-    Navpoint* target;
     bool approach;
+    bool direct;
     bool landed;
     Settings& settings;
+	Navpoint target;
 	Runway& landing;
 };
 
