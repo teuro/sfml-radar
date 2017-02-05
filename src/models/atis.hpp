@@ -31,6 +31,8 @@ public:
     std::string get_landing_runway();
     int get_transition_level();
     int get_transition_altitude();
+	
+	bool ok();
 protected:
 private:
     Settings& settings;

@@ -1,15 +1,15 @@
 #include "atis.hpp"
 
 Atis::Atis(Settings& s) : settings(s) { 
+/*
+	this->departure_runway = "04R";
+	this->landing_runway = "04L";
+	this->transition_altitude = 5000;
 	this->transition_level = 55;
-    this->transition_altitude = 5000;
-    this->departure_runway = "22R";
-    this->landing_runway = "15";
+	*/
 }
 
-Atis::~Atis() {
-
-}
+Atis::~Atis() { }
 
 void Atis::update() {
 	
@@ -45,4 +45,18 @@ int Atis::get_transition_level() {
 
 int Atis::get_transition_altitude() {
     return this->transition_altitude;
+}
+
+bool Atis::ok() {
+	if (transition_level > 10 && transition_level < 70) {
+		if (transition_altitude > 2000 && transition_altitude < 8000) {
+			if (departure_runway.length() > 0) {
+				if (landing_runway.length() > 0) {
+					return true;
+				}
+			}
+		}
+	}
+	
+	return false;
 }
