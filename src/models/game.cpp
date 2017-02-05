@@ -126,13 +126,18 @@ void Game::update(double elapsed) {
         (*it)->set_separation_error(false);
         (*it)->update(elapsed);
 		
-		if ((*it)->get_speed() < 20 && (*it)->get_type() < 50) {
+		if ((*it)->get_speed() < 20 && (*it)->get_type() == APPROACH) {
 			it = this->aircrafts.erase(it);
 			++this->handled_planes;
-		} else if ((*it)->get_speed() > 145 && (*it)->get_type() >= 50 && (*it)->get_altitude() < 500) {
+		} else if ((*it)->get_speed() > 145 && (*it)->get_type() == DEPARTURE && (*it)->get_altitude() < 500) {
 			(*it)->set_clearance_altitude(4000);
-		} else if ((*it)->get_type() >= 50 && (*it)->get_altitude() > 1500) {
+		} else if ((*it)->get_type() == DEPARTURE && (*it)->get_altitude() > 1500) {
 			(*it)->set_clearance_speed(250);
+		}
+		
+		if (Tools::on_area((*it)->get_place(), (*it)->get_target().get_place()) && (*it)->get_type() == DEPARTURE) {
+			it = this->aircrafts.erase(it);
+			++this->handled_planes;
 		}
     }
 
@@ -177,17 +182,19 @@ void Game::create_plane() {
 	
 	//Coordinate test(60.46015, 25.2663);
 	
-    int type = Tools::rnd(1, 100);
+    int t_type = Tools::rnd(1, 100);
+
+	types type = (t_type < 50) ? DEPARTURE : APPROACH;
 
     std::string t_callsign = this->airlines(Tools::rnd(0, this->airlines.size()), "ICAO") + Tools::tostr(Tools::rnd(1, 999));
 	
 	Aircraft* plane;
 	
-	if (type >= 50) {
-		plane = new Aircraft(t_callsign, 0.0, this->departure.get_heading(), this->active_field->get_altitude(), this->departure.get_start_place(), type, this->settings, this->landing);
+	if (type == DEPARTURE) {
+		plane = new Aircraft(t_callsign, 0.0, this->departure.get_heading(), this->active_field->get_altitude(), this->departure.get_start_place(), DEPARTURE, this->settings, this->landing, t_outpoint);
 		this->holdings.push(plane);
 	} else {
-		plane = new Aircraft(t_callsign, 250, heading, 10000, t_inpoint.get_place(), type, this->settings, this->landing);
+		plane = new Aircraft(t_callsign, 250, heading, 10000, t_inpoint.get_place(), APPROACH, this->settings, this->landing, t_inpoint);
 		this->aircrafts.push_back(plane);
 	}
 }
@@ -289,6 +296,8 @@ void Game::build_clearance(std::string command) {
 			this->selected->set_clearance_speed(value);
 		} else if (Tools::trim(tmp[0]) == "approach") {
 			this->selected->set_clearance_approach();
+		} else if (Tools::trim(tmp[0]) == "direct") {
+			this->selected->set_clearance_direct();
 		}
 	} else {
 		std::cerr << "No selected plane" << std::endl;

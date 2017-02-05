@@ -135,6 +135,7 @@ private:
 	int handled_planes;
 	
 	enum turn {LEFT = -1, RIGHT = 1};
+	enum types {DEPARTURE, APPROACH};
 	Queryresult airlines;
 };
 
