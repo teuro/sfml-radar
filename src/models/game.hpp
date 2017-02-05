@@ -79,7 +79,7 @@ public:
         * @param void
         * @return void
     **/
-	void load(std::string airfield, std::string dep, std::string lnd);
+	void load(std::string airfield);
 
     /**
         * Calculate new state of game
@@ -87,7 +87,9 @@ public:
         * @return void
     **/
 	void update(double elapsed);
-
+	
+	void set_runways(std::string t_departure, std::string t_landing);
+	
 	/**
         * Select a plane
         * @param std::string callsign

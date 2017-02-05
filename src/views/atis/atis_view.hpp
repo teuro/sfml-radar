@@ -19,7 +19,6 @@ public:
 	std::string get_value(Point& mouse);
 private:
 	Atis* atis;
-	std::vector <Drawable_list> lists;
 	std::vector <Runway> runways;
 };
 
