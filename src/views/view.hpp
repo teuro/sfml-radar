@@ -82,6 +82,7 @@ protected:
 	std::vector <Image> images;
 	std::vector <Paragraph> paragraphs;
 	std::vector <Drawable_input> inputs;
+	std::vector <Drawable_list> lists;
 private:
 };
 

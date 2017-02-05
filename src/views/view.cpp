@@ -56,7 +56,7 @@ void View::load(std::string state) {
 	std::string file_name;
 	
 	TiXmlDocument doc;
-	bool load_ok; 
+	bool load_ok = false;
 	
 	if (state == "game") {
 		file_name = this->settings.layout_game_file_name;
@@ -211,7 +211,6 @@ void View::draw() {
 
 void View::draw_element(Drawable_list& dl) {
 	int color = dl.get_style().get_text_color();
-	
 	std::list <std::string> t_list = dl.get_elements();
 	std::list <std::string> :: iterator it = t_list.begin();
 	
