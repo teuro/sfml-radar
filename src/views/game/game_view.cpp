@@ -33,9 +33,16 @@ void Gameview::draw() {
 	this->centerpoint_screen.set_place(this->settings.screen_width / 2, this->settings.screen_height / 2);
 	this->inputs.back().set_value(this->command);
 	this->View::draw();
+	
+	for (unsigned int i = 0; i < this->lists.size(); ++i) {
+		this->style(this->lists[i]);
+		this->draw_element(this->lists[i]);
+	}
 }
 
 void Gameview::draw_plane(Aircraft*& plane, Aircraft* selected) {
+	lists.clear();
+	
 	Point aircraft_place = this->calculate(plane->get_place());
 	Point draw;
 	std::string id = "";
@@ -55,9 +62,12 @@ void Gameview::draw_plane(Aircraft*& plane, Aircraft* selected) {
 	Drawable_list info_list("ul", "infolist", id);
 	
 	info_list.add_element(plane->get_name());
-	info_list.add_element(Tools::tostr(plane->get_speed()));
-	info_list.add_element(Tools::tostr(Tools::rad2deg(plane->get_heading())));
-	info_list.add_element(Tools::tostr(plane->get_altitude()));
+	
+	if (id == "selected") {
+		info_list.add_element(Tools::tostr(plane->get_speed()));
+		info_list.add_element(Tools::tostr(Tools::rad2deg(plane->get_heading())));
+		info_list.add_element(Tools::tostr(plane->get_altitude()));
+	}
 	
 	this->style(dplane);
 	this->style(info_list);
@@ -67,10 +77,7 @@ void Gameview::draw_plane(Aircraft*& plane, Aircraft* selected) {
 	drawer.lineColor(aircraft_place, end_point_place_p, dplane.get_style().get_text_color());
     drawer.circleColor(aircraft_place, separation_ring, dplane.get_style().get_text_color());
 	
-	this->draw_element(dplane);
 	this->draw_element(info_list);
-	
-	info_list.clear_content();
 }
 
 void Gameview::draw_navpoints(std::vector <Navpoint>& navpoints) {
@@ -146,19 +153,4 @@ Point Gameview::calculate(Coordinate& target) {
 	Point t(pixelX, pixelY);
 	
 	return t;
-}
-
-void Gameview::draw_element(Drawable_element& de) {
-	int background_color = de.get_style().get_background_color();
-	int border_color = de.get_style().get_border_color();
-	std::string shape = de.get_style().get_shape();
-	
-	Point place_a = de.get_style().get_place();
-	Point place_b(place_a.get_x() + de.get_style().get_width(), place_a.get_y() + de.get_style().get_height());
-	
-	if (shape == "rectangle") {
-		this->drawer.rectangleColor(place_a, place_b, background_color, border_color);
-	} else if (shape == "triangle") {
-		this->drawer.trigonColor(place_a, 30, background_color);
-	}
 }

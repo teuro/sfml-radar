@@ -117,7 +117,6 @@ public:
 		draw many elements
 	**/
 	
-	 void draw_element(Drawable_element& de);
 	 void update_command(std::string command);
 private:
 	/**
