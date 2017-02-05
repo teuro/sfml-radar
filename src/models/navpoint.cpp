@@ -1,5 +1,7 @@
 #include "navpoint.hpp"
 
+Navpoint::Navpoint() { }
+
 Navpoint::Navpoint(std::string name, Coordinate p) : place(p) {
     this->name = name;
 }

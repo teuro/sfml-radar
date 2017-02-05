@@ -8,6 +8,7 @@
 class Navpoint {
 public:
     Navpoint(std::string name, Coordinate p);
+    Navpoint();
     Navpoint(std::string name, double latitude, double longitude);
     ~Navpoint();
     Coordinate& get_place();
