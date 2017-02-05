@@ -119,6 +119,11 @@ void Gamecontroller::update(double elapsed) {
 		/**
 			* @todo check if handled_planes >= required_planes and plane_list is empty
 		**/
+	} else if (this->state == ATIS) {
+		if (this->atis->ok()) {
+			this->state = GAME;
+			this->game->set_runways(this->atis->get_departure_runway(), this->atis->get_landing_runway());
+		}
 	}
 	
 	this->draw_logic();
@@ -169,7 +174,7 @@ void Gamecontroller::handle_mouse_click(Point& mouse) {
 
 void Gamecontroller::load() {
 	std::clog << "Gamecontroller::load()" << std::endl;
-	this->game->load("EFHK", this->atis->get_departure_runway(), this->atis->get_landing_runway());
+	this->game->load("EFHK");
 	this->gameview->load();
 	this->atisview->load(this->game->get_active_field()->get_runways());
 }
