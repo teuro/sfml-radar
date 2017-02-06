@@ -26,7 +26,7 @@ public:
     int clearance_speed_upper;
     int new_plane_lower;
     int new_plane_upper;
-    int required_handled;
+    unsigned int required_handled;
     int max_planes;
     int approach_point_distance;
     int speed_reduction_point;
