@@ -64,9 +64,9 @@ void Gameview::draw_plane(Aircraft*& plane, Aircraft* selected) {
 	info_list.add_element(plane->get_name());
 	
 	if (id == "selected") {
-		info_list.add_element(Tools::tostr(plane->get_speed()));
-		info_list.add_element(Tools::tostr(Tools::rad2deg(plane->get_heading())));
-		info_list.add_element(Tools::tostr(plane->get_altitude()));
+		info_list.add_element(Tools::tostr((int)plane->get_speed()));
+		info_list.add_element(Tools::tostr((int)Tools::rad2deg(plane->get_heading())));
+		info_list.add_element(Tools::tostr((int)plane->get_altitude()));
 		
 		if (plane->get_type() == 0) {
 			info_list.add_element(plane->get_target().get_name());
