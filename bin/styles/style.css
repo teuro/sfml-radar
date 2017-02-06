@@ -34,6 +34,16 @@
 	left: 350px;
 }
 
+#departure_runway {
+	top: 40px;
+	left: 350px;
+}
+
+#landing_runway {
+	top: 70px;
+	left: 350px;
+}
+
 #metar {
 	width: 400px;
 }

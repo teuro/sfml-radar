@@ -7,5 +7,7 @@
 	<p id="nextplane" class="time">Next plane [PLN]</p>
 	<p id="handled" class="count">Planes handled [PLH]</p>
 	<p id="clearances" class="count">Clearances relayed [CLRC]</p>
+	<p id="departure_runway" class="info">departure [DEP]</p>
+	<p id="landing_runway" class="info">landing [LND]</p>
 	<input type="text" name="input" class="userinput" id="clearance_input" />
 </layout>
