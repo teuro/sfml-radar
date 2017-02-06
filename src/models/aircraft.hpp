@@ -60,6 +60,8 @@ private:
     bool approach;
     bool direct;
     bool landed;
+	bool check_approach_config(double target_altitude);
+	void calculate_angle_target(Coordinate& target);
     Settings& settings;
 	Navpoint target;
 	Runway& landing;
