@@ -145,7 +145,7 @@ void Game::update(double elapsed) {
         (*it)->set_separation_error(true);
     }
 
-    if (this->duration > this->new_plane) {
+    if (this->duration > this->new_plane && this->settings.required_handled > this->handled_planes + + this->aircrafts.size() + this->holdings.size()) {
         create_plane();
         double time_for_next_plane = Tools::rnd(this->settings.new_plane_lower * 1000, this->settings.new_plane_upper * 1000);
 		this->new_plane += time_for_next_plane;
