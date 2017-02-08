@@ -180,9 +180,10 @@ void Game::create_plane() {
 	Outpoint t_outpoint = this->outpoints[Tools::rnd(0, (int)this->outpoints.size()-1)];
 	double heading = Tools::deg2rad(227);
 	
-	//Coordinate test(60.46015, 25.2663);
+	Coordinate test(60.3680, 25.0666);
 	
     int t_type = Tools::rnd(1, 100);
+	t_type = 51;
 
 	types type = (t_type < 50) ? DEPARTURE : APPROACH;
 
@@ -194,7 +195,7 @@ void Game::create_plane() {
 		plane = new Aircraft(t_callsign, 0.0, this->departure.get_heading(), this->active_field->get_altitude(), this->departure.get_start_place(), DEPARTURE, this->settings, this->landing, t_outpoint);
 		this->holdings.push(plane);
 	} else {
-		plane = new Aircraft(t_callsign, 250, heading, 10000, t_inpoint.get_place(), APPROACH, this->settings, this->landing, t_inpoint);
+		plane = new Aircraft(t_callsign, 200, heading, 1300, test, APPROACH, this->settings, this->landing, t_inpoint);
 		this->aircrafts.push_back(plane);
 	}
 }
