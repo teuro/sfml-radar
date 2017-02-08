@@ -12,14 +12,15 @@ Aircraft::Aircraft(std::string name, double speed, double heading, double altitu
 
     this->separation_error = false;
     this->type = type;
-    this->approach = false;
+    this->approach = true;
+    this->landed = false;
     this->direct = false;
     this->turn = -1;
 }
 
 Aircraft::~Aircraft() { }
 
-bool Aircraft::check_approach_config(double target_altitude) {
+bool Aircraft::check_approach_config() {
 	double min_approach_angle = this->landing.get_heading() - Tools::deg2rad(this->settings.approach_angle);
 	double max_approach_angle = this->landing.get_heading() + Tools::deg2rad(this->settings.approach_angle);
 	
@@ -56,40 +57,45 @@ void Aircraft::calculate_angle_target(Coordinate& target) {
 
 void Aircraft::update(double elapsed) {
 	this->heading = Tools::fix_angle(this->heading);
-	
+
 	if (this->approach) {
 		if (this->landed == false) {
 			/** Distance from planes position to runway in feets **/
 			double t_distance = Tools::distanceNM(this->place, this->landing.get_start_place()) * 6076.11549;
 			double target_approach_altitude = std::tan(Tools::deg2rad(this->landing.get_glidepath())) * t_distance;
 			
-			//std::clog << t_distance << " ft " << target_approach_altitude << " ft " << std::endl;
-			
-			if (!this->check_approach_config(target_approach_altitude)) {
+			if (!this->check_approach_config()) {
 				this->approach = false;
 				return;
+			}
+			
+			if (this->altitude - this->settings.airfield_altitude < 1200) {
+				this->clearance_speed = 180;
+			} 
+			
+			if (this->altitude - this->settings.airfield_altitude < 800) {
+				this->clearance_speed = 160;
+			} 
+			
+			if (this->altitude - this->settings.airfield_altitude < 300) {
+				this->clearance_speed = 135;
 			}
 			
 			if (this->altitude > this->settings.airfield_altitude) {
 				if (this->altitude > target_approach_altitude) {
 					this->altitude = target_approach_altitude;
 				}
-			} else {
-				this->altitude = this->settings.airfield_altitude;
-				this->landed = true;
-			}
-			
-			if (this->altitude - this->settings.airfield_altitude < 1000) {
-				this->clearance_speed = 150;
 			} 
 			
-			if (this->altitude - this->settings.airfield_altitude < 500) {
-				this->clearance_speed = 135;
+			if (Tools::on_area(this->place, this->landing.get_start_place())) {
+				std::clog << "Runway start point let's land completely" << std::endl;
+				this->altitude = this->settings.airfield_altitude;
+				this->landed = true;
+			} else {
+				this->calculate_angle_target(this->landing.get_start_place());
 			}
-			
-			this->calculate_angle_target(this->landing.get_start_place());
 		} else {
-			this->clearance_speed = 0;
+			this->clearance_speed = 10;
 			this->heading = this->landing.get_heading();
 			this->altitude = this->settings.airfield_altitude;
 		}
@@ -170,7 +176,6 @@ void Aircraft::set_clearance_speed(double cl_spd) {
 
 void Aircraft::set_clearance_heading(double cl_hdg, int turn) {
 	this->clearance_heading = cl_hdg;
-	std::string t_turn = (turn == -1) ? "left" : "right";
 	
 	this->clearance_heading = Tools::fix_angle(this->clearance_heading);
 	
