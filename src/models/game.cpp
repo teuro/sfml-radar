@@ -117,6 +117,29 @@ void Game::handle_holdings() {
     }
 }
 
+void Game::calculate_points(int type, int clearance_count) {
+	++this->handled_planes;
+	
+	int multiply = (type == APPROACH) ? 5 : 3;
+	int point = multiply * 10;
+	
+	point = std::log(point / clearance_count) * multiply * 10;
+	
+	this->points.push_back(point);
+}
+
+int Game::get_points() {
+	std::list <int> :: iterator it = this->points.begin();
+	int sum = 0;
+	
+	while (it != this->points.end()) {
+		sum += (*it);
+		++it;
+	}
+	
+	return sum;
+}
+
 void Game::update(double elapsed) {
 	this->duration += elapsed;
     this->check_collision();
@@ -127,17 +150,19 @@ void Game::update(double elapsed) {
         (*it)->update(elapsed);
 		
 		if ((*it)->get_speed() < 20 && (*it)->get_type() == APPROACH) {
+			calculate_points(APPROACH, this->calculate_clearances((*it)->get_name()));
 			it = this->aircrafts.erase(it);
-			++this->handled_planes;
+			continue;
 		} else if ((*it)->get_speed() > 145 && (*it)->get_type() == DEPARTURE && (*it)->get_altitude() < 500) {
 			(*it)->set_clearance_altitude(4000);
-		} else if ((*it)->get_type() == DEPARTURE && (*it)->get_altitude() > 1500) {
+		} else if ((*it)->get_type() == DEPARTURE && (*it)->get_altitude() > 1500 && (*it)->get_altitude() < this->settings.shortcut) {
 			(*it)->set_clearance_speed(250);
 		}
 		
 		if (Tools::on_area((*it)->get_place(), (*it)->get_target().get_place()) && (*it)->get_type() == DEPARTURE) {
 			it = this->aircrafts.erase(it);
-			++this->handled_planes;
+			calculate_points(DEPARTURE, 5);
+			continue;
 		}
     }
 
@@ -178,13 +203,15 @@ void Game::create_plane() {
 
 	Inpoint t_inpoint = this->inpoints[Tools::rnd(0, (int)this->inpoints.size()-1)];
 	Outpoint t_outpoint = this->outpoints[Tools::rnd(0, (int)this->outpoints.size()-1)];
+	
+	int t_type = Tools::rnd(1, 100);
+	
+	/** testing data
 	double heading = Tools::deg2rad(227);
-	
 	Coordinate test(60.3680, 25.0666);
-	
-    int t_type = Tools::rnd(1, 100);
 	t_type = 51;
-
+	**/
+	
 	types type = (t_type < 50) ? DEPARTURE : APPROACH;
 
     std::string t_callsign = this->airlines(Tools::rnd(0, this->airlines.size()), "ICAO") + Tools::tostr(Tools::rnd(1, 999));
@@ -192,10 +219,12 @@ void Game::create_plane() {
 	Aircraft* plane;
 	
 	if (type == DEPARTURE) {
-		plane = new Aircraft(t_callsign, 0.0, this->departure.get_heading(), this->active_field->get_altitude(), this->departure.get_start_place(), DEPARTURE, this->settings, this->landing, t_outpoint);
+		plane = new Aircraft(t_callsign, DEPARTURE, this->settings, this->departure, t_outpoint);
+		plane->load();
 		this->holdings.push(plane);
 	} else {
-		plane = new Aircraft(t_callsign, 200, heading, 1300, test, APPROACH, this->settings, this->landing, t_inpoint);
+		plane = new Aircraft(t_callsign, APPROACH, this->settings, this->landing, t_inpoint);
+		plane->load();
 		this->aircrafts.push_back(plane);
 	}
 }
@@ -271,10 +300,32 @@ Aircraft* Game::get_selected() {
     return this->selected;
 }
 
+std::list <Clearance> Game::get_clearances() {
+	return this->clearances;
+}
+
+int Game::calculate_clearances(std::string name) {
+	int count = 0;
+	
+	std::list <Clearance> :: iterator it = this->clearances.begin();
+	
+	while (it != this->clearances.end()) {
+		if ((*it).plane == name) {
+			++count;
+		}
+		++it;
+	}
+	
+	return count;
+}
+
 void Game::build_clearance(std::string command) {
 	std::vector <std::string> tmp = Tools::split(" ", command);
 	
 	if (this->selected != NULL) {
+		Clearance t_clearance = {this->duration, this->selected->get_name(), this->command};
+		this->clearances.push_back(t_clearance);
+		
 		int value = Tools::tonumber<int>(tmp.back());
 
 		if (Tools::trim(tmp[0]) == "turn") {
@@ -298,7 +349,11 @@ void Game::build_clearance(std::string command) {
 		} else if (Tools::trim(tmp[0]) == "approach") {
 			this->selected->set_clearance_approach();
 		} else if (Tools::trim(tmp[0]) == "direct") {
-			this->selected->set_clearance_direct();
+			if (this->selected->get_altitude() < this->settings.shortcut) {
+				std::cerr << "Unable to comply because altitude must be greater than " << this->settings.shortcut << " ft" << std::endl;
+			} else {
+				this->selected->set_clearance_direct();
+			}
 		}
 	} else {
 		std::cerr << "No selected plane" << std::endl;

@@ -18,6 +18,12 @@
 #include "../tools/tools.hpp"
 #include "../tools/database/database.hpp"
 
+struct Clearance {
+	double time;
+	std::string plane;
+	std::string clearance;
+};
+
 /**
     * Game very low-level on MVC model
     * Representing state of game
@@ -107,11 +113,15 @@ public:
 	int get_planes_count();
 	int get_separation_errors();
 	int get_new_plane();
+	int get_points();
+	std::list <Clearance> get_clearances();
 private:
     void load_airfield(std::string icao);
     void check_collision();
     void handle_holdings();
     bool is_free(Inpoint& navpoint);
+	void calculate_points(int type, int clearance_count);
+	int calculate_clearances(std::string name);
 	Coordinate centerpoint;
 	Settings& settings;
 
@@ -121,6 +131,8 @@ private:
 	std::list       <Aircraft*>		aircrafts;
 	std::queue      <Aircraft*>		holdings;
 	std::list       <Aircraft*>		errors;
+	std::list       <int>			points;
+	std::list       <Clearance>		clearances;
 	std::vector     <Airfield>		airfields;
 
 	std::string command;
