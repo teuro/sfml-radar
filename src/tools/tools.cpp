@@ -237,3 +237,12 @@ double Tools::CalcGeograpicAngle(double arith) {
 	
 	return (arith * (-1.0) + (PI / 2.0));
 }
+
+Point Tools::calculate_midpoint(Point& a, Point& b) {
+	int x = std::abs((a.get_x() + b.get_x()) / 2);
+	int y = std::abs((a.get_y() + b.get_y()) / 2);
+	
+	Point t(x, y);
+	
+	return t;
+}

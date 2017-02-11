@@ -317,6 +317,8 @@ namespace Tools {
 	double fix_angle(double angle);
 	
 	double CalcGeograpicAngle(double arith);
+	
+	Point calculate_midpoint(Point& a, Point& b);
 }
 
 #endif // _TOOLS_HPP
