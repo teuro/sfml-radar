@@ -225,20 +225,7 @@ void Game::create_plane() {
 	}
 }
 
-void Game::load_airfield(std::string icao) {
-	std::clog << "Game::load_airfield(" << icao << ")" << std::endl;
-    Queryresult airport = Database::get_result("SELECT ROWID AS airfield_id, ICAO, latitude, longitude, altitude FROM airfields WHERE ICAO = '" + icao + "'");
-
-    std::map <std::string, std::string> variables;
-	
-    variables["airfield_id"] = airport(0, "airfield_id");
-
-    Coordinate place(Tools::tonumber<double>(airport(0, "latitude")), Tools::tonumber<double>(airport(0, "longitude")));
-
-    this->active_field = new Airfield(airport(0, "ICAO"), place);
-	this->settings.airfield_altitude = Tools::toint(airport(0, "altitude"));
-	this->settings.centerpoint = place;
-	
+void Game::load_navpoints(std::map <std::string, std::string> variables) {
 	try {
 		std::string query = Database::bind_param("SELECT name, latitude, longitude, altitude, heading, type FROM navpoints WHERE ? = ?", variables);
 		
@@ -267,7 +254,9 @@ void Game::load_airfield(std::string icao) {
 	} catch ( ... ) {
 		throw;
 	}
-	
+}
+
+void Game::load_runways(std::map <std::string, std::string> variables) {
 	try {
 		std::string query = Database::bind_param("SELECT name, start_latitude, start_longitude, end_latitude, end_longitude FROM runways WHERE ? = ?", variables);
 		
@@ -289,6 +278,24 @@ void Game::load_airfield(std::string icao) {
 	} catch ( ... ) {
 		throw;
 	}
+}
+
+void Game::load_airfield(std::string icao) {
+	std::clog << "Game::load_airfield(" << icao << ")" << std::endl;
+    Queryresult airport = Database::get_result("SELECT ROWID AS airfield_id, ICAO, latitude, longitude, altitude FROM airfields WHERE ICAO = '" + icao + "'");
+
+    std::map <std::string, std::string> variables;
+	
+    variables["airfield_id"] = airport(0, "airfield_id");
+
+    Coordinate place(Tools::tonumber<double>(airport(0, "latitude")), Tools::tonumber<double>(airport(0, "longitude")));
+
+    this->active_field = new Airfield(airport(0, "ICAO"), place);
+	this->settings.airfield_altitude = Tools::toint(airport(0, "altitude"));
+	this->settings.centerpoint = place;
+	
+	this->load_navpoints(variables);
+	this->load_runways(variables);
 	
     this->centerpoint = this->active_field->get_place();
 }

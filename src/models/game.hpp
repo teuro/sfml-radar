@@ -111,6 +111,8 @@ private:
     void load_airfield(std::string icao);
     void check_collision();
     void handle_holdings();
+	void load_navpoints(std::map <std::string, std::string> variables);
+	void load_runways(std::map <std::string, std::string> variables);
     bool is_free(Inpoint& navpoint);
 	void calculate_points(int type, int clearance_count);
 	int calculate_clearances(std::string name);
