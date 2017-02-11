@@ -44,6 +44,11 @@
 	left: 350px;
 }
 
+#points {
+	top: 10px;
+	left: 520px;
+}
+
 #metar {
 	width: 400px;
 }
