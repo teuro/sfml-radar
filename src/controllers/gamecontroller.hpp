@@ -11,12 +11,6 @@
 #include "../views/atis/atis_view.hpp"
 #include "controller.hpp"
 
-struct Clearance {
-	double time;
-	std::string plane;
-	std::string clearance;
-};
-
 /**
 	* Gamecontroller
 	* Responsible for linking gameview and model together
@@ -46,7 +40,7 @@ public:
     void handle_mouse_wheel(int amount);
     void set_centerpoint(Coordinate& cp);
     Coordinate& get_centerpoint();
-    void update(double elapsed);
+    void update(double elapsed, Point& mouse);
     void handle_mouse_click(Point& mouse);
     void load();
     void handle_text_input();
@@ -58,7 +52,7 @@ protected:
 private:
 	void set_variables();
 	void calculate_fps();
-	void draw_logic();
+	void draw_logic(Point& mouse);
 
 	std::list <Clearance> clearances;
 	std::list <std::string> quicklist;

@@ -70,7 +70,8 @@ void Gamecontroller::set_variables() {
 	this->gameview->repl["[TRL]"] = Tools::tostr(this->atis->get_transition_level());
 	this->gameview->repl["[TRA]"] = Tools::tostr(this->atis->get_transition_altitude());
 	this->gameview->repl["[FPS]"] = Tools::tostr(this->fps);
-	this->gameview->repl["[CLRC]"] = Tools::tostr(this->clearances.size());
+	this->gameview->repl["[CLRC]"] = Tools::tostr(this->game->get_clearances().size());
+	this->gameview->repl["[PCNT]"] = Tools::tostr(this->game->get_points());
 	
 	this->atisview->repl["[METAR]"] = this->metar->to_string();
 	this->atisview->repl["[DEPARTURE]"] = this->atis->get_departure_runway();
@@ -87,7 +88,7 @@ void Gamecontroller::calculate_fps() {
 	}
 }
 
-void Gamecontroller::draw_logic() {
+void Gamecontroller::draw_logic(Point& mouse) {
 	++this->frames;
 	
 	if (this->state == GAME) {	
@@ -95,9 +96,9 @@ void Gamecontroller::draw_logic() {
 		this->gameview->clear_screen();
 		this->gameview->update_command(this->command);
 		this->gameview->draw();
-		this->gameview->draw_planes(this->game->get_aircrafts(), this->game->get_selected());
 		this->gameview->draw_navpoints(this->game->get_navpoints());
 		this->gameview->draw_airfield(this->game->get_active_field());
+		this->gameview->draw_planes(this->game->get_aircrafts(), this->game->get_selected(), mouse);
 		this->gameview->render();
 	} else if (this->state == ATIS) {
 		this->atisview->clear_screen();
@@ -106,7 +107,7 @@ void Gamecontroller::draw_logic() {
 	}
 }
 
-void Gamecontroller::update(double elapsed) {
+void Gamecontroller::update(double elapsed, Point& mouse) {
 	this->set_variables();
 	
 	if (this->state == GAME) {
@@ -126,7 +127,7 @@ void Gamecontroller::update(double elapsed) {
 		}
 	}
 	
-	this->draw_logic();
+	this->draw_logic(mouse);
 }
 
 void Gamecontroller::handle_mouse_click(Point& mouse) {
@@ -188,8 +189,6 @@ void Gamecontroller::handle_text_input() {
 	}
 	
 	this->game->build_clearance(command);
-	Clearance t_clearance = {this->game_time, this->game->get_selected()->get_name(), this->command};
-	this->clearances.push_back(t_clearance);
 }
 
 void Gamecontroller::update_command(std::string command) {

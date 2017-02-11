@@ -89,7 +89,7 @@ public:
 		* @return void
 	**/
 	
-	void draw_planes(std::list <Aircraft*> planes, Aircraft* selected);
+	void draw_planes(std::list <Aircraft*> planes, Aircraft* selected, Point& mouse);
 	
 	/**
 		* Gameview set_centerpoint
@@ -134,7 +134,7 @@ private:
 		* @return void
 	**/
 	
-    void draw_plane(Aircraft*& plane, Aircraft* selected);
+    void draw_plane(Aircraft*& plane, Aircraft* selected, Point& mouse);
 	std::string command;
 };
 

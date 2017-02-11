@@ -50,7 +50,7 @@ void Program::run() {
 	
 	while (this->handle_events(gamecontroller, window)) {
 		time_now = this->clock.restart();
-		gamecontroller.update(time_now.asMilliseconds());
+		gamecontroller.update(time_now.asMilliseconds(), mouse);
 		sf::sleep(time_change - time_now);	
 	}
 	
@@ -59,6 +59,7 @@ void Program::run() {
 
 bool Program::handle_event(sf::Event& event, Controller& ctrl, sf::RenderWindow& window) {
     sf::Vector2i mouse_place = sf::Mouse::getPosition(window);
+	mouse.set_place(mouse_place.x, mouse_place.y);
 	int button_type = -1;
 
     switch (event.type) {

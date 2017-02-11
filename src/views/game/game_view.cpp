@@ -40,7 +40,7 @@ void Gameview::draw() {
 	}
 }
 
-void Gameview::draw_plane(Aircraft*& plane, Aircraft* selected) {
+void Gameview::draw_plane(Aircraft*& plane, Aircraft* selected, Point& mouse) {
 	lists.clear();
 	
 	Point aircraft_place = this->calculate(plane->get_place());
@@ -71,6 +71,16 @@ void Gameview::draw_plane(Aircraft*& plane, Aircraft* selected) {
 		if (plane->get_type() == 0) {
 			info_list.add_element(plane->get_target().get_name());
 		}
+		
+		this->drawer.lineColor(aircraft_place, mouse, 250, 60, 60);
+		double heading = Tools::angle(aircraft_place, mouse);
+		
+		heading = Tools::fix_angle(heading - Tools::get_PI() / 2.0);
+		heading = Tools::rad2deg(heading);
+	
+		Point text_place = Tools::calculate_midpoint(aircraft_place, mouse);
+		
+		this->drawer.draw_text(Tools::tostr(heading), text_place, 250,60 ,60);
 	}
 	
 	this->style(dplane);
@@ -94,11 +104,11 @@ void Gameview::draw_navpoints(std::vector <Navpoint>& navpoints) {
     }
 }
 
-void Gameview::draw_planes(std::list <Aircraft*> planes, Aircraft* selected) {
+void Gameview::draw_planes(std::list <Aircraft*> planes, Aircraft* selected, Point& mouse) {
     std::list <Aircraft*> :: iterator plane = planes.begin();
     	
     while (plane != planes.end()) {
-        this->draw_plane((*plane), selected);
+        this->draw_plane((*plane), selected, mouse);
         ++plane;
     }
 }
