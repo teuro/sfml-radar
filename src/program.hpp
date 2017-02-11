@@ -99,6 +99,7 @@ private:
 
     Point mouse_start;
     Point mouse_end;
+    Point mouse;
 
     sqlite3* database;
     bool draw;
