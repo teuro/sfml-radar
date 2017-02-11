@@ -1,20 +1,33 @@
 #include "aircraft.hpp"
 
-Aircraft::Aircraft(std::string name, double speed, double heading, double altitude, Coordinate p, int type, Settings& s, Runway& land, Navpoint& out) : place(p), settings(s), target(out), landing(land) {
-    this->name = name;
-    this->heading = heading;
-    this->altitude = altitude;
-    this->speed = speed;
+Aircraft::Aircraft(std::string t_name, int t, Settings& s, Runway& landing, Inpoint& ip) : name(t_name), type(t), settings(s) {
+	this->place = ip.get_place();
+	this->heading = ip.get_heading();
+	this->altitude = ip.get_altitude();
+	this->speed = 250;
+	this->landing = landing;
+}
 
-    this->clearance_altitude = -1;
+Aircraft::Aircraft(std::string t_name, int t, Settings& s, Runway& departure, Outpoint& op) : name(t_name), type(t), settings(s) {
+	this->place = departure.get_start_place();
+	this->heading = departure.get_heading();
+	this->altitude = this->settings.airfield_altitude;
+	this->speed = 0;
+	this->target = op;
+}
+
+void Aircraft::load() {
+	std::clog << this->name << " load()" << std::endl;
+	
+	this->clearance_altitude = -1;
     this->clearance_heading = -1;
     this->clearance_speed = -1;
 
     this->separation_error = false;
-    this->type = type;
-    this->approach = true;
+    this->approach = false;
     this->landed = false;
     this->direct = false;
+	
     this->turn = -1;
 }
 

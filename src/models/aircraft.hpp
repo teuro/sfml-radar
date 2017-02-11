@@ -3,103 +3,38 @@
 
 #include <iostream>
 
-#include "navpoint.hpp"
+#include "inpoint.hpp"
+#include "outpoint.hpp"
 #include "../tools/tools.hpp"
 #include "../tools/settings.hpp"
 #include "runway.hpp"
 
 class Aircraft {
 public:
-    Aircraft(std::string name, double speed, double heading, double altitude, Coordinate p, int type, Settings& s, Runway& land, Navpoint& out);
+    Aircraft(std::string name, int type, Settings& s, Runway& landing, Inpoint& in);
+    Aircraft(std::string name, int type, Settings& s, Runway& departure, Outpoint& out);
+	
     ~Aircraft();
-    
-	/**
-		* update
-		* Hndles aircrafts movement. 
-		* @param double elapsed time since previous update in milliseconds
-		* @return void
-	**/
 	
 	void update(double elapsed);
-	
-	/**
-		* get_place
-		* returns aircraft's current position in map coordinates 
-		* @param void
-		* @return Coordinate&
-	**/
-	
+
     Coordinate& get_place();
 	
-	/**
-		* get_target
-		* returns aircraft's current target point.
-		* @param void
-		* @return Navpoint&
-	**/
-	
 	Navpoint& get_target();
-	
-	/**
-		* get_name
-		* returns aircraft's name (callsign).
-		* @param void
-		* @return std::string
-	**/
-	
+
     std::string get_name();
-	
-	/**
-		* get_speed
-		* returns aircraft's current speed in knots.
-		* @param void
-		* @return double
-	**/
-	
+
     double get_speed();
-	
-	/**
-		* get_heading
-		* returns aircraft's current heading in radians.
-		* @param void
-		* @return double
-	**/
 	
     double get_heading();
 	
-	/**
-		* get_altitude
-		* returns aircraft's current altitude in feets.
-		* @param void
-		* @return double
-	**/
-	
     double get_altitude();
-    
-	/**
-		* get_clearance_speed
-		* returns aircraft's current get_clearance_speed in knots.
-		* @param void
-		* @return double
-	**/
-	
     double get_clearance_speed();
-	
-	/**
-		* get_clearance_heading
-		* returns aircraft's current get_clearance_heading in radians.
-		* @param void
-		* @return double
-	**/
-	
     double get_clearance_heading();
 	
-	/**
-		* get_clearance_altitude
-		* returns aircraft's current get_clearance_altitude in feets.
-		* @param void
-		* @return double
-	**/
+	bool operator ==(std::string t_name) {
+		return this->name == t_name;
+	}
 	
     double get_clearance_altitude();
 	
@@ -113,6 +48,8 @@ public:
     bool get_separation_error();
     void set_place(Coordinate& place);
     int get_type();
+	
+	void load();
 protected:
 private:
     Coordinate place;
@@ -140,8 +77,7 @@ private:
 	void calculate_angle_target(Coordinate& target);
     Settings& settings;
 	Navpoint target;
-	Runway& landing;
+	Runway landing;
 };
-
 
 #endif
