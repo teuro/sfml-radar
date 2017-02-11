@@ -28,10 +28,6 @@ void Game::set_centerpoint(Coordinate& cp) {
 	this->centerpoint = cp;
 }
 
-Coordinate& Game::get_centerpoint() {
-    return this->centerpoint;
-}
-
 Airfield* Game::get_active_field() {
 	if (this->active_field == NULL) {
 		throw std::logic_error("Game::get_active_field() this->active_field == NULL");
@@ -241,6 +237,7 @@ void Game::load_airfield(std::string icao) {
 
     this->active_field = new Airfield(airport(0, "ICAO"), place);
 	this->settings.airfield_altitude = Tools::toint(airport(0, "altitude"));
+	this->settings.centerpoint = place;
 	
 	try {
 		std::string query = Database::bind_param("SELECT name, latitude, longitude, altitude, heading, type FROM navpoints WHERE ? = ?", variables);
@@ -259,7 +256,7 @@ void Game::load_airfield(std::string icao) {
 				double t_altitude   = Tools::tonumber<double>(q_navpoints(i, "altitude"));
 				double t_heading    = Tools::tonumber<double>(q_navpoints(i, "heading"));
 
-				this->inpoints.push_back(Inpoint(t_name, t_place, 250, t_altitude, t_heading));
+				this->inpoints.push_back(Inpoint(t_name, t_place, 250, t_altitude, Tools::deg2rad(t_heading)));
 			} else {
 				this->outpoints.push_back((Outpoint(t_name, t_place)));
 			}

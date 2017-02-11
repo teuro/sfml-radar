@@ -33,24 +33,22 @@ std::string Gamecontroller::handle_function_keys(int action) {
 void Gamecontroller::handle_mouse_release(Point& mouse_start, Point& mouse_end) {
     double distance_px  = Tools::distancePX(mouse_start, mouse_end);
     double angle_rad    = Tools::angle(mouse_start, mouse_end);
-    double distance_nm  = 7;
+    double distance_nm  = this->gameview->distanceNM(distance_px);
 	
 	if (distance_px == 0) {
 		distance_nm = 0;
 	}
 	
-    Coordinate center = Tools::calculate(this->game->get_centerpoint(), angle_rad, distance_nm);
-	
-	this->game->set_centerpoint(center);
+    this->settings.centerpoint = Tools::calculate(this->settings.centerpoint, angle_rad, distance_nm);
 }
 
 void Gamecontroller::handle_mouse_wheel(int amount) {
     this->settings.zoom += (-amount * 10);
 
-    if (this->settings.zoom < 30) {
-        this->settings.zoom = 30;
-    } else if (this->settings.zoom > 110) {
-		this->settings.zoom = 110;
+    if (this->settings.zoom < 20) {
+        this->settings.zoom = 20;
+    } else if (this->settings.zoom > 150) {
+		this->settings.zoom = 150;
 	}
 	
 	this->gameview->set_zoom(this->settings.zoom);
@@ -92,7 +90,7 @@ void Gamecontroller::draw_logic(Point& mouse) {
 	++this->frames;
 	
 	if (this->state == GAME) {	
-		this->gameview->set_centerpoint_map(this->game->get_centerpoint());
+		this->gameview->set_centerpoint_map(this->settings.centerpoint);
 		this->gameview->clear_screen();
 		this->gameview->update_command(this->command);
 		this->gameview->draw();
@@ -140,7 +138,7 @@ void Gamecontroller::handle_mouse_click(Point& mouse) {
 		for (plane = aircrafts.begin(); plane != aircrafts.end(); ++plane) {
 			Point aircraft = this->gameview->calculate((*plane)->get_place());
 
-			if (Tools::on_area(mouse, aircraft)) {
+			if (Tools::on_area(mouse, aircraft, 10)) {
 				this->game->selected = (*plane);
 			}
 		}
@@ -178,6 +176,8 @@ void Gamecontroller::load() {
 	this->game->load("EFHK");
 	this->gameview->load();
 	this->atisview->load(this->game->get_active_field()->get_runways());
+	this->settings.zoom = 110;
+	this->gameview->set_zoom(this->settings.zoom);
 }
 
 void Gamecontroller::handle_text_input() {

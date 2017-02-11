@@ -44,15 +44,6 @@ namespace Tools {
 	double distanceNM(Coordinate& a, Coordinate& b);
 	
 	/**
-		* distanceNM
-		* Converts pixels to nautical miles 
-		* @parameter double px
-		* @parameter double zoom
-		* @return double
-	**/
-	double distanceNM(double px, double zoom);
-	
-	/**
 		* distancePX
 		* Calculates distance between two screen points
 		* @paramterer Point a
@@ -60,15 +51,6 @@ namespace Tools {
 		* @return double
 	**/
 	double distancePX(Point& a, Point& b);
-	
-	/**
-		* distanceP´X
-		* Converts nautcal miles to pixels
-		* @parameter double nm
-		* @parameter double zoom
-		* @return double
-	**/
-	double distancePX(double nm, double zoom);
 	
 	/**
 		* angle

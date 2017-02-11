@@ -118,6 +118,9 @@ public:
 	**/
 	
 	 void update_command(std::string command);
+	 
+	 double distancePX(double nautical);
+	 double distanceNM(double pixels);
 private:
 	/**
 		* Gameview centerpoint

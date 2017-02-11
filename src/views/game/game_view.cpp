@@ -74,13 +74,15 @@ void Gameview::draw_plane(Aircraft*& plane, Aircraft* selected, Point& mouse) {
 		
 		this->drawer.lineColor(aircraft_place, mouse, 250, 60, 60);
 		double heading = Tools::angle(aircraft_place, mouse);
+		double distance = Tools::distancePX(aircraft_place, mouse);
 		
 		heading = Tools::fix_angle(heading - Tools::get_PI() / 2.0);
 		heading = Tools::rad2deg(heading);
+		distance = this->distanceNM(distance);
 	
 		Point text_place = Tools::calculate_midpoint(aircraft_place, mouse);
 		
-		this->drawer.draw_text(Tools::tostr(heading), text_place, 250,60 ,60);
+		this->drawer.draw_text(Tools::tostr((int)heading) + " deg " + Tools::tostr((int)distance) + " nm", text_place, 250,60 ,60);
 	}
 	
 	this->style(dplane);
@@ -99,7 +101,8 @@ void Gameview::draw_navpoints(std::vector <Navpoint>& navpoints) {
         Point place_screen = this->calculate(navpoints[i].get_place());
 		
         this->drawer.trigonColor(place_screen, 15, 15245785);
-		place_screen.change_x(40);
+		place_screen.change_x(15);
+		place_screen.change_y(-10);
 		this->drawer.draw_text(navpoints[i].get_name(), place_screen, 15264587);
     }
 }
@@ -111,6 +114,24 @@ void Gameview::draw_planes(std::list <Aircraft*> planes, Aircraft* selected, Poi
         this->draw_plane((*plane), selected, mouse);
         ++plane;
     }
+}
+
+double Gameview::distancePX(double nautical) {
+	double center_w = this->settings.screen_width / 2.0;
+	double center_h = this->settings.screen_height / 2.0;
+	
+	double center2corner = std::sqrt(std::pow(center_w, 2.0) + std::pow(center_h, 2.0));
+	
+	return (nautical * center2corner) / this->settings.zoom;
+}
+
+double Gameview::distanceNM(double pixels) {
+	double center_w = this->settings.screen_width / 2.0;
+	double center_h = this->settings.screen_height / 2.0;
+	
+	double center2corner = std::sqrt(std::pow(center_w, 2.0) + std::pow(center_h, 2.0));
+	
+	return (this->settings.zoom * pixels) / center2corner;
 }
 
 void Gameview::draw_airfield(Airfield* airfield) {
@@ -142,7 +163,7 @@ void Gameview::set_zoom(int zoom) {
 
 void Gameview::set_centerpoint_map(Coordinate& centerpoint_map) {
 	double distanceNM = Tools::distanceNM(centerpoint_map, this->centerpoint_map);
-	double angle_rad = Tools::CalcGeograpicAngle(Tools::fix_angle(Tools::angle(centerpoint_map, this->centerpoint_map) + Tools::get_PI()));
+	double angle_rad = Tools::fix_angle(Tools::angle(centerpoint_map, this->centerpoint_map) - Tools::get_PI() / 2.0);
 	
 	Coordinate a(min_lat, min_lon);
 	Coordinate b(max_lat, max_lon);

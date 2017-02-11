@@ -33,18 +33,10 @@ class Game {
 public:
     /**
         * Game main class
-        * @param Coordinate& cp center point of game
         * @param Settings& s game settiungs
     **/
 	Game(Settings& s);
 	~Game();
-
-    /**
-        * Get center point of game
-        * @param none
-        * @return Coordinate& center point coordinates
-    **/
-	Coordinate& get_centerpoint();
 
 	/**
         * Set new center poitn to the game

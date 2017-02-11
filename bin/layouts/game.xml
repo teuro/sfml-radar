@@ -10,5 +10,6 @@
 	<p id="departure_runway" class="info">departure [DEP]</p>
 	<p id="landing_runway" class="info">landing [LND]</p>
 	<p id="points" class="count">points [PCNT]</p>
+	<p id="required" class="count">Required [RQD]</p>
 	<input type="text" name="input" class="userinput" id="clearance_input" />
 </layout>

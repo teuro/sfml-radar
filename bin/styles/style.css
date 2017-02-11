@@ -49,6 +49,11 @@
 	left: 520px;
 }
 
+#required {
+	top: 40px;
+	left: 520px;
+}
+
 #metar {
 	width: 400px;
 }

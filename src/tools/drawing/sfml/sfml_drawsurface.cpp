@@ -130,7 +130,7 @@ void sfml_drawsurface::trigonColor(Point& a, unsigned int size, int color) {
 void sfml_drawsurface::trigonColor(Point& a, unsigned int size, int red, int green, int blue) {
 	sf::CircleShape triangle(size, 3);
 	triangle.setOutlineColor(sf::Color(red, green, blue));
-	triangle.setPosition(a.get_x(), a.get_y());
+	triangle.setPosition(a.get_x() - size, a.get_y() - size);
 	
 	this->window.draw(triangle);
 }
