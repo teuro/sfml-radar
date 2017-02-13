@@ -207,10 +207,8 @@ void View::draw_element(Paragraph& p) {
 	
 	Point place_a = st.get_place();
 	
-	if (background_color > 0) {
-		Point place_b(place_a.get_x() + st.get_width(), place_a.get_y() + st.get_height());
-		this->drawer.rectangleColor(place_a, place_b, background_color);
-	}
+	Point place_b(place_a.get_x() + st.get_width(), place_a.get_y() + st.get_height());
+	this->drawer.rectangleColor(place_a, place_b, background_color);
 	
 	this->drawer.draw_text(Tools::replace(p.get_content(), repl), place_a, color);
 }
@@ -225,10 +223,8 @@ void View::draw_element(Drawable_input& i) {
 	
 	Point place_a = st.get_place();
 	
-	if (background_color > 0) {
-		Point place_b(place_a.get_x() + st.get_width(), place_a.get_y() + st.get_height());
-		this->drawer.rectangleColor(place_a, place_b, background_color);
-	}
+	Point place_b(place_a.get_x() + st.get_width(), place_a.get_y() + st.get_height());
+	this->drawer.rectangleColor(place_a, place_b, background_color);
 	
 	this->drawer.draw_text(i.get_value(), place_a, color);
 }
@@ -299,6 +295,7 @@ void View::draw_element(Drawable_list& dl) {
 	std::clog << "View::draw_element(Drawable& dl)" << std::endl;
 	#endif
 	int color = dl.get_style().get_text_color();
+	int font_size = this->drawer.get_fontsize() + 5;
 	std::list <std::string> t_list = dl.get_elements();
 	std::list <std::string> :: iterator it = t_list.begin();
 	
@@ -306,7 +303,7 @@ void View::draw_element(Drawable_list& dl) {
 
 	for (it = t_list.begin(); it != t_list.end(); ++it) {
 		this->drawer.draw_text((*it), place, color);
-		place.change_y(20);
+		place.change_y(font_size);
 	}
 }
 
@@ -316,6 +313,7 @@ void View::draw_element(Drawable_table& dt) {
 	#endif
 	int color = dt.get_style().get_text_color();
 	Point place = dt.get_style().get_place();
+	int font_size = this->drawer.get_fontsize() + 5;
 	
 	std::list <Row> t_list = dt.get_rows();
 	std::list <Row> :: iterator rit = t_list.begin();
@@ -329,10 +327,10 @@ void View::draw_element(Drawable_table& dt) {
 
 			this->drawer.draw_text(Tools::replace((*cit).get_content(), repl), place, color);
 			++cit;
-			place.change_y(25);
+			place.change_y(font_size);
 		}
 		
-		place.change_y(-25 * c_list.size());
+		place.change_y(-font_size * c_list.size());
 		place.change_x(160);
 		
 		++rit;
