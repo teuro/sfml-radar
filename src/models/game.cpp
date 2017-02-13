@@ -17,6 +17,7 @@ void Game::load(std::string airfield) {
     this->new_plane = 5000;
 	this->handled_planes = 0;
 	this->airlines = Database::get_result("SELECT ICAO FROM airlines");
+	this->selected = NULL;
 }
 
 void Game::set_runways(std::string t_departure, std::string t_landing) {
@@ -331,33 +332,37 @@ void Game::build_clearance(std::string command) {
 		this->clearances.push_back(t_clearance);
 		
 		int value = Tools::tonumber<int>(tmp.back());
-
-		if (Tools::trim(tmp[0]) == "turn") {
-			int turn = (Tools::trim(tmp[1]) == "right") ? 1 : -1;
-			
-			this->selected->set_clearance_heading(Tools::deg2rad(value), turn);
-		} else if (Tools::trim(tmp[0]) == "climb") {
-			if (this->selected->get_altitude() > value) {
-				std::cerr << "Can't climb, because altitude " << this->selected->get_altitude() << " ft is higher than " << value << " ft" << std::endl;
-			} else {
-				this->selected->set_clearance_altitude(value);
+		
+		if (tmp.size() > 1) {
+			if (Tools::trim(tmp[0]) == "turn") {
+				int turn = (Tools::trim(tmp[1]) == "right") ? 1 : -1;
+				
+				this->selected->set_clearance_heading(Tools::deg2rad(value), turn);
+			} else if (Tools::trim(tmp[0]) == "climb") {
+				if (this->selected->get_altitude() > value) {
+					std::cerr << "Can't climb, because altitude " << this->selected->get_altitude() << " ft is higher than " << value << " ft" << std::endl;
+				} else {
+					this->selected->set_clearance_altitude(value);
+				}
+			} else if (Tools::trim(tmp[0]) == "descent") {
+				if (this->selected->get_altitude() < value) {
+					std::cerr << "Can't descent, because altitude " << this->selected->get_altitude() << " ft is lower than " << value << " ft" << std::endl;
+				} else {
+					this->selected->set_clearance_altitude(value);
+				}
+			} else if (Tools::trim(tmp[0]) == "speed") {
+				this->selected->set_clearance_speed(value);
+			} else if (Tools::trim(tmp[0]) == "approach") {
+				this->selected->set_clearance_approach();
+			} else if (Tools::trim(tmp[0]) == "direct") {
+				if (this->selected->get_altitude() < this->settings.shortcut) {
+					std::cerr << "Unable to comply because altitude must be greater than " << this->settings.shortcut << " ft" << std::endl;
+				} else {
+					this->selected->set_clearance_direct();
+				}
 			}
-		} else if (Tools::trim(tmp[0]) == "descent") {
-			if (this->selected->get_altitude() < value) {
-				std::cerr << "Can't descent, because altitude " << this->selected->get_altitude() << " ft is lower than " << value << " ft" << std::endl;
-			} else {
-				this->selected->set_clearance_altitude(value);
-			}
-		} else if (Tools::trim(tmp[0]) == "speed") {
-			this->selected->set_clearance_speed(value);
-		} else if (Tools::trim(tmp[0]) == "approach") {
-			this->selected->set_clearance_approach();
-		} else if (Tools::trim(tmp[0]) == "direct") {
-			if (this->selected->get_altitude() < this->settings.shortcut) {
-				std::cerr << "Unable to comply because altitude must be greater than " << this->settings.shortcut << " ft" << std::endl;
-			} else {
-				this->selected->set_clearance_direct();
-			}
+		} else {
+			std::cerr << "Unknown command" << std::endl;
 		}
 	} else {
 		std::cerr << "No selected plane" << std::endl;
