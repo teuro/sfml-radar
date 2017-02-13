@@ -1,15 +1,25 @@
 <?xml version="1.0" ?>
 <layout>
-	<p id="planes" class="count">Planes in area [PLC]</p>
-	<p id="sep_errors" class="count">Game errors [SPE]</p>
-	<p id="gametime" class="time">Game time [TIME]</p>
-	<p id="fps" class="count">FPS [FPS]</p>
-	<p id="nextplane" class="time">Next plane [PLN]</p>
-	<p id="handled" class="count">Planes handled [PLH]</p>
-	<p id="clearances" class="count">Clearances relayed [CLRC]</p>
-	<p id="departure_runway" class="info">departure [DEP]</p>
-	<p id="landing_runway" class="info">landing [LND]</p>
-	<p id="points" class="count">points [PCNT]</p>
-	<p id="required" class="count">Required [RQD]</p>
-	<input type="text" name="input" class="userinput" id="clearance_input" />
+	<table id="basic_info" class="table">
+		<tr>
+			<td>Planes in area [PLC]</td>
+			<td>Game errors [SPE]</td>
+			<td>Game time [TIME]</td>
+		</tr>
+		<tr>
+			<td>FPS [FPS]</td>
+			<td>Next plane [PLN]</td>
+			<td>Planes handled [PLH]</td>
+		</tr>
+		<tr>
+			<td>Clearances relayed [CLRC]</td>
+			<td>departure [DEP]</td>
+			<td>landing [LND]</td>
+		</tr>
+		<tr>
+			<td>points [PCNT]</td>
+		</tr>
+	</table>
+	
+	<input type="text" class="userinput" id="" />
 </layout>

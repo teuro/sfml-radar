@@ -1,61 +1,11 @@
-#gametime {
-	top: 10px;
-}
-
-#planes {
-	top: 40px;
-}
-
-#sep_errors {
-	top: 40px;
-	left: 180px;
-}
-
-#selected {
-	color: rgb(160, 160, 250);
-}
-
-#fps {
-	top: 10px;
-	left: 180px;
-}
-
-#nextplane {
-	top: 70px;
-}
-
-#handled {
-	top: 70px;
-	left: 180px;
-}
-
-#clearances {
-	top: 10px;
-	left: 350px;
-}
-
-#departure_runway {
-	top: 40px;
-	left: 350px;
-}
-
-#landing_runway {
-	top: 70px;
-	left: 350px;
-}
-
-#points {
-	top: 10px;
-	left: 520px;
-}
-
-#required {
-	top: 40px;
-	left: 520px;
-}
-
 #metar {
 	width: 400px;
+}
+
+#basic_info {
+	top: 30px;
+	left: 20px;
+	color: rgb(125, 60, 60);
 }
 
 p {
