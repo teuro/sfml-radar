@@ -26,12 +26,22 @@ void Gameview::load() {
 }
 
 void Gameview::update_command(std::string t_command) {
+	#ifdef DEBUG
+	std::clog << "Gameview::update_command()" << std::endl;
+	#endif
 	this->command = t_command;
 }
 
 void Gameview::draw() {
+	#ifdef DEBUG
+	std::clog << "Gameview::draw()" << std::endl;
+	#endif
 	this->centerpoint_screen.set_place(this->settings.screen_width / 2, this->settings.screen_height / 2);
-	this->inputs.back().set_value(this->command);
+	
+	if (this->command.length()) {
+		this->inputs.back().set_value(this->command);
+	}
+	
 	this->View::draw();
 	
 	for (unsigned int i = 0; i < this->lists.size(); ++i) {
@@ -41,6 +51,9 @@ void Gameview::draw() {
 }
 
 void Gameview::draw_plane(Aircraft*& plane, Aircraft* selected, Point& mouse) {
+	#ifdef DEBUG
+	std::clog << "Gameview::draw_plane(Aircraft*& plane, Aircraft* selected, Point& mouse)" << std::endl;
+	#endif
 	lists.clear();
 	
 	Point aircraft_place = this->calculate(plane->get_place());
@@ -97,6 +110,9 @@ void Gameview::draw_plane(Aircraft*& plane, Aircraft* selected, Point& mouse) {
 }
 
 void Gameview::draw_navpoints(std::vector <Navpoint>& navpoints) {
+	#ifdef DEBUG
+	std::clog << "Gameview::draw_navpoints(std::vector <Navpoint>& navpoints)" << std::endl;
+	#endif
     for (unsigned int i = 0; i < navpoints.size(); ++i) {
         Point place_screen = this->calculate(navpoints[i].get_place());
 		
@@ -108,6 +124,9 @@ void Gameview::draw_navpoints(std::vector <Navpoint>& navpoints) {
 }
 
 void Gameview::draw_planes(std::list <Aircraft*> planes, Aircraft* selected, Point& mouse) {
+	#ifdef DEBUG
+	std::clog << "Gameview::draw_planes(std::list <Aircraft*> planes, Aircraft* selected, Point& mouse)" << std::endl;
+	#endif
     std::list <Aircraft*> :: iterator plane = planes.begin();
     	
     while (plane != planes.end()) {
@@ -117,6 +136,9 @@ void Gameview::draw_planes(std::list <Aircraft*> planes, Aircraft* selected, Poi
 }
 
 double Gameview::distancePX(double nautical) {
+	#ifdef DEBUG
+	std::clog << "Gameview::distancePX(double " << nautical << ")" << std::endl;
+	#endif
 	double center_w = this->settings.screen_width / 2.0;
 	double center_h = this->settings.screen_height / 2.0;
 	
@@ -126,6 +148,9 @@ double Gameview::distancePX(double nautical) {
 }
 
 double Gameview::distanceNM(double pixels) {
+	#ifdef DEBUG
+	std::clog << "Gameview::distanceNM(double " << pixels << ")" << std::endl;
+	#endif
 	double center_w = this->settings.screen_width / 2.0;
 	double center_h = this->settings.screen_height / 2.0;
 	
@@ -135,6 +160,9 @@ double Gameview::distanceNM(double pixels) {
 }
 
 void Gameview::draw_airfield(Airfield* airfield) {
+	#ifdef DEBUG
+	std::clog << "Gameview::draw_airfield(Airfield* airfield)" << std::endl;
+	#endif
     std::vector <Runway> runways = airfield->get_runways();
 	
     for (unsigned int i = 0; i < runways.size(); i+=2) {
@@ -146,6 +174,9 @@ void Gameview::draw_airfield(Airfield* airfield) {
 }
 
 void Gameview::set_zoom(int zoom) {
+	#ifdef DEBUG
+	std::clog << "Gameview::set_zoom(int " << zoom << ")" << std::endl;
+	#endif
 	Coordinate a(min_lat, min_lon);
 	Coordinate b(max_lat, max_lon);
 	
@@ -162,6 +193,9 @@ void Gameview::set_zoom(int zoom) {
 }
 
 void Gameview::set_centerpoint_map(Coordinate& centerpoint_map) {
+	#ifdef DEBUG
+	std::clog << "Gameview::set_centerpoint_map(Coordinate& centerpoint_map)" << std::endl;
+	#endif
 	double distanceNM = Tools::distanceNM(centerpoint_map, this->centerpoint_map);
 	double angle_rad = Tools::fix_angle(Tools::angle(centerpoint_map, this->centerpoint_map) - Tools::get_PI() / 2.0);
 	
@@ -182,6 +216,9 @@ void Gameview::set_centerpoint_map(Coordinate& centerpoint_map) {
 }
 
 Point Gameview::calculate(Coordinate& target) {
+	#ifdef DEBUG
+	std::clog << "Gameview::calculate(Coordinate& target)" << std::endl;
+	#endif
 	int pixelY = this->settings.screen_height - ((target.get_latitude() - min_lat) / (max_lat - min_lat)) * this->settings.screen_height;
 	int pixelX = ((target.get_longitude() - min_lon) / (max_lon - min_lon)) * this->settings.screen_width;
 	
