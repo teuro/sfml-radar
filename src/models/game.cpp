@@ -352,14 +352,22 @@ void Game::build_clearance(std::string command) {
 				}
 			} else if (Tools::trim(tmp[0]) == "speed") {
 				this->selected->set_clearance_speed(value);
-			} else if (Tools::trim(tmp[0]) == "approach") {
-				this->selected->set_clearance_approach();
-			} else if (Tools::trim(tmp[0]) == "direct") {
-				if (this->selected->get_altitude() < this->settings.shortcut) {
-					std::cerr << "Unable to comply because altitude must be greater than " << this->settings.shortcut << " ft" << std::endl;
-				} else {
+			} 
+		} else if (Tools::trim(tmp[0]) == "direct") {
+			if (this->selected->get_altitude() < this->settings.shortcut) {
+				std::cerr << "Unable to comply because altitude must be greater than " << this->settings.shortcut << " ft" << std::endl;
+			} else {
+				if (this->selected->get_type() == DEPARTURE) {
 					this->selected->set_clearance_direct();
+				} else {
+					std::cerr << "Plane must be departing not approaching" << std::endl;
 				}
+			}
+		} else if (Tools::trim(tmp[0]) == "approach") {
+			if (this->selected->get_type() == APPROACH) {
+				this->selected->set_clearance_approach();
+			} else {
+				std::cerr << "Plane must be approaching not departing" << std::endl;
 			}
 		} else {
 			std::cerr << "Unknown command" << std::endl;
