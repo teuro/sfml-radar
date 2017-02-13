@@ -5,7 +5,7 @@
 #basic_info {
 	top: 30px;
 	left: 20px;
-	color: rgb(90, 90, 90);
+	color: rgb(125, 60, 60);
 }
 
 p {
@@ -58,23 +58,23 @@ input {
 }
 
 .strorage {
-	top: 150px;
+	top: 80px;
 }
 
 #runway-list-departure {
-	left: 100px;
+	left: 50px;
 }
 
 #runway-list-landing {
-	left: 150px;
+	left: 100px;
 }
 
 #transfer-altitude {
-	left: 200px;
+	left: 150px;
 }
 
 #transfer-level {
-	left: 250px;
+	left: 200px;
 }
 
 .userinput {

@@ -38,7 +38,9 @@ void Gameview::draw() {
 	#endif
 	this->centerpoint_screen.set_place(this->settings.screen_width / 2, this->settings.screen_height / 2);
 	
-	this->inputs.back().set_value(this->command);
+	if (this->command.length()) {
+		this->inputs.back().set_value(this->command);
+	}
 	
 	this->View::draw();
 	
