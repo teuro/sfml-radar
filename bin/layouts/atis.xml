@@ -1,11 +1,17 @@
 <?xml version="1.0" ?>
 <layout>
-	<p id="metar" class="info">[METAR]</p>
-	
-	<p id="atis" class="input">Select proper runway for departure and landing. Select altitude and level</p>
-	
-	<p id="departure" class="input">Departure [DEPARTURE]</p>
-	<p id="landing" class="input">Landing [LANDING]</p>
-	<p id="level" class="input">Transition level [LEVEL]</p>
-	<p id="altitude" class="input">Transition altitude [ALTITUDE]</p>
+	<table id="basic_info" class="table">
+		<tr>
+			<td>Departure</td>
+			<td>Landing</td>
+			<td>Transition level</td>
+			<td>Transition altitude</td>
+		</tr>
+		<tr>
+			<td>[DEPARTURE]</td>
+			<td>[LANDING]</td>
+			<td>[LEVEL]</td>
+			<td>[ALTITUDE]</td>
+		</tr>
+	</table>
 </layout>
