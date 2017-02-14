@@ -1,5 +1,5 @@
 CXX := g++
-CXXFLAGS := -g -c -O -Wall -Wextra -pedantic -std=gnu++11
+CXXFLAGS := -g -c -O3 -Wall -Wextra -pedantic -std=gnu++11
 LINKFLAGS := -O -g
 LIB_DIRS := -Lext/lib
 
