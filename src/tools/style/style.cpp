@@ -8,7 +8,7 @@ Style::Style() {
 	this->width = 0;
 	this->height = 0;
 	this->text_color = 0;
-	this->background_color = 250254;
+	this->background_color = 0;
 }
 
 Style::~Style() { }
@@ -41,6 +41,7 @@ void Style::set_attribute(std::string key, std::string value) {
     } else if (key == "color") {
         std::sscanf(value.c_str(), "rgb(%i, %i, %i);", &r, &g, &b);
         this->text_color = (r * 256 + g) * 256 + b;
+		//std::clog << r << " " << g << " " << b << " " << text_color << std::endl;
     } else if (key == "background-color") {
         std::sscanf(value.c_str(), "rgb(%i, %i, %i);", &r, &g, &b);
         this->background_color = (r * 256 + g) * 256 + b;
