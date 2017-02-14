@@ -125,7 +125,7 @@ void View::load(std::string state) {
 				std::string t_class = pParm->Attribute("class");
 				std::string t_name = pParm->Value();
 				
-				Image img(t_name, t_class, t_id, source);
+				Image img(source, t_name, t_class, t_id);
 				
 				this->style(img);
 				this->images.push_back(img);
