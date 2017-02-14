@@ -23,6 +23,14 @@ private:
 	std::string callsign;
 };
 
+class Drawable_navpoint : public Drawable_element {
+public:
+	Drawable_navpoint(std::string name, std::string t_name, std::string t_class, std::string t_id);
+	std::string get_name();
+private:
+	std::string name;
+};
+
 /**
 	* Gameview is responsible to render game to screen.
 	* view 
