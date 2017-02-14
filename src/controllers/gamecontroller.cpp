@@ -60,7 +60,11 @@ void Gamecontroller::set_variables() {
 	this->gameview->repl["[TIME]"] = Tools::totime(this->game_time, "H:i:s");
 	this->gameview->repl["[PLC]"] = Tools::tostr(this->game->get_planes_count());
 	this->gameview->repl["[SPE]"] = Tools::tostr(this->game->get_separation_errors());
-	this->gameview->repl["[PLN]"] = Tools::totime(this->game->get_new_plane() - this->game_time, "i:s");
+	if (this->game->get_new_plane() > this->game_time) {
+		this->gameview->repl["[PLN]"] = Tools::totime(this->game->get_new_plane() - this->game_time, "i:s");
+	} else {
+		this->gameview->repl["[PLN]"] = "No plane";
+	}
 	this->gameview->repl["[SPK]"] = Tools::tostr(this->settings.max_separation_errors);
 	this->gameview->repl["[RQD]"] = Tools::tostr(this->settings.required_handled);
 	this->gameview->repl["[DEP]"] = Tools::tostr(this->atis->get_departure_runway());
