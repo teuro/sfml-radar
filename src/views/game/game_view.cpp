@@ -73,11 +73,11 @@ void Gameview::draw_plane(Aircraft*& plane, Aircraft* selected, Point& mouse) {
 	Drawable_list info_list("ul", "infolist", id);
 	
 	info_list.add_element(plane->get_name());
+	info_list.add_element(Tools::tostr((int)plane->get_altitude()));
 	
 	if (id == "selected") {
 		info_list.add_element(Tools::tostr((int)plane->get_speed()));
 		info_list.add_element(Tools::tostr((int)Tools::rad2deg(plane->get_heading())));
-		info_list.add_element(Tools::tostr((int)plane->get_altitude()));
 		
 		if (plane->get_type() == 0) {
 			info_list.add_element(plane->get_target().get_name());
@@ -114,10 +114,10 @@ void Gameview::draw_navpoints(std::vector <Navpoint>& navpoints) {
     for (unsigned int i = 0; i < navpoints.size(); ++i) {
         Point place_screen = this->calculate(navpoints[i].get_place());
 		
-        this->drawer.trigonColor(place_screen, 15, 15245785);
+        this->drawer.trigonColor(place_screen, 15, 1316060);
 		place_screen.change_x(15);
 		place_screen.change_y(-10);
-		this->drawer.draw_text(navpoints[i].get_name(), place_screen, 15264587);
+		this->drawer.draw_text(navpoints[i].get_name(), place_screen, 1316060);
     }
 }
 
