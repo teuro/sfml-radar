@@ -104,6 +104,7 @@ void Gamecontroller::draw_logic(Point& mouse) {
 	} else if (this->state == ATIS) {
 		this->atisview->clear_screen();
 		this->atisview->draw();
+		this->atisview->draw_errors(this->atis->get_atis_errors());
 		this->atisview->render();
 	}
 }
@@ -122,10 +123,11 @@ void Gamecontroller::update(double elapsed, Point& mouse) {
 			* @todo check if handled_planes >= required_planes and plane_list is empty
 		**/
 	} else if (this->state == ATIS) {
+		this->atis->update();
 		if (this->atis->ok()) {
 			this->state = GAME;
 			this->game->set_runways(this->atis->get_departure_runway(), this->atis->get_landing_runway());
-		}
+		} 
 	}
 	
 	this->draw_logic(mouse);
@@ -179,6 +181,7 @@ void Gamecontroller::load() {
 	this->game->load("EFHK");
 	this->gameview->load();
 	this->atisview->load(this->game->get_active_field()->get_runways());
+	this->atis->load(this->game->get_active_field()->get_runways());
 	this->settings.zoom = 110;
 	this->gameview->set_zoom(this->settings.zoom);
 	this->metar.update(this->game->get_active_field()->get_name());
