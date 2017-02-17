@@ -8,13 +8,9 @@
 	color: rgb(90, 90, 90);
 }
 
-#logo {
+#atis_error {
 	top: 150px;
-	left: 400px;
-}
-
-.navpoint {
-	color: rgb(20, 20, 220);
+	left: 480px;
 }
 
 p {
