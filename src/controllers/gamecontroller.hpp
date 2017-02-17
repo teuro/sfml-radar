@@ -60,7 +60,7 @@ private:
     Gameview* gameview;
     Atisview* atisview;
     Game* game;
-	Metar* metar;
+	Metar metar;
 	Atis* atis;
     int function_key;
 	double game_time;

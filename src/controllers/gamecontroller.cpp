@@ -1,10 +1,10 @@
 #include "gamecontroller.hpp"
 
 Gamecontroller::Gamecontroller(Settings& s, Drawsurface& d) : Controller(s, d) { 
-	this->metar = new Metar;
+	Metar metar;
 	this->gameview = new Gameview(this->drawer, this->settings);
 	this->game = new Game(this->settings);
-	this->atis = new Atis(this->settings);
+	this->atis = new Atis(this->settings, this->metar);
 	this->atisview = new Atisview(this->drawer, this->settings, this->atis);
 	this->settings.zoom = 110;
 	this->frames = 0;
@@ -13,7 +13,6 @@ Gamecontroller::Gamecontroller(Settings& s, Drawsurface& d) : Controller(s, d) {
 }
 
 Gamecontroller::~Gamecontroller() { 
-	delete this->metar;
 	delete this->gameview;
 	delete this->atisview;
 	delete this->game;
@@ -56,7 +55,7 @@ void Gamecontroller::handle_mouse_wheel(int amount) {
 
 void Gamecontroller::set_variables() {
 	this->gameview->repl["[PLH]"] = Tools::tostr(this->game->get_handled_planes());
-	this->gameview->repl["[METAR]"] = this->metar->to_string();
+	this->gameview->repl["[METAR]"] = this->metar.to_string();
 	this->gameview->repl["[TIME]"] = Tools::totime(this->game_time, "H:i:s");
 	this->gameview->repl["[PLC]"] = Tools::tostr(this->game->get_planes_count());
 	this->gameview->repl["[SPE]"] = Tools::tostr(this->game->get_separation_errors());
@@ -75,7 +74,7 @@ void Gamecontroller::set_variables() {
 	this->gameview->repl["[CLRC]"] = Tools::tostr(this->game->get_clearances().size());
 	this->gameview->repl["[PCNT]"] = Tools::tostr(this->game->get_points());
 	
-	this->atisview->repl["[METAR]"] = this->metar->to_string();
+	this->atisview->repl["[METAR]"] = this->metar.to_string();
 	this->atisview->repl["[DEPARTURE]"] = this->atis->get_departure_runway();
 	this->atisview->repl["[LANDING]"] = this->atis->get_landing_runway();
 	this->atisview->repl["[LEVEL]"] = Tools::tostr(this->atis->get_transition_level());
@@ -118,7 +117,7 @@ void Gamecontroller::update(double elapsed, Point& mouse) {
 		this->calculate_fps();
 		
 		this->game->update(elapsed);
-		this->metar->update(this->game->get_active_field()->get_name());
+		this->metar.update(this->game->get_active_field()->get_name());
 		/**
 			* @todo check if handled_planes >= required_planes and plane_list is empty
 		**/
@@ -182,6 +181,7 @@ void Gamecontroller::load() {
 	this->atisview->load(this->game->get_active_field()->get_runways());
 	this->settings.zoom = 110;
 	this->gameview->set_zoom(this->settings.zoom);
+	this->metar.update(this->game->get_active_field()->get_name());
 }
 
 void Gamecontroller::handle_text_input() {
