@@ -17,6 +17,7 @@ public:
 	void draw();
     void load(std::vector <Runway> runways);
 	std::string get_value(Point& mouse);
+	void draw_errors(std::list <std::string> errors);
 private:
 	Atis* atis;
 	std::vector <Runway> runways;

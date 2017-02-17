@@ -18,19 +18,19 @@ std::string Metar::to_string() {
 
 void Metar::update(std::string icao) {
 	this->clouds.clear();
-    this->pressure = 997;
-    this->humidity = 65;
-    this->visibility = 8500;
-    this->wind.direction = 250;
-    this->wind.speed = 12;
-    this->devpoint = 03;
-    this->temperature = 02;
+    this->pressure = 1001;
+    this->humidity = 70;
+    this->visibility = 6500;
+    this->wind.direction = 40;
+    this->wind.speed = 15;
+    this->temperature = 15;
+    this->devpoint = (int)this->temperature - ((100 - this->humidity) / 5);
 	this->icao = icao;
 	this->generate_clouds();
 }
 
 void Metar::generate_clouds() {
-	Cloud cld {"BKN", 30};
+	Cloud cld {"OVC", 30};
     this->clouds.push_back(cld);
 }
 
@@ -46,8 +46,12 @@ int Metar::get_visibility() {
     return this->visibility;
 }
 
-int Metar::get_wind_direction() {
-    return this->wind.direction;
+double Metar::get_wind_direction() {
+    return Tools::deg2rad(this->wind.direction);
+}
+
+int Metar::get_wind_speed() {
+    return this->wind.speed;
 }
 
 int Metar::get_correct_level(int transition_altitude) {

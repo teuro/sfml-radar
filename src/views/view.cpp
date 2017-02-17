@@ -300,9 +300,10 @@ void View::draw_element(Drawable_list& dl) {
 	std::list <std::string> :: iterator it = t_list.begin();
 	
 	Point place = dl.get_style().get_place();
-
+	
 	for (it = t_list.begin(); it != t_list.end(); ++it) {
 		this->drawer.draw_text((*it), place, color);
+//		std::clog << "Draw " << (*it) << " " << place << " " << color << std::endl;
 		place.change_y(font_size);
 	}
 }

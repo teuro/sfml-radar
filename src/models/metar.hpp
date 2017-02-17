@@ -37,7 +37,8 @@ public:
     std::string to_string();
     void update(std::string icao);
     int get_pressure();
-    int get_wind_direction();
+    double get_wind_direction();
+    int get_wind_speed();
     int get_temperature();
     int get_visibility();
     int get_correct_level(int transition_altitude);

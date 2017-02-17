@@ -65,3 +65,16 @@ std::string Atisview::get_value(Point& mouse) {
 	
 	return "";
 }
+
+void Atisview::draw_errors(std::list <std::string> errors) {
+	Drawable_list atis_errors("ul", "list", "atis_error");
+	std::list <std::string> :: iterator it = errors.begin();
+	
+	while (it != errors.end()) {
+		atis_errors.add_element((*it));
+		++it;
+	}
+	
+	this->style(atis_errors);
+	this->draw_element(atis_errors);
+}

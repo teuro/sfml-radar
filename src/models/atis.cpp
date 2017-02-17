@@ -1,13 +1,17 @@
 #include "atis.hpp"
 
 Atis::Atis(Settings& s, Metar& m) : settings(s), metar(m) { 
-	this->departure_runway = "22R";
-	this->landing_runway = "22L";
-	this->transition_altitude = 5000;
-	//this->transition_level = 55;
+	this->departure_runway = "";
+	this->landing_runway = "";
+	this->transition_altitude = 0;
+	this->transition_level = 0;
 }
 
 Atis::~Atis() { }
+
+void Atis::load(std::vector <Runway> rwys) {
+	this->runways = rwys;
+}
 
 void Atis::update() {
 	
@@ -46,6 +50,7 @@ int Atis::get_transition_altitude() {
 }
 
 int Atis::calculate_tr_level(int pressure, int altitude) {
+	//std::clog << "Atis::calculate_tr_level(" << pressure << ", " << altitude << ")" << std::endl;
 	std::map <int, std::vector <int> > levels;
 	int place = -1;
 	
@@ -84,34 +89,92 @@ int Atis::calculate_tr_level(int pressure, int altitude) {
 	levels[18000].push_back(195);
 	levels[18000].push_back(200);
 	
-	if (pressure > 1032 && pressure < 1050) {
-		place = 0;
-	} else if (pressure > 1014 && pressure < 1031) {
-		place = 1;
-	} else if (pressure > 996 && pressure < 1013) {
-		place = 2;
-	} else if (pressure > 978 && pressure < 995) {
-		place = 3;
-	} else if (pressure > 960 && pressure < 977) {
-		place = 4;
-	} else if (pressure > 943 && pressure < 959) {
+	if (pressure >= 943 && pressure < 959) {
 		place = 5;
-	}
-	
+	} else if (pressure >= 960 && pressure < 977) {
+		place = 4;
+	} else if (pressure >= 978 && pressure < 995) {
+		place = 3;
+	} else if (pressure >= 996 && pressure < 1013) {
+		place = 2;
+	} else if (pressure >= 1014 && pressure < 1031) {
+		place = 1;
+	} else if (pressure >= 1032 && pressure < 1050) {
+		place = 0;
+	} 
+		
 	return levels[altitude][place];
 }
 
-bool Atis::ok() {
-	//std::clog << this->calculate_tr_level(this->metar.get_pressure(), transition_altitude) << std::endl;
-	if (transition_level > 10 && transition_level < 70) {
-		if (transition_altitude > 2000 && transition_altitude < 8000) {
-			if (departure_runway.length() > 0) {
-				if (landing_runway.length() > 0) {
-					return true;
-				}
-			}
+std::list <std::string>  Atis::get_atis_errors() {
+	return this->atis_errors;
+}
+
+double Atis::calculate_backwind(double runway) {
+	//std::clog << "Atis::calculate_backwind(" << runway << ")" << std::endl;
+	double wind = this->metar.get_wind_direction();
+	int speed = this->metar.get_wind_speed();
+	
+	return -std::cos(wind - runway) * speed;
+}
+
+double Atis::calculate_backwind(std::string runway_name) {
+	//std::clog << "Atis::calculate_backwind(" << runway_name << ")" << std::endl;
+	std::vector <Runway> :: iterator it_rwy = std::find(this->runways.begin(), this->runways.end(), runway_name);
+	
+	return this->calculate_backwind(it_rwy->get_heading());
+}
+
+bool Atis::check_backwind(std::string runway_name) {
+	//std::clog << "Atis::check_backwind(" << runway_name << ")" << std::endl;
+	if (runway_name.length() > 0) {
+		std::vector <Runway> :: iterator it_rwy = std::find(this->runways.begin(), this->runways.end(), runway_name);
+		
+		if (this->calculate_backwind(it_rwy->get_heading()) > 0) {
+			return false;
 		}
+		
+		return true;
 	}
 	
-	return false;
+	return true;
+}
+
+bool Atis::ok() {
+	this->atis_errors.clear();
+	bool ok = true;
+	
+	if (transition_altitude > 2000 && transition_altitude < 19000) {
+		int calculated_tr_level = this->calculate_tr_level(this->metar.get_pressure(), transition_altitude);
+		
+		if (calculated_tr_level != transition_level) {
+			this->atis_errors.push_back("transition level should be " + Tools::tostr(calculated_tr_level));
+			ok = false;
+		}
+	} else {
+		this->atis_errors.push_back("Choose transition altitude");
+		ok = false;
+	}
+	
+	if (departure_runway.length()) {
+		if (!check_backwind(departure_runway)) {
+			this->atis_errors.push_back("runway " + departure_runway + " has " + Tools::tostr(calculate_backwind(departure_runway)) + " kt wind speed");
+			ok = false;
+		} 
+	} else {
+		this->atis_errors.push_back("Choose runway for departure");
+		ok = false;
+	}
+	
+	if (landing_runway.length()) {
+		if (!check_backwind(landing_runway)) {
+			this->atis_errors.push_back("runway " + landing_runway + " has " + Tools::tostr(calculate_backwind(landing_runway)) + " kt wind speed");
+			ok = false;
+		}
+	} else {
+		this->atis_errors.push_back("Choose runway for landing");
+		ok = false;
+	}
+	
+	return ok;
 }
