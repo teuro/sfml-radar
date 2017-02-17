@@ -2,6 +2,7 @@
 #define ATIS_HPP
 
 #include "../tools/settings.hpp"
+#include "metar.hpp"
 
 /**
     Atis presenting user inputted data which defines active runways and transition altitude and level.
@@ -14,7 +15,7 @@ public:
         * @param Settings
         * @return none
     **/
-    Atis(Settings& s);
+    Atis(Settings& s, Metar& m);
     ~Atis();
     /**
         * Update updates this based on time from controller.
@@ -36,10 +37,13 @@ public:
 protected:
 private:
     Settings& settings;
+	Metar& metar;
     int transition_level;
     int transition_altitude;
     std::string departure_runway;
     std::string landing_runway;
+	
+	int calculate_tr_level(int pressure, int altitude);
 };
 
 
