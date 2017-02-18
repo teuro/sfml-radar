@@ -18,12 +18,12 @@ std::string Metar::to_string() {
 
 void Metar::update(std::string icao) {
 	this->clouds.clear();
-    this->pressure = 1001;
-    this->humidity = 70;
-    this->visibility = 6500;
-    this->wind.direction = 40;
-    this->wind.speed = 15;
-    this->temperature = 15;
+    this->pressure = Tools::rnd(965, 1035);
+    this->humidity = Tools::rnd(20, 80);
+    this->visibility = Tools::rnd(100, 9999);
+    this->wind.direction = Tools::rnd(5, 355);
+    this->wind.speed = Tools::rnd(3, 50);
+    this->temperature = Tools::rnd(-30, 40);
     this->devpoint = (int)this->temperature - ((100 - this->humidity) / 5);
 	this->icao = icao;
 	this->generate_clouds();
@@ -52,9 +52,4 @@ double Metar::get_wind_direction() {
 
 int Metar::get_wind_speed() {
     return this->wind.speed;
-}
-
-int Metar::get_correct_level(int transition_altitude) {
-    Queryresult result = Database::get_result("SELECT level FROM pressure_limit, transfer_levels WHERE " + Tools::tostr(pressure) + " BETWEEN lower AND upper AND altitude = " + Tools::tostr(transition_altitude) + " AND pressure_limit.ROWID = transfer_levels.pressure_id");
-    return Tools::toint(result(0, "level"));
 }
