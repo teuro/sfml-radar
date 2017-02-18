@@ -72,7 +72,7 @@ std::string Atisview::get_value(Point& mouse) {
 				return t;
 			}
 			
-			place.change_y(20);
+			place.change_y(25);
 			
 			++list_item;
 		}
