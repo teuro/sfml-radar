@@ -66,6 +66,7 @@ public:
     std::string bind_term;
 	std::string layout_game_file_name;
 	std::string layout_atis_file_name;
+	std::string layout_stat_file_name;
 	Coordinate centerpoint;
 };
 

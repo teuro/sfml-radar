@@ -30,6 +30,8 @@ public:
     int get_transition_altitude();
 	
 	bool ok();
+	
+	std::map <int, std::vector <int> > get_levels();
 protected:
 private:
     Settings& settings;
@@ -40,6 +42,7 @@ private:
     std::string landing_runway;
 	std::list <std::string> atis_errors;
 	std::vector <Runway> runways;
+	std::map <int, std::vector <int> > levels;
 	
 	int calculate_tr_level(int pressure, int altitude);
 	

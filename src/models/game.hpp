@@ -107,6 +107,7 @@ public:
 	int get_new_plane();
 	int get_points();
 	std::list <Clearance> get_clearances();
+	bool ok();
 private:
     void load_airfield(std::string icao);
     void check_collision();
@@ -138,7 +139,7 @@ private:
     double duration;
     int separation_errors;
     int new_plane;
-	int handled_planes;
+	unsigned int handled_planes;
 	
 	enum turn {LEFT = -1, RIGHT = 1};
 	enum types {DEPARTURE, APPROACH};

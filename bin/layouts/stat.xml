@@ -1,0 +1,9 @@
+<?xml version="1.0" ?>
+<layout>
+	<p id="info" class="info">Well done You handled all required planes.</p>
+	<table id="basic_info" class="table">
+		<tr>
+			<td>Errors</td><td>[SPE]</td>
+		</tr>
+	</table>
+</layout>

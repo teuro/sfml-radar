@@ -5,14 +5,18 @@
 	<table id="basic_info" class="table">
 		<tr>
 			<td>Departure</td>
-			<td>Landing</td>
-			<td>Transition level</td>
-			<td>Transition altitude</td>
+			<td>[DEPARTURE]</td>
 		</tr>
 		<tr>
-			<td>[DEPARTURE]</td>
+			<td>Landing</td>
 			<td>[LANDING]</td>
+		</tr>
+		<tr>
+			<td>Transition level</td>
 			<td>[LEVEL]</td>
+		</tr>
+		<tr>
+			<td>Transition altitude</td>
 			<td>[ALTITUDE]</td>
 		</tr>
 	</table>

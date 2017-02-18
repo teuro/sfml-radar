@@ -4,37 +4,52 @@ Atisview::Atisview(Drawsurface& d, Settings& s, Atis*& a) : View(d, s), atis(a) 
 
 Atisview::~Atisview() { }
 
-void Atisview::load(std::vector <Runway> runways) {
+void Atisview::load(std::vector <Runway> runways, std::map <int, std::vector <int> > levels) {
     View::load("atis");
-	
-	lists.clear();
-	
+	this->tr_levels = levels;
+	this->runways = runways;
+}
+
+void Atisview::update() {
 	Drawable_list runway_list_dep("ul", "strorage", "runway-list-departure");
 	Drawable_list runway_list_lnd("ul", "strorage", "runway-list-landing");
-	Drawable_list transfer_level("ul", "strorage", "transfer-altitude");
-	Drawable_list transfer_altitude("ul", "strorage", "transfer-level");
+	Drawable_list transfer_level("ul", "strorage", "transfer-level");
+	Drawable_list transfer_altitude("ul", "strorage", "transfer-altitude");
+	
+	lists.clear();
 	
 	for (unsigned int i = 0; i < runways.size(); ++i) {
 		runway_list_dep.add_element(runways[i].get_name());
 		runway_list_lnd.add_element(runways[i].get_name());
 	}
+
+	std::map <int, std::vector <int> > :: iterator altitude;
+	std::vector <int> :: iterator level;
 	
-	for (int i = -2; i < 3; ++i) {
-		transfer_altitude.add_element(Tools::tostr(i * 1000 + 5000));
+	for (altitude = tr_levels.begin(); altitude != tr_levels.end(); ++altitude) {
+		transfer_altitude.add_element(Tools::tostr(altitude->first));
+		level = altitude->second.begin();
+		
+		while (level != altitude->second.end()) {
+			transfer_level.add_element(Tools::tostr((*level)));
+			++level;
+		}
+		display_levels[altitude->first] = transfer_level;
+		transfer_level.clear_content();
 	}
-	
-	for (int i = 0; i < 7; ++i) {
-		transfer_level.add_element(Tools::tostr(i * 5 + 35));
+
+	int t_altitude = this->atis->get_transition_altitude();
+	this->lists.push_back(runway_list_dep);
+	this->lists.push_back(runway_list_lnd);
+	this->lists.push_back(transfer_altitude);
+	if (t_altitude > 2000) {
+		this->lists.push_back(display_levels[t_altitude]);
 	}
-	
-	lists.push_back(runway_list_dep);
-	lists.push_back(runway_list_lnd);
-	lists.push_back(transfer_altitude);
-	lists.push_back(transfer_level);
 }
 
 void Atisview::draw() {
-    View::draw();
+	this->update();
+	View::draw();
 	
 	for (unsigned int i = 0; i < this->lists.size(); ++i) {
 		this->style(this->lists[i]);

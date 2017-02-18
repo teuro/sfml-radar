@@ -6,6 +6,7 @@ Gamecontroller::Gamecontroller(Settings& s, Drawsurface& d) : Controller(s, d) {
 	this->game = new Game(this->settings);
 	this->atis = new Atis(this->settings, this->metar);
 	this->atisview = new Atisview(this->drawer, this->settings, this->atis);
+	this->statview = new Statview(this->drawer, this->settings);
 	this->settings.zoom = 110;
 	this->frames = 0;
 	this->fps_time = 5000;
@@ -15,6 +16,7 @@ Gamecontroller::Gamecontroller(Settings& s, Drawsurface& d) : Controller(s, d) {
 Gamecontroller::~Gamecontroller() { 
 	delete this->gameview;
 	delete this->atisview;
+	delete this->statview;
 	delete this->game;
 	delete this->atis;
 }
@@ -79,6 +81,8 @@ void Gamecontroller::set_variables() {
 	this->atisview->repl["[LANDING]"] = this->atis->get_landing_runway();
 	this->atisview->repl["[LEVEL]"] = Tools::tostr(this->atis->get_transition_level());
 	this->atisview->repl["[ALTITUDE]"] = Tools::tostr(this->atis->get_transition_altitude());
+	
+	this->statview->repl["[SPE]"] = Tools::tostr(this->game->get_separation_errors());
 }
 
 void Gamecontroller::calculate_fps() {
@@ -106,28 +110,37 @@ void Gamecontroller::draw_logic(Point& mouse) {
 		this->atisview->draw();
 		this->atisview->draw_errors(this->atis->get_atis_errors());
 		this->atisview->render();
+	} else if (this->state == STAT) {
+		this->statview->clear_screen();
+		this->statview->draw();
+		this->statview->draw_clearances(this->game->get_clearances());
+		this->statview->render();
 	}
 }
 
 void Gamecontroller::update(double elapsed, Point& mouse) {
 	this->set_variables();
 	
-	if (this->state == GAME) {
+	if (this->state == ATIS) {
+		this->atis->update();
+		
+		if (this->atis->ok()) {
+			this->state = GAME;
+			this->game->set_runways(this->atis->get_departure_runway(), this->atis->get_landing_runway());
+		} 
+	} else if (this->state == GAME) {
 		this->game_time += elapsed;
 		
 		this->calculate_fps();
 		
 		this->game->update(elapsed);
 		this->metar.update(this->game->get_active_field()->get_name());
-		/**
-			* @todo check if handled_planes >= required_planes and plane_list is empty
-		**/
-	} else if (this->state == ATIS) {
-		this->atis->update();
-		if (this->atis->ok()) {
-			this->state = GAME;
-			this->game->set_runways(this->atis->get_departure_runway(), this->atis->get_landing_runway());
-		} 
+		
+		if (this->game->ok()) {
+			this->state = STAT;
+		}
+	} else if (this->state == STAT) {
+	
 	}
 	
 	this->draw_logic(mouse);
@@ -179,9 +192,10 @@ void Gamecontroller::handle_mouse_click(Point& mouse) {
 void Gamecontroller::load() {
 	std::clog << "Gamecontroller::load()" << std::endl;
 	this->game->load("EFHK");
-	this->gameview->load();
-	this->atisview->load(this->game->get_active_field()->get_runways());
 	this->atis->load(this->game->get_active_field()->get_runways());
+	this->gameview->load();
+	this->atisview->load(this->game->get_active_field()->get_runways(), this->atis->get_levels());
+	this->statview->load();
 	this->settings.zoom = 110;
 	this->gameview->set_zoom(this->settings.zoom);
 	this->metar.update(this->game->get_active_field()->get_name());

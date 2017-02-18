@@ -11,6 +11,24 @@ Atis::~Atis() { }
 
 void Atis::load(std::vector <Runway> rwys) {
 	this->runways = rwys;
+	
+	std::vector <int> altitudes;
+	
+	altitudes.push_back(3000);
+	altitudes.push_back(4000);
+	altitudes.push_back(5000);
+	altitudes.push_back(6000);
+	altitudes.push_back(7000);
+	altitudes.push_back(18000);
+	
+	for (unsigned int i = 0; i < altitudes.size(); ++i) {
+		int base = altitudes[i] / 100 - 5;
+		
+		for (unsigned int j = 1;  j < 7; ++j) {
+			levels[altitudes[i]].push_back(base);
+			base += 5;
+		}
+	}
 }
 
 void Atis::update() {
@@ -49,46 +67,13 @@ int Atis::get_transition_altitude() {
     return this->transition_altitude;
 }
 
+std::map <int, std::vector <int> > Atis::get_levels() {
+	return this->levels;
+}
+
 int Atis::calculate_tr_level(int pressure, int altitude) {
-	//std::clog << "Atis::calculate_tr_level(" << pressure << ", " << altitude << ")" << std::endl;
-	std::map <int, std::vector <int> > levels;
 	int place = -1;
-	
-	levels[3000].push_back(25);
-	levels[3000].push_back(30);
-	levels[3000].push_back(35);
-	levels[3000].push_back(40);
-	levels[3000].push_back(45);
-	levels[3000].push_back(50);
-	
-	levels[4000].push_back(35);
-	levels[4000].push_back(40);
-	levels[4000].push_back(45);
-	levels[4000].push_back(50);
-	levels[4000].push_back(55);
-	levels[4000].push_back(60);
-	
-	levels[5000].push_back(45);
-	levels[5000].push_back(50);
-	levels[5000].push_back(55);
-	levels[5000].push_back(60);
-	levels[5000].push_back(65);
-	levels[5000].push_back(70);
-	
-	levels[6000].push_back(55);
-	levels[6000].push_back(60);
-	levels[6000].push_back(65);
-	levels[6000].push_back(70);
-	levels[6000].push_back(75);
-	levels[6000].push_back(80);
-	
-	levels[18000].push_back(175);
-	levels[18000].push_back(180);
-	levels[18000].push_back(185);
-	levels[18000].push_back(190);
-	levels[18000].push_back(195);
-	levels[18000].push_back(200);
-	
+
 	if (pressure >= 943 && pressure < 959) {
 		place = 5;
 	} else if (pressure >= 960 && pressure < 977) {
@@ -144,18 +129,6 @@ bool Atis::ok() {
 	this->atis_errors.clear();
 	bool ok = true;
 	
-	if (transition_altitude > 2000 && transition_altitude < 19000) {
-		int calculated_tr_level = this->calculate_tr_level(this->metar.get_pressure(), transition_altitude);
-		
-		if (calculated_tr_level != transition_level) {
-			this->atis_errors.push_back("transition level should be " + Tools::tostr(calculated_tr_level));
-			ok = false;
-		}
-	} else {
-		this->atis_errors.push_back("Choose transition altitude");
-		ok = false;
-	}
-	
 	if (departure_runway.length()) {
 		if (!check_backwind(departure_runway)) {
 			this->atis_errors.push_back("runway " + departure_runway + " has " + Tools::tostr(calculate_backwind(departure_runway)) + " kt wind speed");
@@ -173,6 +146,23 @@ bool Atis::ok() {
 		}
 	} else {
 		this->atis_errors.push_back("Choose runway for landing");
+		ok = false;
+	}
+	
+	if (transition_altitude > 2000 && transition_altitude < 19000) {
+		int calculated_tr_level = this->calculate_tr_level(this->metar.get_pressure(), transition_altitude);
+		
+		if (calculated_tr_level != transition_level) {
+			this->atis_errors.push_back("transition level should be " + Tools::tostr(calculated_tr_level));
+			ok = false;
+		}
+	} else {
+		this->atis_errors.push_back("Choose transition altitude");
+		ok = false;
+	}
+	
+	if (transition_level == 0) {
+		this->atis_errors.push_back("Choose transition level");
 		ok = false;
 	}
 	

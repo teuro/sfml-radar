@@ -18,6 +18,16 @@ void Game::load(std::string airfield) {
 	this->handled_planes = 0;
 	this->airlines = Database::get_result("SELECT ICAO FROM airlines");
 	this->selected = NULL;
+	/** testing data
+	Clearance clr {10254, "PRI225", "turn 225"};
+	this->clearances.push_back(clr);
+	Clearance clr1 {15642, "PRI225", "descent 7000"};
+	this->clearances.push_back(clr1);
+	Clearance clr2 {25642, "PRI225", "descent 3000"};
+	this->clearances.push_back(clr2);
+	Clearance clr3 {254642, "PRI225", "approach"};
+	this->clearances.push_back(clr3);
+	**/
 }
 
 void Game::set_runways(std::string t_departure, std::string t_landing) {
@@ -328,7 +338,7 @@ void Game::build_clearance(std::string command) {
 	std::vector <std::string> tmp = Tools::split(" ", command);
 	
 	if (this->selected != NULL) {
-		Clearance t_clearance = {this->duration, this->selected->get_name(), this->command};
+		Clearance t_clearance = {this->duration, this->selected->get_name(), command};
 		this->clearances.push_back(t_clearance);
 		
 		int value = Tools::tonumber<int>(tmp.back());
@@ -391,4 +401,8 @@ int Game::get_separation_errors() {
 
 int Game::get_new_plane() {
 	return this->new_plane;
+}
+
+bool Game::ok() {
+	return (this->handled_planes == this->settings.required_handled);
 }

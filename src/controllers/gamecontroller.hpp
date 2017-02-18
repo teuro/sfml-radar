@@ -9,6 +9,7 @@
 #include "../tools/tools.hpp"
 #include "../views/game/game_view.hpp"
 #include "../views/atis/atis_view.hpp"
+#include "../views/stat/stat_view.hpp"
 #include "controller.hpp"
 
 /**
@@ -59,12 +60,13 @@ private:
 	std::list <std::string> matching_elements(std::string input);
     Gameview* gameview;
     Atisview* atisview;
+    Statview* statview;
     Game* game;
 	Metar metar;
 	Atis* atis;
     int function_key;
 	double game_time;
-	enum states {PLAYER, ATIS, GAME, STATISTIS};
+	enum states {PLAYER, ATIS, GAME, STAT};
 	int state;
 };
 
