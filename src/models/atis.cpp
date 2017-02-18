@@ -131,7 +131,7 @@ bool Atis::ok() {
 	
 	if (departure_runway.length()) {
 		if (!check_backwind(departure_runway)) {
-			this->atis_errors.push_back("runway " + departure_runway + " has " + Tools::tostr(calculate_backwind(departure_runway)) + " kt wind speed");
+			this->atis_errors.push_back("runway " + departure_runway + " has " + Tools::tostr(calculate_backwind(departure_runway)) + " kt tailwind");
 			ok = false;
 		} 
 	} else {
@@ -141,7 +141,7 @@ bool Atis::ok() {
 	
 	if (landing_runway.length()) {
 		if (!check_backwind(landing_runway)) {
-			this->atis_errors.push_back("runway " + landing_runway + " has " + Tools::tostr(calculate_backwind(landing_runway)) + " kt wind speed");
+			this->atis_errors.push_back("runway " + landing_runway + " has " + Tools::tostr(calculate_backwind(landing_runway)) + " kt tailwind");
 			ok = false;
 		}
 	} else {
