@@ -41,7 +41,6 @@ public:
     int get_wind_speed();
     int get_temperature();
     int get_visibility();
-    int get_correct_level(int transition_altitude);
 protected:
 private:
     int pressure;
