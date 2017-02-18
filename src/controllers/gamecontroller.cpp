@@ -51,7 +51,7 @@ void Gamecontroller::handle_mouse_wheel(int amount) {
     } else if (this->settings.zoom > 150) {
 		this->settings.zoom = 150;
 	}
-	
+    
 	this->gameview->set_zoom(this->settings.zoom);
 }
 
