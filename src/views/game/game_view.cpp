@@ -180,8 +180,12 @@ void Gameview::set_zoom(int zoom) {
 	
 	double distance = zoom / 2.0;
 	
-	Coordinate c(Tools::calculate(this->centerpoint_map, Tools::deg2rad(315.0), std::sqrt(std::pow(distance, 2.0) + std::pow(distance, 2.0))));
-	Coordinate d(Tools::calculate(this->centerpoint_map, Tools::deg2rad(135.0), std::sqrt(std::pow(distance, 2.0) + std::pow(distance, 2.0))));
+	this->calculate_coordinate_limits(distance);
+}
+
+void Gameview::calculate_coordinate_limits(double distance) {
+	Coordinate c(Tools::calculate(this->settings.centerpoint, Tools::deg2rad(315.0), distance));
+	Coordinate d(Tools::calculate(this->settings.centerpoint, Tools::deg2rad(135.0), distance));
 	
 	min_lat = d.get_latitude();
 	max_lat = c.get_latitude();
@@ -190,12 +194,12 @@ void Gameview::set_zoom(int zoom) {
 	max_lon = d.get_longitude();
 }
 
-void Gameview::set_centerpoint_map(Coordinate& centerpoint_map) {
+void Gameview::set_centerpoint_map(Coordinate& centerpoint) {
 	#ifdef DEBUG
 	std::clog << "Gameview::set_centerpoint_map(Coordinate& centerpoint_map)" << std::endl;
 	#endif
-	double distanceNM = Tools::distanceNM(centerpoint_map, this->centerpoint_map);
-	double angle_rad = Tools::fix_angle(Tools::angle(centerpoint_map, this->centerpoint_map) - Tools::get_PI() / 2.0);
+	double distanceNM = Tools::distanceNM(centerpoint, this->centerpoint_map);
+	double angle_rad = Tools::fix_angle(Tools::angle(centerpoint, this->centerpoint_map) - Tools::get_PI() / 2.0);
 	
 	Coordinate a(min_lat, min_lon);
 	Coordinate b(max_lat, max_lon);
@@ -210,7 +214,8 @@ void Gameview::set_centerpoint_map(Coordinate& centerpoint_map) {
 	max_lat = b.get_latitude();
 	max_lon = b.get_longitude();
 	
-	this->centerpoint_map = centerpoint_map;
+	this->centerpoint_map = centerpoint;
+	this->settings.centerpoint = this->centerpoint_map;
 }
 
 Point Gameview::calculate(Coordinate& target) {

@@ -147,6 +147,7 @@ private:
 	
     void draw_plane(Aircraft*& plane, Aircraft* selected, Point& mouse);
 	std::string command;
+	void calculate_coordinate_limits(double distance);
 };
 
 #endif // _GAME_VIEW_HPP
