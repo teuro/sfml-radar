@@ -19,6 +19,7 @@ protected:
 	Style style;
 	
 	Drawable_element(std::string t_name, std::string t_class = "", std::string t_id = "");
+	Drawable_element();
 	~Drawable_element();
 public:
 	void set_style(Style& style);

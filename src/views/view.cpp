@@ -11,6 +11,7 @@ std::string Drawable_input::get_value() {
 }
 
 Drawable_list::Drawable_list(std::string t_name, std::string t_class, std::string t_id) : Drawable_element(t_name, t_class, t_id) { }
+Drawable_list::Drawable_list() { }
 
 void Drawable_list::add_element(std::string content) {
 	this->elements.push_back(content);
@@ -104,6 +105,9 @@ void View::load(std::string state) {
 		load_ok = doc.LoadFile(file_name.c_str());
 	} else if (state == "atis") {
 		file_name = this->settings.layout_atis_file_name;
+		load_ok = doc.LoadFile(file_name.c_str());
+	} else if (state == "stat") {
+		file_name = this->settings.layout_stat_file_name;
 		load_ok = doc.LoadFile(file_name.c_str());
 	}	
 	
@@ -303,7 +307,7 @@ void View::draw_element(Drawable_list& dl) {
 	
 	for (it = t_list.begin(); it != t_list.end(); ++it) {
 		this->drawer.draw_text((*it), place, color);
-//		std::clog << "Draw " << (*it) << " " << place << " " << color << std::endl;
+		//std::clog << "Draw " << (*it) << " " << place << " " << color << std::endl;
 		place.change_y(font_size);
 	}
 }
@@ -328,11 +332,11 @@ void View::draw_element(Drawable_table& dt) {
 
 			this->drawer.draw_text(Tools::replace((*cit).get_content(), repl), place, color);
 			++cit;
-			place.change_y(font_size);
+			place.change_x(160);
 		}
 		
-		place.change_y(-font_size * c_list.size());
-		place.change_x(160);
+		place.change_x(-160 * c_list.size());
+		place.change_y(font_size);
 		
 		++rit;
 	}

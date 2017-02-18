@@ -1,7 +1,6 @@
 #include "drawable_element.hpp"
-Drawable_element::Drawable_element(std::string t_name, std::string t_class, std::string t_id) : name(t_name), s_class(t_class), id(t_id) {
-	//std::clog << this->name << " " << this->s_class << " " << this->id << std::endl;
-}
+Drawable_element::Drawable_element(std::string t_name, std::string t_class, std::string t_id) : name(t_name), s_class(t_class), id(t_id) { }
+Drawable_element::Drawable_element() { }
 
 Drawable_element::~Drawable_element() { }
 
