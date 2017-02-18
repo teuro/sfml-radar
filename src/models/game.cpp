@@ -18,16 +18,10 @@ void Game::load(std::string airfield) {
 	this->handled_planes = 0;
 	this->airlines = Database::get_result("SELECT ICAO FROM airlines");
 	this->selected = NULL;
-	/** testing data
-	Clearance clr {10254, "PRI225", "turn 225"};
-	this->clearances.push_back(clr);
-	Clearance clr1 {15642, "PRI225", "descent 7000"};
-	this->clearances.push_back(clr1);
-	Clearance clr2 {25642, "PRI225", "descent 3000"};
-	this->clearances.push_back(clr2);
-	Clearance clr3 {254642, "PRI225", "approach"};
-	this->clearances.push_back(clr3);
-	**/
+	
+	for (unsigned int i = 0; i < 3; ++i) {
+		create_plane();
+	}
 }
 
 void Game::set_runways(std::string t_departure, std::string t_landing) {
