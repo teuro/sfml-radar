@@ -18,6 +18,10 @@ void Atisview::update() {
 	
 	lists.clear();
 	
+	runway_list_dep.add_element("departure");
+	runway_list_lnd.add_element("landing");
+	transfer_altitude.add_element("altitude");
+	
 	for (unsigned int i = 0; i < runways.size(); ++i) {
 		runway_list_dep.add_element(runways[i].get_name());
 		runway_list_lnd.add_element(runways[i].get_name());
@@ -29,7 +33,7 @@ void Atisview::update() {
 	for (altitude = tr_levels.begin(); altitude != tr_levels.end(); ++altitude) {
 		transfer_altitude.add_element(Tools::tostr(altitude->first));
 		level = altitude->second.begin();
-		
+		transfer_level.add_element("level");
 		while (level != altitude->second.end()) {
 			transfer_level.add_element(Tools::tostr((*level)));
 			++level;
@@ -42,6 +46,7 @@ void Atisview::update() {
 	this->lists.push_back(runway_list_dep);
 	this->lists.push_back(runway_list_lnd);
 	this->lists.push_back(transfer_altitude);
+	
 	if (t_altitude > 2000) {
 		this->lists.push_back(display_levels[t_altitude]);
 	}
@@ -72,7 +77,7 @@ std::string Atisview::get_value(Point& mouse) {
 				return t;
 			}
 			
-			place.change_y(25);
+			place.change_y(23);
 			
 			++list_item;
 		}
