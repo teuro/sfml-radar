@@ -140,7 +140,8 @@ unsigned int sfml_drawsurface::get_fontsize() {
 }
 
 void sfml_drawsurface::clear_screen() {
-	this->window.clear();
+	sf::Color background(10, 10, 10, 0);
+	this->window.clear(background);
 }
 
 std::vector <int> sfml_drawsurface::convert(int color) {
