@@ -129,7 +129,7 @@ std::vector <std::string> Tools::split(std::string delimiter, std::string input)
 }
 
 int Tools::rnd(int a, int b) {
-    return (a + std::rand() % (a + b));
+    return (a + std::rand() % (b - a));
 }
 
 std::string Tools::ltrim(std::string s) {
