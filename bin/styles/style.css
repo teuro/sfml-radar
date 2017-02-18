@@ -5,7 +5,7 @@
 #basic_info {
 	top: 30px;
 	left: 20px;
-	color: rgb(90, 90, 90);
+	color: rgb(150, 150, 90);
 }
 
 #atis_error {
@@ -17,16 +17,15 @@ p {
 	left: 10px;
 	width: 160px;
 	height: 25px;
-	color: rgb(250, 25, 25);
-	border: rgb(150, 15, 15);
+	color: rgb(150, 150, 90);
 }
 
 plane {
-	color: rgb(60, 160, 250);
+	color: rgb(150, 150, 90);
 }
 
 ul {
-	color: rgb(60, 160, 250);
+	color: rgb(150, 150, 90);
 }
 
 .infolist {
@@ -35,7 +34,7 @@ ul {
 }
 
 input {
-	color: rgb(20, 30 ,30);
+	color: rgb(150, 150, 90);
 }
 
 #atis {
@@ -65,7 +64,7 @@ input {
 }
 
 #runway-list-departure {
-	left: 100px;
+	left: 50px;
 }
 
 #runway-list-landing {
@@ -73,11 +72,11 @@ input {
 }
 
 #transfer-altitude {
-	left: 200px;
+	left: 250px;
 }
 
 #transfer-level {
-	left: 250px;
+	left: 350px;
 }
 
 .userinput {
