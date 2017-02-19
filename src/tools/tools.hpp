@@ -301,6 +301,13 @@ namespace Tools {
 	double CalcGeograpicAngle(double arith);
 	
 	Point calculate_midpoint(Point& a, Point& b);
+	
+	template <class T>
+	T random_object(std::vector <T> input) {
+		int place = Tools::rnd(0, (int)input.size()-1);
+		
+		return input[place];
+	}
 }
 
 #endif // _TOOLS_HPP
