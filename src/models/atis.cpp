@@ -76,15 +76,15 @@ int Atis::calculate_tr_level(int pressure, int altitude) {
 
 	if (pressure >= 943 && pressure < 959) {
 		place = 5;
-	} else if (pressure >= 960 && pressure < 977) {
+	} else if (pressure >= 959 && pressure < 977) {
 		place = 4;
-	} else if (pressure >= 978 && pressure < 995) {
+	} else if (pressure >= 977 && pressure < 995) {
 		place = 3;
-	} else if (pressure >= 996 && pressure < 1013) {
+	} else if (pressure >= 995 && pressure < 1013) {
 		place = 2;
-	} else if (pressure >= 1014 && pressure < 1031) {
+	} else if (pressure >= 1013 && pressure < 1031) {
 		place = 1;
-	} else if (pressure >= 1032 && pressure < 1050) {
+	} else if (pressure >= 1031 && pressure < 1050) {
 		place = 0;
 	} 
 		
