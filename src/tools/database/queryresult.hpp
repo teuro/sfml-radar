@@ -26,13 +26,29 @@ public:
         * @param unsigned int row needed row
         * @param std::string column requested column name
         * @return std::string basically one value (std::string for a while)
-        * @todo It really need more flexibility
+        * @todo tempalate for others formats might be good idea.
     **/
+	
     std::string operator()(unsigned int row, std::string column);
+	
+	 /**
+        * operator() place were macig begins
+        * @param unsigned int row requested row
+        * @param unsigned int column requested column
+        * @return std::string basically one value (std::string for a while)
+        * @todo tempalate for others formats might be good idea.
+    **/
+	
     std::string operator()(unsigned int row, unsigned int column);
 
+	 /**
+        * operator[] place were macig begins
+        * @param unsigned int row needed row
+        * @return Queryrow needs handling before use
+    **/
+	
     Queryrow operator[](unsigned int row);
-
+	
     std::size_t size();
 protected:
 private:

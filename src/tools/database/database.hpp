@@ -18,7 +18,7 @@ namespace Database {
 	/**
         * Make a query and returns data
 		* Makes absolutely anything to results, so You receive raw data from database
-        * @param query
+        * @param std::string query
         * @return Queryresult
     **/
 	
