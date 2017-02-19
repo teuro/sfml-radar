@@ -1,19 +1,22 @@
 #include "aircraft.hpp"
 
-Aircraft::Aircraft(std::string t_name, int t, Settings& s, Runway& landing, Inpoint& ip) : name(t_name), type(t), settings(s) {
+Aircraft::Aircraft(std::string t_name, Settings& s, Airfield*& af, Atis*& a, Inpoint& ip) : name(t_name), settings(s), airport(af), atis(a) {
 	this->place = ip.get_place();
 	this->heading = ip.get_heading();
 	this->altitude = ip.get_altitude();
 	this->speed = 250;
-	this->landing = landing;
+	this->type = APPROACH;
+	this->load();
 }
 
-Aircraft::Aircraft(std::string t_name, int t, Settings& s, Runway& departure, Outpoint& op) : name(t_name), type(t), settings(s) {
-	this->place = departure.get_start_place();
-	this->heading = departure.get_heading();
+Aircraft::Aircraft(std::string t_name, Settings& s, Airfield*& af, Atis*& a, Outpoint& op) : name(t_name), settings(s), airport(af), atis(a) {
+	this->place = this->airport->get_runway(this->atis->get_departure_runway()).get_start_place();
 	this->altitude = this->settings.airfield_altitude;
+	this->heading = this->airport->get_runway(this->atis->get_departure_runway()).get_heading();
 	this->speed = 0;
 	this->target = op;
+	this->type = DEPARTURE;
+	this->load();
 }
 
 void Aircraft::load() {
@@ -32,6 +35,16 @@ void Aircraft::load() {
 }
 
 Aircraft::~Aircraft() { }
+
+void Aircraft::set_approach_runway(std::string name) {
+	std::clog << "Aircraft::set_approach_runway(" << name << ")" << std::endl;
+	try {
+		this->landing = this->airport->get_runway(name);
+		std::clog << "Expecting runway " << this->landing.get_name() << " for landing" << std::endl;
+	} catch (std::logic_error& e) {
+		std::cerr << e.what() << std::endl;
+	}
+}
 
 bool Aircraft::check_approach_config() {
 	double min_approach_angle = this->landing.get_heading() - Tools::deg2rad(this->settings.approach_angle);
@@ -200,7 +213,12 @@ void Aircraft::set_clearance_altitude(double cl_alt) {
 }
 
 void Aircraft::set_clearance_approach() {
+	std::clog << this->landing.get_start_place() << std::endl;
 	this->approach = true;
+}
+
+void Aircraft::cancel_approach() {
+	this->approach = false;
 }
 
 void Aircraft::set_clearance_direct() {

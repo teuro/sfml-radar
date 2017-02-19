@@ -8,11 +8,13 @@
 #include "../tools/tools.hpp"
 #include "../tools/settings.hpp"
 #include "runway.hpp"
+#include "airfield.hpp"
+#include "atis.hpp"
 
 class Aircraft {
 public:
-    Aircraft(std::string name, int type, Settings& s, Runway& landing, Inpoint& in);
-    Aircraft(std::string name, int type, Settings& s, Runway& departure, Outpoint& out);
+    Aircraft(std::string name, Settings& settings, Airfield*& airport, Atis*& atis, Inpoint& in);
+    Aircraft(std::string name, Settings& settings, Airfield*& airport, Atis*& atis, Outpoint& out);
 	
     ~Aircraft();
 	
@@ -42,11 +44,13 @@ public:
     void set_clearance_heading(double cl_hdg, int turn = -1);
     void set_clearance_altitude(double cl_alt);
     void set_clearance_approach();
+	void cancel_approach();
     void set_clearance_direct();
 
     void set_separation_error(bool t);
     bool get_separation_error();
     void set_place(Coordinate& place);
+    void set_approach_runway(std::string name);
     int get_type();
 	
 	void load();
@@ -78,6 +82,8 @@ private:
     Settings& settings;
 	Navpoint target;
 	Runway landing;
+	Airfield*& airport;
+	Atis*& atis;
 };
 
 #endif
