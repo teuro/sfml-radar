@@ -33,6 +33,11 @@ ul {
 	left: 20px;
 }
 
+#planelist {
+	top: 450px;
+	left: 700px;
+}
+
 input {
 	color: rgb(150, 150, 90);
 }
