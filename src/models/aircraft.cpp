@@ -221,6 +221,35 @@ void Aircraft::cancel_approach() {
 	this->approach = false;
 }
 
-void Aircraft::set_clearance_direct() {
+void Aircraft::set_clearance_direct(std::string outpoint) {
+	std::clog << "Aircraft::set_clearance_direct(" << outpoint << ")" << std::endl;
+	
+	try {
+		Outpoint t_op = this->airport->get_outpoint(outpoint);
+		std::clog << "Direct to " << t_op.get_name() << std::endl;
+		this->target = t_op;
 	this->direct = true;
+	} catch (std::logic_error& e) {
+		std::cerr << e.what() << std::endl;
+	}
+}
+
+double Aircraft::get_clearance_altitude() {
+	return (this->clearance_altitude < 0) ? 0 : this->clearance_altitude;
+}
+
+double Aircraft::get_clearance_speed() {
+	return (this->clearance_speed < 0) ? 0 : this->clearance_speed;
+}
+
+double Aircraft::get_clearance_heading() {
+	return (this->clearance_heading < 0) ? 0 : this->clearance_heading;
+}
+
+bool Aircraft::get_direct() {
+	return this->direct;
+}
+
+bool Aircraft::get_approach() {
+	return this->approach;
 }

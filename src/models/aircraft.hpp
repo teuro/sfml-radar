@@ -28,24 +28,27 @@ public:
 
     double get_speed();
 	
-    double get_heading();
-	
-    double get_altitude();
+    double get_clearance_altitude();
     double get_clearance_speed();
     double get_clearance_heading();
+	
+	double get_altitude();
+    double get_peed();
+    double get_heading();
+	
+	bool get_direct();
+	bool get_approach();
 	
 	bool operator ==(std::string t_name) {
 		return this->name == t_name;
 	}
-	
-    double get_clearance_altitude();
 	
 	void set_clearance_speed(double cl_spd);
     void set_clearance_heading(double cl_hdg, int turn = -1);
     void set_clearance_altitude(double cl_alt);
     void set_clearance_approach();
 	void cancel_approach();
-    void set_clearance_direct();
+    void set_clearance_direct(std::string outpoint);
 
     void set_separation_error(bool t);
     bool get_separation_error();

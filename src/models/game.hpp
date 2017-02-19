@@ -10,8 +10,6 @@
 #include <queue>
 #include <algorithm>
 
-#include "inpoint.hpp"
-#include "outpoint.hpp"
 #include "aircraft.hpp"
 #include "airfield.hpp"
 #include "atis.hpp"
@@ -53,7 +51,6 @@ public:
 	**/
 	void add_point(Navpoint np);
 
-	std::vector <Navpoint>& get_navpoints();
 	std::list <Aircraft*> get_aircrafts();
 	std::vector <Airfield>& get_airfields();
 	
@@ -115,14 +112,13 @@ private:
     void handle_holdings();
 	void load_navpoints(std::map <std::string, std::string> variables);
 	void load_runways(std::map <std::string, std::string> variables);
+	Inpoint select_inpoint();
     bool is_free(Inpoint& navpoint);
 	void calculate_points(int type, int clearance_count);
 	int calculate_clearances(std::string name);
 	Coordinate centerpoint;
 	Settings& settings;
 
-	std::vector     <Outpoint>		outpoints;
-	std::vector     <Inpoint>		inpoints;
 	std::vector     <Navpoint>		navpoints;
 	std::list       <Aircraft*>		aircrafts;
 	std::queue      <Aircraft*>		holdings;
@@ -142,8 +138,6 @@ private:
     int separation_errors;
     int new_plane;
 	unsigned int handled_planes;
-	
-	Queryresult airlines;
 };
 
 #endif // _GAME_HPP
