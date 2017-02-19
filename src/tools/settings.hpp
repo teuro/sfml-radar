@@ -5,6 +5,9 @@
 #include <string>
 #include "tools.hpp"
 
+enum turn {LEFT = -1, RIGHT = 1};
+enum types {DEPARTURE, APPROACH};
+
 class Settings {
 public:
 	Settings();
