@@ -34,5 +34,5 @@ Runway& Airfield::get_runway(std::string name) {
 		}
 	}
 	
-	throw std::logic_error("Runway " + name + " not exists");
+	throw std::logic_error("Airfield::get_runway :: " + name + " not exists");
 }
