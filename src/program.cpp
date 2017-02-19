@@ -41,7 +41,7 @@ bool Program::handle_events(Controller& ctrl, sf::RenderWindow& window) {
 }
 
 void Program::run() {
-	sf::RenderWindow window(sf::VideoMode(this->settings.screen_width, this->settings.screen_height), this->settings.program_name);
+	sf::RenderWindow window(sf::VideoMode(this->settings.screen_width, this->settings.screen_height), this->settings.program_name, sf::Style::Resize);
 	sf::Image image;
 	image.loadFromFile("images/logo.png");
 	window.setIcon(image.getSize().x, image.getSize().y, image.getPixelsPtr());
