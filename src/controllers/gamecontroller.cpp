@@ -3,8 +3,8 @@
 Gamecontroller::Gamecontroller(Settings& s, Drawsurface& d) : Controller(s, d) { 
 	Metar metar;
 	this->gameview = new Gameview(this->drawer, this->settings);
-	this->game = new Game(this->settings);
 	this->atis = new Atis(this->settings, this->metar);
+	this->game = new Game(this->settings, this->atis);
 	this->atisview = new Atisview(this->drawer, this->settings, this->atis);
 	this->statview = new Statview(this->drawer, this->settings);
 	this->settings.zoom = 110;
