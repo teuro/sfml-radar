@@ -30,6 +30,7 @@ void Aircraft::load() {
     this->approach = false;
     this->landed = false;
     this->direct = false;
+	this->expect = false;
 	
     this->turn = -1;
 }
@@ -41,6 +42,7 @@ void Aircraft::set_approach_runway(std::string name) {
 	try {
 		this->landing = this->airport->get_runway(name);
 		std::clog << "Expecting runway " << this->landing.get_name() << " for landing" << std::endl;
+		this->expect = true;
 	} catch (std::logic_error& e) {
 		std::cerr << e.what() << std::endl;
 	}
@@ -252,4 +254,16 @@ bool Aircraft::get_direct() {
 
 bool Aircraft::get_approach() {
 	return this->approach;
+}
+
+bool Aircraft::get_expect() {
+	return this->expect;
+}
+
+std::string Aircraft::get_landing_runway_name() {
+	return this->landing.get_name();
+}
+
+std::string Aircraft::get_target_name() {
+	return this->target.get_name();
 }

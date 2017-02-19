@@ -38,6 +38,7 @@ public:
 	
 	bool get_direct();
 	bool get_approach();
+	bool get_expect();
 	
 	bool operator ==(std::string t_name) {
 		return this->name == t_name;
@@ -54,6 +55,8 @@ public:
     bool get_separation_error();
     void set_place(Coordinate& place);
     void set_approach_runway(std::string name);
+	std::string get_landing_runway_name();
+	std::string get_target_name();
     int get_type();
 	
 	void load();
@@ -80,6 +83,7 @@ private:
     bool approach;
     bool direct;
     bool landed;
+    bool expect;
 	bool check_approach_config();
 	void calculate_angle_target(Coordinate& target);
     Settings& settings;

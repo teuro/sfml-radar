@@ -118,9 +118,13 @@ void Gameview::draw_planes(std::list <Aircraft*> planes, Aircraft* selected, Poi
 		std::string special;
 		
 		if ((*plane)->get_type() == APPROACH) {
-			special = ((*plane)->get_approach()) ? "A" : "";
-		} else {
-			special = ((*plane)->get_direct()) ? "D" : "";
+			if ((*plane)->get_expect() && !(*plane)->get_approach()) {
+				special = "E " + (*plane)->get_landing_runway_name();
+			} else if ((*plane)->get_approach()) {
+				special = "A " + (*plane)->get_landing_runway_name();
+			}
+		} else if ((*plane)->get_direct()) {
+			special = "D " + (*plane)->get_target_name();
 		}
 		
 		plane_list.add_element((*plane)->get_name() + " - " + special);
