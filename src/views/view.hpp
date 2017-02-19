@@ -18,6 +18,13 @@
 #include "../tools/style/style.hpp"
 #include "../tools/settings.hpp"
 
+/**
+	* View
+	* This is base class for all views. This parses css and handles all styling. 
+	* This helps others views because this offers many helper methods such as draw_element.
+	* Other views may on call appropriate methods without caring how its implemented.
+**/
+
 class View {
 public:
 	View(Drawsurface& d, Settings& s);
