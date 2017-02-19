@@ -73,11 +73,11 @@ void Gameview::draw_plane(Aircraft*& plane, Aircraft* selected, Point& mouse) {
 	Drawable_list info_list("ul", "infolist", id);
 	
 	info_list.add_element(plane->get_name());
-	info_list.add_element(Tools::tostr((int)plane->get_altitude()));
+	info_list.add_element(Tools::tostr((int)plane->get_altitude()) + " / " + Tools::tostr(plane->get_clearance_altitude()));
 	
 	if (id == "selected") {
-		info_list.add_element(Tools::tostr((int)plane->get_speed()));
-		info_list.add_element(Tools::tostr((int)Tools::rad2deg(plane->get_heading())));
+		info_list.add_element(Tools::tostr((int)plane->get_speed()) + " / " + Tools::tostr((int)plane->get_clearance_speed()));
+		info_list.add_element(Tools::tostr((int)Tools::rad2deg(plane->get_heading())) + " / " + Tools::tostr((int)Tools::rad2deg(plane->get_clearance_heading())));
 		
 		if (plane->get_type() == 0) {
 			info_list.add_element(plane->get_target().get_name());
@@ -107,30 +107,29 @@ void Gameview::draw_plane(Aircraft*& plane, Aircraft* selected, Point& mouse) {
 	this->draw_element(info_list);
 }
 
-void Gameview::draw_navpoints(std::vector <Navpoint>& navpoints) {
-	#ifdef DEBUG
-	std::clog << "Gameview::draw_navpoints(std::vector <Navpoint>& navpoints)" << std::endl;
-	#endif
-    for (unsigned int i = 0; i < navpoints.size(); ++i) {
-        Point place_screen = this->calculate(navpoints[i].get_place());
-		
-        this->drawer.trigonColor(place_screen, 15, 1316060);
-		place_screen.change_x(15);
-		place_screen.change_y(-10);
-		this->drawer.draw_text(navpoints[i].get_name(), place_screen, 1316060);
-    }
-}
-
 void Gameview::draw_planes(std::list <Aircraft*> planes, Aircraft* selected, Point& mouse) {
 	#ifdef DEBUG
 	std::clog << "Gameview::draw_planes(std::list <Aircraft*> planes, Aircraft* selected, Point& mouse)" << std::endl;
 	#endif
     std::list <Aircraft*> :: iterator plane = planes.begin();
+	Drawable_list plane_list("ul", "list", "planelist");
     	
     while (plane != planes.end()) {
+		std::string special;
+		
+		if ((*plane)->get_type() == APPROACH) {
+			special = ((*plane)->get_approach()) ? "A" : "";
+		} else {
+			special = ((*plane)->get_direct()) ? "D" : "";
+		}
+		
+		plane_list.add_element((*plane)->get_name() + " - " + special);
         this->draw_plane((*plane), selected, mouse);
         ++plane;
     }
+	
+	this->style(plane_list);
+	this->draw_element(plane_list);
 }
 
 double Gameview::distancePX(double nautical) {
@@ -162,12 +161,22 @@ void Gameview::draw_airfield(Airfield* airfield) {
 	std::clog << "Gameview::draw_airfield(Airfield* airfield)" << std::endl;
 	#endif
     std::vector <Runway> runways = airfield->get_runways();
+    std::vector <Navpoint> navpoints = airfield->get_navpoints();
 	
     for (unsigned int i = 0; i < runways.size(); i+=2) {
 		Point rwys = this->calculate(runways[i].get_start_place());
 		Point rwye = this->calculate(runways[i].get_end_place());
 		
         this->drawer.lineColor(rwys, rwye, 1524875);
+    }
+	
+	for (unsigned int i = 0; i < navpoints.size(); ++i) {
+        Point place_screen = this->calculate(navpoints[i].get_place());
+		
+        this->drawer.trigonColor(place_screen, 15, 1316060);
+		place_screen.change_x(15);
+		place_screen.change_y(-10);
+		this->drawer.draw_text(navpoints[i].get_name(), place_screen, 1316060);
     }
 }
 

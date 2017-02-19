@@ -72,15 +72,6 @@ public:
 	void load();
 	
 	/**
-		* Gameview draw_navpoints
-		* Draws all navigation points which are linked to the airfield
-		* @param std::vector <Navpoint>& navpoints
-		* @return void
-	**/
-	
-	void draw_navpoints(std::vector <Navpoint>& navpoints);
-	
-	/**
 		* Gameview draw_airfield
 		* Draws current airfield runways basically
 		* @param Airfield* airfield

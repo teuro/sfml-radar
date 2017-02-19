@@ -101,7 +101,6 @@ void Gamecontroller::draw_logic(Point& mouse) {
 		this->gameview->clear_screen();
 		this->gameview->update_command(this->command);
 		this->gameview->draw();
-		this->gameview->draw_navpoints(this->game->get_navpoints());
 		this->gameview->draw_airfield(this->game->get_active_field());
 		this->gameview->draw_planes(this->game->get_aircrafts(), this->game->get_selected(), mouse);
 		this->gameview->render();
