@@ -64,7 +64,7 @@ void Gamecontroller::set_variables() {
 	if (this->game->get_new_plane() > this->game_time) {
 		this->gameview->repl["[PLN]"] = Tools::totime(this->game->get_new_plane() - this->game_time, "i:s");
 	} else {
-		this->gameview->repl["[PLN]"] = "No plane";
+		this->gameview->repl["[PLN]"] = "no plane";
 	}
 	this->gameview->repl["[SPK]"] = Tools::tostr(this->settings.max_separation_errors);
 	this->gameview->repl["[RQD]"] = Tools::tostr(this->settings.required_handled);
