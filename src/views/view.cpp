@@ -1,100 +1,12 @@
 #include "view.hpp"
 
-Drawable_input::Drawable_input(std::string val, std::string t_name, std::string t_class, std::string t_id) : Drawable_element(t_name, t_class, t_id), value(val) { }
-
-void Drawable_input::set_value(std::string val) {
-	this->value = val;
-}
-
-std::string Drawable_input::get_value() {
-	return this->value;
-}
-
-Drawable_list::Drawable_list(std::string t_name, std::string t_class, std::string t_id) : Drawable_element(t_name, t_class, t_id) { }
-Drawable_list::Drawable_list() { }
-
-void Drawable_list::add_element(std::string content) {
-	this->elements.push_back(content);
-}
-
-void Drawable_list::clear_content() {
-	this->elements.clear();
-}
-
-std::list <std::string> Drawable_list::get_elements() {
-	return this->elements;
-}
-
-Image::Image(std::string src, std::string t_name, std::string t_class, std::string t_id) : Drawable_element(t_name, t_class, t_id), source(src) { }
-
-std::string Image::get_source() {
-	return this->source;
-}
-	
-void Image::set_source(std::string src) {
-	this->source = src;
-}
-
-Paragraph::Paragraph(std::string cnt, std::string t_name, std::string t_class, std::string t_id) : Drawable_element(t_name, t_class, t_id), content(cnt) { }
-
-std::string Paragraph::get_content() {
-	return this->content;
-}
-
-void Paragraph::set_content(std::string cnt) {
-	this->content = cnt;
-}
-
-Cell::Cell(std::string cnt) : content(cnt) { }
-
-std::string Cell::get_content() { 
-	return this->content; 
-}
-
-void Cell::set_content(std::string cnt) { 
-	this->content = cnt; 
-}
-
-std::list <Cell> Row::get_cells() { 
-	return this->cells; 
-}
-
-void Row::add_cell(Cell& cell) { 
-	#ifdef DEBUG
-	std::clog << "Row::add_cell(" << cell.get_content() << ")" << std::endl;
-	#endif
-	this->cells.push_back(cell); 
-}
-
-Drawable_table::Drawable_table(std::string t_name, std::string t_class, std::string t_id) : Drawable_element(t_name, t_class, t_id) { }
-
-std::list <Row> Drawable_table::get_rows() {
-	return this->rows; 
-}
-
-void Drawable_table::add_row(Row& row) {
-	#ifdef DEBUG
-	std::clog << "Drawable_table::add_row()" << std::endl;
-	#endif
-	this->rows.push_back(row); 
-}
-
-void Drawable_table::add_cell(Cell& cell) {
-	#ifdef DEBUG
-	std::clog << "Drawable_table::add_cell(" << cell.get_content() << ")" << std::endl;
-	#endif
-	this->rows.back().add_cell(cell); 
-}
-
-View::View(Drawsurface& d, Settings& s) : drawer(d), settings(s) { 
-	this->styles = parse_css::parse("styles/style.css");
-}
+View::View(Drawsurface& d, Settings& s) : drawer(d), settings(s) { }
 
 View::~View() { }
 
 void View::load(std::string state) {
 	std::clog << "View::load()" << std::endl;
-	
+	this->styles = parse_css::parse("styles/style.css");
 	std::string file_name;
 	
 	TiXmlDocument doc;
