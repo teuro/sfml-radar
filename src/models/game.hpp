@@ -14,6 +14,7 @@
 #include "outpoint.hpp"
 #include "aircraft.hpp"
 #include "airfield.hpp"
+#include "atis.hpp"
 #include "../tools/settings.hpp"
 #include "../tools/tools.hpp"
 #include "../tools/database/database.hpp"
@@ -35,7 +36,7 @@ public:
         * Game main class
         * @param Settings& s game settiungs
     **/
-	Game(Settings& s);
+	Game(Settings& s, Atis*& atis);
 	~Game();
 
 	/**
@@ -105,7 +106,7 @@ public:
 	int get_planes_count();
 	int get_separation_errors();
 	int get_new_plane();
-	int get_points();
+	double get_points();
 	std::list <Clearance> get_clearances();
 	bool ok();
 private:
@@ -126,7 +127,7 @@ private:
 	std::list       <Aircraft*>		aircrafts;
 	std::queue      <Aircraft*>		holdings;
 	std::list       <Aircraft*>		errors;
-	std::list       <int>			points;
+	std::list       <double>		points;
 	std::list       <Clearance>		clearances;
 	std::vector     <Airfield>		airfields;
 
@@ -135,14 +136,13 @@ private:
     Airfield* active_field;
     Runway departure;
     Runway landing;
+	Atis*& atis;
 
     double duration;
     int separation_errors;
     int new_plane;
 	unsigned int handled_planes;
 	
-	enum turn {LEFT = -1, RIGHT = 1};
-	enum types {DEPARTURE, APPROACH};
 	Queryresult airlines;
 };
 
