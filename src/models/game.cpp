@@ -1,6 +1,6 @@
 #include "game.hpp"
 
-Game::Game(Settings& s) : settings(s) {
+Game::Game(Settings& s, Atis*& a) : settings(s), atis(a) {
     this->duration = 0;
 }
 
@@ -18,15 +18,15 @@ void Game::load(std::string airfield) {
 	this->handled_planes = 0;
 	this->airlines = Database::get_result("SELECT ICAO FROM airlines");
 	this->selected = NULL;
-	
-	for (unsigned int i = 0; i < 3; ++i) {
-		create_plane();
-	}
 }
 
 void Game::set_runways(std::string t_departure, std::string t_landing) {
 	this->departure = this->active_field->get_runway(t_departure);
 	this->landing = this->active_field->get_runway(t_landing);
+	
+	for (unsigned int i = 0; i < 3; ++i) {
+		create_plane();
+	}
 }
 
 void Game::set_centerpoint(Coordinate& cp) {
@@ -121,16 +121,16 @@ void Game::handle_holdings() {
 void Game::calculate_points(int type, int clearance_count) {
 	++this->handled_planes;
 	
-	int multiply = (type == APPROACH) ? 5 : 3;
-	int point = multiply * 10;
+	double multiply = (type == APPROACH) ? 5 : 3;
+	double point = multiply * 10;
 	
 	point = std::log(point / clearance_count) * multiply * 10;
 	
 	this->points.push_back(point);
 }
 
-int Game::get_points() {
-	std::list <int> :: iterator it = this->points.begin();
+double Game::get_points() {
+	std::list <double> :: iterator it = this->points.begin();
 	int sum = 0;
 	
 	while (it != this->points.end()) {
@@ -220,12 +220,10 @@ void Game::create_plane() {
 	Aircraft* plane;
 	
 	if (type == DEPARTURE) {
-		plane = new Aircraft(t_callsign, DEPARTURE, this->settings, this->departure, t_outpoint);
-		plane->load();
+		plane = new Aircraft(t_callsign, this->settings, this->active_field, this->atis, t_outpoint);
 		this->holdings.push(plane);
 	} else {
-		plane = new Aircraft(t_callsign, APPROACH, this->settings, this->landing, t_inpoint);
-		plane->load();
+		plane = new Aircraft(t_callsign, this->settings, this->active_field, this->atis, t_inpoint);
 		this->aircrafts.push_back(plane);
 	}
 }
@@ -335,46 +333,65 @@ void Game::build_clearance(std::string command) {
 		Clearance t_clearance = {this->duration, this->selected->get_name(), command};
 		this->clearances.push_back(t_clearance);
 		
-		int value = Tools::tonumber<int>(tmp.back());
+		std::string s_value = tmp.back();
+		int value = -5;
 		
 		if (tmp.size() > 1) {
 			if (Tools::trim(tmp[0]) == "turn") {
+				value = Tools::toint(s_value);
 				int turn = (Tools::trim(tmp[1]) == "right") ? 1 : -1;
 				
 				this->selected->set_clearance_heading(Tools::deg2rad(value), turn);
 			} else if (Tools::trim(tmp[0]) == "climb") {
+				value = Tools::toint(s_value);
 				if (this->selected->get_altitude() > value) {
 					std::cerr << "Can't climb, because altitude " << this->selected->get_altitude() << " ft is higher than " << value << " ft" << std::endl;
 				} else {
 					this->selected->set_clearance_altitude(value);
 				}
 			} else if (Tools::trim(tmp[0]) == "descent") {
+				value = Tools::toint(s_value);
 				if (this->selected->get_altitude() < value) {
 					std::cerr << "Can't descent, because altitude " << this->selected->get_altitude() << " ft is lower than " << value << " ft" << std::endl;
 				} else {
 					this->selected->set_clearance_altitude(value);
 				}
 			} else if (Tools::trim(tmp[0]) == "speed") {
+				value = Tools::toint(s_value);
 				this->selected->set_clearance_speed(value);
-			} 
-		} else if (Tools::trim(tmp[0]) == "direct") {
-			if (this->selected->get_altitude() < this->settings.shortcut) {
-				std::cerr << "Unable to comply because altitude must be greater than " << this->settings.shortcut << " ft" << std::endl;
-			} else {
-				if (this->selected->get_type() == DEPARTURE) {
-					this->selected->set_clearance_direct();
+			} else if (Tools::trim(tmp[0]) == "direct") {
+				if (this->selected->get_altitude() < this->settings.shortcut) {
+					std::cerr << "Unable to comply because altitude must be greater than " << this->settings.shortcut << " ft" << std::endl;
 				} else {
-					std::cerr << "Plane must be departing not approaching" << std::endl;
+					if (this->selected->get_type() == DEPARTURE) {
+						this->selected->set_clearance_direct();
+					} else {
+						std::cerr << "Plane must be departing not approaching" << std::endl;
+					}
 				}
-			}
-		} else if (Tools::trim(tmp[0]) == "approach") {
-			if (this->selected->get_type() == APPROACH) {
-				this->selected->set_clearance_approach();
+			} else if (Tools::trim(tmp[0]) == "approach") {
+				if (this->selected->get_type() == APPROACH) {
+					this->selected->set_clearance_approach();
+				} else {
+					std::cerr << "Plane must be approaching not departing" << std::endl;
+				}
+			} else if (Tools::trim(tmp[0]) == "cancel") {
+				if (this->selected->get_type() == APPROACH) {
+					this->selected->cancel_approach();
+				} else {
+					std::cerr << "Plane must be approaching not departing" << std::endl;
+				}
+			} else if (Tools::trim(tmp[0]) == "expect") { 
+				std::clog << "Game::build_clearance(" << command << ")" << std::endl;
+				if (this->selected->get_type() == APPROACH) {
+					std::string landing = Tools::trim(s_value);
+					this->selected->set_approach_runway(landing);
+				} else {
+					std::cerr << "Plane must be approaching not departing" << std::endl;
+				}
 			} else {
-				std::cerr << "Plane must be approaching not departing" << std::endl;
-			}
-		} else {
-			std::cerr << "Unknown command" << std::endl;
+				std::cerr << "Unknown command" << std::endl;
+			} 
 		}
 	} else {
 		std::cerr << "No selected plane" << std::endl;
