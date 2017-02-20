@@ -1,0 +1,13 @@
+plane {
+	color: rgb(150, 150, 90);
+}
+
+.infolist {
+	top: 10px;
+	left: 20px;
+}
+
+#planelist {
+	top: 50px;
+	left: 650px;
+}

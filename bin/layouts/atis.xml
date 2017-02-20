@@ -1,7 +1,9 @@
 <?xml version="1.0" ?>
 <layout>
 	<p id="metar" class="info">[METAR]</p>
-	
+	<p id="atis_info" class="info">First choose appropriate runway on list below. Try choose headwind instead of tailwind. 
+	Next choose transition altitude and transfer level. Transition level should be line with pressure and altitude.
+	</p>
 	<table id="basic_info" class="table">
 		<tr>
 			<td>Departure</td>

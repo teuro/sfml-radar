@@ -8,80 +8,8 @@
 	color: rgb(150, 150, 90);
 }
 
-#atis_error {
-	top: 150px;
-	left: 480px;
-}
-
-p {
-	left: 10px;
-	width: 160px;
-	height: 25px;
-	color: rgb(150, 150, 90);
-}
-
-plane {
-	color: rgb(150, 150, 90);
-}
-
-ul {
-	color: rgb(150, 150, 90);
-}
-
-.infolist {
-	top: 10px;
-	left: 20px;
-}
-
-#planelist {
-	top: 50px;
-	left: 650px;
-}
-
-input {
-	color: rgb(150, 150, 90);
-}
-
-#atis {
-	top: 50px;
-	left: 50px;
-	width: 500px;
-}
-
-#departure {
-	top: 250px;
-}
-
-#landing {
-	top: 280px;
-}
-
-#level {
-	top: 310px;
-}
-
-#altitude {
-	top: 340px;
-}
-
 .strorage {
-	top: 150px;
-}
-
-#runway-list-departure {
-	left: 50px;
-}
-
-#runway-list-landing {
-	left: 150px;
-}
-
-#transfer-altitude {
-	left: 250px;
-}
-
-#transfer-level {
-	left: 350px;
+	top: 200px;
 }
 
 .userinput {

@@ -1,0 +1,47 @@
+#runway-list-departure {
+	left: 50px;
+}
+
+#runway-list-landing {
+	left: 150px;
+}
+
+#transfer-altitude {
+	left: 250px;
+}
+
+#transfer-level {
+	left: 350px;
+}
+
+#atis_error {
+	top: 200px;
+	left: 480px;
+}
+
+#atis_info {
+	top: 120px;
+	width: 600px;
+}
+
+#atis {
+	top: 50px;
+	left: 50px;
+	width: 500px;
+}
+
+#departure {
+	top: 250px;
+}
+
+#landing {
+	top: 280px;
+}
+
+#level {
+	top: 310px;
+}
+
+#altitude {
+	top: 340px;
+}
