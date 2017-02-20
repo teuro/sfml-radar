@@ -38,10 +38,8 @@ void Aircraft::load() {
 Aircraft::~Aircraft() { }
 
 void Aircraft::set_approach_runway(std::string name) {
-	std::clog << "Aircraft::set_approach_runway(" << name << ")" << std::endl;
 	try {
 		this->landing = this->airport->get_runway(name);
-		std::clog << "Expecting runway " << this->landing.get_name() << " for landing" << std::endl;
 		this->expect = true;
 	} catch (std::logic_error& e) {
 		std::cerr << e.what() << std::endl;
@@ -215,7 +213,6 @@ void Aircraft::set_clearance_altitude(double cl_alt) {
 }
 
 void Aircraft::set_clearance_approach() {
-	std::clog << this->landing.get_start_place() << std::endl;
 	this->approach = true;
 }
 
@@ -224,11 +221,8 @@ void Aircraft::cancel_approach() {
 }
 
 void Aircraft::set_clearance_direct(std::string outpoint) {
-	std::clog << "Aircraft::set_clearance_direct(" << outpoint << ")" << std::endl;
-	
 	try {
 		Outpoint t_op = this->airport->get_outpoint(outpoint);
-		std::clog << "Direct to " << t_op.get_name() << std::endl;
 		this->target = t_op;
 	this->direct = true;
 	} catch (std::logic_error& e) {
