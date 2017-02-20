@@ -40,6 +40,8 @@ public:
 	
     virtual void draw_text(std::string text, Point& a, int red, int green, int blue, int font_size = 16) = 0;
     virtual void draw_text(std::string text, Point& a, int color, int font_size = 16) = 0;
+	
+	virtual int get_text_length(std::string text) = 0;
 
 	virtual unsigned int get_fontsize() = 0;
 	virtual void flip() = 0;

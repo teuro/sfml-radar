@@ -41,6 +41,8 @@ public:
     void draw_text(std::string text, Point& a, std::string color = "green", int font_size = 16);
     void draw_text(std::string text, Point& a, int red, int green, int blue, int font_size = 16);
     void draw_text(std::string text, Point& a, int color, int font_size = 16);
+	
+	int get_text_length(std::string text);
 
 	unsigned int get_fontsize();
 	void flip();

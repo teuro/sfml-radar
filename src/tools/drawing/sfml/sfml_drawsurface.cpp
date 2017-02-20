@@ -157,3 +157,16 @@ std::vector <int> sfml_drawsurface::convert(int color) {
 	
 	return t;
 }
+
+int sfml_drawsurface::get_text_length(std::string text) {
+	if (!font_loaded) {
+		this->load_font("arial.ttf", this->font_size);
+	}
+	
+	sf::Text t_text;
+	t_text.setFont(this->font);
+	t_text.setString(text);
+	t_text.setCharacterSize(font_size);
+	sf::FloatRect t_rect = t_text.getLocalBounds();
+	return (int)t_rect.width;
+}
