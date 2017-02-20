@@ -203,12 +203,15 @@ void Gamecontroller::load() {
 void Gamecontroller::handle_text_input() {
     std::string t_command = this->command;
 	
-	if (t_command == "reset") {
-		this->game->set_centerpoint(this->settings.centerpoint);
-		return;
-	}
+	std::vector <std::string> tmp = Tools::split(";", this->command);
 	
-	this->game->build_clearance(command);
+	if (tmp.size() > 1) {
+		for (unsigned int i = 0; i < tmp.size(); ++i) {
+			this->game->build_clearance(Tools::trim(tmp[i]));
+		}
+	} else {
+		this->game->build_clearance(command);
+	}
 }
 
 void Gamecontroller::update_command(std::string command) {
