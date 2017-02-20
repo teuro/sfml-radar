@@ -5,6 +5,7 @@
 #include <tinyxml/tinyxml.h>
 
 #include "../tools/drawing/sfml/sfml_drawsurface.hpp"
+#include <dirent.h>
 #include <map>
 #include <vector>
 #include <list>
@@ -58,6 +59,7 @@ protected:
 	std::vector <Drawable_list> lists;
 	std::vector <Drawable_table> tables;
 private:
+	void add_style(std::list <Style> tmp);
 };
 
 #endif

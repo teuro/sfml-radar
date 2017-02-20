@@ -4,9 +4,27 @@ View::View(Drawsurface& d, Settings& s) : drawer(d), settings(s) { }
 
 View::~View() { }
 
+void View::add_style(std::list <Style> tmp) {
+	this->styles.splice(this->styles.end(), tmp);
+}
+
 void View::load(std::string state) {
 	std::clog << "View::load()" << std::endl;
-	this->styles = parse_css::parse("styles/style.css");
+	
+	DIR *dir;
+	struct dirent *ent;
+	if ((dir = opendir (this->settings.style_folder.c_str())) != NULL) {
+		while ((ent = readdir (dir)) != NULL) {
+			std::string file_name = this->settings.style_folder + std::string(ent->d_name);
+			if (file_name != "/." && file_name != "/..") {
+				this->add_style(parse_css::parse(file_name));
+			}
+		}
+		closedir (dir);
+	} else {
+		std::cerr << "Directory not open" << std::endl;
+	}
+	
 	std::string file_name;
 	
 	TiXmlDocument doc;
@@ -119,14 +137,40 @@ void View::draw_element(Paragraph& p) {
 	#endif
 	Style st = p.get_style();
 	int color = st.get_text_color();
-	int background_color = st.get_background_color();
 	
 	Point place_a = st.get_place();
 	
-	Point place_b(place_a.get_x() + st.get_width(), place_a.get_y() + st.get_height());
-	this->drawer.rectangleColor(place_a, place_b, background_color);
+	unsigned int width = this->drawer.get_text_length(p.get_content());
 	
-	this->drawer.draw_text(Tools::replace(p.get_content(), repl), place_a, color);
+	if (width <= st.get_width()) {
+		this->drawer.draw_text(Tools::replace(p.get_content(), repl), place_a, color);
+	} else {
+		std::vector <std::string> tmp = Tools::split(" ", p.get_content());
+		std::vector <std::string> lines;
+		std::string line;
+		std::string t_line;
+		
+		for (unsigned int i = 0; i < tmp.size(); ++i) {
+			t_line += tmp[i] + " ";
+			width = this->drawer.get_text_length(t_line);
+			
+			if (width > st.get_width()) {
+				lines.push_back(line);
+				line = "";
+				t_line = tmp[i] + " ";
+			} else {
+				line = t_line;
+			}
+		}
+		
+		lines.push_back(t_line);
+		
+		for (unsigned int i = 0; i < lines.size(); ++i) {
+			this->drawer.draw_text(Tools::replace(lines[i], repl), place_a, color);
+			place_a.change_y(25);
+		}
+		
+	}
 }
 
 void View::draw_element(Drawable_input& i) {

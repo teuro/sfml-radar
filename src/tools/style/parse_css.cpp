@@ -1,7 +1,7 @@
 #include "parse_css.hpp"
 
 std::list <Style> parse_css::parse(std::string file) {
-    std::ifstream fin(file.c_str(), std::ios::in);
+	std::ifstream fin(file.c_str(), std::ios::in);
     std::string line;
     std::string id;
     std::string s_class;
