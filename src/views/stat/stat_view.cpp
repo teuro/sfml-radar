@@ -14,16 +14,30 @@ void Statview::load() {
 
 void Statview::draw_points(std::list <Game_point> points) {
 	std::list <Game_point> :: iterator pit = points.begin();
+	Drawable_table point_table("table", "", "points");
 	
-	Point place(120, 50);
-	int color = 1524875;
+	int sum = 0;
 	
 	while (pit != points.end()) {
-		this->drawer.draw_text(pit->plane, place, color);
-		place.change_x(100);
-		this->drawer.draw_text(Tools::tostr(pit->points, 3), place, color);
-		place.change_y(20);
-		place.change_x(-100);
+		Row row;
+		point_table.add_row(row);
+		Cell cell1(pit->plane);
+		point_table.add_cell(cell1);
+		
+		Cell cell2(Tools::tostr(pit->points, 3));
+		point_table.add_cell(cell2);
+		sum += pit->points;
 		++pit;
 	}
+	
+	Row row;
+	point_table.add_row(row);
+	Cell cell3("SUM");
+	point_table.add_cell(cell3);
+	
+	Cell cell4(Tools::tostr(sum, 3));
+	point_table.add_cell(cell4);
+	
+	this->style(point_table);
+	this->draw_element(point_table);
 }
