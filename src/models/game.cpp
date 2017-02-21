@@ -113,24 +113,29 @@ void Game::handle_holdings() {
     }
 }
 
-void Game::calculate_points(int type, int clearance_count) {
+void Game::calculate_points(int type, double clearance_count, std::string plane) {
 	++this->handled_planes;
 	
 	double multiply = (type == APPROACH) ? 5 : 3;
 	double point = multiply * 10;
 	
 	point = std::log(point / clearance_count) * multiply * 10;
-	
-	this->points.push_back(point);
+	Game_point tgp = {plane, point};
+	this->points.push_back(tgp);
 }
 
-double Game::get_points() {
-	std::list <double> :: iterator it = this->points.begin();
-	int sum = 0;
+std::list <Game_point> Game::get_points() {
+	return this->points;
+}
+
+double Game::get_game_points() {
+	std::list <Game_point> :: iterator pit = this->points.begin();
+	double sum = 0;
 	
-	while (it != this->points.end()) {
-		sum += (*it);
-		++it;
+	while (pit != this->points.end()) {
+		sum += pit->points;
+		
+		++pit;
 	}
 	
 	return sum;
@@ -146,7 +151,7 @@ void Game::update(double elapsed) {
         (*it)->update(elapsed);
 		
 		if ((*it)->get_speed() < 20 && (*it)->get_type() == APPROACH) {
-			calculate_points(APPROACH, this->calculate_clearances((*it)->get_name()));
+			calculate_points(APPROACH, this->calculate_clearances((*it)->get_name()), (*it)->get_name());
 			it = this->aircrafts.erase(it);
 			continue;
 		} else if ((*it)->get_speed() > 145 && (*it)->get_type() == DEPARTURE && (*it)->get_altitude() < 500) {
@@ -158,8 +163,8 @@ void Game::update(double elapsed) {
 		}
 		
 		if (Tools::on_area((*it)->get_place(), (*it)->get_target().get_place()) && (*it)->get_type() == DEPARTURE) {
+			calculate_points(DEPARTURE, this->calculate_clearances((*it)->get_name()), (*it)->get_name());
 			it = this->aircrafts.erase(it);
-			calculate_points(DEPARTURE, 5);
 			continue;
 		}
     }
@@ -366,7 +371,13 @@ void Game::build_clearance(std::string command) {
 				}
 			} else if (Tools::trim(tmp[0]) == "speed") {
 				value = Tools::toint(s_value);
-				this->selected->set_clearance_speed(value);
+				if (value > this->settings.clearance_speed_upper) {
+					std::cerr << "Maximum clearance speed is " << this->settings.clearance_speed_upper << " knots" << std::endl;
+				} else if (value < this->settings.clearance_speed_lower) {
+					std::cerr << "Minimum clearance speed is " << this->settings.clearance_speed_upper << " knots" << std::endl;
+				} else { 
+					this->selected->set_clearance_speed(value);
+				}
 			} else if (Tools::trim(tmp[0]) == "expect") { 
 				std::clog << "Game::build_clearance(" << command << ")" << std::endl;
 				if (this->selected->get_type() == APPROACH) {

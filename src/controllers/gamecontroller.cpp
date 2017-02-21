@@ -74,7 +74,7 @@ void Gamecontroller::set_variables() {
 	this->gameview->repl["[TRA]"] = Tools::tostr(this->atis->get_transition_altitude());
 	this->gameview->repl["[FPS]"] = Tools::tostr(this->fps);
 	this->gameview->repl["[CLRC]"] = Tools::tostr(this->game->get_clearances().size());
-	this->gameview->repl["[PCNT]"] = Tools::tostr(this->game->get_points());
+	this->gameview->repl["[PCNT]"] = Tools::tostr(this->game->get_game_points());
 	
 	this->atisview->repl["[METAR]"] = this->metar.to_string();
 	this->atisview->repl["[DEPARTURE]"] = this->atis->get_departure_runway();
@@ -83,6 +83,7 @@ void Gamecontroller::set_variables() {
 	this->atisview->repl["[ALTITUDE]"] = Tools::tostr(this->atis->get_transition_altitude());
 	
 	this->statview->repl["[SPE]"] = Tools::tostr(this->game->get_separation_errors());
+	this->statview->repl["[RQD]"] = Tools::tostr(this->settings.required_handled);
 }
 
 void Gamecontroller::calculate_fps() {
@@ -112,7 +113,7 @@ void Gamecontroller::draw_logic(Point& mouse) {
 	} else if (this->state == STAT) {
 		this->statview->clear_screen();
 		this->statview->draw();
-		this->statview->draw_clearances(this->game->get_clearances());
+		this->statview->draw_points(this->game->get_points());
 		this->statview->render();
 	}
 }

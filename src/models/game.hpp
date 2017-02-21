@@ -23,6 +23,11 @@ struct Clearance {
 	std::string clearance;
 };
 
+struct Game_point {
+	std::string plane;
+	double points;
+};
+
 /**
     * Game very low-level on MVC model
     * Representing state of game
@@ -103,7 +108,8 @@ public:
 	int get_planes_count();
 	int get_separation_errors();
 	int get_new_plane();
-	double get_points();
+	std::list <Game_point> get_points();
+	double get_game_points();
 	std::list <Clearance> get_clearances();
 	bool ok();
 private:
@@ -114,7 +120,7 @@ private:
 	void load_runways(std::map <std::string, std::string> variables);
 	Inpoint select_inpoint();
     bool is_free(Inpoint& navpoint);
-	void calculate_points(int type, int clearance_count);
+	void calculate_points(int type, double clearance_count, std::string plane);
 	int calculate_clearances(std::string name);
 	Coordinate centerpoint;
 	Settings& settings;
@@ -123,8 +129,8 @@ private:
 	std::list       <Aircraft*>		aircrafts;
 	std::queue      <Aircraft*>		holdings;
 	std::list       <Aircraft*>		errors;
-	std::list       <double>		points;
 	std::list       <Clearance>		clearances;
+	std::list       <Game_point>	points;
 	std::vector     <Airfield>		airfields;
 
 	std::string command;
