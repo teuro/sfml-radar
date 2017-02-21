@@ -2,11 +2,8 @@
 #define SFML_DRAWSURFACE_HPP
 /**
     * sfml-drawsurface provides basic drawing, pictures and text
-    * @require drawsurface
-    * @require stdexcept
-    * @require SFML\graphics
-    * 2014/06/02
-    * Juha Teurokoski
+    * @date 2014/06/02
+    * @author Juha Teurokoski
 **/
 
 #include "../drawsurface.hpp"

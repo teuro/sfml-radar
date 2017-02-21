@@ -1,8 +1,7 @@
 /**
-    * drawsurface base for all graphics pure abstract
-    * provide only interface quite high-level
-    * 2014/06/02
-    * Juha Teurokoski
+    * drawsurface base for all graphics pure abstract. Provide only interface quite high-level
+    * @date 2014/06/02
+    * @author Juha Teurokoski
 **/
 
 #ifndef _DRAWSURFACE_HPP
