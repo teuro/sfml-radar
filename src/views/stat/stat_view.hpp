@@ -15,7 +15,7 @@ public:
 	~Statview();
 	void draw();
     void load();
-	void draw_clearances(std::list <Clearance> clearances);
+	void draw_points(std::list <Game_point> points);
 };
 
 #endif // ATIS_VIEW

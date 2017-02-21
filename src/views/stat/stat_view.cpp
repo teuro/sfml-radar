@@ -8,23 +8,22 @@ void Statview::draw() {
 }
 
 void Statview::load() { 
+	std::clog << "Statview::load()" << std::endl;
 	View::load("stat");
 }
 
-void Statview::draw_clearances(std::list <Clearance> clearances) {
-	std::list <Clearance> :: iterator cit = clearances.begin();
+void Statview::draw_points(std::list <Game_point> points) {
+	std::list <Game_point> :: iterator pit = points.begin();
 	
 	Point place(120, 50);
 	int color = 1524875;
 	
-	while (cit != clearances.end()) {
-		this->drawer.draw_text(Tools::totime(cit->time, "H:i:s"), place, color);
+	while (pit != points.end()) {
+		this->drawer.draw_text(pit->plane, place, color);
 		place.change_x(100);
-		this->drawer.draw_text(cit->plane, place, color);
-		place.change_x(100);
-		this->drawer.draw_text(cit->clearance, place, color);
+		this->drawer.draw_text(Tools::tostr(pit->points, 3), place, color);
 		place.change_y(20);
-		place.change_x(-200);
-		++cit;
+		place.change_x(-100);
+		++pit;
 	}
 }
