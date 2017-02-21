@@ -15,33 +15,23 @@
 }
 
 #atis_error {
-	top: 200px;
-	left: 480px;
+	top: 350px;
+	left: 250px;
+}
+
+#atis_data {
+	top: 350px;
+	left: 20px;
 }
 
 #atis_info {
-	top: 120px;
+	top: 30px;
 	width: 600px;
+	left: 10px;
+	color: rgb(120, 120, 120);
 }
 
-#atis {
-	top: 50px;
-	left: 50px;
-	width: 500px;
-}
 
-#departure {
-	top: 250px;
-}
-
-#landing {
-	top: 280px;
-}
-
-#level {
-	top: 310px;
-}
-
-#altitude {
-	top: 340px;
+.strorage {
+	top: 140px;
 }

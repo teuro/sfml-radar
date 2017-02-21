@@ -1,15 +1,12 @@
 #metar {
 	width: 400px;
+	color: rgb(180, 80, 80);
 }
 
 #basic_info {
 	top: 30px;
 	left: 20px;
 	color: rgb(150, 150, 90);
-}
-
-.strorage {
-	top: 200px;
 }
 
 .userinput {

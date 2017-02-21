@@ -1,6 +1,6 @@
 p {
-	width: 160px;
 	color: rgb(150, 150, 90);
+	width: 400px;
 }
 
 ul {
@@ -8,5 +8,9 @@ ul {
 }
 
 input {
+	color: rgb(150, 150, 90);
+}
+
+table {
 	color: rgb(150, 150, 90);
 }
