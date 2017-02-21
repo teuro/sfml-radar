@@ -108,10 +108,12 @@ private:
     bool direct;
     bool landed;
     bool expect;
+    bool final_approach;
 	bool check_approach_config();
 	void calculate_angle_target(Coordinate& target);
     Settings& settings;
 	Navpoint target;
+	Coordinate approach_target;
 	Runway landing;
 	Airfield*& airport;
 	Atis*& atis;

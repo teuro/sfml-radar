@@ -31,6 +31,7 @@ void Aircraft::load() {
     this->landed = false;
     this->direct = false;
 	this->expect = false;
+	this->final_approach = false;
 	
     this->turn = -1;
 }
@@ -116,8 +117,12 @@ void Aircraft::update(double elapsed) {
 				std::clog << "Runway start point let's land completely" << std::endl;
 				this->altitude = this->settings.airfield_altitude;
 				this->landed = true;
-			} else {
-				this->calculate_angle_target(this->landing.get_start_place());
+			}  else if (Tools::on_area(this->place, this->landing.get_approach_place()) && this->final_approach == false) {
+				std::clog << "Runway approach point let's turn to start point" << std::endl;
+				this->approach_target = this->landing.get_start_place();
+				this->final_approach = true;
+			}else {
+				this->calculate_angle_target(this->approach_target);
 			}
 		} else {
 			this->clearance_speed = 10;
@@ -213,6 +218,7 @@ void Aircraft::set_clearance_altitude(double cl_alt) {
 
 void Aircraft::set_clearance_approach() {
 	this->approach = true;
+	this->approach_target = this->landing.get_approach_place();
 }
 
 void Aircraft::cancel_approach() {
