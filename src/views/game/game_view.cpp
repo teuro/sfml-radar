@@ -167,11 +167,13 @@ void Gameview::draw_airfield(Airfield* airfield) {
     std::vector <Runway> runways = airfield->get_runways();
     std::vector <Navpoint> navpoints = airfield->get_navpoints();
 	
-    for (unsigned int i = 0; i < runways.size(); i+=2) {
+    for (unsigned int i = 0; i < runways.size(); ++i) {
 		Point rwys = this->calculate(runways[i].get_start_place());
 		Point rwye = this->calculate(runways[i].get_end_place());
+		Point rwya = this->calculate(runways[i].get_approach_place());
 		
         this->drawer.lineColor(rwys, rwye, 1524875);
+        this->drawer.circleColor(rwya, 5, 1524875);
     }
 	
 	for (unsigned int i = 0; i < navpoints.size(); ++i) {
