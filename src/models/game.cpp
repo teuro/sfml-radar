@@ -119,7 +119,7 @@ void Game::calculate_points(int type, double clearance_count, std::string plane)
 	double multiply = (type == APPROACH) ? 5 : 3;
 	double point = multiply * 10;
 	
-	point = std::log(point / clearance_count) * multiply * 10;
+	point = (int)std::log(point / clearance_count) * multiply * 10;
 	Game_point tgp = {plane, point};
 	this->points.push_back(tgp);
 }
@@ -286,8 +286,10 @@ void Game::load_runways(std::map <std::string, std::string> variables) {
 		
 			Coordinate start_p(s_lat, s_lon);
 			Coordinate end_p(e_lat, e_lon);
+			double angle = Tools::fix_angle(Tools::angle(start_p, end_p) - Tools::get_PI());
+			Coordinate approach = Tools::calculate(start_p, angle, this->settings.approach_point_distance);
 
-			Runway rwy(q_runways(i, "name"), start_p, end_p);
+			Runway rwy(q_runways(i, "name"), start_p, end_p, approach);
 			
 			this->active_field->add_runway(rwy);
 		}
