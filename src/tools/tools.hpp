@@ -1,5 +1,5 @@
-#ifndef _TOOLS_HPP
-#define _TOOLS_HPP
+#ifndef TOOLS_HPP
+#define TOOLS_HPP
 
 #include <cmath>
 #include <sstream>
@@ -16,6 +16,12 @@
 
 #include "../models/coordinate.hpp"
 #include "../models/point.hpp"
+
+/**
+	* Tools 
+	* This contain many helper functions. This namespace has only few variables which are constant values.
+	* Do not add any mutable variables, because there no guarantee, that those variables are visible.
+**/
 
 namespace Tools {
 	/**
