@@ -11,9 +11,33 @@
 #include "airfield.hpp"
 #include "atis.hpp"
 
+/**
+	* Aircraft 
+	* This representing flying objects. 
+**/
+
 class Aircraft {
 public:
+	/** 
+		* Approach constructor
+		* @param std::string name
+		* @param Settings& settings
+		* @param Airfield*& airfield
+		* @param Atis*& atis
+		* @param Inpoint& in
+	**/
+	
     Aircraft(std::string name, Settings& settings, Airfield*& airport, Atis*& atis, Inpoint& in);
+	
+	/** 
+		* Departure constructor
+		* @param std::string name
+		* @param Settings& settings
+		* @param Airfield*& airfield
+		* @param Atis*& atis
+		* @param Outpoint& out
+	**/
+	
     Aircraft(std::string name, Settings& settings, Airfield*& airport, Atis*& atis, Outpoint& out);
 	
     ~Aircraft();

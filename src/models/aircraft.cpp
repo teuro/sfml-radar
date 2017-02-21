@@ -86,7 +86,6 @@ void Aircraft::update(double elapsed) {
 
 	if (this->approach) {
 		if (this->landed == false) {
-			/** Distance from planes position to runway in feets **/
 			double t_distance = Tools::distanceNM(this->place, this->landing.get_start_place()) * 6076.11549;
 			double target_approach_altitude = std::tan(Tools::deg2rad(this->landing.get_glidepath())) * t_distance;
 			
