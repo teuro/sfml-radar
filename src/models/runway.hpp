@@ -6,12 +6,13 @@
 
 class Runway {
 public:
-    Runway(std::string n, Coordinate s, Coordinate e);
+    Runway(std::string n, Coordinate s, Coordinate e, Coordinate& a);
     Runway();
     ~Runway();
 
     Coordinate& get_start_place();
     Coordinate& get_end_place();
+    Coordinate& get_approach_place();
 
     double get_length();
     double get_heading();
@@ -24,6 +25,7 @@ private:
     std::string name;
     Coordinate start_place;
     Coordinate end_place;
+    Coordinate approach_point;
     double init_heading;
     double turning_altirude;
 };

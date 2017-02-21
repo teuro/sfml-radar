@@ -1,6 +1,6 @@
 #include "runway.hpp"
 
-Runway::Runway(std::string n, Coordinate s, Coordinate e) : name(n), start_place(s), end_place(e) { }
+Runway::Runway(std::string n, Coordinate s, Coordinate e, Coordinate& a) : name(n), start_place(s), end_place(e), approach_point(a) { }
 
 Runway::Runway() {}
 
@@ -12,6 +12,10 @@ Coordinate& Runway::get_start_place() {
 
 Coordinate& Runway::get_end_place() {
     return this->end_place;
+}
+
+Coordinate& Runway::get_approach_place() {
+	return this->approach_point;
 }
 
 double Runway::get_length() {
