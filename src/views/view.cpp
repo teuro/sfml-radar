@@ -109,7 +109,6 @@ void View::load(std::string state) {
 				Drawable_list list(t_name, t_class, t_id);
 				
 				for (TiXmlElement* e = pParm->FirstChildElement(); e != NULL; e = e->NextSiblingElement()) {
-					std::clog << e->GetText() << std::endl;
 					list.add_element(e->GetText());
 				}
 				
