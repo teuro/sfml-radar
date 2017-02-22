@@ -5,6 +5,7 @@ Atisview::Atisview(Drawsurface& d, Settings& s, Atis*& a) : View(d, s), atis(a) 
 Atisview::~Atisview() { }
 
 void Atisview::load(std::vector <Runway> runways, std::map <int, std::vector <int> > levels) {
+	std::clog << "Atisview::load()" << std::endl;
     View::load("atis");
 	this->tr_levels = levels;
 	this->runways = runways;
