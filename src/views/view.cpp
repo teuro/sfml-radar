@@ -9,7 +9,7 @@ void View::add_style(std::list <Style> tmp) {
 }
 
 void View::load(std::string state) {
-	std::clog << "View::load()" << std::endl;
+	std::clog << "View::load(" << state << ")" << std::endl;
 	
 	DIR *dir;
 	struct dirent *ent;
@@ -101,6 +101,20 @@ void View::load(std::string state) {
 						this->tables.back().add_cell(cell);
 					}
 				}
+			} else if (pParm->Value() == std::string("ul")) {
+				std::string t_id = Tools::trim(pParm->Attribute("id"));
+				std::string t_class = Tools::trim(pParm->Attribute("class"));
+				std::string t_name = pParm->Value();
+				
+				Drawable_list list(t_name, t_class, t_id);
+				
+				for (TiXmlElement* e = pParm->FirstChildElement(); e != NULL; e = e->NextSiblingElement()) {
+					std::clog << e->GetText() << std::endl;
+					list.add_element(e->GetText());
+				}
+				
+				this->style(list);
+				this->lists.push_back(list);
 			} 
 			
             pParm = pParm->NextSiblingElement();
@@ -232,6 +246,7 @@ void View::draw() {
     std::vector <Paragraph> :: iterator paragraph;
     std::vector <Drawable_input> :: iterator input;
     std::vector <Drawable_table> :: iterator table;
+    std::vector <Drawable_list> :: iterator list;
 	
 	for (image = this->images.begin(); image !=  this->images.end(); ++image) {
         draw_element(*image);
@@ -247,6 +262,10 @@ void View::draw() {
 	
 	for (table = this->tables.begin(); table !=  this->tables.end(); ++table) {
         draw_element(*table);
+    }
+	
+	for (list = this->lists.begin(); list !=  this->lists.end(); ++list) {
+        draw_element(*list);
     }
 }
 
