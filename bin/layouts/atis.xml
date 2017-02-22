@@ -25,4 +25,9 @@
 			<td>[LEVEL]</td>
 		</tr>
 	</table>
+	
+	<ul class="test" id="test">
+		<li>Moi</li>
+		<li>Hei</li>
+	</ul>
 </layout>

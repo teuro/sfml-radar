@@ -15,3 +15,9 @@
 	width: 550px;
 	height: 30px;
 }
+
+#test {
+	top: 160px;
+	left: 550px;
+	color: rgb(200, 200, 200);
+}
