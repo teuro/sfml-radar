@@ -17,7 +17,7 @@
 /**
  * @file
  * @author  Juha Teurokoski <teurokoski.juha@gmail.com>
- * @version 1.0
+ * @version 0.7.5
  *
  * @section LICENSE
  *
