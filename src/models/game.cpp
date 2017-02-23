@@ -154,13 +154,7 @@ void Game::update(double elapsed) {
 			calculate_points(APPROACH, this->calculate_clearances((*it)->get_name()), (*it)->get_name());
 			it = this->aircrafts.erase(it);
 			continue;
-		} else if ((*it)->get_speed() > 145 && (*it)->get_type() == DEPARTURE && (*it)->get_altitude() < 500) {
-			(*it)->set_clearance_altitude(4000);
-		} else if ((*it)->get_type() == DEPARTURE && (*it)->get_altitude() > 1500 && (*it)->get_altitude() < this->settings.shortcut) {
-			(*it)->set_clearance_speed(250);
-		} else if ((*it)->get_type() == DEPARTURE && (*it)->get_altitude() > 10000) {
-			(*it)->set_clearance_speed(320);
-		}
+		} 
 		
 		if (Tools::on_area((*it)->get_place(), (*it)->get_target().get_place()) && (*it)->get_type() == DEPARTURE) {
 			calculate_points(DEPARTURE, this->calculate_clearances((*it)->get_name()), (*it)->get_name());

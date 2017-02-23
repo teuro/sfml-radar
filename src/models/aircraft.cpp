@@ -84,6 +84,14 @@ void Aircraft::calculate_angle_target(Coordinate& target) {
 
 void Aircraft::update(double elapsed) {
 	this->heading = Tools::fix_angle(this->heading);
+	
+	if (this->speed > 145 && this->type == DEPARTURE && this->altitude < 500) {
+		this->set_clearance_altitude(4000);
+	} else if (this->type == DEPARTURE && this->altitude > 1500 && this->altitude < this->settings.shortcut) {
+		this->set_clearance_speed(250);
+	} else if (this->type == DEPARTURE && this->altitude > 10000) {
+		this->set_clearance_speed(320);
+	}
 
 	if (this->approach) {
 		if (this->landed == false) {
