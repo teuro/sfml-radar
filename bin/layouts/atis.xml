@@ -5,6 +5,7 @@
 	<p id="atis_info" class="info">
 	First choose appropriate runway on list below. Try choose headwind instead of tailwind. 
 	Next choose transition altitude and transfer level. Transition level should be line with pressure and altitude.
+	Program will display tailwind if You choose wrong runway.
 	</p>
 	
 	<table id="atis_data" class="table">
@@ -25,9 +26,4 @@
 			<td>[LEVEL]</td>
 		</tr>
 	</table>
-	
-	<ul class="test" id="test">
-		<li>Moi</li>
-		<li>Hei</li>
-	</ul>
 </layout>

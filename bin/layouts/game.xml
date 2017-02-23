@@ -1,5 +1,7 @@
 <?xml version="1.0" ?>
 <layout>
+	<p id="metar" class="info">[METAR]</p>
+	
 	<table id="basic_info" class="table">
 		<tr>
 			<td>Planes in area [PLC]</td>
