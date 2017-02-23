@@ -134,7 +134,7 @@ void Gamecontroller::update(double elapsed, Point& mouse) {
 		this->calculate_fps();
 		
 		this->game->update(elapsed);
-		this->metar.update(this->game->get_active_field()->get_name());
+		//this->metar.update(this->game->get_active_field()->get_name());
 		
 		if (this->game->ok()) {
 			this->state = STAT;
