@@ -201,6 +201,18 @@ Inpoint Game::select_inpoint() {
 	return t_inpoint;
 }
 
+bool Game::check_aircrafts(std::string name) {
+	std::list <Aircraft*> :: iterator plane;
+
+    for (plane = this->aircrafts.begin(); plane != this->aircrafts.end(); ++plane) {
+		if ((*plane)->get_name() == name) {
+			return false;
+		}
+	}
+	
+	return true;
+}
+
 void Game::create_plane() {
 	std::clog << "Game::create_plane()" << std::endl;
 	
@@ -225,7 +237,12 @@ void Game::create_plane() {
 	
 	types type = (t_type < 50) ? DEPARTURE : APPROACH;
 
-    std::string t_callsign = airlines(Tools::rnd(0, airlines.size()), "ICAO") + Tools::tostr(Tools::rnd(1, 999));
+    std::string t_callsign;
+	t_callsign = airlines(Tools::rnd(0, airlines.size()), "ICAO") + Tools::tostr(Tools::rnd(1, 999), 3);
+	
+	while (!this->check_aircrafts(t_callsign)) {
+		t_callsign = airlines(Tools::rnd(0, airlines.size()), "ICAO") + Tools::tostr(Tools::rnd(1, 999), 3);
+	}
 	
 	Aircraft* plane;
 	
@@ -375,7 +392,6 @@ void Game::build_clearance(std::string command) {
 					this->selected->set_clearance_speed(value);
 				}
 			} else if (Tools::trim(tmp[0]) == "expect") { 
-				std::clog << "Game::build_clearance(" << command << ")" << std::endl;
 				if (this->selected->get_type() == APPROACH) {
 					std::string landing = Tools::trim(s_value);
 					this->selected->set_approach_runway(landing);

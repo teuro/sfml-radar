@@ -122,6 +122,7 @@ private:
     bool is_free(Inpoint& navpoint);
 	void calculate_points(int type, double clearance_count, std::string plane);
 	int calculate_clearances(std::string name);
+	bool check_aircrafts(std::string name);
 	Coordinate centerpoint;
 	Settings& settings;
 
