@@ -122,11 +122,9 @@ void Aircraft::update(double elapsed) {
 			} 
 			
 			if (Tools::on_area(this->place, this->landing.get_start_place())) {
-				std::clog << "Runway start point let's land completely" << std::endl;
 				this->altitude = this->settings.airfield_altitude;
 				this->landed = true;
 			}  else if (Tools::on_area(this->place, this->landing.get_approach_place()) && this->final_approach == false) {
-				std::clog << "Runway approach point let's turn to start point" << std::endl;
 				this->approach_target = this->landing.get_start_place();
 				this->final_approach = true;
 			}else {
