@@ -25,59 +25,13 @@
 
 namespace Tools {
 	/**
-		* deg2rad
-		* Converts degrees to radians
-		* @parameter double deg
-		* @return double
-	**/
-    double deg2rad(double deg);
-	
-	/**
-		* rad2deg
-		* converts radians to degrees
-		* @parameter double rad
-		* @return double
-	**/
-    double rad2deg(double rad);
-
-	/**
-		* distanceNM 
-		* Calculates distance between two coordinate points
-		* @parameter Coordinate a
-		* @parameter Coordinate b
-		* @return double
-	**/
-	double distanceNM(Coordinate& a, Coordinate& b);
-	
-	/**
-		* distancePX
-		* Calculates distance between two screen points
-		* @paramterer Point a
-		* @paramterer Point b
-		* @return double
-	**/
-	double distancePX(Point& a, Point& b);
-	
-	/**
-		* angle
-		* Calculates angle between two screen points
-		* @param Point& a reference point
-		* @param Point& b reference point
-		* @return double
+		* fix_angle
+		* if angle is bigger than 2 * PI rad returns between 0 and 2 * PI
+		* @param double 
+		* @return duoble
 	**/
 	
-	double angle(Point& a, Point& b);
-	
-	/**
-		* angle
-		* give angle between two coordinate point 
-		* angle is anticlockwise by default but You may choose clockwise 
-		* @parameter Coordinate a
-		* @parameter Coordinate b
-		* @return double
-	**/
-	
-	double angle(Coordinate& a, Coordinate& b);
+	double fix_angle(double angle);
 	
 	/**
 		* calculate
@@ -112,16 +66,6 @@ namespace Tools {
 	**/
 	
 	bool is_match(std::string a, std::string b);
-	
-	/**
-		* rnd
-		* Returns pseudo random integer
-		* @param int a lower bound
-		* @param int b upper bound
-		* @return int
-	**/
-		
-	int rnd(int a, int b);
 
 	/**
 		* tostr
@@ -139,16 +83,24 @@ namespace Tools {
         return os.str();
 	}
 	
+	/**
+		* tostr
+		* converts numbers to constant length string
+		* @param T might bee any numbers
+		* @param unsigned int length 
+		* @return std::string
+	**/
+	
 	template <class T>
-	std::string tostr(T a, unsigned int n) {
+	std::string tostr(T a, unsigned int length) {
         std::ostringstream os;
 
         os << a;
 		
 		std::string t = os.str();
 		
-		if (t.length() < n) {
-			unsigned int required = n - t.length();
+		if (t.length() < length) {
+			unsigned int required = length - t.length();
 			std::string fill_zeros;
 			
 			for ( unsigned int i = 0; i < required; ++i) {
@@ -163,47 +115,14 @@ namespace Tools {
 	
 	/**
 		* totime
-		* converts double to time :)
+		* converts double to time with specific format
+		* @param double milliseconds
+		* @param std::string milliseconds
+		* @description
+		* Format follows PHP's similar functions. 
 	**/
-	
-	std::string totime(double milliseconds);
 	
 	std::string totime(double milliseconds, std::string format = "H:i:s");
-	
-	/**
-		* toint
-		* converts string to int. This is just more easier instead of use tonumber<int>()
-		* @param std::string
-		* @return int
-	**/
-	
-	template <class T>
-	int toint(T a) {
-        std::istringstream is(a);
-        int tmp;
-
-        is >> tmp;
-
-        return tmp;
-	}
-	
-	/**
-		* tonumber
-		* converts string to int. This is just more flexibile instead of use toint()
-		* @param std::string
-		* @return number
-	**/
-
-	template <class T>
-	T tonumber(std::string a) {
-	    //std::clog << "Tools::tonumber(" << a << ")" << std::endl;
-        std::istringstream is(a);
-        T tmp;
-
-        is >> tmp;
-
-        return tmp;
-	}
 	
 	/**
 		* on_area
@@ -226,6 +145,16 @@ namespace Tools {
 	**/
 	
 	bool on_area(Point& mouse, Point& target_left_upper, Point& target_right_lower);
+	
+	/**
+		* on_area
+		* Checks if mouse is inside of an area
+		* @param Point mouse
+		* @param int width
+		* @param int height
+		* @return bool
+	**/
+	
 	bool on_area(Point& mouse, Point& target_left_upper, int width, int height);
 	
 	/**
@@ -299,14 +228,142 @@ namespace Tools {
 	
 	void init_random();
 	
+	/**
+		* replace
+		* Loops throug map and make replace each loop
+		* @param std::string original
+		* @param std::map <std::string, std::string> repl
+		* @return std::string
+	**/
+	
 	std::string replace(std::string original, std::map <std::string, std::string> repl);
+	
+	/**
+		* replace
+		* Finds specific strign and replace it with other string
+		* @param std::string original
+		* @param std::string 
+		* @param std::string 
+		* @return std::string
+	**/
+	
 	std::string replace(std::string original, std::string find, std::string replace);
 	
-	double fix_angle(double angle);
-	
-	double CalcGeograpicAngle(double arith);
+	/**
+		* calculate_midpoint
+		* Calculates midpoint between two points
+		* @param Point 
+		* @param Point 
+		* @return Point
+	**/
 	
 	Point calculate_midpoint(Point& a, Point& b);
+	/**
+		* toint
+		* converts string to int. This is just more easier instead of use tonumber<int>()
+		* @param std::string
+		* @return int
+	**/
+	
+	template <class T>
+	int toint(T a) {
+        std::istringstream is(a);
+        int tmp;
+
+        is >> tmp;
+
+        return tmp;
+	}
+	
+	/**
+		* tonumber
+		* converts string to int. This is just more flexibile instead of use toint()
+		* @param std::string
+		* @return number
+	**/
+
+	template <class T>
+	T tonumber(std::string a) {
+	    //std::clog << "Tools::tonumber(" << a << ")" << std::endl;
+        std::istringstream is(a);
+        T tmp;
+
+        is >> tmp;
+
+        return tmp;
+	}
+	
+		/**
+		* rnd
+		* Returns pseudo random integer
+		* @param int a lower bound
+		* @param int b upper bound
+		* @return int
+	**/
+		
+	int rnd(int a, int b);
+	
+	/**
+		* deg2rad
+		* Converts degrees to radians
+		* @parameter double deg
+		* @return double
+	**/
+    double deg2rad(double deg);
+	
+	/**
+		* rad2deg
+		* converts radians to degrees
+		* @parameter double rad
+		* @return double
+	**/
+    double rad2deg(double rad);
+
+	/**
+		* distanceNM 
+		* Calculates distance between two coordinate points
+		* @parameter Coordinate a
+		* @parameter Coordinate b
+		* @return double
+	**/
+	double distanceNM(Coordinate& a, Coordinate& b);
+	
+	/**
+		* distancePX
+		* Calculates distance between two screen points
+		* @paramterer Point a
+		* @paramterer Point b
+		* @return double
+	**/
+	double distancePX(Point& a, Point& b);
+	
+	/**
+		* angle
+		* Calculates angle between two screen points
+		* @param Point& a reference point
+		* @param Point& b reference point
+		* @return double
+	**/
+	
+	double angle(Point& a, Point& b);
+	
+	/**
+		* angle
+		* give angle between two coordinate point 
+		* angle is anticlockwise by default but You may choose clockwise 
+		* @parameter Coordinate a
+		* @parameter Coordinate b
+		* @return double
+	**/
+	
+	double angle(Coordinate& a, Coordinate& b);
+	
+	/**
+		* random_object
+		* returns random object from vector
+		* @param std::vector <T>
+		* @return T
+	**/
 	
 	template <class T>
 	T random_object(std::vector <T> input) {
@@ -315,5 +372,4 @@ namespace Tools {
 		return input[place];
 	}
 }
-
 #endif // _TOOLS_HPP

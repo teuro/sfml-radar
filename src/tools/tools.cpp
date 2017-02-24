@@ -5,61 +5,20 @@ namespace Tools {
 	const double earth_radius = 3440;
 }
 
+double Tools::fix_angle(double angle) {
+	while (angle > 2 * Tools::get_PI()) {
+		angle -= 2 * Tools::get_PI();
+	}
+	
+	while (angle < 0) {
+		angle += 2 * Tools::get_PI();
+	}
+	
+	return angle;
+}
+
 double Tools::get_PI() {
     return Tools::PI;
-}
-
-double Tools::deg2rad(double deg) {
-	return deg * (Tools::PI / 180.0);
-}
-
-double Tools::rad2deg(double rad) {
-	rad = fix_angle(rad);
-	
-	return rad * 180.0 / Tools::PI;
-}
-
-double Tools::distanceNM(Coordinate& a, Coordinate& b) {
-    double lat1 = a.get_latitude();
-    double lat2 = b.get_latitude();
-    double lon1 = a.get_longitude();
-    double lon2 = b.get_longitude();
-
-    double dlong = deg2rad(lon2 - lon1);
-    double dlat  = deg2rad(lat2 - lat1);
-
-    double a1 = std::sin(dlat/2.0)*std::sin(dlat/2.0) + std::cos(lat1)*std::cos(lat2)*std::sin(dlong/2)*std::sin(dlong/2);
-    double c = 2 * std::atan2(std::sqrt(a1), std::sqrt(1.0-a1));
-    double d = earth_radius * c;
-
-    return d;
-}
-
-double Tools::distancePX(Point& a, Point& b) {
-    int dx = std::abs(a.get_x() - b.get_x());
-    int dy = std::abs(a.get_y() - b.get_y());
-
-    return std::sqrt(std::pow(dx, 2.0) + std::pow(dy, 2.0));
-}
-
-double Tools::angle(Point& a, Point& b) {
-    int dx = a.get_x() - b.get_x();
-    int dy = a.get_y() - b.get_y();
-
-	return std::atan2(dy, dx);
-}
-
-double Tools::angle(Coordinate& a, Coordinate& b) {
-	double fLat = deg2rad(a.get_latitude());
-    double fLng = deg2rad(a.get_longitude());    
-	double tLat = deg2rad(b.get_latitude());
-    double tLng = deg2rad(b.get_longitude());
-	
-	double y = std::sin(tLng-fLng) * std::cos(tLat);
-	double x = std::cos(fLat)*std::sin(tLat) - std::sin(fLat)*std::cos(tLat)*std::cos(tLng-fLng);
-	double brng = std::atan2(y, x);
-	
-	return brng;
 }
 
 Point Tools::calculate(Point& sp, double bearing, double length) {
@@ -126,10 +85,6 @@ std::vector <std::string> Tools::split(std::string delimiter, std::string input)
         tmp_cells.push_back(input.substr(0, pos));
         input.erase(0, pos + 1);
     }
-}
-
-int Tools::rnd(int a, int b) {
-    return (a + std::rand() % (b - a));
 }
 
 std::string Tools::ltrim(std::string s) {
@@ -208,26 +163,6 @@ std::string Tools::totime(double milliseconds, std::string format) {
 	return time_string;
 }
 
-double Tools::fix_angle(double angle) {
-	while (angle > 2 * Tools::get_PI()) {
-		angle -= 2 * Tools::get_PI();
-	}
-	
-	while (angle < 0) {
-		angle += 2 * Tools::get_PI();
-	}
-	
-	return angle;
-}
-
-double Tools::CalcGeograpicAngle(double arith) {
-	if (arith > ((PI / 2.0) && arith < (2 * PI))) {
-		return ((2 * PI) - arith + (PI / 2.0));
-	} 
-	
-	return (arith * (-1.0) + (PI / 2.0));
-}
-
 Point Tools::calculate_midpoint(Point& a, Point& b) {
 	int x = std::abs((a.get_x() + b.get_x()) / 2);
 	int y = std::abs((a.get_y() + b.get_y()) / 2);
@@ -235,4 +170,61 @@ Point Tools::calculate_midpoint(Point& a, Point& b) {
 	Point t(x, y);
 	
 	return t;
+}
+
+int Tools::rnd(int a, int b) {
+    return (a + std::rand() % (b - a));
+}
+
+double Tools::angle(Coordinate& a, Coordinate& b) {
+	double fLat = deg2rad(a.get_latitude());
+    double fLng = deg2rad(a.get_longitude());    
+	double tLat = deg2rad(b.get_latitude());
+    double tLng = deg2rad(b.get_longitude());
+	
+	double y = std::sin(tLng-fLng) * std::cos(tLat);
+	double x = std::cos(fLat)*std::sin(tLat) - std::sin(fLat)*std::cos(tLat)*std::cos(tLng-fLng);
+	double brng = std::atan2(y, x);
+	
+	return brng;
+}
+
+double Tools::deg2rad(double deg) {
+	return deg * (Tools::PI / 180.0);
+}
+
+double Tools::rad2deg(double rad) {
+	rad = fix_angle(rad);
+	
+	return rad * 180.0 / Tools::PI;
+}
+
+double Tools::distanceNM(Coordinate& a, Coordinate& b) {
+    double lat1 = a.get_latitude();
+    double lat2 = b.get_latitude();
+    double lon1 = a.get_longitude();
+    double lon2 = b.get_longitude();
+
+    double dlong = deg2rad(lon2 - lon1);
+    double dlat  = deg2rad(lat2 - lat1);
+
+    double a1 = std::sin(dlat/2.0)*std::sin(dlat/2.0) + std::cos(lat1)*std::cos(lat2)*std::sin(dlong/2)*std::sin(dlong/2);
+    double c = 2 * std::atan2(std::sqrt(a1), std::sqrt(1.0-a1));
+    double d = earth_radius * c;
+
+    return d;
+}
+
+double Tools::distancePX(Point& a, Point& b) {
+    int dx = std::abs(a.get_x() - b.get_x());
+    int dy = std::abs(a.get_y() - b.get_y());
+
+    return std::sqrt(std::pow(dx, 2.0) + std::pow(dy, 2.0));
+}
+
+double Tools::angle(Point& a, Point& b) {
+    int dx = a.get_x() - b.get_x();
+    int dy = a.get_y() - b.get_y();
+
+	return std::atan2(dy, dx);
 }
