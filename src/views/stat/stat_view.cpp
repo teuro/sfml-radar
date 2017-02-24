@@ -24,7 +24,7 @@ void Statview::draw_points(std::list <Game_point> points) {
 		Cell cell1(pit->plane);
 		point_table.add_cell(cell1);
 		
-		Cell cell2(Tools::tostr(pit->points, 3));
+		Cell cell2(Tools::tostr(pit->points, 4));
 		point_table.add_cell(cell2);
 		sum += pit->points;
 		++pit;
@@ -35,7 +35,7 @@ void Statview::draw_points(std::list <Game_point> points) {
 	Cell cell3("SUM");
 	point_table.add_cell(cell3);
 	
-	Cell cell4(Tools::tostr(sum, 3));
+	Cell cell4(Tools::tostr(sum, 4));
 	point_table.add_cell(cell4);
 	
 	this->style(point_table);
