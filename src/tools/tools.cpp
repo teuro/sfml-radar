@@ -143,6 +143,7 @@ std::string Tools::replace(std::string original, std::string find, std::string r
 
 std::string Tools::totime(double milliseconds, std::string format) {
 	std::string time_string;
+	
 	int seconds = milliseconds / 1000;
 	int hours = seconds / 3600;
 	seconds -= hours * 3600;
@@ -183,7 +184,7 @@ double Tools::angle(Coordinate& a, Coordinate& b) {
     double tLng = deg2rad(b.get_longitude());
 	
 	double y = std::sin(tLng-fLng) * std::cos(tLat);
-	double x = std::cos(fLat)*std::sin(tLat) - std::sin(fLat)*std::cos(tLat)*std::cos(tLng-fLng);
+	double x = std::cos(fLat) * std::sin(tLat) - std::sin(fLat) * std::cos(tLat) * std::cos(tLng - fLng);
 	double brng = std::atan2(y, x);
 	
 	return brng;
@@ -208,8 +209,8 @@ double Tools::distanceNM(Coordinate& a, Coordinate& b) {
     double dlong = deg2rad(lon2 - lon1);
     double dlat  = deg2rad(lat2 - lat1);
 
-    double a1 = std::sin(dlat/2.0)*std::sin(dlat/2.0) + std::cos(lat1)*std::cos(lat2)*std::sin(dlong/2)*std::sin(dlong/2);
-    double c = 2 * std::atan2(std::sqrt(a1), std::sqrt(1.0-a1));
+    double a1 = std::sin(dlat / 2.0) * std::sin(dlat / 2.0) + std::cos(lat1) * std::cos(lat2) * std::sin(dlong / 2.0) * std::sin(dlong / 2.0);
+    double c = 2.0 * std::atan2(std::sqrt(a1), std::sqrt(1.0 - a1));
     double d = earth_radius * c;
 
     return d;
