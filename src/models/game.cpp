@@ -60,10 +60,7 @@ void Game::check_collision() {
                 continue;
             }
 
-            if (
-                (*plane_a)->get_altitude() >= 1000 &&
-                (*plane_b)->get_altitude() >= 1000 &&
-                std::abs((*plane_a)->get_altitude() - (*plane_b)->get_altitude()) < this->settings.separation_vertical) {
+            if ((*plane_a)->get_altitude() >= 1000 && (*plane_b)->get_altitude() >= 1000 && std::abs((*plane_a)->get_altitude() - (*plane_b)->get_altitude()) < this->settings.separation_vertical) {
                 if (Tools::distanceNM((*plane_a)->get_place(), (*plane_b)->get_place()) < this->settings.separation_horizontal) {
                     this->errors.push_back((*plane_a));
                     this->errors.push_back((*plane_b));
