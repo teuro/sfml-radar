@@ -9,7 +9,7 @@ Settings::Settings() {
 	this->search_term = "? = ?"; 
 	this->bind_term = " = "; 
 	this->sleep = 50;
-	this->display_clearance_errors = 2500;
+	this->display_clearance_errors = 4000;
 }
 
 Settings::~Settings() { }
