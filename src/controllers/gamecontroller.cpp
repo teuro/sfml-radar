@@ -75,6 +75,7 @@ void Gamecontroller::set_variables() {
 	this->gameview->repl["[FPS]"] = Tools::tostr(this->fps);
 	this->gameview->repl["[CLRC]"] = Tools::tostr(this->game->get_clearances().size());
 	this->gameview->repl["[PCNT]"] = Tools::tostr(this->game->get_game_points());
+	this->gameview->repl["[CLRE]"] = Tools::tostr(this->game->get_clearance_error());
 	
 	this->atisview->repl["[METAR]"] = this->metar.to_string();
 	this->atisview->repl["[DEPARTURE]"] = this->atis->get_departure_runway();
@@ -131,10 +132,12 @@ void Gamecontroller::update(double elapsed, Point& mouse) {
 	} else if (this->state == GAME) {
 		this->game_time += elapsed;
 		
-		this->calculate_fps();
+		if (this->game_error_display < this->game_time) {
+			this->game->remove_first_error();
+		}
 		
+		this->calculate_fps();
 		this->game->update(elapsed);
-		//this->metar.update(this->game->get_active_field()->get_name());
 		
 		if (this->game->ok()) {
 			this->state = STAT;
@@ -203,6 +206,7 @@ void Gamecontroller::load() {
 
 void Gamecontroller::handle_text_input() {
     std::string t_command = this->command;
+	this->game_error_display = this->game_time + this->settings.display_clearance_errors;
 	
 	std::vector <std::string> tmp = Tools::split(";", this->command);
 	

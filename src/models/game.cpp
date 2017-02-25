@@ -116,11 +116,11 @@ void Game::handle_holdings() {
 void Game::calculate_points(int type, double clearance_count, std::string plane) {
 	++this->handled_planes;
 	
-	double multiply = (type == APPROACH) ? 5 : 3;
-	double point = multiply * 10;
+	double point = (type == APPROACH) ? 50 : 30;
 	
-	point = (int)std::log(point / clearance_count) * multiply * 10;
+	point = (int)std::log(point / clearance_count) * point * 10;
 	Game_point tgp = {plane, point};
+	
 	this->points.push_back(tgp);
 }
 
@@ -167,7 +167,7 @@ void Game::update(double elapsed) {
         (*it)->set_separation_error(true);
     }
 
-    if (this->duration > this->new_plane && this->settings.required_handled > this->handled_planes + + this->aircrafts.size() + this->holdings.size()) {
+    if (this->duration > this->new_plane && this->settings.required_handled > this->handled_planes + this->aircrafts.size() + this->holdings.size()) {
         create_plane();
         double time_for_next_plane = Tools::rnd(this->settings.new_plane_lower * 1000, this->settings.new_plane_upper * 1000);
 		this->new_plane += time_for_next_plane;
@@ -371,23 +371,23 @@ void Game::build_clearance(std::string command) {
 			} else if (Tools::trim(tmp[0]) == "climb") {
 				value = Tools::toint(s_value);
 				if (this->selected->get_altitude() > value) {
-					std::cerr << "Can't climb, because altitude " << this->selected->get_altitude() << " ft is higher than " << value << " ft" << std::endl;
+					clearance_errors.push("Can't climb, because altitude " + Tools::tostr(this->selected->get_altitude()) + " ft is higher than " + Tools::tostr(value) + " ft");
 				} else {
 					this->selected->set_clearance_altitude(value);
 				}
 			} else if (Tools::trim(tmp[0]) == "descent") {
 				value = Tools::toint(s_value);
 				if (this->selected->get_altitude() < value) {
-					std::cerr << "Can't descent, because altitude " << this->selected->get_altitude() << " ft is lower than " << value << " ft" << std::endl;
+					clearance_errors.push("Can't descent, because altitude " + Tools::tostr(this->selected->get_altitude()) + " ft is lower than " + Tools::tostr(value) + " ft");
 				} else {
 					this->selected->set_clearance_altitude(value);
 				}
 			} else if (Tools::trim(tmp[0]) == "speed") {
 				value = Tools::toint(s_value);
 				if (value > this->settings.clearance_speed_upper) {
-					std::cerr << "Maximum clearance speed is " << this->settings.clearance_speed_upper << " knots" << std::endl;
+					clearance_errors.push("Maximum clearance speed is " + Tools::tostr(this->settings.clearance_speed_upper) + " knots");
 				} else if (value < this->settings.clearance_speed_lower) {
-					std::cerr << "Minimum clearance speed is " << this->settings.clearance_speed_upper << " knots" << std::endl;
+					clearance_errors.push("Minimum clearance speed is " + Tools::tostr(this->settings.clearance_speed_upper) + " knots");
 				} else { 
 					this->selected->set_clearance_speed(value);
 				}
@@ -396,16 +396,16 @@ void Game::build_clearance(std::string command) {
 					std::string landing = Tools::trim(s_value);
 					this->selected->set_approach_runway(landing);
 				} else {
-					std::cerr << "Plane must be approaching not departing" << std::endl;
+					clearance_errors.push("Plane must be approaching not departing");
 				}
 			} else if (Tools::trim(tmp[0]) == "direct") {
 				if (this->selected->get_altitude() < this->settings.shortcut) {
-					std::cerr << "Unable to comply because altitude must be greater than " << this->settings.shortcut << " ft" << std::endl;
+					clearance_errors.push("Unable to comply because altitude must be greater than " + Tools::tostr(this->settings.shortcut) + " ft");
 				} else {
 					if (this->selected->get_type() == DEPARTURE) {
 						this->selected->set_clearance_direct(s_value);
 					} else {
-						std::cerr << "Plane must be departing not approaching" << std::endl;
+						clearance_errors.push("Plane must be departing not approaching");
 					}
 				}
 			}
@@ -413,20 +413,34 @@ void Game::build_clearance(std::string command) {
 			if (this->selected->get_type() == APPROACH) {
 				this->selected->set_clearance_approach();
 			} else {
-				std::cerr << "Plane must be approaching not departing" << std::endl;
+				clearance_errors.push("Plane must be approaching not departing");
 			}
 		} else if (Tools::trim(tmp[0]) == "cancel") {
 			if (this->selected->get_type() == APPROACH) {
 				this->selected->cancel_approach();
 			} else {
-				std::cerr << "Plane must be approaching not departing" << std::endl;
+				clearance_errors.push("Plane must be approaching not departing");
 			}
 		} else {
-			std::cerr << "Unknown command" << std::endl;
+			clearance_errors.push("Unknown command");
 		} 
 	} else {
-		std::cerr << "No selected plane" << std::endl;
+		clearance_errors.push("No selected plane");
 	}
+}
+
+void Game::remove_first_error() {
+	if (clearance_errors.size()) {
+		clearance_errors.pop();
+	}
+}
+
+std::string Game::get_clearance_error() {
+	if (clearance_errors.size()) {
+		return clearance_errors.front();
+	}
+	
+	return "";
 }
 
 int Game::get_handled_planes() {

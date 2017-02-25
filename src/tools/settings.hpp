@@ -71,6 +71,7 @@ public:
 	std::string layout_atis_file_name;
 	std::string layout_stat_file_name;
 	std::string style_folder;
+	int display_clearance_errors;
 	Coordinate centerpoint;
 };
 

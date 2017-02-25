@@ -112,6 +112,8 @@ public:
 	double get_game_points();
 	std::list <Clearance> get_clearances();
 	bool ok();
+	std::string get_clearance_error();
+	void remove_first_error();
 private:
     void load_airfield(std::string icao);
     void check_collision();
@@ -129,6 +131,7 @@ private:
 	std::vector     <Navpoint>		navpoints;
 	std::list       <Aircraft*>		aircrafts;
 	std::queue      <Aircraft*>		holdings;
+	std::queue      <std::string>	clearance_errors;
 	std::list       <Aircraft*>		errors;
 	std::list       <Clearance>		clearances;
 	std::list       <Game_point>	points;
