@@ -24,5 +24,7 @@
 		</tr>
 	</table>
 	
+	<p id="clearance_errors" class="">[CLRE]</p>
+	
 	<input type="text" class="userinput" id="" />
 </layout>

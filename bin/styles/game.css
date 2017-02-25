@@ -11,3 +11,8 @@ plane {
 	top: 50px;
 	left: 650px;
 }
+
+#clearance_errors {
+	top: 500px;
+	left: 15px;
+}
