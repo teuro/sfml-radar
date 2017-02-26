@@ -37,6 +37,25 @@ void Drawable_table::add_cell(Cell& cell) {
 	this->rows.back().add_cell(cell); 
 }
 
+int Drawable_table::get_max_length() {
+	std::list <Row> :: iterator rit = this->rows.begin();
+	unsigned int max_length = 0;
+	
+	while (rit != this->rows.end()) {
+		std::list <Cell> c_list = rit->get_cells();
+		std::list <Cell> :: iterator cit = c_list.begin();
+		while (cit != c_list.end()) {
+			if ((*cit).get_content().length() > max_length) {
+				max_length = (*cit).get_content().length();
+			}
+			++cit;
+		}
+		++rit;
+	}
+	
+	return max_length;
+}
+
 std::list <Cell> Row::get_cells() { 
 	return this->cells; 
 }

@@ -295,19 +295,20 @@ void View::draw_element(Drawable_table& dt) {
 	std::list <Row> t_list = dt.get_rows();
 	std::list <Row> :: iterator rit = t_list.begin();
 	
+	int length = dt.get_max_length() * this->drawer.get_fontsize() * 0.5;
+	
 	while (rit != t_list.end()) {
 		std::list <Cell> c_list = rit->get_cells();
 		std::list <Cell> :: iterator cit = c_list.begin();
 		
+		
 		while (cit != c_list.end()) {
-			//std::clog << (*cit).get_content() << " " << place << " " << color << std::endl;
-
 			this->drawer.draw_text(Tools::replace((*cit).get_content(), repl), place, color);
 			++cit;
-			place.change_x(160);
+			place.change_x(length);
 		}
 		
-		place.change_x(-160 * c_list.size());
+		place.change_x(-length * c_list.size());
 		place.change_y(font_size);
 		
 		++rit;

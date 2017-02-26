@@ -27,6 +27,7 @@ public:
 	std::list <Row> get_rows();
 	void add_row(Row& row);
 	void add_cell(Cell& cell);
+	int get_max_length();
 private:
 	std::list <Row> rows;
 };
