@@ -8,7 +8,6 @@ void Statview::draw() {
 }
 
 void Statview::load() { 
-	std::clog << "Statview::load()" << std::endl;
 	View::load("stat");
 }
 

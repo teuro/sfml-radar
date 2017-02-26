@@ -20,8 +20,6 @@ Aircraft::Aircraft(std::string t_name, Settings& s, Airfield*& af, Atis*& a, Out
 }
 
 void Aircraft::load() {
-	std::clog << this->name << " load()" << std::endl;
-	
 	this->clearance_altitude = -1;
     this->clearance_heading = -1;
     this->clearance_speed = -1;

@@ -9,8 +9,6 @@ void View::add_style(std::list <Style> tmp) {
 }
 
 void View::load(std::string state) {
-	std::clog << "View::load(" << state << ")" << std::endl;
-	
 	DIR *dir;
 	struct dirent *ent;
 	if ((dir = opendir (this->settings.style_folder.c_str())) != NULL) {

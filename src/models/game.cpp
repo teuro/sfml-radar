@@ -207,8 +207,6 @@ bool Game::check_aircrafts(std::string name) {
 }
 
 void Game::create_plane() {
-	std::clog << "Game::create_plane()" << std::endl;
-	
 	Inpoint t_inpoint = this->select_inpoint();
 	
 	while (!is_free(t_inpoint)) { 
