@@ -33,7 +33,7 @@ std::string Gamecontroller::handle_function_keys(int action) {
 
 void Gamecontroller::handle_mouse_release(Point& mouse_start, Point& mouse_end) {
     double distance_px  = Tools::distancePX(mouse_start, mouse_end);
-    double angle_rad    = Tools::angle(mouse_start, mouse_end);
+    double angle_rad    = Tools::fix_angle(Tools::angle(mouse_start, mouse_end) + Tools::get_PI() / 2.0);
     double distance_nm  = this->gameview->distanceNM(distance_px);
 	
 	if (distance_px == 0) {
@@ -76,6 +76,7 @@ void Gamecontroller::set_variables() {
 	this->gameview->repl["[CLRC]"] = Tools::tostr(this->game->get_clearances().size());
 	this->gameview->repl["[PCNT]"] = Tools::tostr(this->game->get_game_points());
 	this->gameview->repl["[CLRE]"] = Tools::tostr(this->game->get_clearance_error());
+	this->gameview->repl["[GRE]"] = Tools::tostr(this->game->get_game_error());
 	
 	this->atisview->repl["[METAR]"] = this->metar.to_string();
 	this->atisview->repl["[DEPARTURE]"] = this->atis->get_departure_runway();
@@ -99,7 +100,7 @@ void Gamecontroller::draw_logic(Point& mouse) {
 	++this->frames;
 	
 	if (this->state == GAME) {	
-		this->gameview->set_centerpoint_map(this->settings.centerpoint);
+		this->gameview->calculate_coordinate_limits(this->settings.zoom);
 		this->gameview->clear_screen();
 		this->gameview->update_command(this->command);
 		this->gameview->draw();
@@ -133,7 +134,11 @@ void Gamecontroller::update(double elapsed, Point& mouse) {
 		this->game_time += elapsed;
 		
 		if (this->game_error_display < this->game_time) {
-			this->game->remove_first_error();
+			this->game->remove_first_clearance_error();
+		}
+		
+		if (this->game_error_display < this->game_time) {
+			this->game->remove_first_game_error();
 		}
 		
 		this->calculate_fps();

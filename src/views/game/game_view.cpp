@@ -210,30 +210,6 @@ void Gameview::calculate_coordinate_limits(double distance) {
 	max_lon = d.get_longitude();
 }
 
-void Gameview::set_centerpoint_map(Coordinate& centerpoint) {
-	#ifdef DEBUG
-	std::clog << "Gameview::set_centerpoint_map(Coordinate& centerpoint_map)" << std::endl;
-	#endif
-	double distanceNM = Tools::distanceNM(centerpoint, this->centerpoint_map);
-	double angle_rad = Tools::fix_angle(Tools::angle(centerpoint, this->centerpoint_map) - Tools::get_PI() / 2.0);
-	
-	Coordinate a(min_lat, min_lon);
-	Coordinate b(max_lat, max_lon);
-	
-	if (distanceNM > 0.0) {
-		a = Tools::calculate(a, angle_rad, distanceNM);
-		b = Tools::calculate(b, angle_rad, distanceNM);
-	}
-	
-	min_lat = a.get_latitude();
-	min_lon = a.get_longitude();
-	max_lat = b.get_latitude();
-	max_lon = b.get_longitude();
-	
-	this->centerpoint_map = centerpoint;
-	this->settings.centerpoint = this->centerpoint_map;
-}
-
 Point Gameview::calculate(Coordinate& target) {
 	#ifdef DEBUG
 	std::clog << "Gameview::calculate(Coordinate& target)" << std::endl;

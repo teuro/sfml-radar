@@ -90,15 +90,6 @@ public:
 	
 	void draw_planes(std::list <Aircraft*> planes, Aircraft* selected, Point& mouse);
 	
-	/**
-		* Gameview set_centerpoint
-		* Sets centerpoint to the frame
-		* @param Coordinate& centerpoint
-		* @return void
-	**/
-	
-	void set_centerpoint_map(Coordinate& centerpoint_map);
-	
 	void set_zoom(int zoom);
 	
 	/**
@@ -120,13 +111,8 @@ public:
 	 
 	 double distancePX(double nautical);
 	 double distanceNM(double pixels);
+	 void calculate_coordinate_limits(double distance);
 private:
-	/**
-		* Gameview centerpoint
-		* Centerpoint on map
-	**/
-	
-	Coordinate centerpoint_map;
 	
 	/**
 		* Gameview draw_plane
@@ -138,7 +124,6 @@ private:
 	
     void draw_plane(Aircraft*& plane, Aircraft* selected, Point& mouse);
 	std::string command;
-	void calculate_coordinate_limits(double distance);
 };
 
 #endif // _GAME_VIEW_HPP
