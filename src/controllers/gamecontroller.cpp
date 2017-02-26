@@ -45,11 +45,13 @@ void Gamecontroller::handle_mouse_release(Point& mouse_start, Point& mouse_end) 
 
 void Gamecontroller::handle_mouse_wheel(int amount) {
     this->settings.zoom += (-amount * 10);
+	int zoom_min = 5;
+	int zoom_max = 200;
 
-    if (this->settings.zoom < 20) {
-        this->settings.zoom = 20;
-    } else if (this->settings.zoom > 150) {
-		this->settings.zoom = 150;
+    if (this->settings.zoom < zoom_min) {
+        this->settings.zoom = zoom_min;
+    } else if (this->settings.zoom > zoom_max) {
+		this->settings.zoom = zoom_max;
 	}
     
 	this->gameview->set_zoom(this->settings.zoom);
