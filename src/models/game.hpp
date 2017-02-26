@@ -43,13 +43,6 @@ public:
 	~Game();
 
 	/**
-        * Set new center poitn to the game
-        * @param Coordinate& cp new center point
-        * @return void
-	**/
-	void set_centerpoint(Coordinate& cp);
-
-	/**
         Add's new Navpoint to game
         @param Navpoint& np new nav point
         @return void
@@ -113,7 +106,9 @@ public:
 	std::list <Clearance> get_clearances();
 	bool ok();
 	std::string get_clearance_error();
-	void remove_first_error();
+	void remove_first_clearance_error();
+	std::string get_game_error();
+	void remove_first_game_error();
 private:
     void load_airfield(std::string icao);
     void check_collision();
@@ -125,13 +120,13 @@ private:
 	void calculate_points(int type, double clearance_count, std::string plane);
 	int calculate_clearances(std::string name);
 	bool check_aircrafts(std::string name);
-	Coordinate centerpoint;
 	Settings& settings;
 
 	std::vector     <Navpoint>		navpoints;
 	std::list       <Aircraft*>		aircrafts;
 	std::queue      <Aircraft*>		holdings;
 	std::queue      <std::string>	clearance_errors;
+	std::queue      <std::string>	game_errors;
 	std::list       <Aircraft*>		errors;
 	std::list       <Clearance>		clearances;
 	std::list       <Game_point>	points;

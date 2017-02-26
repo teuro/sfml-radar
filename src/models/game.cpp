@@ -28,10 +28,6 @@ void Game::set_runways(std::string t_departure, std::string t_landing) {
 	}
 }
 
-void Game::set_centerpoint(Coordinate& cp) {
-	this->centerpoint = cp;
-}
-
 Airfield* Game::get_active_field() {
 	if (this->active_field == NULL) {
 		throw std::logic_error("Game::get_active_field() this->active_field == NULL");
@@ -66,7 +62,7 @@ void Game::check_collision() {
                     this->errors.push_back((*plane_b));
 
                     if (!(*plane_a)->get_separation_error() || !(*plane_b)->get_separation_error()) {
-                        std::clog << "Separation error occured between " << (*plane_a)->get_name() << " and " << (*plane_b)->get_name() << std::endl;
+                        game_errors.push("Separation error occured between " + (*plane_a)->get_name() + " and " + (*plane_b)->get_name());
                         ++this->separation_errors;
                     }
                 }
@@ -322,8 +318,6 @@ void Game::load_airfield(std::string icao) {
 	
 	this->load_navpoints(variables);
 	this->load_runways(variables);
-	
-    this->centerpoint = this->active_field->get_place();
 }
 
 Aircraft* Game::get_selected() {
@@ -426,7 +420,7 @@ void Game::build_clearance(std::string command) {
 	}
 }
 
-void Game::remove_first_error() {
+void Game::remove_first_clearance_error() {
 	if (clearance_errors.size()) {
 		clearance_errors.pop();
 	}
@@ -435,6 +429,20 @@ void Game::remove_first_error() {
 std::string Game::get_clearance_error() {
 	if (clearance_errors.size()) {
 		return clearance_errors.front();
+	}
+	
+	return "";
+}
+
+void Game::remove_first_game_error() {
+	if (game_errors.size()) {
+		game_errors.pop();
+	}
+}
+
+std::string Game::get_game_error() {
+	if (game_errors.size()) {
+		return game_errors.front();
 	}
 	
 	return "";
