@@ -16,3 +16,8 @@ plane {
 	top: 500px;
 	left: 15px;
 }
+
+#game_errors {
+	top: 470px;
+	left: 15px;
+}
