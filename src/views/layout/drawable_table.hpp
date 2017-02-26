@@ -3,6 +3,16 @@
 
 #include "drawable_element.hpp"
 
+/**
+	* Drawable_table and helper classe Cell and Row
+	* With this You may create tables more easier.
+**/
+
+
+/**
+	* Cell 
+	* Contains only pure string
+**/
 class Cell {
 public:
 	Cell(std::string content);
@@ -13,6 +23,11 @@ private:
 	std::string content;
 };
 
+/**
+	* Row 
+	* Contains list of cells
+**/
+
 class Row {
 public:
 	std::list <Cell> get_cells();
@@ -20,6 +35,11 @@ public:
 private:
 	std::list <Cell> cells;
 };
+
+/**
+	* Drawable_table
+	* Contains list of rows
+**/
 
 class Drawable_table : public Drawable_element {
 public:
