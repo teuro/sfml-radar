@@ -207,7 +207,7 @@ void View::style(Drawable_element& de) {
     std::list <Style> :: iterator t_style = this->styles.begin();
 	
     while (t_style != this->styles.end()) {
-		if (t_style->get_name() == de.get_name()) {
+		if (de.get_name().length() && t_style->get_name() == de.get_name()) {
 			de.set_style((*t_style));
 		}
 		
@@ -217,7 +217,7 @@ void View::style(Drawable_element& de) {
 	t_style = this->styles.begin();
 	
 	while (t_style != this->styles.end()) {
-		if (t_style->get_class() == de.get_class()) {
+		if (de.get_class().length() && t_style->get_class() == de.get_class()) {
 			de.set_style((*t_style));
 		}
 		
@@ -227,7 +227,7 @@ void View::style(Drawable_element& de) {
 	t_style = this->styles.begin();
 	
 	while (t_style != this->styles.end()) {
-		if (t_style->get_id() == de.get_id()) {
+		if (de.get_id().length() && t_style->get_id() == de.get_id()) {
 			de.set_style((*t_style));
 		}
 		
@@ -279,7 +279,6 @@ void View::draw_element(Drawable_list& dl) {
 	
 	for (it = t_list.begin(); it != t_list.end(); ++it) {
 		this->drawer.draw_text((*it), place, color);
-		//std::clog << "Draw " << (*it) << " " << place << " " << color << std::endl;
 		place.change_y(font_size);
 	}
 }
@@ -295,12 +294,17 @@ void View::draw_element(Drawable_table& dt) {
 	std::list <Row> t_list = dt.get_rows();
 	std::list <Row> :: iterator rit = t_list.begin();
 	
-	int length = dt.get_max_length() * this->drawer.get_fontsize() * 0.5;
+	int length = this->drawer.get_text_length(dt.get_max_length()) + 15;
 	
 	while (rit != t_list.end()) {
 		std::list <Cell> c_list = rit->get_cells();
 		std::list <Cell> :: iterator cit = c_list.begin();
 		
+		int t_color = rit->get_style().get_text_color();
+			
+		if (t_color > 0) {
+			color = t_color;
+		}
 		
 		while (cit != c_list.end()) {
 			this->drawer.draw_text(Tools::replace((*cit).get_content(), repl), place, color);
