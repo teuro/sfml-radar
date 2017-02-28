@@ -1,6 +1,6 @@
 CXX := g++
-CXXFLAGS := -s -c -O -Wall -Wextra -pedantic -std=gnu++11
-LINKFLAGS := -O -s
+CXXFLAGS := -g -c -O -Wall -Wextra -pedantic -std=gnu++11
+LINKFLAGS := -O -g
 LIB_DIRS := -Lext/lib
 
 PUTKARTS_VERSION :=

@@ -28,8 +28,9 @@ private:
 	* Contains list of cells
 **/
 
-class Row {
+class Row : public Drawable_element {
 public:
+	Row(std::string t_name = "tr", std::string t_class = "", std::string t_id = "");
 	std::list <Cell> get_cells();
 	void add_cell(Cell& cell);
 private:
@@ -47,7 +48,7 @@ public:
 	std::list <Row> get_rows();
 	void add_row(Row& row);
 	void add_cell(Cell& cell);
-	int get_max_length();
+	std::string get_max_length();
 private:
 	std::list <Row> rows;
 };

@@ -29,6 +29,8 @@ public:
 	std::string get_id();
 	std::string get_class();
 	std::string get_name();
+	
+	void set_class(std::string t_class);
 };
 
 #endif

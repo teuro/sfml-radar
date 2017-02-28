@@ -14,6 +14,7 @@ Style::Style() {
 Style::~Style() { }
 
 void Style::set_attribute(std::string key, int value) {
+	//std::clog << "Style::set_attribute(" << key << ", " << value << ")" << std::endl;
 	if (value > 0) {
 		if (key == "color") {
 			this->text_color = value;
@@ -28,6 +29,12 @@ void Style::set_attribute(std::string key, int value) {
 }
 
 void Style::set_attribute(std::string key, std::string value) {
+	//std::clog << "Style::set_attribute(" << key << ", " << value << ")" << std::endl;
+	
+	if (value.length() == 0) {
+		return;
+	}
+	
     if (key == "left") {
         this->place.set_x(Tools::tonumber<int>(value));
 		this->left = Tools::tonumber<int>(value);
@@ -41,7 +48,6 @@ void Style::set_attribute(std::string key, std::string value) {
     } else if (key == "color") {
         std::sscanf(value.c_str(), "rgb(%i, %i, %i);", &r, &g, &b);
         this->text_color = (r * 256 + g) * 256 + b;
-		//std::clog << r << " " << g << " " << b << " " << text_color << std::endl;
     } else if (key == "background-color") {
         std::sscanf(value.c_str(), "rgb(%i, %i, %i);", &r, &g, &b);
         this->background_color = (r * 256 + g) * 256 + b;

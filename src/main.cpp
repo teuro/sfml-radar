@@ -3,6 +3,12 @@
 
 #include "program.hpp"
 
+/**
+	* ATC radar game
+	* This is main function for the game. Basically this just initialize program and catch exceptions. 
+	* 
+**/
+
 int main(){
     try {
         Program program;

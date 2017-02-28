@@ -1,7 +1,3 @@
-plane {
-	color: rgb(150, 150, 90);
-}
-
 .infolist {
 	top: 10px;
 	left: 20px;
@@ -10,14 +6,15 @@ plane {
 #planelist {
 	top: 50px;
 	left: 650px;
+	color: rgb(150, 150, 60);
 }
 
 #clearance_errors {
-	top: 500px;
-	left: 15px;
+	top: 600px;
+	left: 30px;
 }
 
 #game_errors {
-	top: 470px;
-	left: 15px;
+	top: 570px;
+	left: 30px;
 }

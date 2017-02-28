@@ -63,6 +63,7 @@ void Gameview::draw_plane(Aircraft*& plane, Aircraft* selected, Point& mouse) {
 	
 	info_list.add_element(plane->get_name());
 	info_list.add_element(Tools::tostr((int)plane->get_altitude()) + " / " + Tools::tostr(plane->get_clearance_altitude()));
+	info_list.set_class("normal");
 	
 	if (id == "selected") {
 		info_list.add_element(Tools::tostr((int)plane->get_speed()) + " / " + Tools::tostr((int)plane->get_clearance_speed()));
@@ -83,6 +84,7 @@ void Gameview::draw_plane(Aircraft*& plane, Aircraft* selected, Point& mouse) {
 		Point text_place = Tools::calculate_midpoint(aircraft_place, mouse);
 		
 		this->drawer.draw_text(Tools::tostr((int)heading) + " deg " + Tools::tostr((int)distance) + " nm", text_place, 250,60 ,60);
+		info_list.set_class("selected");
 	}
 	
 	this->style(dplane);
@@ -98,10 +100,18 @@ void Gameview::draw_plane(Aircraft*& plane, Aircraft* selected, Point& mouse) {
 
 void Gameview::draw_planes(std::list <Aircraft*> planes, Aircraft* selected, Point& mouse) {
     std::list <Aircraft*> :: iterator plane = planes.begin();
-	Drawable_list plane_list("ul", "list", "planelist");
+	Drawable_table plane_table("table", "", "planelist");
     	
     while (plane != planes.end()) {
 		std::string special;
+		Row row("tr", "normal", "");
+		
+		if ((*plane) == selected) {
+			row.set_class("selected");
+		}
+		
+		this->style(row);
+		plane_table.add_row(row);
 		
 		if ((*plane)->get_type() == APPROACH) {
 			if ((*plane)->get_expect() && !(*plane)->get_approach()) {
@@ -113,13 +123,18 @@ void Gameview::draw_planes(std::list <Aircraft*> planes, Aircraft* selected, Poi
 			special = "D " + (*plane)->get_target_name();
 		}
 		
-		plane_list.add_element((*plane)->get_name() + " - " + special);
+		Cell cell_1((*plane)->get_name());
+		plane_table.add_cell(cell_1);
+		
+		Cell cell_2(special);
+		plane_table.add_cell(cell_2);
+
         this->draw_plane((*plane), selected, mouse);
         ++plane;
     }
 	
-	this->style(plane_list);
-	this->draw_element(plane_list);
+	this->style(plane_table);
+	this->draw_element(plane_table);
 }
 
 double Gameview::distancePX(double nautical) {

@@ -25,6 +25,10 @@ std::string Drawable_element::get_name() {
 	return this->name;
 }
 
+void Drawable_element::set_class(std::string t_class) {
+	this->s_class = t_class;
+	//std::clog << "Drawable_element::set_class(" << t_class << ") => " << this->get_class() << std::endl;
+}
 
 void Drawable_element::calculate_styles() {
 	std::list <Style> :: iterator style = this->styles.begin();
@@ -37,6 +41,8 @@ void Drawable_element::calculate_styles() {
 		this->style.set_attribute("color", (*style).get_text_color());
 		this->style.set_attribute("background-color", (*style).get_background_color());
 		this->style.set_attribute("shape", (*style).get_shape());
+		this->style.set_attribute("class", (*style).get_class());
+		this->style.set_attribute("id", (*style).get_id());
 		
 		++style;
 	 }
