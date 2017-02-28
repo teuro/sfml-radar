@@ -58,7 +58,6 @@ void Gameview::draw_plane(Aircraft*& plane, Aircraft* selected, Point& mouse) {
 		id = "selected";
 	}
 	
-	Drawable_plane dplane("plane", "plane", "", id);
 	Drawable_list info_list("ul", "infolist", id);
 	
 	info_list.add_element(plane->get_name());
@@ -66,14 +65,16 @@ void Gameview::draw_plane(Aircraft*& plane, Aircraft* selected, Point& mouse) {
 	info_list.set_class("normal");
 	
 	if (id == "selected") {
+		info_list.set_class("selected");
+		this->style(info_list);
+		
 		info_list.add_element(Tools::tostr((int)plane->get_speed()) + " / " + Tools::tostr((int)plane->get_clearance_speed()));
 		info_list.add_element(Tools::tostr((int)Tools::rad2deg(plane->get_heading())) + " / " + Tools::tostr((int)Tools::rad2deg(plane->get_clearance_heading())));
 		
-		if (plane->get_type() == 0) {
+		if (plane->get_type() == DEPARTURE) {
 			info_list.add_element(plane->get_target().get_name());
 		}
 		
-		this->drawer.lineColor(aircraft_place, mouse, 250, 60, 60);
 		double heading = Tools::angle(aircraft_place, mouse);
 		double distance = Tools::distancePX(aircraft_place, mouse);
 		
@@ -83,17 +84,16 @@ void Gameview::draw_plane(Aircraft*& plane, Aircraft* selected, Point& mouse) {
 	
 		Point text_place = Tools::calculate_midpoint(aircraft_place, mouse);
 		
-		this->drawer.draw_text(Tools::tostr((int)heading) + " deg " + Tools::tostr((int)distance) + " nm", text_place, 250,60 ,60);
-		info_list.set_class("selected");
+		this->drawer.draw_text(Tools::tostr((int)heading) + " deg " + Tools::tostr((int)distance) + " nm", text_place, info_list.get_style().get_text_color());
+		this->drawer.lineColor(aircraft_place, mouse, info_list.get_style().get_text_color());
 	}
 	
-	this->style(dplane);
 	this->style(info_list);
 	
 	info_list.get_style().set_place(aircraft_place);
 	
-	drawer.lineColor(aircraft_place, end_point_place_p, dplane.get_style().get_text_color());
-    drawer.circleColor(aircraft_place, separation_ring, dplane.get_style().get_text_color());
+	drawer.lineColor(aircraft_place, end_point_place_p, info_list.get_style().get_text_color());
+    drawer.circleColor(aircraft_place, separation_ring, info_list.get_style().get_text_color());
 	
 	this->draw_element(info_list);
 }
