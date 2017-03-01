@@ -9,38 +9,42 @@ void View::add_style(std::list <Style> tmp) {
 }
 
 void View::load(std::string state) {
+	this->load_styles();
+	this->load_layout(state);
+}
+
+void View::load_styles() {
+	std::clog << "View::load_styles()" << std::endl;
 	DIR *dir;
 	struct dirent *ent;
 	if ((dir = opendir (this->settings.style_folder.c_str())) != NULL) {
 		while ((ent = readdir (dir)) != NULL) {
 			std::string file_name = this->settings.style_folder + std::string(ent->d_name);
 			if (file_name != "/." && file_name != "/..") {
-				this->add_style(parse_css::parse(file_name));
+				this->add_style(this->parse_css(file_name));
 			}
 		}
 		closedir (dir);
 	} else {
 		std::cerr << "Directory not open" << std::endl;
 	}
-	
-	std::string file_name;
-	
+}
+
+void View::load_layout(std::string state) {
+	std::clog << "View::load_layout(" << state << ")" << std::endl;
 	TiXmlDocument doc;
 	bool load_ok = false;
 	
 	if (state == "game") {
-		file_name = this->settings.layout_game_file_name;
-		load_ok = doc.LoadFile(file_name.c_str());
+		load_ok = doc.LoadFile(this->settings.layout_game_file_name.c_str());
 	} else if (state == "atis") {
-		file_name = this->settings.layout_atis_file_name;
-		load_ok = doc.LoadFile(file_name.c_str());
+		load_ok = doc.LoadFile(this->settings.layout_atis_file_name.c_str());
 	} else if (state == "stat") {
-		file_name = this->settings.layout_stat_file_name;
-		load_ok = doc.LoadFile(file_name.c_str());
+		load_ok = doc.LoadFile(this->settings.layout_stat_file_name.c_str());
 	}	
 	
 	if (!load_ok) {
-		throw std::logic_error("layout-file " + file_name + " not found");
+		throw std::logic_error("layout-file " + state + ".xml not ok");
 	} 
 	
     TiXmlElement *pRoot, *pParm;
@@ -48,7 +52,6 @@ void View::load(std::string state) {
 	
     if (pRoot) {
         pParm = pRoot->FirstChildElement();
-        int i = 0; // for sorting the entries
 		
         while (pParm) {
 			if (pParm->Value() == std::string("img")) {
@@ -115,7 +118,6 @@ void View::load(std::string state) {
 			} 
 			
             pParm = pParm->NextSiblingElement();
-            ++i;
         }
 	}
 }
@@ -317,4 +319,46 @@ void View::draw_element(Drawable_table& dt) {
 		
 		++rit;
 	}
+}
+
+std::list <Style> View::parse_css(std::string file) {
+	std::ifstream fin(file.c_str(), std::ios::in);
+    std::string line;
+    std::string id;
+    std::string s_class;
+    std::string name;
+
+    std::list <Style> tmp;
+
+    while (std::getline(fin, line)) {
+		size_t found = line.find("{");
+        if (found != std::string::npos) {
+			Style t;
+			
+			if (line.substr(0, 1) == "#") {
+				id = line.substr(1, found-1);
+				id = Tools::trim(id);
+				t.set_attribute("id", id);
+			} else if (line.substr(0, 1) == ".") {
+				s_class = line.substr(1, found-1);
+				s_class = Tools::trim(s_class);
+				t.set_attribute("class", s_class);
+			} else {
+				name = line.substr(0, found-1);
+				name = Tools::trim(name);
+				t.set_attribute("name", name);
+			}
+			
+			tmp.push_back(t);
+        } else if (line.substr(0, 1) != "}" && line != "") {
+            std::string key     = Tools::trim(line.substr(0, line.find(":")));
+            std::string value   = Tools::trim(line.substr(line.find(":")+1));
+
+            tmp.back().set_attribute(key, value);
+		}
+    }
+
+    fin.close();
+
+    return tmp;
 }

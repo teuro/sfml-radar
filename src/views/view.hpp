@@ -15,7 +15,6 @@
 #include "layout/drawable_list.hpp"
 #include "layout/drawable_table.hpp"
 #include "layout/drawable_input.hpp"
-#include "../tools/style/parse_css.hpp"
 #include "../tools/style/style.hpp"
 #include "../tools/settings.hpp"
 
@@ -60,6 +59,9 @@ protected:
 	std::vector <Drawable_table> tables;
 private:
 	void add_style(std::list <Style> tmp);
+	std::list <Style> parse_css(std::string file);
+	void load_styles();
+	void load_layout(std::string state);
 };
 
 #endif
