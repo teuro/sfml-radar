@@ -70,6 +70,7 @@ std::string Atisview::get_value(Point& mouse) {
 		t_list = this->lists[i].get_elements();
 		list_item = t_list.begin();
 		Point place = this->lists[i].get_style().get_place();
+		place.change_y(this->drawer.get_fontsize());
 		
 		while (list_item != t_list.end()) {
 			if (Tools::on_area(mouse, place, 50, 10)) {
@@ -77,7 +78,7 @@ std::string Atisview::get_value(Point& mouse) {
 				return t;
 			}
 			
-			place.change_y(23);
+			place.change_y(this->drawer.get_fontsize());
 			
 			++list_item;
 		}
