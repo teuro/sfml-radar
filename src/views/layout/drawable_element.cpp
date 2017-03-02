@@ -27,7 +27,6 @@ std::string Drawable_element::get_name() {
 
 void Drawable_element::set_class(std::string t_class) {
 	this->s_class = t_class;
-	//std::clog << "Drawable_element::set_class(" << t_class << ") => " << this->get_class() << std::endl;
 }
 
 void Drawable_element::calculate_styles() {
