@@ -6,6 +6,7 @@
 class Image : public Drawable_element {
 public:
 	Image(std::string source, std::string t_name, std::string t_class, std::string t_id);
+	Image(std::string source, std::string t_name, std::list <std::string> classes, std::string t_id);
 	
 	std::string get_source();
 	void set_source(std::string src);

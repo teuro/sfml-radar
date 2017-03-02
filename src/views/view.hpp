@@ -62,6 +62,7 @@ private:
 	std::list <Style> parse_css(std::string file);
 	void load_styles();
 	void load_layout(std::string state);
+	std::map <std::string, std::string> get_info(TiXmlElement *pParm);
 };
 
 #endif

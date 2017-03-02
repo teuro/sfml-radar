@@ -30,6 +30,15 @@ void View::load_styles() {
 	}
 }
 
+std::map <std::string, std::string> View::get_info(TiXmlElement *pParm) {
+	std::map <std::string, std::string> tmp;
+
+	tmp["id"] = pParm->Attribute("id");
+	tmp["class"] = pParm->Attribute("class");
+	
+	return tmp;
+}
+
 void View::load_layout(std::string state) {
 	std::clog << "View::load_layout(" << state << ")" << std::endl;
 	TiXmlDocument doc;
@@ -52,15 +61,20 @@ void View::load_layout(std::string state) {
 	
     if (pRoot) {
         pParm = pRoot->FirstChildElement();
+		std::map <std::string, std::string> element_info;
 		
         while (pParm) {
 			if (pParm->Value() == std::string("img")) {
-				std::string source = pParm->Attribute("src");
-				std::string t_id = pParm->Attribute("id");
-				std::string t_class = pParm->Attribute("class");
+				element_info = this->get_info(pParm);
 				std::string t_name = pParm->Value();
+				std::list <std::string> t_class;
+				std::vector <std::string> t_explode =  Tools::split(" ", element_info["class"]);
 				
-				Image img(source, t_name, t_class, t_id);
+				std::copy(t_explode.begin(), t_explode.end(), std::back_inserter(t_class));
+				
+				std::string source = pParm->Attribute("src");
+				
+				Image img(source, t_name, t_class, element_info["id"]);
 				
 				this->style(img);
 				this->images.push_back(img);
@@ -217,10 +231,16 @@ void View::style(Drawable_element& de) {
 	}
 	
 	t_style = this->styles.begin();
+	std::list <std::string> t_classes = de.get_classes();
 	
 	while (t_style != this->styles.end()) {
-		if (de.get_class().length() && t_style->get_class() == de.get_class()) {
-			de.set_style((*t_style));
+		std::list <std::string> :: iterator it = t_classes.begin();
+		while (it != t_classes.end()) {
+			if ((*it).length() && t_style->get_class() == (*it)) {
+				de.set_style((*t_style));
+			}
+			
+			++it;
 		}
 		
 		++t_style;

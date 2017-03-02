@@ -14,3 +14,8 @@ input {
 table {
 	color: rgb(150, 150, 90);
 }
+
+img {
+	top: 15px;
+	left: 20px;
+}

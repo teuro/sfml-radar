@@ -11,6 +11,7 @@ void Cell::set_content(std::string cnt) {
 }
 
 Row::Row(std::string t_name, std::string t_class, std::string t_id) : Drawable_element(t_name, t_class, t_id) { }
+Row::Row(std::string t_name, std::list <std::string> classes, std::string t_id) : Drawable_element(t_name, classes, t_id) { }
 
 void Row::add_cell(Cell& cell) { 
 	#ifdef DEBUG
@@ -20,6 +21,7 @@ void Row::add_cell(Cell& cell) {
 }
 
 Drawable_table::Drawable_table(std::string t_name, std::string t_class, std::string t_id) : Drawable_element(t_name, t_class, t_id) { }
+Drawable_table::Drawable_table(std::string t_name, std::list <std::string> classes, std::string t_id) : Drawable_element(t_name, classes, t_id) { }
 
 std::list <Row> Drawable_table::get_rows() {
 	return this->rows; 

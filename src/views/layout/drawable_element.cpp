@@ -1,5 +1,6 @@
 #include "drawable_element.hpp"
 Drawable_element::Drawable_element(std::string t_name, std::string t_class, std::string t_id) : name(t_name), s_class(t_class), id(t_id) { }
+Drawable_element::Drawable_element(std::string t_name, std::list <std::string> t_classes, std::string t_id) : name(t_name), classes(t_classes), id(t_id) { }
 Drawable_element::Drawable_element() { }
 
 Drawable_element::~Drawable_element() { }
@@ -19,6 +20,14 @@ std::string Drawable_element::get_id() {
 
 std::string Drawable_element::get_class() {
 	return this->s_class;
+}
+
+std::list <std::string> Drawable_element::get_classes() {
+	if (this->classes.size() == 0) {
+		this->classes.push_back(this->s_class);
+	}
+	
+	return this->classes;
 }
 
 std::string Drawable_element::get_name() {
