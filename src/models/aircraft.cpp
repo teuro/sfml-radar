@@ -137,9 +137,9 @@ void Aircraft::update(double elapsed) {
 		this->calculate_angle_target(this->target.get_place());
 	}
 	
-	this->altitude  = change_parameter(elapsed, this->altitude, this->clearance_altitude, 	30.0);
-	this->speed     = change_parameter(elapsed, this->speed, 	this->clearance_speed, 		3.0);
-	this->heading   = change_parameter(elapsed, this->heading, 	this->clearance_heading, 	Tools::deg2rad(3.0), this->turn);
+	this->altitude  = change_parameter(elapsed, this->altitude, this->clearance_altitude, 	this->settings.altitude_change);
+	this->speed     = change_parameter(elapsed, this->speed, 	this->clearance_speed, 		this->settings.speed_change);
+	this->heading   = change_parameter(elapsed, this->heading, 	this->clearance_heading, 	Tools::deg2rad(this->settings.heading_change), this->turn);
 	
 	double distance = this->speed * (elapsed / 1000) / 3600;
 	this->place = Tools::calculate(this->place, this->heading, distance);

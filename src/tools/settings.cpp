@@ -23,7 +23,7 @@ void Settings::set_values(std::map<std::string, std::string> values ) {
     this->separation_horizontal         = Tools::toint(values["separation_horizontal"]);
     this->separation_vertical           = Tools::toint(values["separation_vertical"]);
     this->heading_change                = Tools::toint(values["heading_change"]);
-    this->height_change                 = Tools::toint(values["height_change"]);
+    this->altitude_change               = Tools::toint(values["altitude_change"]);
     this->speed_change                  = Tools::toint(values["speed_change"]);
     this->distance_width                = Tools::toint(values["distance_width"]);
     this->clearance_speed_lower         = Tools::toint(values["clearance_speed_lower"]);

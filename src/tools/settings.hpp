@@ -22,7 +22,7 @@ public:
     int separation_horizontal;
     int separation_vertical;
     int heading_change;
-    int height_change;
+    int altitude_change;
     int speed_change;
     int distance_width;
     int clearance_speed_lower;
