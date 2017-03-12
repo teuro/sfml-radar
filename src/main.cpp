@@ -1,7 +1,7 @@
 #include <iostream>
 #include <stdexcept>
 
-#include "program.hpp"
+#include "window/sfml/sfml_window.hpp"
 
 /**
 	* ATC radar game
@@ -11,13 +11,13 @@
 
 int main(){
     try {
-        Program program;
+        SFML_window window;
 		
-		program.init();
-		
-        program.run();
+		window.init();
+		window.load_settings();
+        window.run();
 
-        program.close();
+        window.close();
     } catch (std::runtime_error& e) {
         std::cerr << e.what() << std::endl;
         return 1;

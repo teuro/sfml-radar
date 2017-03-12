@@ -1,17 +1,17 @@
-#include "program.hpp"
+#include "sfml_window.hpp"
 
-Program::Program(){
-    this->load();
+SFML_window::SFML_window() { }
+
+SFML_window::~SFML_window() { }
+
+void SFML_window::init() {
+    std::clog << "SFML_window::init()" << std::endl;
 	this->time_change = sf::milliseconds(50);
 }
 
-Program::~Program() { }
-
-void Program::init() {
-    std::clog << "Program::init()" << std::endl;
-	
+void SFML_window::load_settings() {
+	std::clog << "SFML_window::load_settings()" << std::endl;
 	Tools::init_random();
-	
 	Queryresult qrslt = Database::get_result("SELECT setting_name, setting_value FROM settings");
 	std::map <std::string, std::string> tmp;
 
@@ -19,28 +19,18 @@ void Program::init() {
 		tmp[qrslt(i, "setting_name")] = qrslt(i, "setting_value");
 	}
 
-	settings.set_values(tmp);
+	this->settings.set_values(tmp);
 }
 
-void Program::load() {
-    std::clog << "Program::load()" << std::endl;
+void SFML_window::close() {
+    std::clog << "SFML_window::close()" << std::endl;
 }
 
-void Program::close() {
-    std::clog << "Program::close()" << std::endl;
+void SFML_window::handle_events() {
+    std::clog << "SFML_window::handle_events()" << std::endl;
 }
 
-bool Program::handle_events(Controller& ctrl, sf::RenderWindow& window) {
-	sf::Event event;
-
-	while (window.pollEvent(event)) {
-		return this->handle_event(event, ctrl, window);
-	}
-	
-	return true;
-}
-
-void Program::run() {
+void SFML_window::run() {
 	sf::RenderWindow window(sf::VideoMode(this->settings.screen_width, this->settings.screen_height), this->settings.program_name, sf::Style::Resize);
 	sf::Image image;
 	image.loadFromFile("images/logo.png");
@@ -52,7 +42,13 @@ void Program::run() {
 	gamecontroller.load();
 	sf::Time time_now;
 	
-	while (this->handle_events(gamecontroller, window)) {
+	sf::Event event;
+	bool on_run = true;
+	
+	while (on_run) {
+		window.pollEvent(event);
+		on_run = this->handle_event(event, gamecontroller, window);
+		
 		time_now = this->clock.restart();
 		gamecontroller.update(time_now.asMilliseconds(), mouse);
 		sf::sleep(time_change - time_now);	
@@ -61,7 +57,7 @@ void Program::run() {
 	window.close();
 }
 
-bool Program::handle_event(sf::Event& event, Controller& ctrl, sf::RenderWindow& window) {
+bool SFML_window::handle_event(sf::Event& event, Controller& ctrl, sf::RenderWindow& window) {
     sf::Vector2i mouse_place = sf::Mouse::getPosition(window);
 	mouse.set_place(mouse_place.x, mouse_place.y);
 	int button_type = -1;
@@ -90,11 +86,7 @@ bool Program::handle_event(sf::Event& event, Controller& ctrl, sf::RenderWindow&
         case sf::Event::TextEntered:
             if (event.text.unicode == 8 && this->input_string.length()) {
                 this->input_string = this->input_string.erase(input_string.length()-1, 1);
-            } else if (
-				((event.text.unicode >= 65 && event.text.unicode <= 122) ||
-				(event.text.unicode >= 48 && event.text.unicode <= 57) ||
-				(event.text.unicode == 32 || event.text.unicode == 59)) && 
-				event.text.unicode != 13 && event.text.unicode != 8) {
+            } else if (event.text.unicode != 13) {
                 this->input_string += sf::String(event.text.unicode);
             }
 			
