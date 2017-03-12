@@ -223,6 +223,7 @@ void Gamecontroller::handle_text_input() {
 		}
 	} else {
 		this->game->build_clearance(command);
+		this->quicklist.push_back(command);
 	}
 }
 
