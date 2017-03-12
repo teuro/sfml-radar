@@ -100,9 +100,10 @@ private:
     int turn;
 
     void change_speed();
-    void change_altitude(double elapsed);
     void change_heading();
-    double change_parameter(double elapsed, double value, double _value, double change, int turn = 0);
+    void change_speed(double elapsed);
+    void change_altitude(double elapsed);
+    void change_heading(double elapsed);
     int type;
     bool approach;
     bool direct;
