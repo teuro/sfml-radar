@@ -6,11 +6,13 @@
 #include <cstdlib>
 #include <cstdio>
 #include "../tools.hpp"
+#include "../settings.hpp"
 #include "../../models/point.hpp"
 
 class Style {
 public:
     Style();
+    Style(Settings& s);
     ~Style();
 
     std::string get_id();
@@ -54,6 +56,8 @@ private:
 	int top;
 	
 	int r, g, b; /* pure help variables */
+	
+	Settings settings;
 };
 
 #endif // STYLE_HPP

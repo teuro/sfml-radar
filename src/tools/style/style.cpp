@@ -1,6 +1,6 @@
 #include "style.hpp"
 
-Style::Style() { 
+Style::Style(Settings& s) : settings(s) { 
 	this->place.set_x(0);
 	this->place.set_y(0);
 	this->left = 0;
@@ -11,6 +11,16 @@ Style::Style() {
 	this->background_color = 0;
 }
 
+Style::Style() { 
+	this->place.set_x(0);
+	this->place.set_y(0);
+	this->left = 0;
+	this->top = 0;
+	this->width = 0;
+	this->height = 0;
+	this->text_color = 0;
+	this->background_color = 0;
+}
 Style::~Style() { }
 
 void Style::set_attribute(std::string key, int value) {
@@ -38,10 +48,16 @@ void Style::set_attribute(std::string key, std::string value) {
     if (key == "left") {
         this->place.set_x(Tools::tonumber<int>(value));
 		this->left = Tools::tonumber<int>(value);
+    } else if (key == "right") {
+        this->place.set_x(this->settings.screen_width - Tools::tonumber<int>(value));
+		this->left = this->settings.screen_width - Tools::tonumber<int>(value);
     } else if (key == "top") {
         this->place.set_y(Tools::tonumber<int>(value));
 		this->top = Tools::tonumber<int>(value);
-    } else if (key == "width") {
+    } else if (key == "bottom") {
+        this->place.set_y(this->settings.screen_height - Tools::tonumber<int>(value));
+		this->top = this->settings.screen_height - Tools::tonumber<int>(value);
+    }else if (key == "width") {
         this->width = Tools::tonumber<int>(value);
     } else if (key == "height") {
         this->height = Tools::tonumber<int>(value);
