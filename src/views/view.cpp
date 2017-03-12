@@ -194,7 +194,7 @@ void View::draw_element(Paragraph& p) {
 		
 		for (unsigned int i = 0; i < lines.size(); ++i) {
 			this->drawer.draw_text(Tools::replace(lines[i], repl), place_a, color);
-			place_a.change_y(25);
+			place_a.change_y(this->drawer.get_fontsize());
 		}
 		
 	}
@@ -353,7 +353,7 @@ std::list <Style> View::parse_css(std::string file) {
     while (std::getline(fin, line)) {
 		size_t found = line.find("{");
         if (found != std::string::npos) {
-			Style t;
+			Style t(this->settings);
 			
 			if (line.substr(0, 1) == "#") {
 				id = line.substr(1, found-1);
