@@ -229,3 +229,13 @@ double Tools::angle(Point& a, Point& b) {
 
 	return std::atan2(dy, dx);
 }
+
+int Tools::round_nearest(int number, int multiple) {
+    if (multiple == 0) {
+		return number;
+	}
+
+    int remainder = number % multiple;
+
+    return number + multiple - remainder;
+}

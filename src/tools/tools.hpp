@@ -371,5 +371,7 @@ namespace Tools {
 		
 		return input[place];
 	}
+	
+	int round_nearest(int number, int multiply);
 }
 #endif // _TOOLS_HPP
