@@ -15,6 +15,7 @@ void Game::load(std::string airfield) {
 	
 	this->separation_errors = 0;
     this->new_plane = 5000;
+    this->pop_holdings = 500;
 	this->handled_planes = 0;
 	this->selected = NULL;
 }
@@ -91,7 +92,7 @@ void Game::handle_holdings() {
         std::list <Aircraft*> :: iterator plane = this->aircrafts.begin();
 
         while (plane != this->aircrafts.end()) {
-            if ((*plane)->get_altitude() < 1000) {
+            if ((*plane)->get_altitude() < 1000 || this->duration < this->pop_holdings) {
                 return;
             }
 
@@ -103,7 +104,8 @@ void Game::handle_holdings() {
         t->set_clearance_speed(160);
 		this->aircrafts.push_back(t);
         this->holdings.pop();
-    }
+		this->pop_holdings += this->settings.departure_separation * 1000 * 60;
+	}
 }
 
 void Game::calculate_points(int type, double clearance_count, std::string plane) {
@@ -354,7 +356,7 @@ void Game::build_clearance(std::string command) {
 		if (tmp.size() > 1) {
 			if (Tools::trim(tmp[0]) == "turn") {
 				value = Tools::toint(s_value);
-				int turn = (Tools::trim(tmp[1]) == "right") ? 1 : -1;
+				int turn = (Tools::trim(tmp[1]) == "right") ? RIGHT : LEFT;
 				
 				this->selected->set_clearance_heading(Tools::deg2rad(value), turn);
 			} else if (Tools::trim(tmp[0]) == "climb") {

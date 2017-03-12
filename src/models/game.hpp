@@ -140,6 +140,7 @@ private:
 	Atis*& atis;
 
     double duration;
+	double pop_holdings;
     int separation_errors;
     int new_plane;
 	unsigned int handled_planes;
