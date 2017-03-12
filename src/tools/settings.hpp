@@ -5,8 +5,10 @@
 #include <string>
 #include "tools.hpp"
 
-enum turn {LEFT = -1, RIGHT = 1};
-enum types {DEPARTURE, APPROACH};
+enum turn 		{LEFT = -1, RIGHT = 1};
+enum types 		{DEPARTURE, APPROACH};
+enum altitude 	{DESCENT = -1, CLIMB = 1};
+enum change 	{DECREASE = -1, INCREASE = 1};
 
 class Settings {
 public:
