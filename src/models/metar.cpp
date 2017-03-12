@@ -20,8 +20,8 @@ void Metar::update(std::string icao) {
 	this->clouds.clear();
     this->pressure = Tools::rnd(965, 1035);
     this->humidity = Tools::rnd(20, 80);
-    this->visibility = Tools::rnd(100, 9999);
-    this->wind.direction = Tools::rnd(5, 355);
+    this->visibility = Tools::round_nearest(Tools::rnd(100, 9999), 100);
+    this->wind.direction = Tools::round_nearest(Tools::rnd(5, 355), 5);
     this->wind.speed = Tools::rnd(3, 50);
     this->temperature = Tools::rnd(-30, 40);
     this->devpoint = (int)this->temperature - ((100 - this->humidity) / 5);
