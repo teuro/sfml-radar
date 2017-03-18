@@ -94,6 +94,12 @@ public:
 	**/
 	
 	void set_class(std::string t_class);
+	
+	/**
+		* get maximum length
+	**/
+	
+	virtual std::string get_max_length();
 };
 
 #endif

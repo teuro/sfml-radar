@@ -15,3 +15,19 @@ void Drawable_list::clear_content() {
 std::list <std::string> Drawable_list::get_elements() {
 	return this->elements;
 }
+
+std::string Drawable_list::get_max_length() {
+	std::string max = "";
+	
+	std::list <std::string> :: iterator sit = this->elements.begin();
+	
+	while (sit != this->elements.end()) {
+		if ((*sit).length() > max.length()) {
+			max = (*sit);
+		}
+		
+		++sit;
+	}
+	
+	return max;
+}

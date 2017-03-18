@@ -48,11 +48,16 @@ void Drawable_element::calculate_styles() {
 		this->style.set_attribute("height", (*style).get_height());
 		this->style.set_attribute("color", (*style).get_text_color());
 		this->style.set_attribute("background-color", (*style).get_background_color());
+		this->style.set_attribute("border", (*style).get_border_color());
 		this->style.set_attribute("shape", (*style).get_shape());
 		this->style.set_attribute("class", (*style).get_class());
 		this->style.set_attribute("id", (*style).get_id());
 		
 		++style;
 	 }
+}
+
+std::string Drawable_element::get_max_length() {
+	return "";
 }
 

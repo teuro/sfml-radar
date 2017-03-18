@@ -11,6 +11,7 @@ public:
 	void add_element(std::string content);
 	std::list <std::string> get_elements();
 	void clear_content();
+	virtual std::string get_max_length();
 private:
 	std::list <std::string> elements;
 };
