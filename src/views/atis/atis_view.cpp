@@ -11,10 +11,10 @@ void Atisview::load(std::vector <Runway> runways, std::map <int, std::vector <in
 }
 
 void Atisview::update() {
-	Drawable_list runway_list_dep("ul", "strorage", "runway-list-departure");
-	Drawable_list runway_list_lnd("ul", "strorage", "runway-list-landing");
-	Drawable_list transfer_level("ul", "strorage", "transfer-level");
-	Drawable_list transfer_altitude("ul", "strorage", "transfer-altitude");
+	Drawable_list runway_list_dep("ul", "atis_base", "runway-list-departure");
+	Drawable_list runway_list_lnd("ul", "atis_base", "runway-list-landing");
+	Drawable_list transfer_level("ul", "atis_base",  "transfer-level");
+	Drawable_list transfer_altitude("ul", "atis_base", "transfer-altitude");
 	
 	lists.clear();
 	
@@ -70,7 +70,7 @@ std::string Atisview::get_value(Point& mouse) {
 		t_list = this->lists[i].get_elements();
 		list_item = t_list.begin();
 		Point place = this->lists[i].get_style().get_place();
-		place.change_y(this->drawer.get_fontsize());
+		place.change_y(this->drawer.get_fontsize() / 2);
 		
 		while (list_item != t_list.end()) {
 			if (Tools::on_area(mouse, place, 50, 10)) {
