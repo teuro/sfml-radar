@@ -3,7 +3,7 @@
 Atis::Atis(Settings& s, Metar& m) : settings(s), metar(m) { 
 	this->departure_runway = "";
 	this->landing_runway = "";
-	this->transition_altitude = 0;
+	this->transition_altitude = 5000;
 	this->transition_level = 0;
 }
 
