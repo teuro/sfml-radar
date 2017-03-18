@@ -17,6 +17,7 @@
 #atis_error {
 	top: 350px;
 	left: 250px;
+	border: rgb(16, 150, 230);
 }
 
 #atis_data {
@@ -25,12 +26,15 @@
 }
 
 #atis_info {
-	top: 30px;
-	width: 600px;
+	top: 50px;
+	width: 500px;
 	left: 10px;
 	color: rgb(120, 120, 120);
+	margin: 30px;
+	border: rgb(220, 200, 16);
 }
 
-.strorage {
+.atis_base {
 	top: 140px;
+	border: rgb(16, 150, 230);
 }

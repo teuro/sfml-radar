@@ -1,6 +1,8 @@
 #metar {
 	width: 400px;
 	color: rgb(180, 80, 80);
+	top: 10px;
+	left: 10px;
 }
 
 #basic_info {
