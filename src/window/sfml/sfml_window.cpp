@@ -88,6 +88,7 @@ bool SFML_window::handle_event(sf::Event& event, Controller& ctrl, sf::RenderWin
                 this->input_string = this->input_string.erase(input_string.length()-1, 1);
             } else if (event.text.unicode != 13) {
                 this->input_string += sf::String(event.text.unicode);
+				sf::sleep(sf::milliseconds(50));
             }
 			
 			ctrl.update_command(this->input_string);
