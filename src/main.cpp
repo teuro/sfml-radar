@@ -27,6 +27,9 @@ int main(){
     } catch (std::bad_alloc& e) {
         std::cerr << e.what() << std::endl;
 		return 1;
+    } catch (std::exception& e) {
+        std::cerr << e.what() << std::endl;
+		return 1;
     } catch ( ... ) {
         std::cerr << "Unknown error" << std::endl;
         return 1;
