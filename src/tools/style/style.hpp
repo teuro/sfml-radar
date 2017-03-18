@@ -30,6 +30,7 @@ public:
     unsigned int get_text_color();
     unsigned int get_background_color();
     unsigned int get_border_color();
+    unsigned int get_margin();
 	
     void set_attribute(std::string key, std::string value);
     void set_attribute(std::string key, int value);
@@ -54,6 +55,7 @@ private:
     int border_color;
 	int left;
 	int top;
+	int margin;
 	
 	int r, g, b; /* pure help variables */
 	

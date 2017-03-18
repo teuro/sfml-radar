@@ -9,6 +9,8 @@ Style::Style(Settings& s) : settings(s) {
 	this->height = 0;
 	this->text_color = 0;
 	this->background_color = 0;
+	this->border_color = 0;
+	this->margin = 5;
 }
 
 Style::Style() { 
@@ -20,6 +22,8 @@ Style::Style() {
 	this->height = 0;
 	this->text_color = 0;
 	this->background_color = 0;
+	this->border_color = 0;
+	this->margin = 5;
 }
 Style::~Style() { }
 
@@ -32,6 +36,8 @@ void Style::set_attribute(std::string key, int value) {
 			this->background_color = value;
 		} else if (key == "border") {
 			this->border_color = value;
+		} else if (key == "margin") {
+			this->margin = value;
 		} else { 
 			this->set_attribute(key, Tools::tostr(value));
 		}
@@ -77,6 +83,8 @@ void Style::set_attribute(std::string key, std::string value) {
 		this->shape = value;
 	} else if (key == "position") {
 		this->position = value;
+	} else if (key == "margin") {
+		this->margin = Tools::tonumber<int>(value);
 	} else if (key == "border") {
 		std::sscanf(value.c_str(), "rgb(%i, %i, %i);", &r, &g, &b);
         this->border_color = (r * 256 + g) * 256 + b;
@@ -133,6 +141,10 @@ unsigned int Style::get_background_color() {
 
 unsigned int Style::get_border_color() {
     return this->border_color;
+}
+
+unsigned int Style::get_margin() {
+    return this->margin;
 }
 
 void Style::set_place(Point& t_place) {
