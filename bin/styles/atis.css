@@ -1,27 +1,27 @@
 #runway-list-departure {
-	left: 50px;
+	left: 10px;
 }
 
 #runway-list-landing {
-	left: 150px;
+	left: 100px;
 }
 
 #transfer-altitude {
-	left: 250px;
+	left: 175px;
 }
 
 #transfer-level {
-	left: 350px;
+	left: 250px;
 }
 
 #atis_error {
-	top: 350px;
+	top: 300px;
 	left: 250px;
 	border: rgb(16, 150, 230);
 }
 
 #atis_data {
-	top: 350px;
+	top: 300px;
 	left: 20px;
 }
 
