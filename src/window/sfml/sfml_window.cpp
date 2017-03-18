@@ -6,7 +6,7 @@ SFML_window::~SFML_window() { }
 
 void SFML_window::init() {
     std::clog << "SFML_window::init()" << std::endl;
-	this->time_change = sf::milliseconds(50);
+	this->time_change = sf::milliseconds(80);
 }
 
 void SFML_window::load_settings() {
@@ -94,7 +94,7 @@ bool SFML_window::handle_event(sf::Event& event, Controller& ctrl, sf::RenderWin
             return true;
         case sf::Event::MouseWheelMoved:
             ctrl.handle_mouse_wheel(event.mouseWheel.delta);
-            break;
+            return true;
         case sf::Event::MouseButtonPressed:
             if (event.mouseButton.button == sf::Mouse::Left) {
                 mouse_start.set_place(mouse_place.x, mouse_place.y);
@@ -106,7 +106,6 @@ bool SFML_window::handle_event(sf::Event& event, Controller& ctrl, sf::RenderWin
             mouse_end.set_place(mouse_place.x, mouse_place.y);
             ctrl.handle_mouse_release(mouse_start, mouse_end);
             return true;
-            break;
         case sf::Event::Resized:
             this->settings.screen_height = event.size.height;
             this->settings.screen_width = event.size.width;
