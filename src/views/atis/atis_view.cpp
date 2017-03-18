@@ -34,10 +34,12 @@ void Atisview::update() {
 		transfer_altitude.add_element(Tools::tostr(altitude->first));
 		level = altitude->second.begin();
 		transfer_level.add_element("level");
+		
 		while (level != altitude->second.end()) {
 			transfer_level.add_element(Tools::tostr((*level)));
 			++level;
 		}
+		
 		display_levels[altitude->first] = transfer_level;
 		transfer_level.clear_content();
 	}
