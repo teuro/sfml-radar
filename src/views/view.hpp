@@ -10,6 +10,7 @@
 #include <vector>
 #include <list>
 #include <fstream>
+#include "layout/drawable_text_element.hpp"
 #include "layout/drawable_image.hpp"
 #include "layout/drawable_paragraph.hpp"
 #include "layout/drawable_list.hpp"
@@ -44,11 +45,12 @@ protected:
     std::list <Style> styles;
     void draw_element(Image& img);
     void draw_element(Paragraph& p);
-    void draw_element(Drawable_element& de);
+    void draw_element(std::string text, Point& place, int color);
     void draw_element(Drawable_input& di);
 	void draw_element(Drawable_list& dl);
 	void draw_element(Drawable_table& dt);
-
+	void draw_borders(Style& style);
+	
 	void style(Drawable_element& de);
     void load(std::string state);
     Point centerpoint_screen;

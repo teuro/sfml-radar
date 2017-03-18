@@ -158,6 +158,39 @@ void View::draw_element(Image& img) {
 	this->drawer.draw_picture(img.get_source(), place);
 }
 
+void View::draw_borders(Style& style) {
+	int color = style.get_border_color();
+	int width = style.get_width();
+	int height = style.get_height();
+	int margin = style.get_margin();
+
+	Point place_a = style.get_place();
+	Point place_b(place_a.get_x(), place_a.get_y());
+	
+	place_b.change_x(width + margin);
+	place_a.change_x(-margin);
+	
+	place_a.change_y(-margin);
+	place_b.change_y(-margin);
+	
+	this->drawer.lineColor(place_a, place_b, color);
+	
+	place_a.change_y(margin + height + margin);
+	place_b.change_y(margin + height + margin);
+	
+	this->drawer.lineColor(place_a, place_b, color);
+	
+	place_a.change_x(margin + width + margin);
+	place_a.change_y(-margin -height - margin);
+	
+	this->drawer.lineColor(place_a, place_b, color);
+	
+	place_a.change_x(-margin - width - margin);
+	place_b.change_x(-margin - width - margin);
+	
+	this->drawer.lineColor(place_a, place_b, color);
+}
+
 void View::draw_element(Paragraph& p) {
 	#ifdef DEBUG
 	std::clog << "View::draw_element(Paragraph& p)" << std::endl;
@@ -168,9 +201,15 @@ void View::draw_element(Paragraph& p) {
 	Point place_a = st.get_place();
 	
 	unsigned int width = this->drawer.get_text_length(p.get_content());
+	unsigned int height = 1;
+	unsigned int t_height = 1;
+	p.get_style().set_attribute("height", height);
 	
 	if (width <= st.get_width()) {
-		this->drawer.draw_text(Tools::replace(p.get_content(), repl), place_a, color);
+		this->draw_element(Tools::replace(p.get_content(), repl), place_a, color);
+		t_height = this->drawer.get_text_height(p.get_content()) + 5;
+		height += t_height;
+		place_a.change_y(t_height);
 	} else {
 		std::vector <std::string> tmp = Tools::split(" ", p.get_content());
 		std::vector <std::string> lines;
@@ -191,13 +230,20 @@ void View::draw_element(Paragraph& p) {
 		}
 		
 		lines.push_back(t_line);
+		height = lines.size();
+		
+		p.get_style().set_attribute("height", height);
 		
 		for (unsigned int i = 0; i < lines.size(); ++i) {
-			this->drawer.draw_text(Tools::replace(lines[i], repl), place_a, color);
-			place_a.change_y(this->drawer.get_fontsize());
+			this->draw_element(Tools::replace(lines[i], repl), place_a, color);
+			t_height = this->drawer.get_text_height(lines[i]) + 5;
+			height += t_height;
+			place_a.change_y(t_height);
 		}
-		
 	}
+	
+	p.get_style().set_attribute("height", height);
+	this->draw_borders(p.get_style());
 }
 
 void View::draw_element(Drawable_input& i) {
@@ -213,7 +259,7 @@ void View::draw_element(Drawable_input& i) {
 	Point place_b(place_a.get_x() + st.get_width(), place_a.get_y() + st.get_height());
 	this->drawer.rectangleColor(place_a, place_b, background_color);
 	
-	this->drawer.draw_text(i.get_value(), place_a, color);
+	this->draw_element(i.get_value(), place_a, color);
 }
 
 void View::style(Drawable_element& de) {
@@ -292,17 +338,27 @@ void View::draw_element(Drawable_list& dl) {
 	#ifdef DEBUG
 	std::clog << "View::draw_element(Drawable& dl)" << std::endl;
 	#endif
+	
 	int color = dl.get_style().get_text_color();
-	int font_size = this->drawer.get_fontsize() + 5;
+	int height = 0;
+	int t_height;
+	
 	std::list <std::string> t_list = dl.get_elements();
 	std::list <std::string> :: iterator it = t_list.begin();
 	
 	Point place = dl.get_style().get_place();
+	dl.get_style().set_attribute("width", this->drawer.get_text_length(dl.get_max_length()));
 	
 	for (it = t_list.begin(); it != t_list.end(); ++it) {
-		this->drawer.draw_text((*it), place, color);
-		place.change_y(font_size);
+		this->draw_element((*it), place, color);
+		t_height = this->drawer.get_text_height((*it)) + 5;
+		height += t_height;
+		place.change_y(t_height);
 	}
+	
+	dl.get_style().set_attribute("height", height);
+	
+	this->draw_borders(dl.get_style());
 }
 
 void View::draw_element(Drawable_table& dt) {
@@ -329,7 +385,7 @@ void View::draw_element(Drawable_table& dt) {
 		}
 		
 		while (cit != c_list.end()) {
-			this->drawer.draw_text(Tools::replace((*cit).get_content(), repl), place, color);
+			this->draw_element(Tools::replace((*cit).get_content(), repl), place, color);
 			++cit;
 			place.change_x(length);
 		}
@@ -352,6 +408,7 @@ std::list <Style> View::parse_css(std::string file) {
 
     while (std::getline(fin, line)) {
 		size_t found = line.find("{");
+		
         if (found != std::string::npos) {
 			Style t(this->settings);
 			
@@ -381,4 +438,8 @@ std::list <Style> View::parse_css(std::string file) {
     fin.close();
 
     return tmp;
+}
+
+void View::draw_element(std::string text, Point& place_a, int color) {
+	this->drawer.draw_text(text, place_a, color);
 }
