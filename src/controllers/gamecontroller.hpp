@@ -32,7 +32,7 @@ public:
 		* @param int key
 		* @return void
 	**/
-    std::string handle_function_keys(int key);
+    std::string handle_function_keys(int key, std::string input);
 	
 	/**
 		* handle_mouse_release
@@ -141,6 +141,7 @@ private:
 
 	std::list <Clearance> clearances;
 	std::list <std::string> quicklist;
+	std::list <std::string> :: iterator quick_iterator;
 	std::list <std::string> matching_elements(std::string input);
     Gameview* gameview;
     Atisview* atisview;

@@ -65,6 +65,9 @@ public:
     int zoom;
 	int airfield_altitude;
 	int sleep;
+	int transition_levels;
+	int zoom_min;
+	int zoom_max;
     std::string program_name;
     std::string database_name;
     std::string search_term;
@@ -76,6 +79,5 @@ public:
 	int display_clearance_errors;
 	Coordinate centerpoint;
 };
-
 
 #endif

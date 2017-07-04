@@ -11,6 +11,7 @@ Gamecontroller::Gamecontroller(Settings& s, Drawsurface& d) : Controller(s, d) {
 	this->frames = 0;
 	this->fps_time = 5000;
 	this->state = ATIS;
+	quick_iterator = this->quicklist.begin();
 }
 
 Gamecontroller::~Gamecontroller() { 
@@ -21,13 +22,7 @@ Gamecontroller::~Gamecontroller() {
 	delete this->atis;
 }
 
-std::string Gamecontroller::handle_function_keys(int action) {
-	if (action == Tools::RIGHT) {
-		if (this->quicklist.size()) {
-			this->command = this->quicklist.front();
-		}
-	}
-	
+std::string Gamecontroller::handle_function_keys(int action, std::string input) {
 	return this->command;
 }
 
@@ -36,22 +31,16 @@ void Gamecontroller::handle_mouse_release(Point& mouse_start, Point& mouse_end) 
     double angle_rad    = Tools::fix_angle(Tools::angle(mouse_start, mouse_end) + Tools::get_PI() / 2.0);
     double distance_nm  = this->gameview->distanceNM(distance_px);
 	
-	if (distance_px == 0) {
-		distance_nm = 0;
-	}
-	
     this->settings.centerpoint = Tools::calculate(this->settings.centerpoint, angle_rad, distance_nm);
 }
 
 void Gamecontroller::handle_mouse_wheel(int amount) {
     this->settings.zoom += (-amount * 1);
-	int zoom_min = 1;
-	int zoom_max = 250;
 
-    if (this->settings.zoom < zoom_min) {
-        this->settings.zoom = zoom_min;
-    } else if (this->settings.zoom > zoom_max) {
-		this->settings.zoom = zoom_max;
+    if (this->settings.zoom < this->settings.zoom_min) {
+        this->settings.zoom = this->settings.zoom_min;
+    } else if (this->settings.zoom > this->settings.zoom_max) {
+		this->settings.zoom = this->settings.zoom_max;
 	}
     
 	this->gameview->set_zoom(this->settings.zoom);
@@ -219,7 +208,9 @@ void Gamecontroller::handle_text_input() {
 	
 	if (tmp.size() > 1) {
 		for (unsigned int i = 0; i < tmp.size(); ++i) {
-			this->game->build_clearance(Tools::trim(tmp[i]));
+			t_command = Tools::trim(tmp[i]);
+			this->game->build_clearance(t_command);
+			this->quicklist.push_back(t_command);
 		}
 	} else {
 		this->game->build_clearance(command);

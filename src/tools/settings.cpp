@@ -61,6 +61,9 @@ void Settings::set_values(std::map<std::string, std::string> values ) {
     this->cloud_count_lower             = Tools::toint(values["cloud_count_lower"]);
     this->cloud_count_upper             = Tools::toint(values["cloud_count_upper"]);
     this->departure_separation          = Tools::toint(values["departure_separation"]);
+    this->transition_levels          	= Tools::toint(values["transition_levels"]);
+    this->zoom_min			          	= Tools::toint(values["zoom_min"]);
+    this->zoom_max			          	= Tools::toint(values["zoom_max"]);
     this->zoom                          = 70;
     this->program_name                  = values["program_name"];
 }
