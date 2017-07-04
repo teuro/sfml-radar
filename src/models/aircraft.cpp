@@ -84,7 +84,7 @@ bool Aircraft::check_approach_config() {
 void Aircraft::calculate_angle_target(Coordinate& target) {
 	double t_angle = Tools::angle(this->place, target);
 	
-	this->clearance_heading = t_angle;
+	this->clearance_heading = Tools::fix_angle(t_angle);
 	this->turn = (this->heading < this->clearance_heading) ? RIGHT : LEFT;
 }
 
@@ -255,7 +255,7 @@ void Aircraft::set_clearance_direct(std::string outpoint) {
 	try {
 		Outpoint t_op = this->airport->get_outpoint(outpoint);
 		this->target = t_op;
-	this->direct = true;
+		this->direct = true;
 	} catch (std::logic_error& e) {
 		std::cerr << e.what() << std::endl;
 	}

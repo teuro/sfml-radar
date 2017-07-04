@@ -24,8 +24,8 @@ void Atis::load(std::vector <Runway> rwys) {
 	for (unsigned int i = 0; i < altitudes.size(); ++i) {
 		int base = altitudes[i] / 100 - 5;
 		
-		for (unsigned int j = 1;  j < 7; ++j) {
-			levels[altitudes[i]].push_back(base);
+		for (int j = 1;  j < this->settings.transition_levels; ++j) {
+			this->levels[altitudes[i]].push_back(base);
 			base += 5;
 		}
 	}
