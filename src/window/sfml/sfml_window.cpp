@@ -48,6 +48,7 @@ void SFML_window::run() {
 	while (on_run) {
 		window.pollEvent(event);
 		on_run = this->handle_event(event, gamecontroller, window);
+		sf::sleep(sf::milliseconds(10));
 		
 		time_now = this->clock.restart();
 		gamecontroller.update(time_now.asMilliseconds(), mouse);
@@ -61,10 +62,23 @@ bool SFML_window::handle_event(sf::Event& event, Controller& ctrl, sf::RenderWin
     sf::Vector2i mouse_place = sf::Mouse::getPosition(window);
 	mouse.set_place(mouse_place.x, mouse_place.y);
 	int button_type = -1;
-
+	std::string t_input;
+	
     switch (event.type) {
         case sf::Event::Closed:
             return false;
+		 case sf::Event::TextEntered:
+            if (event.text.unicode == 8 && this->input_string.length()) {
+                this->input_string = this->input_string.erase(input_string.length()-1, 1);
+            } else if (event.text.unicode != 13 && event.text.unicode < 128) {
+                this->input_string += sf::String(event.text.unicode);
+            }
+			
+			ctrl.update_command(this->input_string);
+            return true;
+        case sf::Event::MouseWheelMoved:
+            ctrl.handle_mouse_wheel(event.mouseWheel.delta);
+            return true;
         case sf::Event::KeyPressed:
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return)) {
                 ctrl.handle_text_input();
@@ -81,26 +95,22 @@ bool SFML_window::handle_event(sf::Event& event, Controller& ctrl, sf::RenderWin
 			} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
 				button_type = Tools::RIGHT;
 			}
-			this->input_string = ctrl.handle_function_keys(button_type);
-            return true;
-        case sf::Event::TextEntered:
-            if (event.text.unicode == 8 && this->input_string.length()) {
-                this->input_string = this->input_string.erase(input_string.length()-1, 1);
-            } else if (event.text.unicode != 13) {
-                this->input_string += sf::String(event.text.unicode);
-				sf::sleep(sf::milliseconds(50));
-            }
 			
-			ctrl.update_command(this->input_string);
-            return true;
-        case sf::Event::MouseWheelMoved:
-            ctrl.handle_mouse_wheel(event.mouseWheel.delta);
-            return true;
+			sf::sleep(sf::milliseconds(100));
+			
+			if (button_type >= Tools::UP && button_type <= Tools::RIGHT) {
+				t_input = ctrl.handle_function_keys(button_type, this->input_string); 
+				this->input_string = t_input;
+			}
+            
+			return true;
         case sf::Event::MouseButtonPressed:
             if (event.mouseButton.button == sf::Mouse::Left) {
                 mouse_start.set_place(mouse_place.x, mouse_place.y);
                 ctrl.handle_mouse_click(mouse_start);
             }
+			
+			return true;
         case sf::Event::MouseMoved:
             return true;
         case sf::Event::MouseButtonReleased:
