@@ -345,6 +345,15 @@ namespace Tools {
 		* @return double
 	**/
 	
+	/**
+		* nm2ft
+		* Converts nautical miles to feets
+		* @param double miles
+		* @return double
+	**/
+	
+	double nm2ft(double nm);
+	
 	double angle(Point& a, Point& b);
 	
 	/**

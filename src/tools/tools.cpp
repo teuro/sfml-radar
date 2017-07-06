@@ -3,6 +3,7 @@
 namespace Tools {
 	const double PI = 3.14151927;
 	const double earth_radius = 3440;
+	const double milestofeets = 6076.11549;
 }
 
 double Tools::fix_angle(double angle) {
@@ -238,4 +239,8 @@ int Tools::round_nearest(int number, int multiple) {
     int remainder = number % multiple;
 
     return number + multiple - remainder;
+}
+
+double Tools::nm2ft(double nm) {
+	return nm * milestofeets;
 }
