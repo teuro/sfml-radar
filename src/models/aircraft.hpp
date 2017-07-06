@@ -74,6 +74,7 @@ public:
     void set_clearance_approach();
 	void cancel_approach();
     void set_clearance_direct(std::string outpoint);
+	void set_takeoff_clearance();
 
     void set_separation_error(bool t);
     bool get_separation_error();
@@ -98,6 +99,14 @@ private:
     double clearance_altitude;
     double clearance_heading;
     int turn;
+	
+	double v1;
+	double vr;
+	double v2;
+	double vapp;
+	double vland;
+	double vclimb;
+	double vcruise;
 
     void change_speed();
     void change_heading();

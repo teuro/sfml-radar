@@ -7,6 +7,9 @@ Aircraft::Aircraft(std::string t_name, Settings& s, Airfield*& af, Atis*& a, Inp
 	this->speed 				= ip.get_speed();
 	this->type 					= APPROACH;
 	
+	this->vapp					= Tools::rnd(175, 180);
+	this->vland					= Tools::rnd(130, 138);
+	
 	this->load();
 }
 
@@ -18,6 +21,12 @@ Aircraft::Aircraft(std::string t_name, Settings& s, Airfield*& af, Atis*& a, Out
 
 	this->target 				= op;
 	this->type 					= DEPARTURE;
+	
+	this->v1					= Tools::rnd(130, 142);
+	this->vr					= Tools::rnd(145, 147);
+	this->v2					= Tools::rnd(165, 170);
+	this->vclimb				= Tools::rnd(175, 186);
+	this->vcruise				= Tools::rnd(310, 335);
 	
 	this->load();
 }
@@ -91,29 +100,35 @@ void Aircraft::calculate_angle_target(Coordinate& target) {
 void Aircraft::update(double elapsed) {
 	this->heading = Tools::fix_angle(this->heading);
 	
-	if (this->type == DEPARTURE && this->speed > 145 && this->altitude < 500) {
-		this->set_clearance_altitude(4000);
-	} else if (this->type == DEPARTURE && this->altitude > 1500 && this->altitude < this->settings.shortcut) {
-		this->set_clearance_speed(250);
-	} else if (this->type == DEPARTURE && this->altitude > 10000) {
-		this->set_clearance_speed(320);
+	if (this->type == DEPARTURE) {
+		if (this->type == DEPARTURE && this->altitude > 10000) {
+			this->set_clearance_speed(this->vcruise);
+		} else if (this->altitude >= this->airport->get_initial_altitude()) {
+			this->set_clearance_speed(this->airport->get_max_speed());
+		} else if (this->speed >= this->vclimb) {
+			this->set_clearance_altitude(this->airport->get_initial_altitude());
+		} else if (this->altitude >= this->airport->get_acceleration_altitude()) {
+			this->set_clearance_speed(this->vclimb);
+		} else if (this->speed >= this->vr && this->altitude < this->airport->get_acceleration_altitude()) {
+			this->set_clearance_altitude(this->airport->get_acceleration_altitude());
+		} 
 	}
 
 	if (this->approach) {
 		if (this->landed == false) {
-			double t_distance = Tools::distanceNM(this->place, this->landing.get_start_place()) * 6076.11549;
+			double t_distance = Tools::nm2ft(Tools::distanceNM(this->place, this->landing.get_start_place()));
 			double target_approach_altitude = std::tan(Tools::deg2rad(this->landing.get_glidepath())) * t_distance;
 			
 			if (this->altitude - this->settings.airfield_altitude < 1200) {
-				this->clearance_speed = 180;
+				this->clearance_speed = this->vapp;
 			} 
 			
 			if (this->altitude - this->settings.airfield_altitude < 800) {
-				this->clearance_speed = 160;
+				this->clearance_speed = this->vapp-7;
 			} 
 			
 			if (this->altitude - this->settings.airfield_altitude < 300) {
-				this->clearance_speed = 135;
+				this->clearance_speed = this->vland;
 			}
 			
 			if (this->altitude > this->settings.airfield_altitude) {
@@ -146,6 +161,10 @@ void Aircraft::update(double elapsed) {
 	
 	double distance = this->speed * (elapsed / 1000) / 3600;
 	this->place = Tools::calculate(this->place, this->heading, distance);
+}
+
+void Aircraft::set_takeoff_clearance() {
+	this->clearance_speed = this->v2;
 }
 
 Coordinate& Aircraft::get_place() {

@@ -1,7 +1,10 @@
 #include "airfield.hpp"
 
-Airfield::Airfield(std::string n, Coordinate& p) : name(n), place(p) { 
+Airfield::Airfield(std::string n, Coordinate& p, int max_speed, int initial_altitude, int acceleration_altitude) : name(n), place(p) {
 	this->altitude = 150;
+	this->max_speed = max_speed;
+	this->initial_altitude = initial_altitude;
+	this->acceleration_altitude = acceleration_altitude;
 }
 
 Airfield::~Airfield() { }
@@ -20,6 +23,18 @@ void Airfield::add_runway(Runway rwy) {
 
 int Airfield::get_altitude() {
     return this->altitude;
+}
+
+int Airfield::get_max_speed() {
+	return this->max_speed;
+}
+
+int Airfield::get_initial_altitude() {
+	return this->initial_altitude;
+}
+
+int Airfield::get_acceleration_altitude() {
+	return this->acceleration_altitude;
 }
 
 std::string Airfield::get_name() {
