@@ -101,7 +101,7 @@ void Game::handle_holdings() {
 
         Aircraft* t = this->holdings.front();
         t->set_place(this->departure.get_start_place());
-        t->set_clearance_speed(160);
+        t->set_takeoff_clearance();
 		this->aircrafts.push_back(t);
         this->holdings.pop();
 		this->pop_holdings += this->settings.departure_separation * 1000 * 60;
@@ -304,7 +304,7 @@ void Game::load_runways(std::map <std::string, std::string> variables) {
 
 void Game::load_airfield(std::string icao) {
 	std::clog << "Game::load_airfield(" << icao << ")" << std::endl;
-    Queryresult airport = Database::get_result("SELECT ROWID AS airfield_id, ICAO, latitude, longitude, altitude FROM airfields WHERE ICAO = '" + icao + "'");
+    Queryresult airport = Database::get_result("SELECT ROWID AS airfield_id, ICAO, latitude, longitude, altitude, max_speed, initial_altitude, acceleration_altitude FROM airfields WHERE ICAO = '" + icao + "'");
 
     std::map <std::string, std::string> variables;
 	
@@ -312,7 +312,7 @@ void Game::load_airfield(std::string icao) {
 
     Coordinate place(Tools::tonumber<double>(airport(0, "latitude")), Tools::tonumber<double>(airport(0, "longitude")));
 
-    this->active_field = new Airfield(airport(0, "ICAO"), place);
+    this->active_field = new Airfield(airport(0, "ICAO"), place, Tools::toint(airport(0, "max_speed")), Tools::toint(airport(0, "initial_altitude")), Tools::toint(airport(0, "acceleration_altitude")));
 	this->settings.airfield_altitude = Tools::toint(airport(0, "altitude"));
 	this->settings.centerpoint = place;
 	
