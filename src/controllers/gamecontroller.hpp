@@ -152,7 +152,9 @@ private:
 	Atis* atis;
     int function_key;
 	double game_time;
-	double game_error_display;
+	double flash_message_begin;
+	double flash_message_time;
+	std::string message;
 	enum states {PLAYER, ATIS, GAME, STAT};
 	int state;
 };

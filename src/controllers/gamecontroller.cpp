@@ -11,6 +11,8 @@ Gamecontroller::Gamecontroller(Settings& s, Drawsurface& d) : Controller(s, d) {
 	this->frames = 0;
 	this->fps_time = 5000;
 	this->state = ATIS;
+	this->flash_message_begin = -1;
+	this->flash_message_time = 2500;
 	quick_iterator = this->quicklist.begin();
 }
 
@@ -97,6 +99,11 @@ void Gamecontroller::draw_logic(Point& mouse) {
 		this->gameview->draw();
 		this->gameview->draw_airfield(this->game->get_active_field());
 		this->gameview->draw_planes(this->game->get_aircrafts(), this->game->get_selected(), mouse);
+		
+		if (this->game_time < (this->flash_message_begin + this->flash_message_time)) {
+			this->gameview->flash_message(this->message);
+		}
+		
 		this->gameview->render();
 	} else if (this->state == ATIS) {
 		this->atisview->clear_screen();
@@ -124,14 +131,6 @@ void Gamecontroller::update(double elapsed, Point& mouse) {
 	} else if (this->state == GAME) {
 		this->game_time += elapsed;
 		
-		if (this->game_error_display < this->game_time) {
-			this->game->remove_first_clearance_error();
-		}
-		
-		if (this->game_error_display < this->game_time) {
-			this->game->remove_first_game_error();
-		}
-		
 		this->calculate_fps();
 		this->game->update(elapsed);
 		
@@ -157,6 +156,8 @@ void Gamecontroller::handle_mouse_click(Point& mouse) {
 
 			if (Tools::on_area(mouse, aircraft, 10)) {
 				this->game->selected = (*plane);
+				this->message = "Plane " + (*plane)->get_name() + " selected";
+				this->flash_message_begin = this->game_time;
 			}
 		}
 	} else if (this->state == ATIS) {
@@ -202,7 +203,6 @@ void Gamecontroller::load() {
 
 void Gamecontroller::handle_text_input() {
     std::string t_command = this->command;
-	this->game_error_display = this->game_time + this->settings.display_clearance_errors;
 	
 	std::vector <std::string> tmp = Tools::split(";", this->command);
 	

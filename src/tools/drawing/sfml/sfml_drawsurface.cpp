@@ -1,7 +1,8 @@
 #include "sfml_drawsurface.hpp"
 
 sfml_drawsurface::sfml_drawsurface(sf::RenderWindow& w) : window(w) {
-	font_loaded = false;
+	this->font_loaded = false;
+	this->font_size = 16;
 }
 
 sfml_drawsurface::~sfml_drawsurface() { }
@@ -40,14 +41,15 @@ void sfml_drawsurface::draw_text(std::string text, Point& a, int red, int green,
 		this->load_font("arial.ttf", this->font_size);
 	}
 
+	 sf::Color clr(red, green, blue);
+	
 	sf::Text _text;
+	
 	_text.setFont(this->font);
 	_text.setCharacterSize(font_size);
-	_text.setString(text);
 	_text.setPosition(sf::Vector2f(a.get_x(), a.get_y()));
-
-    sf::Color clr(red, green, blue);
 	_text.setColor(clr);
+	_text.setString(text);
 
 	this->window.draw(_text);
 }

@@ -39,6 +39,7 @@ public:
 	int required;
 	std::string metar;
 	std::map <std::string, std::string> repl;
+	virtual void flash_message(std::string message);
 protected:
     Drawsurface& drawer;
     Settings& settings;

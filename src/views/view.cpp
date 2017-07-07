@@ -443,3 +443,9 @@ std::list <Style> View::parse_css(std::string file) {
 void View::draw_element(std::string text, Point& place_a, int color) {
 	this->drawer.draw_text(text, place_a, color);
 }
+
+void View::flash_message(std::string message) {
+	Point place(250, 250);
+	
+	this->drawer.draw_text(message, place, 250, 127, 127);
+}
