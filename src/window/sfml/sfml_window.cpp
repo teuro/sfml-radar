@@ -61,7 +61,6 @@ void SFML_window::run() {
 bool SFML_window::handle_event(sf::Event& event, Controller& ctrl, sf::RenderWindow& window) {
     sf::Vector2i mouse_place = sf::Mouse::getPosition(window);
 	mouse.set_place(mouse_place.x, mouse_place.y);
-	int button_type = -1;
 	std::string t_input;
 	
     switch (event.type) {
@@ -86,22 +85,9 @@ bool SFML_window::handle_event(sf::Event& event, Controller& ctrl, sf::RenderWin
 				ctrl.update_command(this->input_string);
             } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
                 return false;
-            } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-				button_type = Tools::UP;
-			} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-				button_type = Tools::DOWN;
-			} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-				button_type = Tools::LEFT;
-			} else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-				button_type = Tools::RIGHT;
-			}
+            } 
 			
 			sf::sleep(sf::milliseconds(100));
-			
-			if (button_type >= Tools::UP && button_type <= Tools::RIGHT) {
-				t_input = ctrl.handle_function_keys(button_type, this->input_string); 
-				this->input_string = t_input;
-			}
             
 			return true;
         case sf::Event::MouseButtonPressed:

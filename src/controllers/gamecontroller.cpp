@@ -22,7 +22,7 @@ Gamecontroller::~Gamecontroller() {
 	delete this->atis;
 }
 
-std::string Gamecontroller::handle_function_keys(int action, std::string input) {
+std::string Gamecontroller::handle_function_keys() {
 	return this->command;
 }
 

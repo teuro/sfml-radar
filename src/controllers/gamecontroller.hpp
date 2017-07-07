@@ -32,7 +32,8 @@ public:
 		* @param int key
 		* @return void
 	**/
-    std::string handle_function_keys(int key, std::string input);
+	
+    std::string handle_function_keys();
 	
 	/**
 		* handle_mouse_release
