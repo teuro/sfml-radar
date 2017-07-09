@@ -5,6 +5,7 @@ Settings::Settings() {
 	this->layout_game_file_name = "layouts/game.xml"; 
 	this->layout_atis_file_name = "layouts/atis.xml"; 
 	this->layout_stat_file_name = "layouts/stat.xml"; 
+	this->layout_menu_file_name = "layouts/menu.xml"; 
 	this->style_folder = "styles/"; 
 	this->search_term = "? = ?"; 
 	this->bind_term = " = "; 
