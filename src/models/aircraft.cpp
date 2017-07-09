@@ -66,24 +66,15 @@ bool Aircraft::check_approach_config() {
 	double min_approach_angle = Tools::fix_angle(this->landing.get_heading() - Tools::deg2rad(this->settings.approach_angle));
 	double max_approach_angle = Tools::fix_angle(this->landing.get_heading() + Tools::deg2rad(this->settings.approach_angle));
 	
-	std::clog << "Heading must be between " << min_approach_angle << " and " << max_approach_angle << std::endl;
-	std::clog << "Plane heading is " << this->heading << std::endl;
-	
 	if (this->altitude > this->settings.max_approach_altitude) {
-		std::clog << "plane altitude is " << this->altitude << " ft " << this->settings.max_approach_altitude << " ft" << std::endl;
-		
 		altitude_ok = false;
 	}
 	
 	if (this->heading > max_approach_angle || this->heading	< min_approach_angle) {
-		std::clog << "max approach angle " << Tools::rad2deg(max_approach_angle) << " < " << Tools::rad2deg(this->heading) << std::endl;
-		std::clog << "min approach angle " << Tools::rad2deg(min_approach_angle) << " < " << Tools::rad2deg(this->heading) << std::endl;
-		
 		heading_ok = false;
 	} 
 	
 	if (this->speed > this->settings.max_approach_speed) {
-		std::clog << "plane speed is " << this->speed << " kt <=> " << this->settings.max_approach_speed << " kt" << std::endl;				
 		speed_ok = false;
 	}
 	
