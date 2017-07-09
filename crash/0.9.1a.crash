@@ -1,0 +1,57 @@
+C:\Users\acer\Documents\GitHub\sfml-radar\bin>gdb atcradar.exe
+GNU gdb (GDB) 7.5
+Copyright (C) 2012 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.  Type "show copying"
+and "show warranty" for details.
+This GDB was configured as "i686-pc-mingw32".
+For bug reporting instructions, please see:
+<http://www.gnu.org/software/gdb/bugs/>...
+Reading symbols from C:\Users\acer\Documents\GitHub\sfml-radar\bin\atcradar.exe.
+..done.
+(gdb) run
+Starting program: C:\Users\acer\Documents\GitHub\sfml-radar\bin\atcradar.exe
+[New Thread 4584.0xa58]
+SFML_window::init()
+SFML_window::load_settings()
+[New Thread 4584.0x11fc]
+Gamecontroller::load()
+Game::load(EFHK)
+Game::load_airfield(EFHK)
+View::load_styles()
+View::load_layout(game)
+View::load_styles()
+View::load_layout(atis)
+View::load_styles()
+View::load_layout(stat)
+[New Thread 4584.0x734]
+[New Thread 4584.0x13f4]
+[New Thread 4584.0x5c4]
+[New Thread 4584.0x1ac4]
+[New Thread 4584.0x16ac]
+[New Thread 4584.0x1b00]
+Heading must be between 0.304164 and 1.35134
+Plane heading is 0.349058
+[New Thread 4584.0x19cc]
+
+0x769caf92  	
+Program received signal SIGSEGV, Segmentation fault.
+(gdb) backtrace
+#0  0x769caf92 in lstrlenW () from C:\Windows\syswow64\KernelBase.dll
+#1  0x6a0f8335 in ?? ()
+#2  0x03e4989c in ?? ()
+#3  0x6f41754f in DllUnregisterServer () from C:\Windows\SysWOW64\dinput.dll
+warning: (Internal error: pc 0x3 in read in psymtab, but not in symtab.)
+
+warning: (Internal error: pc 0x3 in read in psymtab, but not in symtab.)
+
+#4  0x00000004 in ?? ()
+warning: (Internal error: pc 0x3 in read in psymtab, but not in symtab.)
+
+#5  0x03e4989c in ?? ()
+#6  0x6f412d50 in DirectInputCreateEx () from C:\Windows\SysWOW64\dinput.dll
+#7  0x6f40f2a5 in DirectInputCreateEx () from C:\Windows\SysWOW64\dinput.dll
+#8  0x6f419245 in DllUnregisterServer () from C:\Windows\SysWOW64\dinput.dll
+#9  0x00000000 in ?? ()
+(gdb)
