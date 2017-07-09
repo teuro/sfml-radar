@@ -160,9 +160,9 @@ std::vector <int> sfml_drawsurface::convert(int color) {
 	return t;
 }
 
-int sfml_drawsurface::get_text_length(std::string text) {
+int sfml_drawsurface::get_text_length(std::string text, int font_size) {
 	if (!font_loaded) {
-		this->load_font("arial.ttf", this->font_size);
+		this->load_font("arial.ttf", font_size);
 	}
 	
 	sf::Text t_text;
@@ -170,12 +170,13 @@ int sfml_drawsurface::get_text_length(std::string text) {
 	t_text.setString(text);
 	t_text.setCharacterSize(font_size);
 	sf::FloatRect t_rect = t_text.getLocalBounds();
+	
 	return (int)t_rect.width;
 }
 
-int sfml_drawsurface::get_text_height(std::string text) {
+int sfml_drawsurface::get_text_height(std::string text, int font_size) {
 	if (!font_loaded) {
-		this->load_font("arial.ttf", this->font_size);
+		this->load_font("arial.ttf", font_size);
 	}
 	
 	sf::Text t_text;
