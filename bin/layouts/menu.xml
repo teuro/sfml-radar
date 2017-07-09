@@ -1,0 +1,21 @@
+<?xml version="1.0" ?>
+<layout>
+	<p id="menu" class="menu">Wellcome to ATC-radar. First choose proper level 1-4. 4 is the most difficult one.</p>
+	
+	<table id="variables" class="">
+		<tr>
+			<th>Max planes in control</th>
+			<td>[MPL]</td>
+		</tr>
+		<tr>
+			<th>Required planes</th>
+			<td>[RQD]</td>
+		</tr>
+		<tr>
+			<th>Level</th>
+			<td>[LEV]</td>
+		</tr>
+	</table>
+	
+	<p id="choose_airfield" class="menu">Next choose proper airfield from below.</p>
+</layout>

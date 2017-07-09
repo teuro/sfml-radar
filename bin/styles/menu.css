@@ -1,0 +1,21 @@
+#menu {
+	top: 20px;
+	left: 30px;
+	width: 350px;
+	color: rgb(150, 150, 20);
+}
+
+#variables {
+	top: 100px;
+	left: 30px;
+}
+
+#choose_airfield {
+	top: 180px;
+	left: 30px;
+}
+
+#airfield_list {
+	top: 220px;
+	left: 30px;
+}
