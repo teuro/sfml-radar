@@ -14,7 +14,9 @@ void View::load(std::string state) {
 }
 
 void View::load_styles() {
+	#ifdef DEBUG
 	std::clog << "View::load_styles()" << std::endl;
+	#endif
 	DIR *dir;
 	struct dirent *ent;
 	if ((dir = opendir (this->settings.style_folder.c_str())) != NULL) {
@@ -40,7 +42,9 @@ std::map <std::string, std::string> View::get_info(TiXmlElement *pParm) {
 }
 
 void View::load_layout(std::string state) {
+	#ifdef DEBUG
 	std::clog << "View::load_layout(" << state << ")" << std::endl;
+	#endif
 	TiXmlDocument doc;
 	bool load_ok = false;
 	
@@ -50,6 +54,8 @@ void View::load_layout(std::string state) {
 		load_ok = doc.LoadFile(this->settings.layout_atis_file_name.c_str());
 	} else if (state == "stat") {
 		load_ok = doc.LoadFile(this->settings.layout_stat_file_name.c_str());
+	} else if (state == "menu") {
+		load_ok = doc.LoadFile(this->settings.layout_menu_file_name.c_str());
 	}	
 	
 	if (!load_ok) {
@@ -200,14 +206,14 @@ void View::draw_element(Paragraph& p) {
 	
 	Point place_a = st.get_place();
 	
-	unsigned int width = this->drawer.get_text_length(p.get_content());
+	unsigned int width = this->drawer.get_text_length(p.get_content(), 16);
 	unsigned int height = 1;
 	unsigned int t_height = 1;
 	p.get_style().set_attribute("height", height);
 	
 	if (width <= st.get_width()) {
 		this->draw_element(Tools::replace(p.get_content(), repl), place_a, color);
-		t_height = this->drawer.get_text_height(p.get_content()) + 5;
+		t_height = this->drawer.get_text_height(p.get_content(), 16) + 5;
 		height += t_height;
 		place_a.change_y(t_height);
 	} else {
@@ -218,7 +224,7 @@ void View::draw_element(Paragraph& p) {
 		
 		for (unsigned int i = 0; i < tmp.size(); ++i) {
 			t_line += tmp[i] + " ";
-			width = this->drawer.get_text_length(t_line);
+			width = this->drawer.get_text_length(t_line, 16);
 			
 			if (width > st.get_width()) {
 				lines.push_back(line);
@@ -236,7 +242,7 @@ void View::draw_element(Paragraph& p) {
 		
 		for (unsigned int i = 0; i < lines.size(); ++i) {
 			this->draw_element(Tools::replace(lines[i], repl), place_a, color);
-			t_height = this->drawer.get_text_height(lines[i]) + 5;
+			t_height = this->drawer.get_text_height(lines[i], 16) + 5;
 			height += t_height;
 			place_a.change_y(t_height);
 		}
@@ -347,11 +353,11 @@ void View::draw_element(Drawable_list& dl) {
 	std::list <std::string> :: iterator it = t_list.begin();
 	
 	Point place = dl.get_style().get_place();
-	dl.get_style().set_attribute("width", this->drawer.get_text_length(dl.get_max_length()));
+	dl.get_style().set_attribute("width", this->drawer.get_text_length(dl.get_max_length(), 16));
 	
 	for (it = t_list.begin(); it != t_list.end(); ++it) {
-		this->draw_element((*it), place, color);
-		t_height = this->drawer.get_text_height((*it)) + 5;
+		this->draw_element(Tools::replace(*it, repl), place, color);
+		t_height = this->drawer.get_text_height((*it), 16) + 5;
 		height += t_height;
 		place.change_y(t_height);
 	}
@@ -372,7 +378,7 @@ void View::draw_element(Drawable_table& dt) {
 	std::list <Row> t_list = dt.get_rows();
 	std::list <Row> :: iterator rit = t_list.begin();
 	
-	int length = this->drawer.get_text_length(dt.get_max_length()) + 15;
+	int length = this->drawer.get_text_length(dt.get_max_length(), 16) + 15;
 	
 	while (rit != t_list.end()) {
 		std::list <Cell> c_list = rit->get_cells();
@@ -445,7 +451,7 @@ void View::draw_element(std::string text, Point& place_a, int color) {
 }
 
 void View::flash_message(std::string message) {
-	Point place(250, 250);
+	Point place(30, 600);
 	
 	this->drawer.draw_text(message, place, 250, 127, 127);
 }
