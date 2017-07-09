@@ -46,8 +46,14 @@ void SFML_window::run() {
 	bool on_run = true;
 	
 	while (on_run) {
-		window.pollEvent(event);
-		on_run = this->handle_event(event, gamecontroller, window);
+		while (window.pollEvent(event)) {
+			on_run = this->handle_event(event, gamecontroller, window);
+			
+			if (on_run == false) { 
+				break;
+			}
+		}
+		
 		sf::sleep(sf::milliseconds(10));
 		
 		time_now = this->clock.restart();
@@ -77,7 +83,7 @@ bool SFML_window::handle_event(sf::Event& event, Controller& ctrl, sf::RenderWin
             return true;
         case sf::Event::MouseWheelMoved:
             ctrl.handle_mouse_wheel(event.mouseWheel.delta);
-            return true;
+			return true;
         case sf::Event::KeyPressed:
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return)) {
                 ctrl.handle_text_input();
@@ -109,6 +115,6 @@ bool SFML_window::handle_event(sf::Event& event, Controller& ctrl, sf::RenderWin
         default:
             return true;
     }
-
+	
     return true;
 }
