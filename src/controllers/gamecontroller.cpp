@@ -222,17 +222,21 @@ void Gamecontroller::load() {
 void Gamecontroller::handle_text_input() {
     std::string t_command = this->command;
 	
-	std::vector <std::string> tmp = Tools::split(";", this->command);
-	
-	if (tmp.size() > 1) {
-		for (unsigned int i = 0; i < tmp.size(); ++i) {
-			t_command = Tools::trim(tmp[i]);
-			this->game->build_clearance(t_command);
-			this->quicklist.push_back(t_command);
+	if (this->state == GAME) {
+		std::vector <std::string> tmp = Tools::split(";", this->command);
+		
+		if (tmp.size() > 1) {
+			for (unsigned int i = 0; i < tmp.size(); ++i) {
+				t_command = Tools::trim(tmp[i]);
+				this->game->build_clearance(t_command);
+				this->quicklist.push_back(t_command);
+			}
+		} else {
+			this->game->build_clearance(command);
+			this->quicklist.push_back(command);
 		}
-	} else {
-		this->game->build_clearance(command);
-		this->quicklist.push_back(command);
+	} else if (this->state == MENU) {
+		this->state = ATIS;
 	}
 }
 
