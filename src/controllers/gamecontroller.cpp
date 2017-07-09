@@ -208,15 +208,9 @@ void Gamecontroller::handle_mouse_click(Point& mouse) {
 
 void Gamecontroller::load() {
 	std::clog << "Gamecontroller::load()" << std::endl;
-	this->game->load("EFHK");
-	this->atis->load(this->game->get_active_field()->get_runways());
+	
+	this->menu->load();
 	this->menuview->load();
-	this->atisview->load(this->game->get_active_field()->get_runways(), this->atis->get_levels());
-	this->gameview->load();
-	this->statview->load();
-	this->settings.zoom = 110;
-	this->gameview->set_zoom(this->settings.zoom);
-	this->metar.update(this->game->get_active_field()->get_name());
 }
 
 void Gamecontroller::handle_text_input() {
@@ -237,6 +231,16 @@ void Gamecontroller::handle_text_input() {
 		}
 	} else if (this->state == MENU) {
 		this->state = ATIS;
+		
+		this->game->load(this->menu->get_airport());
+		this->metar.update(this->game->get_active_field()->get_name());
+		this->atis->load(this->game->get_active_field()->get_runways());
+		
+		this->atisview->load(this->game->get_active_field()->get_runways(), this->atis->get_levels());
+		this->gameview->load();
+		this->statview->load();
+		this->settings.zoom = 110;
+		this->gameview->set_zoom(this->settings.zoom);
 	}
 }
 

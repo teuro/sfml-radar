@@ -13,6 +13,8 @@ public:
 	std::list <std::string> get_airports();
 	
 	void change_level(int change);
+	void load();
+	std::string get_airport();
 	int get_level();
 private:
 	int level;
