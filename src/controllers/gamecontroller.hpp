@@ -6,10 +6,12 @@
 #include "../models/game.hpp"
 #include "../models/atis.hpp"
 #include "../models/metar.hpp"
+#include "../models/menu.hpp"
 #include "../tools/tools.hpp"
 #include "../views/game/game_view.hpp"
 #include "../views/atis/atis_view.hpp"
 #include "../views/stat/stat_view.hpp"
+#include "../views/menu/menu_view.hpp"
 #include "controller.hpp"
 
 /**
@@ -147,15 +149,17 @@ private:
     Gameview* gameview;
     Atisview* atisview;
     Statview* statview;
+    Menuview* menuview;
     Game* game;
 	Metar metar;
 	Atis* atis;
+	Menu* menu;
     int function_key;
 	double game_time;
 	double flash_message_begin;
 	double flash_message_time;
 	std::string message;
-	enum states {PLAYER, ATIS, GAME, STAT};
+	enum states {MENU, ATIS, GAME, STAT};
 	int state;
 };
 

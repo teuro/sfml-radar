@@ -5,12 +5,15 @@ Gamecontroller::Gamecontroller(Settings& s, Drawsurface& d) : Controller(s, d) {
 	this->gameview = new Gameview(this->drawer, this->settings);
 	this->atis = new Atis(this->settings, this->metar);
 	this->game = new Game(this->settings, this->atis);
+	this->menu = new Menu;
 	this->atisview = new Atisview(this->drawer, this->settings, this->atis);
 	this->statview = new Statview(this->drawer, this->settings);
+	this->menuview = new Menuview(this->drawer, this->settings, menu);
 	this->settings.zoom = 110;
 	this->frames = 0;
 	this->fps_time = 5000;
-	this->state = ATIS;
+	this->fps_end_time = 8500;
+	this->state = MENU;
 	this->flash_message_begin = -1;
 	this->flash_message_time = 2500;
 	quick_iterator = this->quicklist.begin();
@@ -20,8 +23,10 @@ Gamecontroller::~Gamecontroller() {
 	delete this->gameview;
 	delete this->atisview;
 	delete this->statview;
+	delete this->menuview;
 	delete this->game;
 	delete this->atis;
+	delete this->menu;
 }
 
 std::string Gamecontroller::handle_function_keys() {
@@ -37,18 +42,26 @@ void Gamecontroller::handle_mouse_release(Point& mouse_start, Point& mouse_end) 
 }
 
 void Gamecontroller::handle_mouse_wheel(int amount) {
-    this->settings.zoom += (-amount * 1);
-
-    if (this->settings.zoom < this->settings.zoom_min) {
-        this->settings.zoom = this->settings.zoom_min;
-    } else if (this->settings.zoom > this->settings.zoom_max) {
-		this->settings.zoom = this->settings.zoom_max;
+    if (this->state == GAME) {
+		this->settings.zoom += (-amount * 1);
+		
+		if (this->settings.zoom < this->settings.zoom_min) {
+			this->settings.zoom = this->settings.zoom_min;
+		} else if (this->settings.zoom > this->settings.zoom_max) {
+			this->settings.zoom = this->settings.zoom_max;
+		}
+		
+		this->gameview->set_zoom(this->settings.zoom);
+	} else if (this->state == MENU) {
+		this->menu->change_level(amount);
 	}
-    
-	this->gameview->set_zoom(this->settings.zoom);
 }
 
 void Gamecontroller::set_variables() {
+	this->menuview->repl["[MPL]"] = Tools::tostr(this->settings.max_planes);
+	this->menuview->repl["[RQD]"] = Tools::tostr(this->settings.required_handled);
+	this->menuview->repl["[LEV]"] = Tools::tostr(this->menu->get_level());
+
 	this->gameview->repl["[PLH]"] = Tools::tostr(this->game->get_handled_planes());
 	this->gameview->repl["[METAR]"] = this->metar.to_string();
 	this->gameview->repl["[TIME]"] = Tools::totime(this->game_time, "H:i:s");
@@ -115,6 +128,10 @@ void Gamecontroller::draw_logic(Point& mouse) {
 		this->statview->draw();
 		this->statview->draw_points(this->game->get_points());
 		this->statview->render();
+	} else if (this->state == MENU) {
+		this->menuview->clear_screen();
+		this->menuview->draw();
+		this->menuview->render();
 	}
 }
 
@@ -193,8 +210,9 @@ void Gamecontroller::load() {
 	std::clog << "Gamecontroller::load()" << std::endl;
 	this->game->load("EFHK");
 	this->atis->load(this->game->get_active_field()->get_runways());
-	this->gameview->load();
+	this->menuview->load();
 	this->atisview->load(this->game->get_active_field()->get_runways(), this->atis->get_levels());
+	this->gameview->load();
 	this->statview->load();
 	this->settings.zoom = 110;
 	this->gameview->set_zoom(this->settings.zoom);
