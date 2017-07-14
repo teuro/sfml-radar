@@ -169,10 +169,6 @@ void Game::update(double elapsed) {
     }
 }
 
-std::vector <Airfield>& Game::get_airfields() {
-    return this->airfields;
-}
-
 double Game::get_duration() {
     return this->duration;
 }
@@ -304,7 +300,10 @@ void Game::load_runways(std::map <std::string, std::string> variables) {
 
 void Game::load_airfield(std::string icao) {
 	std::clog << "Game::load_airfield(" << icao << ")" << std::endl;
-    Queryresult airport = Database::get_result("SELECT ROWID AS airfield_id, ICAO, latitude, longitude, altitude, max_speed, initial_altitude, acceleration_altitude FROM airfields WHERE ICAO = '" + icao + "'");
+	std::list <std::string> t_airport;
+	t_airport.push_back(icao);
+	
+    Queryresult airport = Database::get_result(Database::bind_param("SELECT ROWID AS airfield_id, ICAO, latitude, longitude, altitude, max_speed, initial_altitude, acceleration_altitude FROM airfields WHERE ICAO = '?'", t_airport));
 
     std::map <std::string, std::string> variables;
 	

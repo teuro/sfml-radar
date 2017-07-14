@@ -50,7 +50,6 @@ public:
 	void add_point(Navpoint np);
 
 	std::list <Aircraft*> get_aircrafts();
-	std::vector <Airfield>& get_airfields();
 	
 	Aircraft* selected;
 
@@ -130,8 +129,7 @@ private:
 	std::list       <Aircraft*>		errors;
 	std::list       <Clearance>		clearances;
 	std::list       <Game_point>	points;
-	std::vector     <Airfield>		airfields;
-
+	
 	std::string command;
 
     Airfield* active_field;
