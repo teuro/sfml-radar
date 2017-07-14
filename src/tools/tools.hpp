@@ -60,8 +60,8 @@ namespace Tools {
 	/**
 		* is_match
 		* Checks if two strings are similar
-		* @param std::String a
-		* @param std::String b
+		* @param std::string a
+		* @param std::string b
 		* @return bool
 	**/
 	
