@@ -7,6 +7,10 @@ ul {
 	color: rgb(150, 150, 90);
 }
 
+li {
+	color: rgb(0, 0, 200);
+}
+
 input {
 	color: rgb(150, 150, 90);
 }
@@ -18,4 +22,17 @@ table {
 img {
 	top: 15px;
 	left: 20px;
+}
+
+.active {
+	color: rgb(250, 15, 15);
+}
+
+.pure {
+	color: rgb(15, 200, 150);
+}
+
+#menus {
+	top: 250px;
+	left: 30px;
 }
