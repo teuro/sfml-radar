@@ -5,7 +5,7 @@ Gamecontroller::Gamecontroller(Settings& s, Drawsurface& d) : Controller(s, d) {
 	this->gameview = new Gameview(this->drawer, this->settings);
 	this->atis = new Atis(this->settings, this->metar);
 	this->game = new Game(this->settings, this->atis);
-	this->menu = new Menu;
+	this->menu = new Menu("list", "airports");
 	this->atisview = new Atisview(this->drawer, this->settings, this->atis);
 	this->statview = new Statview(this->drawer, this->settings);
 	this->menuview = new Menuview(this->drawer, this->settings, menu);
@@ -53,15 +53,14 @@ void Gamecontroller::handle_mouse_wheel(int amount) {
 		
 		this->gameview->set_zoom(this->settings.zoom);
 	} else if (this->state == MENU) {
-		this->menu->change_level(amount);
+		this->menu->change_selection(amount);
 	}
 }
 
 void Gamecontroller::set_variables() {
 	this->menuview->repl["[MPL]"] = Tools::tostr(this->settings.max_planes);
 	this->menuview->repl["[RQD]"] = Tools::tostr(this->settings.required_handled);
-	this->menuview->repl["[LEV]"] = Tools::tostr(this->menu->get_level());
-
+	
 	this->gameview->repl["[PLH]"] = Tools::tostr(this->game->get_handled_planes());
 	this->gameview->repl["[METAR]"] = this->metar.to_string();
 	this->gameview->repl["[TIME]"] = Tools::totime(this->game_time, "H:i:s");
@@ -156,6 +155,8 @@ void Gamecontroller::update(double elapsed, Point& mouse) {
 		}
 	} else if (this->state == STAT) {
 	
+	} else if (this->state == MENU) {
+		
 	}
 	
 	this->draw_logic(mouse);
@@ -206,6 +207,21 @@ void Gamecontroller::handle_mouse_click(Point& mouse) {
 	}
 }
 
+void Gamecontroller::load_menu_items(std::string query, Menu*& menu) {
+	menu->clear();
+	std::list <std::string> arguments;
+	arguments.push_back(this->command);
+	
+	Queryresult list = Database::get_result(Database::bind_param(query, arguments));
+	
+	for (unsigned int i = 0; i < list.size(); ++i) {
+		std::string name = list(i, "ICAO");
+		Menu_item t(i, name);
+		
+		menu->add_item(t);
+	}
+}
+
 void Gamecontroller::load() {
 	std::clog << "Gamecontroller::load()" << std::endl;
 	
@@ -232,7 +248,9 @@ void Gamecontroller::handle_text_input() {
 	} else if (this->state == MENU) {
 		this->state = ATIS;
 		
-		this->game->load(this->menu->get_airport());
+		Menu_item ti = this->menu->get_selected();
+		
+		this->game->load(ti.get_name());
 		this->metar.update(this->game->get_active_field()->get_name());
 		this->atis->load(this->game->get_active_field()->get_runways());
 		
@@ -246,6 +264,7 @@ void Gamecontroller::handle_text_input() {
 
 void Gamecontroller::update_command(std::string command) {
 	this->command = command;
+	this->load_menu_items("SELECT ICAO FROM airfields WHERE ICAO LIKE '%?%'", this->menu);
 }
 
 bool Gamecontroller::is_ok() {
