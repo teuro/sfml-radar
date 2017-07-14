@@ -65,8 +65,8 @@ void Atisview::draw() {
 }
 
 std::string Atisview::get_value(Point& mouse) {
-	std::list <std::string> t_list;
-	std::list <std::string> :: iterator list_item;
+	std::list <Drawable_list_item> t_list;
+	std::list <Drawable_list_item> :: iterator list_item;
 	
 	for (unsigned int i = 0; i < this->lists.size(); ++i) {
 		t_list = this->lists[i].get_elements();
@@ -76,7 +76,7 @@ std::string Atisview::get_value(Point& mouse) {
 		
 		while (list_item != t_list.end()) {
 			if (Tools::on_area(mouse, place, 50, 10)) {
-				std::string t = Tools::tostr(i) + "|" + (*list_item); 
+				std::string t = Tools::tostr(i) + "|" + (list_item->get_content()); 
 				return t;
 			}
 			
