@@ -7,6 +7,7 @@
 #include "../models/atis.hpp"
 #include "../models/metar.hpp"
 #include "../models/menu.hpp"
+#include "../models/menu_item.hpp"
 #include "../tools/tools.hpp"
 #include "../views/game/game_view.hpp"
 #include "../views/atis/atis_view.hpp"
@@ -141,6 +142,7 @@ private:
 	void set_variables();
 	void calculate_fps();
 	void draw_logic(Point& mouse);
+	void load_menu_items(std::string query, Menu*& menu);
 
 	std::list <Clearance> clearances;
 	std::list <std::string> quicklist;
