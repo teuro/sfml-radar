@@ -7,18 +7,23 @@ Menuview::~Menuview() { }
 void Menuview::draw() { 
 	View::draw();
 	
-	Drawable_list d_list("ul", "airfield_list", "airfield_list");
+	Drawable_list d_list("ul", this->menu->get_id(), this->menu->get_class());
 	
-	std::list <std::string> t_air = this->menu->get_airports();
+	std::vector <Menu_item> items = this->menu->get_items();
 	
-	std::list <std::string> :: iterator it = t_air.begin();
+	std::vector <Menu_item> :: iterator it = items.begin();
 	
-	for (it = t_air.begin(); it != t_air.end(); ++it) {
-		d_list.add_element(*it);
+	for (it = items.begin(); it != items.end(); ++it) {
+		if (this->menu->get_selected().get_id() == (it->get_id())) {
+			d_list.add_element(it->get_name(), "active");
+		} else {
+			d_list.add_element(it->get_name(), "pure");
+		}
 	}
 	
 	this->style(d_list);
-	this->lists.push_back(d_list);
+	
+	this->draw_element(d_list);
 }
 
 void Menuview::load() { 

@@ -1,32 +1,52 @@
 #include "menu.hpp"
 
-Menu::Menu() { 
-	this->level = 1;
-	this->t_level = 0;
+Menu::Menu(std::string id, std::string t_class) {
+	this->id = id;
+	this->t_class = t_class;
+	this->selected = 0;
 }
 
-Menu::~Menu() { 
-
-}
+Menu::~Menu() {  }
 
 void Menu::load() {
-	this->airports.push_back("EFHK");
-	this->airports.push_back("EFTU");
-	this->airports.push_back("EFTP");
+	std::clog << "Menu::load()" << std::endl;
+	Menu_item t1(0, "EFHK", 38);
+	Menu_item t2(1, "EFTP", 63);
+	Menu_item t3(2, "EFTU", 89);
+	
+	this->items.push_back(t1);
+	this->items.push_back(t2);
+	this->items.push_back(t3);
 }
 
-std::list <std::string> Menu::get_airports() {
-	return this->airports;
+void Menu::change_selection(int change) {
+	this->selected += change;
+	
+	if (this->selected >= this->items.size()) {
+		this->selected = 0;
+	} 
 }
 
-std::string Menu::get_airport() {
-	return this->airports.front();
+Menu_item Menu::get_selected() {
+	return this->items[this->selected];
 }
 
-void Menu::change_level(int change) {
-	this->level += change;
+std::string Menu::get_id() {
+	return this->id;
 }
 
-int Menu::get_level() {
-	return this->level;
+std::string Menu::get_class() {
+	return this->t_class;
+}
+
+std::vector <Menu_item> Menu::get_items() {
+	return this->items;
+}
+
+void Menu::add_item(Menu_item& mi) {
+	this->items.push_back(mi);
+}
+
+void Menu::clear() {
+	this->items.clear();
 }

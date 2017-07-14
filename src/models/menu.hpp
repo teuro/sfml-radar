@@ -3,23 +3,32 @@
 
 #include <iostream>
 #include <string>
-#include <list>
+#include <vector>
+
+#include "menu_item.hpp"
+
+#include "../tools/database/database.hpp"
 
 class Menu {
 public:
-	Menu();
+	Menu(std::string id, std::string t_class);
 	~Menu();
 	
-	std::list <std::string> get_airports();
-	
-	void change_level(int change);
+	void change_selection(int change);
+	Menu_item get_selected();
 	void load();
-	std::string get_airport();
-	int get_level();
+	
+	std::string get_id();
+	std::string get_class();
+	
+	std::vector <Menu_item> get_items();
+	void add_item(Menu_item& mi);
+	void clear();
 private:
-	int level;
-	int t_level;
-	std::list <std::string> airports;
+	std::string id;
+	std::string t_class;
+	unsigned int selected;
+	std::vector <Menu_item> items;
 };
 
 #endif
