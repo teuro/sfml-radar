@@ -4,26 +4,34 @@ Drawable_list::Drawable_list(std::string t_name, std::string t_class, std::strin
 Drawable_list::Drawable_list(std::string t_name, std::list <std::string> classes, std::string t_id) : Drawable_element(t_name, classes, t_id) { }
 Drawable_list::Drawable_list() { }
 
-void Drawable_list::add_element(std::string content) {
-	this->elements.push_back(content);
+void Drawable_list::add_element(std::string content, std::string t_class, std::string t_id) {
+	Drawable_list_item tmp(content, t_class, t_id);
+	
+	this->elements.push_back(tmp);
+}
+
+void Drawable_list::add_element(std::string content, std::list <std::string> classes, std::string t_id) {
+	Drawable_list_item tmp(content, classes, t_id);
+	
+	this->elements.push_back(tmp);
 }
 
 void Drawable_list::clear_content() {
 	this->elements.clear();
 }
 
-std::list <std::string> Drawable_list::get_elements() {
+std::list <Drawable_list_item> Drawable_list::get_elements() {
 	return this->elements;
 }
 
 std::string Drawable_list::get_max_length() {
 	std::string max = "";
 	
-	std::list <std::string> :: iterator sit = this->elements.begin();
+	std::list <Drawable_list_item> :: iterator sit = this->elements.begin();
 	
 	while (sit != this->elements.end()) {
-		if ((*sit).length() > max.length()) {
-			max = (*sit);
+		if (sit->get_content().length() > max.length()) {
+			max = sit->get_content();
 		}
 		
 		++sit;
