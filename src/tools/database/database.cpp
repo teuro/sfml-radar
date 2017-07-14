@@ -14,6 +14,18 @@ Queryresult Database::get_result(std::string query) {
     return qrslt;
 }
 
+std::string Database::bind_param(std::string query_string, std::list <std::string> variables) {
+	if (query_string.length() == 0) {
+		throw std::logic_error("Empty query string not able to perform");
+	}
+	
+	for (const auto& item : variables) {
+		query_string = Tools::replace(query_string, "?", item);
+	}
+	
+	return query_string;
+}
+
 std::string Database::bind_param(std::string query_string, std::map <std::string, std::string> variables) {
 	if (query_string.length() == 0) {
 		throw std::logic_error("Empty query string not able to perform");

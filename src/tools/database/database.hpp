@@ -2,6 +2,7 @@
 #define DATABASE_HPP
 
 #include <map>
+#include <list>
 #include <string>
 #include <stdexcept>
 
@@ -35,6 +36,7 @@ namespace Database {
     **/
 
     std::string bind_param(std::string query_string, std::map <std::string, std::string> variables);
+    std::string bind_param(std::string query_string, std::list <std::string> variables);
 }
 
 #endif // DATABASE_HPP
