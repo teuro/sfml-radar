@@ -130,7 +130,10 @@ void View::load_layout(std::string state) {
 				Drawable_list list(t_name, t_class, t_id);
 				
 				for (TiXmlElement* e = pParm->FirstChildElement(); e != NULL; e = e->NextSiblingElement()) {
-					list.add_element(e->GetText());
+					std::string t_id1 = Tools::trim(e->Attribute("id"));
+					std::string t_class1 = Tools::trim(e->Attribute("class"));
+					
+					list.add_element(e->GetText(), t_class1, t_id1);
 				}
 				
 				this->style(list);
@@ -349,15 +352,17 @@ void View::draw_element(Drawable_list& dl) {
 	int height = 0;
 	int t_height;
 	
-	std::list <std::string> t_list = dl.get_elements();
-	std::list <std::string> :: iterator it = t_list.begin();
+	std::list <Drawable_list_item> t_list = dl.get_elements();
+	std::list <Drawable_list_item> :: iterator it = t_list.begin();
 	
 	Point place = dl.get_style().get_place();
 	dl.get_style().set_attribute("width", this->drawer.get_text_length(dl.get_max_length(), 16));
 	
 	for (it = t_list.begin(); it != t_list.end(); ++it) {
-		this->draw_element(Tools::replace(*it, repl), place, color);
-		t_height = this->drawer.get_text_height((*it), 16) + 5;
+		this->style(*it);
+		color = it->get_style().get_text_color();
+		this->draw_element(Tools::replace(it->get_content(), repl), place, color);
+		t_height = this->drawer.get_text_height(it->get_content(), 16) + 5;
 		height += t_height;
 		place.change_y(t_height);
 	}
