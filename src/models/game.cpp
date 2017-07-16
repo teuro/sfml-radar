@@ -244,9 +244,14 @@ void Game::create_plane() {
 	}
 }
 
-void Game::load_navpoints(std::map <std::string, std::string> variables) {
+void Game::load_navpoints(int airfield_id) {
+	std::clog << "Game::load_navpoints(" << airfield_id << ")" << std::endl;
+	std::list <std::string> variables;
+	
+	variables.push_back(Tools::tostr(airfield_id));
+	
 	try {
-		std::string query = Database::bind_param("SELECT name, latitude, longitude, altitude, heading, type FROM navpoints WHERE ? = ?", variables);
+		std::string query = Database::bind_param("SELECT name, latitude, longitude, altitude, heading, type FROM navpoints WHERE airfield_id = ?", variables);
 		
 		Queryresult q_navpoints = Database::get_result(query);
 		
@@ -257,7 +262,7 @@ void Game::load_navpoints(std::map <std::string, std::string> variables) {
 			Coordinate t_place(t_lat, t_lon);
 			std::string t_name  = q_navpoints(i, "name");
 			int type = Tools::toint(q_navpoints(i, "type"));
-
+			
 			if (type == 2) {
 				double t_altitude   = Tools::tonumber<double>(q_navpoints(i, "altitude"));
 				double t_heading    = Tools::tonumber<double>(q_navpoints(i, "heading"));
@@ -272,9 +277,15 @@ void Game::load_navpoints(std::map <std::string, std::string> variables) {
 	}
 }
 
-void Game::load_runways(std::map <std::string, std::string> variables) {
+void Game::load_runways(int airfield_id) {
+	std::clog << "Game::load_runways(" << airfield_id << ")" << std::endl;
+	
+	std::list <std::string> variables;
+	
+	variables.push_back(Tools::tostr(airfield_id));
+	
 	try {
-		std::string query = Database::bind_param("SELECT name, start_latitude, start_longitude, end_latitude, end_longitude FROM runways WHERE ? = ?", variables);
+		std::string query = Database::bind_param("SELECT name, start_latitude, start_longitude, end_latitude, end_longitude FROM runways WHERE airfield_id = ?", variables);
 		
 		Queryresult q_runways = Database::get_result(query);
 
@@ -304,19 +315,20 @@ void Game::load_airfield(std::string icao) {
 	t_airport.push_back(icao);
 	
     Queryresult airport = Database::get_result(Database::bind_param("SELECT ROWID AS airfield_id, ICAO, latitude, longitude, altitude, max_speed, initial_altitude, acceleration_altitude FROM airfields WHERE ICAO = '?'", t_airport));
-
-    std::map <std::string, std::string> variables;
 	
-    variables["airfield_id"] = airport(0, "airfield_id");
+	int airfield_id = Tools::toint(airport(0, "airfield_id"));
 
     Coordinate place(Tools::tonumber<double>(airport(0, "latitude")), Tools::tonumber<double>(airport(0, "longitude")));
-
+	
     this->active_field = new Airfield(airport(0, "ICAO"), place, Tools::toint(airport(0, "max_speed")), Tools::toint(airport(0, "initial_altitude")), Tools::toint(airport(0, "acceleration_altitude")));
+	
 	this->settings.airfield_altitude = Tools::toint(airport(0, "altitude"));
 	this->settings.centerpoint = place;
 	
-	this->load_navpoints(variables);
-	this->load_runways(variables);
+	this->load_navpoints(airfield_id);
+	this->load_runways(airfield_id);
+	
+	std::clog << "airfield loaded ok" << std::endl;
 }
 
 Aircraft* Game::get_selected() {
@@ -361,41 +373,41 @@ void Game::build_clearance(std::string command) {
 			} else if (Tools::trim(tmp[0]) == "climb") {
 				value = Tools::toint(s_value);
 				if (this->selected->get_altitude() > value) {
-					clearance_errors.push("Can't climb, because altitude " + Tools::tostr(this->selected->get_altitude()) + " ft is higher than " + Tools::tostr(value) + " ft");
+					display_messages.push("Can't climb, because altitude " + Tools::tostr(this->selected->get_altitude()) + " ft is higher than " + Tools::tostr(value) + " ft");
 				} else {
 					this->selected->set_clearance_altitude(value);
 				}
 			} else if (Tools::trim(tmp[0]) == "descent") {
 				value = Tools::toint(s_value);
 				if (this->selected->get_altitude() < value) {
-					clearance_errors.push("Can't descent, because altitude " + Tools::tostr(this->selected->get_altitude()) + " ft is lower than " + Tools::tostr(value) + " ft");
+					display_messages.push("Can't descent, because altitude " + Tools::tostr(this->selected->get_altitude()) + " ft is lower than " + Tools::tostr(value) + " ft");
 				} else {
 					this->selected->set_clearance_altitude(value);
 				}
 			} else if (Tools::trim(tmp[0]) == "speed") {
 				value = Tools::toint(s_value);
 				if (value > this->settings.clearance_speed_upper) {
-					clearance_errors.push("Maximum clearance speed is " + Tools::tostr(this->settings.clearance_speed_upper) + " knots");
+					display_messages.push("Maximum clearance speed is " + Tools::tostr(this->settings.clearance_speed_upper) + " knots");
 				} else if (value < this->settings.clearance_speed_lower) {
-					clearance_errors.push("Minimum clearance speed is " + Tools::tostr(this->settings.clearance_speed_upper) + " knots");
+					display_messages.push("Minimum clearance speed is " + Tools::tostr(this->settings.clearance_speed_upper) + " knots");
 				} else { 
 					this->selected->set_clearance_speed(value);
 				}
 			} else if (Tools::trim(tmp[0]) == "expect") { 
 				if (this->selected->get_type() == APPROACH) {
 					std::string landing = Tools::trim(s_value);
-					this->selected->set_approach_runway(landing);
+					display_messages.push(this->selected->set_approach_runway(landing));
 				} else {
-					clearance_errors.push("Plane must be approaching not departing");
+					display_messages.push("Plane must be approaching not departing");
 				}
 			} else if (Tools::trim(tmp[0]) == "direct") {
 				if (this->selected->get_altitude() < this->settings.shortcut) {
-					clearance_errors.push("Unable to comply because altitude must be greater than " + Tools::tostr(this->settings.shortcut) + " ft");
+					display_messages.push("Unable to comply because altitude must be greater than " + Tools::tostr(this->settings.shortcut) + " ft");
 				} else {
 					if (this->selected->get_type() == DEPARTURE) {
 						this->selected->set_clearance_direct(s_value);
 					} else {
-						clearance_errors.push("Plane must be departing not approaching");
+						display_messages.push("Plane must be departing not approaching");
 					}
 				}
 			}
@@ -403,31 +415,55 @@ void Game::build_clearance(std::string command) {
 			if (this->selected->get_type() == APPROACH) {
 				this->selected->set_clearance_approach();
 			} else {
-				clearance_errors.push("Plane must be approaching not departing");
+				display_messages.push("Plane must be approaching not departing");
 			}
 		} else if (Tools::trim(tmp[0]) == "cancel") {
 			if (this->selected->get_type() == APPROACH) {
 				this->selected->cancel_approach();
 			} else {
-				clearance_errors.push("Plane must be approaching not departing");
+				display_messages.push("Plane must be approaching not departing");
 			}
 		} else {
-			clearance_errors.push("Unknown command");
+			display_messages.push("Unknown command");
 		} 
 	} else {
-		clearance_errors.push("No selected plane");
+		display_messages.push("No selected plane");
 	}
 }
 
+std::string Game::get_message() {
+	std::string front;
+	
+	if (!this->display_messages.empty()) {
+		front = this->display_messages.front();
+		
+		this->display_messages.pop();
+		
+		return front;
+	} 
+	
+	return "";
+}
+
+void Game::clear_errors() {
+	while (!this->display_messages.empty()) {
+		this->display_messages.pop();
+	}
+}
+
+int Game::get_separation_errors() {
+	return this->separation_errors;
+}
+
 void Game::remove_first_clearance_error() {
-	if (clearance_errors.size()) {
-		clearance_errors.pop();
+	if (display_messages.size()) {
+		display_messages.pop();
 	}
 }
 
 std::string Game::get_clearance_error() {
-	if (clearance_errors.size()) {
-		return clearance_errors.front();
+	if (display_messages.size()) {
+		return display_messages.front();
 	}
 	
 	return "";
@@ -453,10 +489,6 @@ int Game::get_handled_planes() {
 
 int Game::get_planes_count() {
 	return this->aircrafts.size();
-}
-
-int Game::get_separation_errors() {
-	return this->separation_errors;
 }
 
 int Game::get_new_plane() {

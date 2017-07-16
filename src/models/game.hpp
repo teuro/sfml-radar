@@ -108,12 +108,15 @@ public:
 	void remove_first_clearance_error();
 	std::string get_game_error();
 	void remove_first_game_error();
+	
+	std::string get_message();
+	void clear_errors();
 private:
     void load_airfield(std::string icao);
     void check_collision();
     void handle_holdings();
-	void load_navpoints(std::map <std::string, std::string> variables);
-	void load_runways(std::map <std::string, std::string> variables);
+	void load_navpoints(int airfield_id);
+	void load_runways(int airfield_id);
 	Inpoint select_inpoint();
     bool is_free(Inpoint& navpoint);
 	void calculate_points(int type, double clearance_count, std::string plane);
@@ -124,7 +127,7 @@ private:
 	std::vector     <Navpoint>		navpoints;
 	std::list       <Aircraft*>		aircrafts;
 	std::queue      <Aircraft*>		holdings;
-	std::queue      <std::string>	clearance_errors;
+	std::queue      <std::string>	display_messages;
 	std::queue      <std::string>	game_errors;
 	std::list       <Aircraft*>		errors;
 	std::list       <Clearance>		clearances;
