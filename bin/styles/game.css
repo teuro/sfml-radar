@@ -18,3 +18,17 @@
 	top: 570px;
 	left: 30px;
 }
+
+.active {
+	color: rgb(250, 15, 15);
+}
+
+.normal {
+	color: rgb(15, 200, 150);
+}
+
+#flash {
+	top: 580px;
+	left: 30px;
+	color: rgb(150, 226, 18);
+}
