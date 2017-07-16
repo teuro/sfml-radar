@@ -163,6 +163,7 @@ private:
 	std::string message;
 	enum states {MENU, ATIS, GAME, STAT};
 	int state;
+	void set_flash_message(std::string message);
 };
 
 

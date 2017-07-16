@@ -53,7 +53,7 @@ void Gamecontroller::handle_mouse_wheel(int amount) {
 		
 		this->gameview->set_zoom(this->settings.zoom);
 	} else if (this->state == MENU) {
-		this->menu->change_selection(amount);
+		this->menu->change_selection(-amount);
 	}
 }
 
@@ -114,6 +114,8 @@ void Gamecontroller::draw_logic(Point& mouse) {
 		
 		if (this->game_time < (this->flash_message_begin + this->flash_message_time)) {
 			this->gameview->flash_message(this->message);
+		} else {
+			this->message = "";
 		}
 		
 		this->gameview->render();
@@ -147,6 +149,15 @@ void Gamecontroller::update(double elapsed, Point& mouse) {
 	} else if (this->state == GAME) {
 		this->game_time += elapsed;
 		
+		
+		if (flash_message_begin + flash_message_time < game_time) {
+			std::string tmp = this->game->get_message();
+		
+			if (tmp.length()) {
+				this->set_flash_message(tmp);
+			}
+		}
+		
 		this->calculate_fps();
 		this->game->update(elapsed);
 		
@@ -162,6 +173,11 @@ void Gamecontroller::update(double elapsed, Point& mouse) {
 	this->draw_logic(mouse);
 }
 
+void Gamecontroller::set_flash_message(std::string message) {
+	this->message = message;
+	this->flash_message_begin = this->game_time;
+}
+
 void Gamecontroller::handle_mouse_click(Point& mouse) {
 	if (this->state == GAME) {
 		this->game->selected = NULL;
@@ -174,8 +190,7 @@ void Gamecontroller::handle_mouse_click(Point& mouse) {
 
 			if (Tools::on_area(mouse, aircraft, 10)) {
 				this->game->selected = (*plane);
-				this->message = "Plane " + (*plane)->get_name() + " selected";
-				this->flash_message_begin = this->game_time;
+				this->set_flash_message("Plane " + (*plane)->get_name() + " selected");
 			}
 		}
 	} else if (this->state == ATIS) {
@@ -227,6 +242,7 @@ void Gamecontroller::load() {
 	
 	this->menu->load();
 	this->menuview->load();
+	this->load_menu_items("SELECT ICAO FROM airfields", this->menu);
 }
 
 void Gamecontroller::handle_text_input() {
@@ -264,7 +280,6 @@ void Gamecontroller::handle_text_input() {
 
 void Gamecontroller::update_command(std::string command) {
 	this->command = command;
-	this->load_menu_items("SELECT ICAO FROM airfields WHERE ICAO LIKE '%?%'", this->menu);
 }
 
 bool Gamecontroller::is_ok() {
