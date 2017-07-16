@@ -10,13 +10,6 @@ Menu::~Menu() {  }
 
 void Menu::load() {
 	std::clog << "Menu::load()" << std::endl;
-	Menu_item t1(0, "EFHK", 38);
-	Menu_item t2(1, "EFTP", 63);
-	Menu_item t3(2, "EFTU", 89);
-	
-	this->items.push_back(t1);
-	this->items.push_back(t2);
-	this->items.push_back(t3);
 }
 
 void Menu::change_selection(int change) {
