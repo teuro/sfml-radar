@@ -456,7 +456,7 @@ void View::draw_element(std::string text, Point& place_a, int color) {
 }
 
 void View::flash_message(std::string message) {
-	Point place(30, 600);
-	
-	this->drawer.draw_text(message, place, 250, 127, 127);
+	Paragraph p(message, "p", "message", "flash");
+	this->style(p);
+	this->draw_element(p);
 }
