@@ -17,7 +17,7 @@ void Menuview::draw() {
 		if (this->menu->get_selected().get_id() == (it->get_id())) {
 			d_list.add_element(it->get_name(), "active");
 		} else {
-			d_list.add_element(it->get_name(), "pure");
+			d_list.add_element(it->get_name(), "normal");
 		}
 	}
 	

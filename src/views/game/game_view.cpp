@@ -65,7 +65,7 @@ void Gameview::draw_plane(Aircraft*& plane, Aircraft* selected, Point& mouse) {
 	info_list.set_class("normal");
 	
 	if (id == "selected") {
-		info_list.set_class("selected");
+		info_list.set_class("active");
 		this->style(info_list);
 		
 		info_list.add_element(Tools::tostr((int)plane->get_speed()) + " / " + Tools::tostr((int)plane->get_clearance_speed()));
@@ -118,6 +118,8 @@ void Gameview::draw_planes(std::list <Aircraft*> planes, Aircraft* selected, Poi
 				special = "E " + (*plane)->get_landing_runway_name();
 			} else if ((*plane)->get_approach()) {
 				special = "A " + (*plane)->get_landing_runway_name();
+			} else if ((*plane)->get_landing()) {
+				special = "L " + (*plane)->get_landing_runway_name();
 			}
 		} else if ((*plane)->get_direct()) {
 			special = "D " + (*plane)->get_target_name();
