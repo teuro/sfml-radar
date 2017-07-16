@@ -38,6 +38,7 @@ void Aircraft::load() {
     this->landed 				= false;
     this->direct 				= false;
 	this->expect 				= false;
+	this->land	 				= false;
 	this->final_approach 		= false;
 	
 	this->clearance_altitude 	= this->altitude;
@@ -49,13 +50,18 @@ void Aircraft::load() {
 
 Aircraft::~Aircraft() { }
 
-void Aircraft::set_approach_runway(std::string name) {
+std::string Aircraft::set_approach_runway(std::string name) {
+	std::string tmp;
+	
 	try {
 		this->landing = this->airport->get_runway(name);
 		this->expect = true;
+		tmp = "Expect runway " + name;
 	} catch (std::logic_error& e) {
-		std::cerr << e.what() << std::endl;
+		tmp = e.what();
 	}
+	
+	return tmp;
 }
 
 bool Aircraft::check_approach_config() {
@@ -289,6 +295,10 @@ bool Aircraft::get_direct() {
 
 bool Aircraft::get_approach() {
 	return this->approach;
+}
+
+bool Aircraft::get_landing() {
+	return this->land;
 }
 
 bool Aircraft::get_expect() {

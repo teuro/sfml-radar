@@ -49,7 +49,7 @@ Runway& Airfield::get_runway(std::string name) {
 		}
 	}
 	
-	throw std::logic_error("Airfield::get_runway :: " + name + " not exists");
+	throw std::logic_error("Runway " + name + " not exists");
 }
 
 Inpoint& Airfield::get_inpoint(std::string name) {
@@ -59,7 +59,7 @@ Inpoint& Airfield::get_inpoint(std::string name) {
 		}
 	}
 	
-	throw std::logic_error("Airfield::get_inpoint :: " + name + " not exists");
+	throw std::logic_error("Inpoint " + name + " not exists");
 }
 
 Outpoint& Airfield::get_outpoint(std::string name) {
