@@ -25,3 +25,7 @@
 .normal {
 	color: rgb(250, 60, 20);
 }
+
+.active {
+	color: rgb(20, 60, 20);
+}
