@@ -272,6 +272,7 @@ void View::draw_element(Drawable_input& i) {
 }
 
 void View::style(Drawable_element& de) {
+	//std::clog << de.get_id() << " " << de.get_class() << std::endl;
 	#ifdef DEBUG
 	std::clog << "View::style(Drawable_element& de)" << std::endl;
 	#endif
@@ -303,8 +304,10 @@ void View::style(Drawable_element& de) {
 	
 	t_style = this->styles.begin();
 	
+	std::string tmp_id = de.get_id();
+	
 	while (t_style != this->styles.end()) {
-		if (de.get_id().length() && t_style->get_id() == de.get_id()) {
+		if (tmp_id.length() && t_style->get_id() == tmp_id) {
 			de.set_style((*t_style));
 		}
 		
@@ -361,6 +364,8 @@ void View::draw_element(Drawable_list& dl) {
 	for (it = t_list.begin(); it != t_list.end(); ++it) {
 		this->style(*it);
 		color = it->get_style().get_text_color();
+		//std::clog << it->get_content() << " color " << color << std::endl;
+		//std::clog << it->get_style() << std::endl;
 		this->draw_element(Tools::replace(it->get_content(), repl), place, color);
 		t_height = this->drawer.get_text_height(it->get_content(), 16) + 5;
 		height += t_height;

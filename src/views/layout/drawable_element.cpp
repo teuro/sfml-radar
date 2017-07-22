@@ -1,11 +1,14 @@
 #include "drawable_element.hpp"
-Drawable_element::Drawable_element(std::string t_name, std::string t_class, std::string t_id) : name(t_name), s_class(t_class), id(t_id) { }
+Drawable_element::Drawable_element(std::string t_name, std::string t_class, std::string t_id) : name(t_name), s_class(t_class), id(t_id) { 
+	//std::clog << t_name << " " << t_class << " " << t_id << std::endl;
+}
 Drawable_element::Drawable_element(std::string t_name, std::list <std::string> t_classes, std::string t_id) : name(t_name), classes(t_classes), id(t_id) { }
 Drawable_element::Drawable_element() { }
 
 Drawable_element::~Drawable_element() { }
 
 void Drawable_element::set_style(Style& stle) {
+	//std::clog << "Drawable_element::set_style(" << stle << ")" << std::endl;
 	this->styles.push_back(stle);
 	this->calculate_styles();
 }

@@ -3,7 +3,7 @@
 
 #include <string>
 #include <list>
-#include "../../models/point.hpp"
+#include "../../models/coordinate/point.hpp"
 #include "../../tools/tools.hpp"
 #include "../../tools/style/style.hpp"
 

@@ -10,9 +10,9 @@
 #include <queue>
 #include <algorithm>
 
-#include "aircraft.hpp"
-#include "airfield.hpp"
-#include "atis.hpp"
+#include "game_objects/aircraft.hpp"
+#include "game_objects/airfield.hpp"
+#include "weather/atis.hpp"
 #include "../tools/settings.hpp"
 #include "../tools/tools.hpp"
 #include "../tools/database/database.hpp"
@@ -111,7 +111,10 @@ public:
 	
 	std::string get_message();
 	void clear_errors();
+	int get_level();
+	void set_level(int level);
 private:
+	int level;
     void load_airfield(std::string icao);
     void check_collision();
     void handle_holdings();

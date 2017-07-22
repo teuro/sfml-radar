@@ -7,7 +7,7 @@
 #include <cstdio>
 #include "../tools.hpp"
 #include "../settings.hpp"
-#include "../../models/point.hpp"
+#include "../../models/coordinate/point.hpp"
 
 class Style {
 public:

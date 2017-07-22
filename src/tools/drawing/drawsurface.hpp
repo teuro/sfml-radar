@@ -10,7 +10,7 @@
 #include <string>
 #include <vector>
 
-#include "../../models/point.hpp"
+#include "../../models/coordinate/point.hpp"
 
 class Drawsurface {
 protected:

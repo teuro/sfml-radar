@@ -7,7 +7,7 @@ Menuview::~Menuview() { }
 void Menuview::draw() { 
 	View::draw();
 	
-	Drawable_list d_list("ul", this->menu->get_id(), this->menu->get_class());
+	Drawable_list d_list("ul", this->menu->get_class(), this->menu->get_id());
 	
 	std::vector <Menu_item> items = this->menu->get_items();
 	
@@ -27,5 +27,6 @@ void Menuview::draw() {
 }
 
 void Menuview::load() { 
+	std::clog << "Menuview::load()" << std::endl;
 	View::load("menu");
 }

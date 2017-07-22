@@ -7,8 +7,8 @@
 #include "../view.hpp"
 #include "../../tools/tools.hpp"
 #include "../../tools/settings.hpp"
-#include "../../models/atis.hpp"
-#include "../../models/runway.hpp"
+#include "../../models/weather/atis.hpp"
+#include "../../models/game_objects/runway.hpp"
 
 class Atisview : public View {
 public:
@@ -17,7 +17,7 @@ public:
 	void draw();
     void load(std::vector <Runway> runways, std::map <int, std::vector <int> > levels);
 	std::string get_value(Point& mouse);
-	void draw_errors(std::list <std::string> errors);
+	void draw_errors();
 	void update();
 private:
 	Atis* atis;

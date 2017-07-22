@@ -74,6 +74,10 @@ bool Tools::on_area(Coordinate& a, Coordinate& b) {
 }
 
 std::vector <std::string> Tools::split(std::string delimiter, std::string input) {
+	if (input.length() == 0) {
+		throw std::logic_error("input can't be empty");
+	}
+
     std::vector <std::string> tmp_cells;
     while (true) {
         std::string::size_type pos = input.find(delimiter, 0);
@@ -82,7 +86,7 @@ std::vector <std::string> Tools::split(std::string delimiter, std::string input)
             tmp_cells.push_back(input);
             return tmp_cells;
         }
-
+		
         tmp_cells.push_back(input.substr(0, pos));
         input.erase(0, pos + 1);
     }

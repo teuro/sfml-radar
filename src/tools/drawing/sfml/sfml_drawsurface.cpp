@@ -41,7 +41,7 @@ void sfml_drawsurface::draw_text(std::string text, Point& a, int red, int green,
 		this->load_font("arial.ttf", this->font_size);
 	}
 
-	 sf::Color clr(red, green, blue);
+	sf::Color clr(red, green, blue);
 	
 	sf::Text _text;
 	

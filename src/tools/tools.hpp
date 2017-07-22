@@ -14,8 +14,8 @@
 #include <ctime>
 #include <map>
 
-#include "../models/coordinate.hpp"
-#include "../models/point.hpp"
+#include "../models/coordinate/coordinate.hpp"
+#include "../models/coordinate/point.hpp"
 
 /**
 	* Tools 

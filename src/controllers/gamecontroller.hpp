@@ -4,10 +4,10 @@
 #include <cstdlib>
 
 #include "../models/game.hpp"
-#include "../models/atis.hpp"
-#include "../models/metar.hpp"
-#include "../models/menu.hpp"
-#include "../models/menu_item.hpp"
+#include "../models/weather/atis.hpp"
+#include "../models/weather/metar.hpp"
+#include "../models/menu/menu.hpp"
+#include "../models/menu/menu_item.hpp"
 #include "../tools/tools.hpp"
 #include "../views/game/game_view.hpp"
 #include "../views/atis/atis_view.hpp"

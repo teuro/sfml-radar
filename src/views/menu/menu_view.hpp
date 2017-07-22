@@ -5,7 +5,7 @@
 #include <iostream>
 
 #include "../view.hpp"
-#include "../../models/menu.hpp"
+#include "../../models/menu/menu.hpp"
 #include "../../tools/tools.hpp"
 #include "../../tools/settings.hpp"
 

@@ -16,8 +16,6 @@ void Atisview::update() {
 	Drawable_list transfer_level("ul", "atis_base",  "transfer-level");
 	Drawable_list transfer_altitude("ul", "atis_base", "transfer-altitude");
 	
-	lists.clear();
-	
 	runway_list_dep.add_element("departure");
 	runway_list_lnd.add_element("landing");
 	transfer_altitude.add_element("altitude");
@@ -45,12 +43,18 @@ void Atisview::update() {
 	}
 
 	int t_altitude = this->atis->get_transition_altitude();
-	this->lists.push_back(runway_list_dep);
-	this->lists.push_back(runway_list_lnd);
-	this->lists.push_back(transfer_altitude);
+	
+	this->style(runway_list_dep);
+	this->style(runway_list_lnd);
+	this->style(transfer_altitude);
+	
+	/*this->draw_element(runway_list_dep);
+	this->draw_element(runway_list_lnd);
+	this->draw_element(transfer_altitude);*/
 	
 	if (t_altitude > 2000) {
-		this->lists.push_back(display_levels[t_altitude]);
+		this->style(display_levels[t_altitude]);
+		//this->draw_element(display_levels[t_altitude]);
 	}
 }
 
@@ -64,33 +68,9 @@ void Atisview::draw() {
 	}
 }
 
-std::string Atisview::get_value(Point& mouse) {
-	std::list <Drawable_list_item> t_list;
-	std::list <Drawable_list_item> :: iterator list_item;
-	
-	for (unsigned int i = 0; i < this->lists.size(); ++i) {
-		t_list = this->lists[i].get_elements();
-		list_item = t_list.begin();
-		Point place = this->lists[i].get_style().get_place();
-		place.change_y(this->drawer.get_fontsize() / 2);
-		
-		while (list_item != t_list.end()) {
-			if (Tools::on_area(mouse, place, 50, 10)) {
-				std::string t = Tools::tostr(i) + "|" + (list_item->get_content()); 
-				return t;
-			}
-			
-			place.change_y(this->drawer.get_fontsize());
-			
-			++list_item;
-		}
-	}
-	
-	return "";
-}
-
-void Atisview::draw_errors(std::list <std::string> errors) {
+void Atisview::draw_errors() {
 	Drawable_list atis_errors("ul", "list", "atis_error");
+	std::list <std::string> errors = this->atis->get_atis_errors();
 	std::list <std::string> :: iterator it = errors.begin();
 	
 	while (it != errors.end()) {

@@ -65,6 +65,7 @@ void SFML_window::run() {
 }
 
 bool SFML_window::handle_event(sf::Event& event, Controller& ctrl, sf::RenderWindow& window) {
+	//std::clog << "SFML_window::handle_event()" << std::endl;
     sf::Vector2i mouse_place = sf::Mouse::getPosition(window);
 	mouse.set_place(mouse_place.x, mouse_place.y);
 	std::string t_input;

@@ -9,10 +9,10 @@
 #include "../view.hpp"
 #include "../../tools/tools.hpp"
 #include "../../tools/settings.hpp"
-#include "../../models/coordinate.hpp"
-#include "../../models/navpoint.hpp"
-#include "../../models/aircraft.hpp"
-#include "../../models/airfield.hpp"
+#include "../../models/coordinate/coordinate.hpp"
+#include "../../models/coordinate/navpoint.hpp"
+#include "../../models/game_objects/aircraft.hpp"
+#include "../../models/game_objects/airfield.hpp"
 
 class Drawable_plane : public Drawable_element {
 public:

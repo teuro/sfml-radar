@@ -5,7 +5,7 @@ Gamecontroller::Gamecontroller(Settings& s, Drawsurface& d) : Controller(s, d) {
 	this->gameview = new Gameview(this->drawer, this->settings);
 	this->atis = new Atis(this->settings, this->metar);
 	this->game = new Game(this->settings, this->atis);
-	this->menu = new Menu("list", "airports");
+	this->menu = new Menu("runway-list-departure", "atis-base");
 	this->atisview = new Atisview(this->drawer, this->settings, this->atis);
 	this->statview = new Statview(this->drawer, this->settings);
 	this->menuview = new Menuview(this->drawer, this->settings, menu);
@@ -54,12 +54,15 @@ void Gamecontroller::handle_mouse_wheel(int amount) {
 		this->gameview->set_zoom(this->settings.zoom);
 	} else if (this->state == MENU) {
 		this->menu->change_selection(-amount);
+	} else if (this->state == ATIS) {
+		this->menu->change_selection(-amount);
 	}
 }
 
 void Gamecontroller::set_variables() {
 	this->menuview->repl["[MPL]"] = Tools::tostr(this->settings.max_planes);
 	this->menuview->repl["[RQD]"] = Tools::tostr(this->settings.required_handled);
+	//this->menuview->repl["[LEV]"] = Tools::tostr(this->game->get_level());
 	
 	this->gameview->repl["[PLH]"] = Tools::tostr(this->game->get_handled_planes());
 	this->gameview->repl["[METAR]"] = this->metar.to_string();
@@ -84,6 +87,7 @@ void Gamecontroller::set_variables() {
 	this->gameview->repl["[GRE]"] = Tools::tostr(this->game->get_game_error());
 	
 	this->atisview->repl["[METAR]"] = this->metar.to_string();
+	//this->atisview->repl["[LEV]"] = Tools::tostr(this->game->get_level());
 	this->atisview->repl["[DEPARTURE]"] = this->atis->get_departure_runway();
 	this->atisview->repl["[LANDING]"] = this->atis->get_landing_runway();
 	this->atisview->repl["[LEVEL]"] = Tools::tostr(this->atis->get_transition_level());
@@ -114,15 +118,14 @@ void Gamecontroller::draw_logic(Point& mouse) {
 		
 		if (this->game_time < (this->flash_message_begin + this->flash_message_time)) {
 			this->gameview->flash_message(this->message);
-		} else {
-			this->message = "";
 		}
 		
 		this->gameview->render();
 	} else if (this->state == ATIS) {
 		this->atisview->clear_screen();
 		this->atisview->draw();
-		this->atisview->draw_errors(this->atis->get_atis_errors());
+		this->atisview->draw_errors();
+		this->menuview->draw();
 		this->atisview->render();
 	} else if (this->state == STAT) {
 		this->statview->clear_screen();
@@ -137,6 +140,7 @@ void Gamecontroller::draw_logic(Point& mouse) {
 }
 
 void Gamecontroller::update(double elapsed, Point& mouse) {
+	//std::clog << "Gamecontroller::update(" << elapsed << ", " << mouse << ")" << std::endl;
 	this->set_variables();
 	
 	if (this->state == ATIS) {
@@ -148,7 +152,6 @@ void Gamecontroller::update(double elapsed, Point& mouse) {
 		} 
 	} else if (this->state == GAME) {
 		this->game_time += elapsed;
-		
 		
 		if (flash_message_begin + flash_message_time < game_time) {
 			std::string tmp = this->game->get_message();
@@ -193,36 +196,11 @@ void Gamecontroller::handle_mouse_click(Point& mouse) {
 				this->set_flash_message("Plane " + (*plane)->get_name() + " selected");
 			}
 		}
-	} else if (this->state == ATIS) {
-		std::string value = this->atisview->get_value(mouse);
-		
-		std::vector <std::string> t = Tools::split("|", value);
-		
-		if (t.size() != 2) {
-			return;
-		} 
-		
-		int type = Tools::toint(Tools::trim(t[0]));
-		std::string t_value = Tools::trim(t[1]);
-		
-		switch (type) {
-		case 0:
-			this->atis->set_departure_runway(t_value);
-			break;
-		case 1:
-			this->atis->set_landing_runway(t_value);
-			break;
-		case 2:
-			this->atis->set_transition_altitude(Tools::toint(t_value));
-			break;
-		case 3:
-			this->atis->set_transition_level(Tools::toint(t_value));
-			break;
-		}
-	}
+	} 	
 }
 
 void Gamecontroller::load_menu_items(std::string query, Menu*& menu) {
+	std::clog << "Gamecontroller::load_menu_items(" << query << ", menu" << ")" << std::endl;
 	menu->clear();
 	std::list <std::string> arguments;
 	arguments.push_back(this->command);
@@ -246,6 +224,7 @@ void Gamecontroller::load() {
 }
 
 void Gamecontroller::handle_text_input() {
+	//std::clog << "Gamecontroller::handle_text_input()" << std::endl;
     std::string t_command = this->command;
 	
 	if (this->state == GAME) {
@@ -263,18 +242,63 @@ void Gamecontroller::handle_text_input() {
 		}
 	} else if (this->state == MENU) {
 		this->state = ATIS;
+		this->game->set_level(1);
 		
 		Menu_item ti = this->menu->get_selected();
+		this->menu = new Menu("runway-list-departure", "atis_base");
 		
 		this->game->load(ti.get_name());
 		this->metar.update(this->game->get_active_field()->get_name());
 		this->atis->load(this->game->get_active_field()->get_runways());
+		
+		std::vector <Runway> t_runways = this->game->get_active_field()->get_runways();
+		std::vector <Runway> :: iterator r = t_runways.begin();
+		
+		while (r != t_runways.end()) {
+			this->menu->add_item(r->get_name());
+			++r;
+		}
+		
+		delete this->menuview;
+		this->menuview = new Menuview(this->drawer, this->settings, this->menu);
+		this->menuview->load();
 		
 		this->atisview->load(this->game->get_active_field()->get_runways(), this->atis->get_levels());
 		this->gameview->load();
 		this->statview->load();
 		this->settings.zoom = 110;
 		this->gameview->set_zoom(this->settings.zoom);
+	} else if (this->state == ATIS) {
+		if (!this->atis->departure_runway_ok()) {
+			this->atis->set_departure_runway(this->menu->get_selected().get_name());
+		} else if (!this->atis->landing_runway_ok()) {
+			this->atis->set_landing_runway(this->menu->get_selected().get_name());
+			if (this->atis->landing_runway_ok()) {
+				delete this->menu;
+				this->menu = new Menu("transfer-altitude", "atis-base");
+				
+				std::vector <int> altitudes = this->atis->get_altitudes();
+				this->menu->add_items(altitudes);
+				
+				delete this->menuview;
+				this->menuview = new Menuview(this->drawer, this->settings, this->menu);
+				this->menuview->load();
+			}
+		} else if (!this->atis->transition_altitude_ok()) {
+			this->atis->set_transition_altitude(Tools::toint(this->menu->get_selected().get_name()));
+			if (this->atis->transition_altitude_ok()) {
+				delete this->menu;
+				this->menu = new Menu("transfer-level", "atis-base");
+				std::vector <int> levels = this->atis->get_levels(this->atis->get_transition_altitude());
+				this->menu->add_items(levels);
+				
+				delete this->menuview;
+				this->menuview = new Menuview(this->drawer, this->settings, this->menu);
+				this->menuview->load();
+			}
+		} else if (!this->atis->transfer_level_ok()) {
+			this->atis->set_transition_level(Tools::toint(this->menu->get_selected().get_name()));
+		} 
 	}
 }
 

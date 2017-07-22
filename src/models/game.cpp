@@ -498,3 +498,11 @@ int Game::get_new_plane() {
 bool Game::ok() {
 	return (this->handled_planes == this->settings.required_handled);
 }
+
+int Game::get_level() {
+	return this->level;
+}
+
+void Game::set_level(int level) {
+	this->level = level;
+}

@@ -9,7 +9,7 @@
 
 #include "../controllers/controller.hpp"
 #include "../controllers/gamecontroller.hpp"
-#include "../models/point.hpp"
+#include "../models/coordinate/point.hpp"
 #include "../tools/settings.hpp"
 #include "../tools/database/database.hpp"
 
