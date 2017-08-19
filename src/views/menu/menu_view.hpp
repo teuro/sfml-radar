@@ -7,6 +7,7 @@
 #include "../view.hpp"
 #include "../../models/menu/menu.hpp"
 #include "../../tools/tools.hpp"
+#include "../../tools/point_tools.hpp"
 #include "../../tools/settings.hpp"
 
 class Menuview : public View {

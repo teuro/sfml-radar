@@ -2,6 +2,7 @@
 #define ATIS_HPP
 
 #include "../../tools/settings.hpp"
+#include "../../tools/text_tools.hpp"
 #include "metar.hpp"
 #include "../game_objects/runway.hpp"
 

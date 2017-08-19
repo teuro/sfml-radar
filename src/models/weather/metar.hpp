@@ -5,6 +5,7 @@
 #include <string>
 
 #include "../../tools/tools.hpp"
+#include "../../tools/text_tools.hpp"
 #include "../../tools/database/database.hpp"
 
 /**

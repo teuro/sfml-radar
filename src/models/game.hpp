@@ -15,6 +15,7 @@
 #include "weather/atis.hpp"
 #include "../tools/settings.hpp"
 #include "../tools/tools.hpp"
+#include "../tools/text_tools.hpp"
 #include "../tools/database/database.hpp"
 
 struct Clearance {

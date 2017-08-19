@@ -8,6 +8,7 @@
 
 #include "../view.hpp"
 #include "../../tools/tools.hpp"
+#include "../../tools/point_tools.hpp"
 #include "../../tools/settings.hpp"
 #include "../../models/coordinate/coordinate.hpp"
 #include "../../models/coordinate/navpoint.hpp"

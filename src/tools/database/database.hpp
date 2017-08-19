@@ -8,6 +8,7 @@
 
 #include "queryresult.hpp"
 #include "../settings.hpp"
+#include "../text_tools.hpp"
 
 /**
     * namespace Database

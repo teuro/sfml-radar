@@ -1,11 +1,16 @@
 #ifndef STYLE_HPP
 #define STYLE_HPP
 
+/**
+	* This part of program reads and parses well formed *.css files.
+**/
+
 #include <string>
 #include <iostream>
 #include <cstdlib>
 #include <cstdio>
 #include "../tools.hpp"
+#include "../text_tools.hpp"
 #include "../settings.hpp"
 #include "../../models/coordinate/point.hpp"
 

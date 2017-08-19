@@ -8,6 +8,7 @@
 #include "menu_item.hpp"
 
 #include "../../tools/database/database.hpp"
+#include "../../tools/text_tools.hpp"
 
 class Menu {
 public:

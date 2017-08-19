@@ -4,6 +4,7 @@
 #include <map>
 #include <string>
 #include "tools.hpp"
+#include "coordinate_tools.hpp"
 
 enum turn 		{LEFT = -1, RIGHT = 1};
 enum types 		{DEPARTURE, APPROACH};

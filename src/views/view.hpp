@@ -18,6 +18,8 @@
 #include "layout/drawable_input.hpp"
 #include "../tools/style/style.hpp"
 #include "../tools/settings.hpp"
+#include "../tools/tools.hpp"
+#include "../tools/text_tools.hpp"
 
 /**
 	* View
