@@ -72,16 +72,23 @@ bool Aircraft::check_approach_config() {
 	double min_approach_angle = Tools::fix_angle(this->landing.get_heading() - Tools::deg2rad(this->settings.approach_angle));
 	double max_approach_angle = Tools::fix_angle(this->landing.get_heading() + Tools::deg2rad(this->settings.approach_angle));
 	
+	//std::clog << "Min angle " << min_approach_angle << " max angle " << max_approach_angle << " plane heading " << this->heading << std::endl;
+	
+	this->approach_config_error = "";
+	
 	if (this->altitude > this->settings.max_approach_altitude) {
 		altitude_ok = false;
+		this->approach_config_error += " Altide is incorrect ";
 	}
 	
 	if (this->heading > max_approach_angle || this->heading	< min_approach_angle) {
 		heading_ok = false;
+		this->approach_config_error += " heading is incorrect ";
 	} 
 	
 	if (this->speed > this->settings.max_approach_speed) {
 		speed_ok = false;
+		this->approach_config_error += " speed is incorrect ";
 	}
 	
 	return (speed_ok && altitude_ok && heading_ok);
@@ -252,15 +259,17 @@ void Aircraft::set_clearance_altitude(double cl_alt) {
 	this->clearance_altitude = cl_alt;
 }
 
-void Aircraft::set_clearance_approach() {
-	this->approach = true;
-	
+std::string Aircraft::set_clearance_approach() {
 	if (!this->check_approach_config()) {
 		this->approach = false;
-		return;
+		return this->approach_config_error;
 	}
 	
+	this->approach = true;
+	
 	this->approach_target = this->landing.get_approach_place();
+	
+	return "Cleared approach " + get_landing_runway_name();
 }
 
 void Aircraft::cancel_approach() {

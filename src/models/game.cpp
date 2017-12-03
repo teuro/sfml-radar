@@ -413,7 +413,8 @@ void Game::build_clearance(std::string command) {
 			}
 		} else if (Tools::trim(tmp[0]) == "approach") {
 			if (this->selected->get_type() == APPROACH) {
-				this->selected->set_clearance_approach();
+				std::string tmp_msg = this->selected->set_clearance_approach();
+				display_messages.push(tmp_msg);
 			} else {
 				display_messages.push("Plane must be approaching not departing");
 			}
