@@ -50,6 +50,17 @@ int Tools::round_nearest(int number, int multiple) {
     return number + multiple - remainder;
 }
 
+int Tools::round_nearest(double number, int multiple) {
+	int t_number = (int) number;
+    if (multiple == 0) {
+		return number;
+	}
+
+    int remainder = t_number % multiple;
+
+    return t_number + multiple - remainder;
+}
+
 double Tools::nm2ft(double nm) {
 	return nm * milestofeets;
 }

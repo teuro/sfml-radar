@@ -158,6 +158,7 @@ namespace Tools {
 	**/
 	
 	int round_nearest(int number, int multiply);
+	int round_nearest(double number, int multiply);
 }
 
 #endif // _TOOLS_HPP

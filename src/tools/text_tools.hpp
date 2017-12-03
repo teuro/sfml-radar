@@ -75,7 +75,7 @@ namespace Tools {
 	/**
 		* tostr
 		* converts numbers to string
-		* @param T might bee any numbers
+		* @param T might bee any number
 		* @return std::string
 	**/
 	
@@ -91,7 +91,7 @@ namespace Tools {
 	/**
 		* tostr
 		* converts numbers to constant length string
-		* @param T might bee any numbers
+		* @param T might bee any number
 		* @param unsigned int length 
 		* @return std::string
 	**/

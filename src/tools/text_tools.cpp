@@ -16,6 +16,7 @@ std::vector <std::string> Tools::split(std::string delimiter, std::string input)
 	}
 
     std::vector <std::string> tmp_cells;
+	
     while (true) {
         std::string::size_type pos = input.find(delimiter, 0);
 
