@@ -62,7 +62,7 @@ void Gamecontroller::handle_mouse_wheel(int amount) {
 void Gamecontroller::set_variables() {
 	this->menuview->repl["[MPL]"] = Tools::tostr(this->settings.max_planes);
 	this->menuview->repl["[RQD]"] = Tools::tostr(this->settings.required_handled);
-	//this->menuview->repl["[LEV]"] = Tools::tostr(this->game->get_level());
+	this->menuview->repl["[LEV]"] = Tools::tostr(this->game->get_level());
 	
 	this->gameview->repl["[PLH]"] = Tools::tostr(this->game->get_handled_planes());
 	this->gameview->repl["[METAR]"] = this->metar.to_string();
@@ -85,6 +85,12 @@ void Gamecontroller::set_variables() {
 	this->gameview->repl["[PCNT]"] = Tools::tostr(this->game->get_game_points());
 	this->gameview->repl["[CLRE]"] = Tools::tostr(this->game->get_clearance_error());
 	this->gameview->repl["[GRE]"] = Tools::tostr(this->game->get_game_error());
+	this->gameview->repl["[MXA]"] = Tools::tostr(Tools::round_nearest(Tools::rad2deg(this->game->get_landing_runway().get_heading()) + this->settings.approach_angle, 10));
+	this->gameview->repl["[MNA]"] = Tools::tostr(Tools::round_nearest(Tools::rad2deg(this->game->get_landing_runway().get_heading()) - this->settings.approach_angle, 10));
+	
+	if (this->game->get_selected() != NULL) {
+		this->gameview->repl["[PLNA]"] = Tools::tostr(Tools::rad2deg(this->game->get_selected()->get_heading()));
+	}
 	
 	this->atisview->repl["[METAR]"] = this->metar.to_string();
 	//this->atisview->repl["[LEV]"] = Tools::tostr(this->game->get_level());

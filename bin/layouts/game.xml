@@ -19,6 +19,11 @@
 			<td>landing [LND]</td>
 		</tr>
 		<tr>
+			<td>max angle [MXA]</td>
+			<td>min angle [MNA]</td>
+			<td>plane angle [PLNA]</td>
+		</tr>
+		<tr>
 			<td>points [PCNT]</td>
 			<td>required [RQD]</td>
 		</tr>
