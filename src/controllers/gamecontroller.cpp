@@ -42,6 +42,7 @@ void Gamecontroller::handle_mouse_release(Point& mouse_start, Point& mouse_end) 
 }
 
 void Gamecontroller::handle_mouse_wheel(int amount) {
+	
     if (this->state == GAME) {
 		this->settings.zoom += (-amount * 1);
 		
@@ -188,6 +189,8 @@ void Gamecontroller::set_flash_message(std::string message) {
 }
 
 void Gamecontroller::handle_mouse_click(Point& mouse) {
+	this->metar.update("EFHK");
+	
 	if (this->state == GAME) {
 		this->game->selected = NULL;
 
@@ -269,7 +272,7 @@ void Gamecontroller::handle_text_input() {
 		this->menuview = new Menuview(this->drawer, this->settings, this->menu);
 		this->menuview->load();
 		
-		this->atisview->load(this->game->get_active_field()->get_runways(), this->atis->get_levels());
+		this->atisview->load();
 		this->gameview->load();
 		this->statview->load();
 		this->settings.zoom = 110;
@@ -281,7 +284,7 @@ void Gamecontroller::handle_text_input() {
 			this->atis->set_landing_runway(this->menu->get_selected().get_name());
 			if (this->atis->landing_runway_ok()) {
 				delete this->menu;
-				this->menu = new Menu("transfer-altitude", "atis-base");
+				this->menu = new Menu("transfer-altitude", "atis_base");
 				
 				std::vector <int> altitudes = this->atis->get_altitudes();
 				this->menu->add_items(altitudes);
@@ -294,7 +297,7 @@ void Gamecontroller::handle_text_input() {
 			this->atis->set_transition_altitude(Tools::toint(this->menu->get_selected().get_name()));
 			if (this->atis->transition_altitude_ok()) {
 				delete this->menu;
-				this->menu = new Menu("transfer-level", "atis-base");
+				this->menu = new Menu("transfer-level", "atis_base");
 				std::vector <int> levels = this->atis->get_levels(this->atis->get_transition_altitude());
 				this->menu->add_items(levels);
 				
