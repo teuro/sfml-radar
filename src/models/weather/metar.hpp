@@ -3,6 +3,8 @@
 
 #include <list>
 #include <string>
+#include <ctime>
+#include <map>
 
 #include "../../tools/tools.hpp"
 #include "../../tools/text_tools.hpp"
@@ -52,7 +54,13 @@ private:
     std::list <Cloud> clouds;
     Wind wind;
     std::string icao;
+	std::string id_code;
 	void generate_clouds();
+	std::time_t time;
+	
+	void generate_visibility();
+	void generate_wind();
+	void generate_humidity();
 };
 
 #endif // METAR_HPP
