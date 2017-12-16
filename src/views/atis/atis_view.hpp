@@ -16,16 +16,12 @@ public:
 	Atisview(Drawsurface& d, Settings& s, Atis*& a);
 	~Atisview();
 	void draw();
-    void load(std::vector <Runway> runways, std::map <int, std::vector <int> > levels);
+    void load();
 	std::string get_value(Point& mouse);
 	void draw_errors();
 	void update();
 private:
 	Atis* atis;
-	std::vector <Drawable_list> lists;
-	std::map <int, Drawable_list> display_levels;
-	std::map <int, std::vector <int> > tr_levels;
-	std::vector <Runway> runways;
 };
 
 #endif // ATIS_VIEW
