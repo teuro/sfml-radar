@@ -16,6 +16,7 @@ public:
 	~Menuview();
 	void draw();
     void load();
+	void set_menu(Menu*& menu);
 private: 
 	Menu* menu;
 };

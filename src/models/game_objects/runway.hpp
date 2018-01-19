@@ -21,6 +21,7 @@ public:
 
     std::string get_name();
     bool operator ==(const std::string name);
+    bool operator ==(Runway& name);
 protected:
 private:
     std::string name;

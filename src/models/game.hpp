@@ -151,6 +151,7 @@ private:
     int separation_errors;
     int new_plane;
 	unsigned int handled_planes;
+	bool loaded;
 };
 
 #endif // _GAME_HPP

@@ -125,6 +125,7 @@ private:
 	
     void draw_plane(Aircraft*& plane, Aircraft* selected, Point& mouse);
 	std::string command;
+	bool loaded;
 };
 
 #endif // _GAME_VIEW_HPP

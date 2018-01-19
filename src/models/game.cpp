@@ -2,6 +2,8 @@
 
 Game::Game(Settings& s, Atis*& a) : settings(s), atis(a) {
     this->duration = 0;
+	this->selected = NULL;
+	this->loaded = false;
 }
 
 Game::~Game() { }
@@ -17,10 +19,13 @@ void Game::load(std::string airfield) {
     this->new_plane = 5000;
     this->pop_holdings = 500;
 	this->handled_planes = 0;
-	this->selected = NULL;
+	
+	this->loaded = true;
 }
 
 void Game::set_runways(std::string t_departure, std::string t_landing) {
+	std::clog << "Game::set_runways(" << t_departure << ", " << t_landing << ")" << std::endl;
+	
 	this->departure = this->active_field->get_runway(t_departure);
 	this->landing = this->active_field->get_runway(t_landing);
 	
@@ -136,7 +141,11 @@ double Game::get_game_points() {
 	return sum;
 }
 
-void Game::update(double elapsed) {
+void Game::update(double elapsed) {	
+	if (!this->loaded) {
+		throw std::logic_error("Game is not loaded");
+	}
+	
 	this->duration += elapsed;
     this->check_collision();
     this->handle_holdings();
@@ -205,6 +214,10 @@ bool Game::check_aircrafts(std::string name) {
 }
 
 void Game::create_plane() {
+	if (this->active_field == NULL) {
+		throw std::logic_error("Airfield not ready");
+	}
+
 	Inpoint t_inpoint = this->select_inpoint();
 	
 	while (!is_free(t_inpoint)) { 

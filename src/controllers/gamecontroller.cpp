@@ -5,10 +5,7 @@ Gamecontroller::Gamecontroller(Settings& s, Drawsurface& d) : Controller(s, d) {
 	this->gameview = new Gameview(this->drawer, this->settings);
 	this->atis = new Atis(this->settings, this->metar);
 	this->game = new Game(this->settings, this->atis);
-	this->menu = new Menu("runway-list-departure", "atis-base");
-	this->atisview = new Atisview(this->drawer, this->settings, this->atis);
-	this->statview = new Statview(this->drawer, this->settings);
-	this->menuview = new Menuview(this->drawer, this->settings, menu);
+	
 	this->settings.zoom = 110;
 	this->frames = 0;
 	this->fps_time = 5000;
@@ -26,7 +23,25 @@ Gamecontroller::~Gamecontroller() {
 	delete this->menuview;
 	delete this->game;
 	delete this->atis;
-	delete this->menu;
+	//delete this->menu;
+}
+
+void Gamecontroller::load() {
+	std::clog << "Gamecontroller::load()" << std::endl;
+	
+	this->airports 	= new Menu("airport", "airport");
+	this->menu 		= new Menu("airport", "airport");
+	
+	this->load_menu_items("SELECT ICAO FROM airfields", this->airports);
+	this->menu = this->airports;
+	
+	this->atisview 	= new Atisview(this->drawer, this->settings, this->atis);
+	this->statview 	= new Statview(this->drawer, this->settings);
+	this->menuview 	= new Menuview(this->drawer, this->settings, this->menu);
+	
+	this->menuview->load();
+	this->atisview->load();
+	this->state = MENU;
 }
 
 std::string Gamecontroller::handle_function_keys() {
@@ -42,7 +57,6 @@ void Gamecontroller::handle_mouse_release(Point& mouse_start, Point& mouse_end) 
 }
 
 void Gamecontroller::handle_mouse_wheel(int amount) {
-	
     if (this->state == GAME) {
 		this->settings.zoom += (-amount * 1);
 		
@@ -56,7 +70,7 @@ void Gamecontroller::handle_mouse_wheel(int amount) {
 	} else if (this->state == MENU) {
 		this->menu->change_selection(-amount);
 	} else if (this->state == ATIS) {
-		this->menu->change_selection(-amount);
+		this->atis->update(-amount);
 	}
 }
 
@@ -77,8 +91,8 @@ void Gamecontroller::set_variables() {
 	}
 	this->gameview->repl["[SPK]"] = Tools::tostr(this->settings.max_separation_errors);
 	this->gameview->repl["[RQD]"] = Tools::tostr(this->settings.required_handled);
-	this->gameview->repl["[DEP]"] = Tools::tostr(this->atis->get_departure_runway());
-	this->gameview->repl["[LND]"] = Tools::tostr(this->atis->get_landing_runway());
+	this->gameview->repl["[DEP]"] = Tools::tostr(this->atis->get_departure_runway().get_name());
+	this->gameview->repl["[LND]"] = Tools::tostr(this->atis->get_landing_runway().get_name());
 	this->gameview->repl["[TRL]"] = Tools::tostr(this->atis->get_transition_level());
 	this->gameview->repl["[TRA]"] = Tools::tostr(this->atis->get_transition_altitude());
 	this->gameview->repl["[FPS]"] = Tools::tostr(this->fps);
@@ -95,8 +109,8 @@ void Gamecontroller::set_variables() {
 	
 	this->atisview->repl["[METAR]"] = this->metar.to_string();
 	//this->atisview->repl["[LEV]"] = Tools::tostr(this->game->get_level());
-	this->atisview->repl["[DEPARTURE]"] = this->atis->get_departure_runway();
-	this->atisview->repl["[LANDING]"] = this->atis->get_landing_runway();
+	this->atisview->repl["[DEPARTURE]"] = this->atis->get_departure_runway().get_name();
+	this->atisview->repl["[LANDING]"] = this->atis->get_landing_runway().get_name();
 	this->atisview->repl["[LEVEL]"] = Tools::tostr(this->atis->get_transition_level());
 	this->atisview->repl["[ALTITUDE]"] = Tools::tostr(this->atis->get_transition_altitude());
 	
@@ -112,51 +126,25 @@ void Gamecontroller::calculate_fps() {
 	}
 }
 
-void Gamecontroller::draw_logic(Point& mouse) {
-	++this->frames;
+void Gamecontroller::update(double elapsed, Point& mouse) {
+	//std::clog << "Gamecontroller::update(" << elapsed << ", " << mouse << ")" << std::endl;
 	
-	if (this->state == GAME) {	
-		this->gameview->calculate_coordinate_limits(this->settings.zoom);
-		this->gameview->clear_screen();
-		this->gameview->update_command(this->command);
-		this->gameview->draw();
-		this->gameview->draw_airfield(this->game->get_active_field());
-		this->gameview->draw_planes(this->game->get_aircrafts(), this->game->get_selected(), mouse);
+	this->set_variables();
+	
+	if (this->state == ATIS) {
+		if (this->atis->ok()) {
+			this->state = GAME;
+			this->gameview->load();
+			this->game->set_runways(this->atis->get_departure_runway().get_name(), this->atis->get_landing_runway().get_name());
+		} 
 		
-		if (this->game_time < (this->flash_message_begin + this->flash_message_time)) {
-			this->gameview->flash_message(this->message);
-		}
-		
-		this->gameview->render();
-	} else if (this->state == ATIS) {
+		this->menu = this->atis->get_menu();
+		this->menuview->set_menu(this->menu);
 		this->atisview->clear_screen();
 		this->atisview->draw();
 		this->atisview->draw_errors();
 		this->menuview->draw();
 		this->atisview->render();
-	} else if (this->state == STAT) {
-		this->statview->clear_screen();
-		this->statview->draw();
-		this->statview->draw_points(this->game->get_points());
-		this->statview->render();
-	} else if (this->state == MENU) {
-		this->menuview->clear_screen();
-		this->menuview->draw();
-		this->menuview->render();
-	}
-}
-
-void Gamecontroller::update(double elapsed, Point& mouse) {
-	//std::clog << "Gamecontroller::update(" << elapsed << ", " << mouse << ")" << std::endl;
-	this->set_variables();
-	
-	if (this->state == ATIS) {
-		this->atis->update();
-		
-		if (this->atis->ok()) {
-			this->state = GAME;
-			this->game->set_runways(this->atis->get_departure_runway(), this->atis->get_landing_runway());
-		} 
 	} else if (this->state == GAME) {
 		this->game_time += elapsed;
 		
@@ -174,13 +162,27 @@ void Gamecontroller::update(double elapsed, Point& mouse) {
 		if (this->game->ok()) {
 			this->state = STAT;
 		}
-	} else if (this->state == STAT) {
-	
-	} else if (this->state == MENU) {
 		
+		this->gameview->clear_screen();
+		this->gameview->draw();
+		this->gameview->draw_airfield(this->game->get_active_field());
+		this->gameview->draw_planes(this->game->get_aircrafts(), this->game->get_selected(), mouse);
+		
+		if (this->game_time < (this->flash_message_begin + this->flash_message_time)) {
+			this->gameview->flash_message(this->message);
+		}
+		
+		this->gameview->render();
+	} else if (this->state == STAT) {
+		this->statview->clear_screen();
+		this->statview->draw();
+		this->statview->draw_points(this->game->get_points());
+		this->statview->render();
+	} else if (this->state == MENU) {
+		this->menuview->clear_screen();
+		this->menuview->draw();
+		this->menuview->render();
 	}
-	
-	this->draw_logic(mouse);
 }
 
 void Gamecontroller::set_flash_message(std::string message) {
@@ -224,14 +226,6 @@ void Gamecontroller::load_menu_items(std::string query, Menu*& menu) {
 	}
 }
 
-void Gamecontroller::load() {
-	std::clog << "Gamecontroller::load()" << std::endl;
-	
-	this->menu->load();
-	this->menuview->load();
-	this->load_menu_items("SELECT ICAO FROM airfields", this->menu);
-}
-
 void Gamecontroller::handle_text_input() {
 	//std::clog << "Gamecontroller::handle_text_input()" << std::endl;
     std::string t_command = this->command;
@@ -250,64 +244,19 @@ void Gamecontroller::handle_text_input() {
 			this->quicklist.push_back(command);
 		}
 	} else if (this->state == MENU) {
+		this->game->load(this->menu->get_selected().get_name());
+		this->atis->set_airfield(this->game->get_active_field());
+		this->metar.update(this->menu->get_selected().get_name());
+		this->atis->load();
+				
 		this->state = ATIS;
-		this->game->set_level(1);
-		
-		Menu_item ti = this->menu->get_selected();
-		this->menu = new Menu("runway-list-departure", "atis_base");
-		
-		this->game->load(ti.get_name());
-		this->metar.update(this->game->get_active_field()->get_name());
-		this->atis->load(this->game->get_active_field()->get_runways());
-		
-		std::vector <Runway> t_runways = this->game->get_active_field()->get_runways();
-		std::vector <Runway> :: iterator r = t_runways.begin();
-		
-		while (r != t_runways.end()) {
-			this->menu->add_item(r->get_name());
-			++r;
-		}
-		
-		delete this->menuview;
-		this->menuview = new Menuview(this->drawer, this->settings, this->menu);
-		this->menuview->load();
-		
-		this->atisview->load();
-		this->gameview->load();
-		this->statview->load();
-		this->settings.zoom = 110;
-		this->gameview->set_zoom(this->settings.zoom);
+		this->menuview->set_menu(menu);
 	} else if (this->state == ATIS) {
-		if (!this->atis->departure_runway_ok()) {
-			this->atis->set_departure_runway(this->menu->get_selected().get_name());
-		} else if (!this->atis->landing_runway_ok()) {
-			this->atis->set_landing_runway(this->menu->get_selected().get_name());
-			if (this->atis->landing_runway_ok()) {
-				delete this->menu;
-				this->menu = new Menu("transfer-altitude", "atis_base");
-				
-				std::vector <int> altitudes = this->atis->get_altitudes();
-				this->menu->add_items(altitudes);
-				
-				delete this->menuview;
-				this->menuview = new Menuview(this->drawer, this->settings, this->menu);
-				this->menuview->load();
-			}
-		} else if (!this->atis->transition_altitude_ok()) {
-			this->atis->set_transition_altitude(Tools::toint(this->menu->get_selected().get_name()));
-			if (this->atis->transition_altitude_ok()) {
-				delete this->menu;
-				this->menu = new Menu("transfer-level", "atis_base");
-				std::vector <int> levels = this->atis->get_levels(this->atis->get_transition_altitude());
-				this->menu->add_items(levels);
-				
-				delete this->menuview;
-				this->menuview = new Menuview(this->drawer, this->settings, this->menu);
-				this->menuview->load();
-			}
-		} else if (!this->atis->transfer_level_ok()) {
-			this->atis->set_transition_level(Tools::toint(this->menu->get_selected().get_name()));
-		} 
+		if (this->atis->ok() == true) {
+			this->state = GAME;
+		} else {
+			this->atis->set_value(this->menu->get_selected().get_name());
+		}
 	}
 }
 

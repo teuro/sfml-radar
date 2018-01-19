@@ -22,6 +22,8 @@ public:
 	void update();
 private:
 	Atis* atis;
+	
+	void draw_runways();
 };
 
 #endif // ATIS_VIEW

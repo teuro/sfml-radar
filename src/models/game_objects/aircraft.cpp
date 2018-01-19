@@ -14,9 +14,10 @@ Aircraft::Aircraft(std::string t_name, Settings& s, Airfield*& af, Atis*& a, Inp
 }
 
 Aircraft::Aircraft(std::string t_name, Settings& s, Airfield*& af, Atis*& a, Outpoint& op) : name(t_name), settings(s), airport(af), atis(a) {	
-	this->place 				= this->airport->get_runway(this->atis->get_departure_runway()).get_start_place();
-	this->altitude 				= this->settings.airfield_altitude;
-	this->heading 				= this->airport->get_runway(this->atis->get_departure_runway()).get_heading();
+	this->place 				= this->atis->get_departure_runway().get_start_place();
+	std::clog << place << std::endl;
+	this->altitude 				= this->airport->get_altitude();
+	this->heading 				= this->atis->get_departure_runway().get_heading();
 	this->speed					= 0;
 
 	this->target 				= op;

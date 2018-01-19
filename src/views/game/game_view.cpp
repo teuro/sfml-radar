@@ -5,7 +5,9 @@ double max_lat = 61.5;
 double min_lon = 23.0;
 double max_lon = 26.0;
 
-Drawable_plane::Drawable_plane(std::string call, std::string t_name, std::string t_class, std::string t_id) : Drawable_element(t_name, t_class, t_id), callsign(call) { }
+Drawable_plane::Drawable_plane(std::string call, std::string t_name, std::string t_class, std::string t_id) : Drawable_element(t_name, t_class, t_id), callsign(call) { 
+	
+}
 
 std::string Drawable_plane::get_callsign() {
 	return this->callsign;
@@ -15,11 +17,15 @@ void Drawable_plane::set_callsign(std::string call) {
 	this->callsign = call;
 }
 
-Gameview::Gameview(Drawsurface& d, Settings& s) : View(d, s) { }
+Gameview::Gameview(Drawsurface& d, Settings& s) : View(d, s) { 
+	this->loaded = false;
+}
 
 Gameview::~Gameview() { }
 
 void Gameview::load() {
+	std::clog << "Gameview::load()" << std::endl;
+	this->loaded = true;
 	View::load("game");
 }
 
@@ -28,9 +34,15 @@ void Gameview::update_command(std::string t_command) {
 }
 
 void Gameview::draw() {
-	this->centerpoint_screen.set_place(this->settings.screen_width / 2, this->settings.screen_height / 2);
+	if (!this->loaded) {
+		throw std::logic_error("Gameview is not loaded");
+	}
 	
+	this->centerpoint_screen.set_place(this->settings.screen_width / 2, this->settings.screen_height / 2);
 	this->inputs.back().set_value(this->command);
+	
+	this->calculate_coordinate_limits(this->settings.zoom);
+	this->update_command(this->command);
 	
 	this->View::draw();
 	

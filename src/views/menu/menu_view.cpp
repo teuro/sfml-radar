@@ -5,6 +5,7 @@ Menuview::Menuview(Drawsurface& d, Settings& s, Menu*& m) : View(d, s), menu(m) 
 Menuview::~Menuview() { }
 
 void Menuview::draw() { 
+	//std::clog << "Menuview::draw()" << std::endl;
 	View::draw();
 	
 	Drawable_list d_list("ul", this->menu->get_class(), this->menu->get_id());
@@ -29,4 +30,8 @@ void Menuview::draw() {
 void Menuview::load() { 
 	std::clog << "Menuview::load()" << std::endl;
 	View::load("menu");
+}
+
+void Menuview::set_menu(Menu*& menu) {
+	this->menu = menu;
 }

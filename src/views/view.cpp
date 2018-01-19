@@ -9,27 +9,31 @@ void View::add_style(std::list <Style> tmp) {
 }
 
 void View::load(std::string state) {
+	std::clog << "View::load(" << state << ")" << std::endl;
 	this->load_styles();
 	this->load_layout(state);
 }
 
 void View::load_styles() {
-	#ifdef DEBUG
 	std::clog << "View::load_styles()" << std::endl;
-	#endif
-	DIR *dir;
+	
+	DIR* dir;
 	struct dirent *ent;
+	
 	if ((dir = opendir (this->settings.style_folder.c_str())) != NULL) {
 		while ((ent = readdir (dir)) != NULL) {
 			std::string file_name = this->settings.style_folder + std::string(ent->d_name);
+			
 			if (file_name != "/." && file_name != "/..") {
 				this->add_style(this->parse_css(file_name));
 			}
 		}
 		closedir (dir);
-	} else {
-		std::cerr << "Directory not open" << std::endl;
-	}
+		
+		return;
+	} 
+	
+	throw std::logic_error("Directory not open");
 }
 
 std::map <std::string, std::string> View::get_info(TiXmlElement *pParm) {
@@ -42,9 +46,8 @@ std::map <std::string, std::string> View::get_info(TiXmlElement *pParm) {
 }
 
 void View::load_layout(std::string state) {
-	#ifdef DEBUG
 	std::clog << "View::load_layout(" << state << ")" << std::endl;
-	#endif
+	
 	TiXmlDocument doc;
 	bool load_ok = false;
 	
@@ -163,6 +166,7 @@ void View::draw_element(Image& img) {
 	#ifdef DEBUG
 	std::clog << "View::draw_element(Image& img)" << std::endl;
 	#endif
+	
 	Point place = img.get_style().get_place();
 	this->drawer.draw_picture(img.get_source(), place);
 }
@@ -202,8 +206,9 @@ void View::draw_borders(Style& style) {
 
 void View::draw_element(Paragraph& p) {
 	#ifdef DEBUG
-	std::clog << "View::draw_element(Paragraph& p)" << std::endl;
+	std::clog << "View::draw_element(Paragraph& p) " << p.get_content() << std::endl;
 	#endif
+	
 	Style st = p.get_style();
 	int color = st.get_text_color();
 	

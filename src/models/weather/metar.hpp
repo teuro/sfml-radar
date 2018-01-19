@@ -13,7 +13,7 @@
 /**
 	* Cloud represent abstract base of clouds
 	* @var type
-	* @var	altitude
+	* @var altitude
 **/
 
 struct Cloud {

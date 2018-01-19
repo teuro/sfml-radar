@@ -35,6 +35,10 @@ bool Runway::operator ==(std::string name) {
     return this->name == name;
 }
 
+bool Runway::operator ==(Runway& runway) {
+    return this->name == runway.get_name();
+}
+
 double Runway::get_glidepath() {
 	return 3.0;
 }

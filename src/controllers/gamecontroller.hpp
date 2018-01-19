@@ -144,7 +144,6 @@ protected:
 private:
 	void set_variables();
 	void calculate_fps();
-	void draw_logic(Point& mouse);
 	void load_menu_items(std::string query, Menu*& menu);
 
 	std::list <Clearance> clearances;
@@ -159,7 +158,8 @@ private:
 	Metar metar;
 	Atis* atis;
 	Menu* menu;
-    int function_key;
+	Menu* airports;
+	int function_key;
 	double game_time;
 	double flash_message_begin;
 	double flash_message_time;
