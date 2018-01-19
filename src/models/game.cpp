@@ -23,17 +23,6 @@ void Game::load(std::string airfield) {
 	this->loaded = true;
 }
 
-void Game::set_runways(std::string t_departure, std::string t_landing) {
-	std::clog << "Game::set_runways(" << t_departure << ", " << t_landing << ")" << std::endl;
-	
-	this->departure = this->active_field->get_runway(t_departure);
-	this->landing = this->active_field->get_runway(t_landing);
-	
-	for (unsigned int i = 0; i < 3; ++i) {
-		create_plane();
-	}
-}
-
 Airfield* Game::get_active_field() {
 	if (this->active_field == NULL) {
 		throw std::logic_error("Game::get_active_field() this->active_field == NULL");

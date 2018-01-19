@@ -82,8 +82,6 @@ public:
     **/
 	void update(double elapsed);
 	
-	void set_runways(std::string t_departure, std::string t_landing);
-	
 	/**
         * Select a plane
         * @param std::string callsign

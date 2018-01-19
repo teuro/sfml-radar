@@ -135,7 +135,6 @@ void Gamecontroller::update(double elapsed, Point& mouse) {
 		if (this->atis->ok()) {
 			this->state = GAME;
 			this->gameview->load();
-			this->game->set_runways(this->atis->get_departure_runway().get_name(), this->atis->get_landing_runway().get_name());
 		} 
 		
 		this->menu = this->atis->get_menu();
