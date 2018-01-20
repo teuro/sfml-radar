@@ -48,5 +48,4 @@ private:
 	std::vector <Navpoint> navpoints;
 };
 
-
 #endif // _AIRFIELD_HPP

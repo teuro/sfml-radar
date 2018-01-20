@@ -424,13 +424,17 @@ std::list <Style> View::parse_css(std::string file) {
     std::string id;
     std::string s_class;
     std::string name;
-
+	int line_number = 1;
+	int block_open = 0;
+	
     std::list <Style> tmp;
 
     while (std::getline(fin, line)) {
 		size_t found = line.find("{");
 		
         if (found != std::string::npos) {
+			++block_open;
+			
 			Style t(this->settings);
 			
 			if (line.substr(0, 1) == "#") {
@@ -449,11 +453,23 @@ std::list <Style> View::parse_css(std::string file) {
 			
 			tmp.push_back(t);
         } else if (line.substr(0, 1) != "}" && line != "") {
-            std::string key     = Tools::trim(line.substr(0, line.find(":")));
-            std::string value   = Tools::trim(line.substr(line.find(":")+1));
+			size_t found = line.find(":");
+			if (found != std::string::npos) {
+				std::string key     = Tools::trim(line.substr(0, line.find(":")));
+				std::string value   = Tools::trim(line.substr(line.find(":")+1));
 
-            tmp.back().set_attribute(key, value);
+				tmp.back().set_attribute(key, value);
+			} else {
+				throw std::logic_error("Unexpected style in file " + file + " line " + Tools::tostr(line_number));
+			}
+		} else if (line.substr(0, 1) == "}") {
+			--block_open;
+			if (block_open != 0) {
+				throw std::logic_error("css file " + file + " not well formed. Before line " + Tools::tostr(line_number));
+			}
 		}
+		
+		++line_number;
     }
 
     fin.close();
