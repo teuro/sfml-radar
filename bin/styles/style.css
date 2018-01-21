@@ -11,6 +11,12 @@
 	color: rgb(150, 150, 90);
 }
 
+input {
+	top: 630px;
+	left: 30px;
+	color: rgb(150, 30, 30);
+}
+
 .userinput {
 	top: 630px;
 	left: 30px;

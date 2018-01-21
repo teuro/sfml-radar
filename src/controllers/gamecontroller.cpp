@@ -162,6 +162,7 @@ void Gamecontroller::update(double elapsed, Point& mouse) {
 			this->state = STAT;
 		}
 		
+		this->gameview->update_command(this->command);
 		this->gameview->clear_screen();
 		this->gameview->draw();
 		this->gameview->draw_airfield(this->game->get_active_field());

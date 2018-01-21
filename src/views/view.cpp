@@ -12,6 +12,13 @@ void View::load(std::string state) {
 	std::clog << "View::load(" << state << ")" << std::endl;
 	this->load_styles();
 	this->load_layout(state);
+	
+	try {
+		this->body = this->find_style("body");
+	} catch (std::runtime_error& re) {
+		std::cerr << re.what() << std::endl;
+		this->body.set_attribute("background-color", 0);
+	}
 }
 
 void View::load_styles() {
@@ -152,7 +159,8 @@ void View::clear_screen() {
 	#ifdef DEBUG
 	std::clog << "View::clear_screen()" << std::endl;
 	#endif
-    drawer.clear_screen();
+	
+	drawer.clear_screen(body.get_background_color());
 }
 
 void View::render() {
@@ -485,4 +493,14 @@ void View::flash_message(std::string message) {
 	Paragraph p(message, "p", "message", "flash");
 	this->style(p);
 	this->draw_element(p);
+}
+
+Style View::find_style(std::string name) {
+	std::list <Style> :: iterator searched = std::find(this->styles.begin(), this->styles.end(), name);
+	
+	if (searched != this->styles.end()) {
+		return *searched;
+	}
+	
+	throw std::runtime_error("Searched style name '" + name + "' not found");
 }

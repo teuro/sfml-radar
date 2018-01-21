@@ -43,6 +43,10 @@ public:
 	void set_place(Point& place);
 	
 	friend std::ostream& operator << (std::ostream& virta, const Style& style);
+	
+	bool operator ==(std::string name) {
+		return this->name == name;
+	}
 protected:
 private:
     Point place; /* top left corner */

@@ -68,6 +68,8 @@ private:
 	void load_styles();
 	void load_layout(std::string state);
 	std::map <std::string, std::string> get_info(TiXmlElement *pParm);
+	Style find_style(std::string name); 
+	Style body;
 };
 
 #endif

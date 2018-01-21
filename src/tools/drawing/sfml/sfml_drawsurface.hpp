@@ -44,7 +44,9 @@ public:
 
 	unsigned int get_fontsize();
 	void flip();
-	void clear_screen();
+	void clear_screen(int red, int green, int blue);
+	void clear_screen(int color);
+	void clear_screen(std::string color);
 protected:
 private:
 	sf::RenderWindow& window;
