@@ -16,6 +16,7 @@ class Drawsurface {
 protected:
 	std::vector <int> colors;
 	virtual std::vector <int> convert(int color) = 0;
+	virtual int convert(int red, int green, int blue) = 0;
 public:
 	bool font_loaded;
 	unsigned int font_size;

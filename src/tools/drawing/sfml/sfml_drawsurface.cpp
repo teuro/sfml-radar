@@ -177,6 +177,12 @@ std::vector <int> sfml_drawsurface::convert(int color) {
 	return t;
 }
 
+int sfml_drawsurface::convert(int red, int green, int blue) {
+	int color = (red * 65536) + (green * 256) + blue
+	
+	return color;
+}
+
 int sfml_drawsurface::get_text_length(std::string text, int font_size) {
 	if (!font_loaded) {
 		this->load_font("arial.ttf", font_size);

@@ -51,6 +51,7 @@ protected:
 private:
 	sf::RenderWindow& window;
 	sf::Font font;
+	virtual int convert(int red, int green, int blue);
 };
 
 #endif // SFML_DRAWSURFACE_HPP
