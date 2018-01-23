@@ -9,14 +9,32 @@
 
 #include <string>
 #include <vector>
+#include <map>
 
 #include "../../models/coordinate/point.hpp"
 
+class My_Color {
+public:
+	int red;
+	int green;
+	int blue;
+	
+	My_Color(int r, int g, int b) : red(r), green(g), blue(b) { }
+	My_Color(int c) : color(c) { this->calculate(); }
+private:
+	int color;
+	
+	void calculate() {
+		this->blue = this->color % 256;
+		this->color /= 256;
+		this->red = this->color / 256;
+		this->green = this->color % 256;
+	}
+};
+
 class Drawsurface {
 protected:
-	std::vector <int> colors;
-	virtual std::vector <int> convert(int color) = 0;
-	virtual int convert(int red, int green, int blue) = 0;
+	std::map <std::string, My_Color*> color_map;
 public:
 	bool font_loaded;
 	unsigned int font_size;

@@ -3,6 +3,7 @@
 sfml_drawsurface::sfml_drawsurface(sf::RenderWindow& w) : window(w) {
 	this->font_loaded = false;
 	this->font_size = 16;
+	this->color_map.insert(std::make_pair("red", new My_Color(250, 10, 10)));
 }
 
 sfml_drawsurface::~sfml_drawsurface() { }
@@ -16,10 +17,9 @@ void sfml_drawsurface::circleColor(Point& a, unsigned int radius, int red, int g
 	this->window.draw(circle);
 }
 
-void sfml_drawsurface::circleColor(Point& a, unsigned int radius, int color) {
-	this->colors = this->convert(color);
-	
-	circleColor(a, radius, this->colors[0], this->colors[1], this->colors[2]);
+void sfml_drawsurface::circleColor(Point& a, unsigned int radius, int t_color) {
+	My_Color color(t_color);
+	circleColor(a, radius, color.red, color.green, color.blue);
 }
 
 void sfml_drawsurface::draw_picture(std::string file, Point& a) {
@@ -54,10 +54,10 @@ void sfml_drawsurface::draw_text(std::string text, Point& a, int red, int green,
 	this->window.draw(_text);
 }
 
-void sfml_drawsurface::draw_text(std::string text, Point& a, int color, int font_size) {
-	this->colors = this->convert(color);
+void sfml_drawsurface::draw_text(std::string text, Point& a, int t_color, int font_size) {
+	My_Color color(t_color);
 	
-	sfml_drawsurface::draw_text(text, a, this->colors[0], this->colors[1], this->colors[2], font_size);
+	sfml_drawsurface::draw_text(text, a, color.red, color.green, color.blue, font_size);
 }
 
 void sfml_drawsurface::load_font(std::string _font, unsigned int font_size) {
@@ -74,10 +74,10 @@ void sfml_drawsurface::flip() {
 	this->window.display();
 }
 
-void sfml_drawsurface::lineColor(Point& a, Point& b, int color) {
-	this->colors = this->convert(color);
+void sfml_drawsurface::lineColor(Point& a, Point& b, int t_color) {
+	My_Color color(t_color);
 	
-	lineColor(a, b, this->colors[0], this->colors[1], this->colors[2]);
+	lineColor(a, b, color.red, color.green, color.blue);
 }
 
 void sfml_drawsurface::lineColor(Point& a, Point& b, int red, int green, int blue) {
@@ -96,12 +96,9 @@ void sfml_drawsurface::rectangleColor(Point& a, Point& b, int red, int green, in
 
     sf::Color fclr(red, green, blue);
 	
-	int o_blue = border_color % 256;
-	border_color /= 256;
-	int o_red = border_color / 256;
-	int o_green = border_color % 256;
+	My_Color color(border_color);
 	
-    sf::Color oclr(o_red, o_green, o_blue);
+    sf::Color oclr(color.red, color.green, color.blue);
 	
     rect.setOutlineColor(oclr);
     rect.setOutlineThickness(5);
@@ -112,10 +109,10 @@ void sfml_drawsurface::rectangleColor(Point& a, Point& b, int red, int green, in
 	this->window.draw(rect);
 }
 
-void sfml_drawsurface::rectangleColor(Point& a, Point& b, int color, int border_color) {
-	this->colors = this->convert(color);
+void sfml_drawsurface::rectangleColor(Point& a, Point& b, int t_color, int border_color) {
+	My_Color color(t_color);
 	
-	sfml_drawsurface::rectangleColor(a, b, this->colors[0], this->colors[1], this->colors[2], border_color);
+	sfml_drawsurface::rectangleColor(a, b, color.red, color.green, color.blue, border_color);
 }
 
 void sfml_drawsurface::rectangleColor(Point& a, unsigned int length, int red, int green, int blue, int border_color) {
@@ -123,10 +120,10 @@ void sfml_drawsurface::rectangleColor(Point& a, unsigned int length, int red, in
 	sfml_drawsurface::rectangleColor(a, b, red, green, blue, border_color);
 }
 
-void sfml_drawsurface::trigonColor(Point& a, unsigned int size, int color) {
-	this->colors = this->convert(color);
+void sfml_drawsurface::trigonColor(Point& a, unsigned int size, int t_color) {
+	My_Color color(t_color);
 	
-	trigonColor(a, size, this->colors[0], this->colors[1], this->colors[2]);
+	trigonColor(a, size, color.red, color.green, color.blue);
 }
 
 void sfml_drawsurface::trigonColor(Point& a, unsigned int size, int red, int green, int blue) {
@@ -148,39 +145,20 @@ void sfml_drawsurface::clear_screen(int red, int green, int blue) {
 	this->window.clear(background);
 }
 
-void sfml_drawsurface::clear_screen(int color) {
+void sfml_drawsurface::clear_screen(int t_color) {
 	//std::clog << "sfml_drawsurface::clear_screen(" << color << ")" << std::endl;
 	
-	int o_blue = color % 256;
-	color /= 256;
-	int o_red = color / 256;
-	int o_green = color % 256;
+	My_Color color(t_color);
 	
-	this->clear_screen(o_red, o_green, o_blue);
+	this->clear_screen(color.red, color.green, color.blue);
 }
 
 void sfml_drawsurface::clear_screen(std::string color) {
+	if (this->color_map.find(color) != this->color_map.end()) {
+		this->clear_screen(this->color_map[color]->red, this->color_map[color]->green, this->color_map[color]->blue);
+	}
 	
-}
-
-std::vector <int> sfml_drawsurface::convert(int color) {
-	std::vector <int> t;
-	int blue = color % 256;
-	color /= 256;
-	int red = color / 256;
-	int green = color % 256;
-	
-	t.push_back(red);
-	t.push_back(green);
-	t.push_back(blue);
-	
-	return t;
-}
-
-int sfml_drawsurface::convert(int red, int green, int blue) {
-	int color = (red * 65536) + (green * 256) + blue
-	
-	return color;
+	throw std::logic_error("Requested color name '" + color + "' is not available");
 }
 
 int sfml_drawsurface::get_text_length(std::string text, int font_size) {

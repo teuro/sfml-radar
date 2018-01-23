@@ -16,8 +16,6 @@ public:
 	sfml_drawsurface(sf::RenderWindow& window);
 	~sfml_drawsurface();
 	
-	std::vector <int> convert (int color);
-	
 	void rectangleColor(Point& a, Point& b, int color, int border_color = 0);
     void rectangleColor(Point& a, Point& b, int red, int green, int blue, int border_color = 0);
     void rectangleColor(Point& a, unsigned int length, int red, int green, int blue, int border_color = 0);
@@ -51,7 +49,6 @@ protected:
 private:
 	sf::RenderWindow& window;
 	sf::Font font;
-	virtual int convert(int red, int green, int blue);
 };
 
 #endif // SFML_DRAWSURFACE_HPP
