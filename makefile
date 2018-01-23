@@ -56,7 +56,7 @@ all: gui
 gui: $(GUI_BIN)
 
 clean:
-	@echo [RM] $(call rm_rf,build html bin/*.exe)
+	@echo [RM] $(call rm_rf, build html)
 clean_deps:
 	@echo [RM] $(call rm_rf,$(FILES_DEP))
 clean_html:
