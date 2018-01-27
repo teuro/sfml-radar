@@ -9,6 +9,8 @@ public:
 	
 	My_Color(int r, int g, int b);
 	My_Color(int c);
+	
+	int get_color();
 private:
 	int color;
 	

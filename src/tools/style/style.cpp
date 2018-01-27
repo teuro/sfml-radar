@@ -68,11 +68,10 @@ void Style::set_attribute(std::string key, std::string value) {
     } else if (key == "height") {
         this->height = Tools::tonumber<int>(value);
     } else if (key == "color") {
-        std::sscanf(value.c_str(), "rgb(%i, %i, %i);", &r, &g, &b);
-        this->text_color = (r * 256 + g) * 256 + b;
+        this->text_color = this->parse_color(value);
     } else if (key == "background-color") {
-        std::sscanf(value.c_str(), "rgb(%i, %i, %i);", &r, &g, &b);
-        this->background_color = (r * 256 + g) * 256 + b;
+        this->background_color = this->parse_color(value);
+		std::clog << this->background_color << std::endl;
     } else if (key == "class") {
         this->s_class = value;
     } else if (key == "name") {
@@ -86,9 +85,27 @@ void Style::set_attribute(std::string key, std::string value) {
 	} else if (key == "margin") {
 		this->margin = Tools::tonumber<int>(value);
 	} else if (key == "border") {
-		std::sscanf(value.c_str(), "rgb(%i, %i, %i);", &r, &g, &b);
-        this->border_color = (r * 256 + g) * 256 + b;
+		this->border_color = this->parse_color(value);
 	}
+}
+
+int Style::parse_color(std::string color) {
+	int red, green, blue;
+	std::string color_name;
+	
+	if (std::sscanf(color.c_str(), "rgb(%i, %i, %i);", &red, &green, &blue) == 3) {
+		return (red * 256 + green) * 256 + blue;
+	} else { 
+		std::size_t found = color.find(";");
+		
+		if (found == std::string::npos) {
+			color_name = color;
+		} else {
+			color_name = color.substr(0, found);
+		}
+		
+		return this->settings.colors[color_name]->get_color();
+	} 
 }
 
 std::string Style::get_id() {

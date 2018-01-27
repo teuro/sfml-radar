@@ -9,10 +9,12 @@
 #include <iostream>
 #include <cstdlib>
 #include <cstdio>
+#include <list>
 #include "../tools.hpp"
 #include "../text_tools.hpp"
 #include "../settings.hpp"
 #include "../../models/coordinate/point.hpp"
+#include "../drawing/mycolor.hpp"
 
 class Style {
 public:
@@ -66,9 +68,12 @@ private:
 	int top;
 	int margin;
 	
-	int r, g, b; /* pure help variables */
-	
 	Settings settings;
+	
+	template <class T>
+	
+	int parse_color(int color);
+	int parse_color(std::string color);
 };
 
 #endif // STYLE_HPP

@@ -16,7 +16,7 @@
 
 class Drawsurface {
 protected:
-	std::map <std::string, My_Color*> color_map;
+	
 public:
 	bool font_loaded;
 	unsigned int font_size;
@@ -48,7 +48,6 @@ public:
 	virtual void flip() = 0;
 	virtual void clear_screen(int red, int green, int blue) = 0;
 	virtual void clear_screen(int color) = 0;
-	virtual void clear_screen(std::string color) = 0;
 
     virtual ~Drawsurface() { }
 };

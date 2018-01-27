@@ -3,7 +3,6 @@
 sfml_drawsurface::sfml_drawsurface(sf::RenderWindow& w) : window(w) {
 	this->font_loaded = false;
 	this->font_size = 16;
-	this->color_map.insert(std::make_pair("red", new My_Color(250, 10, 10)));
 }
 
 sfml_drawsurface::~sfml_drawsurface() { }
@@ -151,14 +150,6 @@ void sfml_drawsurface::clear_screen(int t_color) {
 	My_Color color(t_color);
 	
 	this->clear_screen(color.red, color.green, color.blue);
-}
-
-void sfml_drawsurface::clear_screen(std::string color) {
-	if (this->color_map.find(color) != this->color_map.end()) {
-		this->clear_screen(this->color_map[color]->red, this->color_map[color]->green, this->color_map[color]->blue);
-	}
-	
-	throw std::logic_error("Requested color name '" + color + "' is not available");
 }
 
 int sfml_drawsurface::get_text_length(std::string text, int font_size) {

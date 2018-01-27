@@ -4,6 +4,7 @@
 #include <map>
 #include <string>
 #include "tools.hpp"
+#include "drawing/mycolor.hpp"
 #include "coordinate_tools.hpp"
 
 enum turn 		{LEFT = -1, RIGHT = 1};
@@ -80,6 +81,7 @@ public:
 	std::string style_folder;
 	int display_clearance_errors;
 	Coordinate centerpoint;
+	std::map <std::string, My_Color*> colors;
 };
 
 #endif
