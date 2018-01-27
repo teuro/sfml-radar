@@ -100,8 +100,8 @@ void Gamecontroller::set_variables() {
 	this->gameview->repl["[PCNT]"] = Tools::tostr(this->game->get_game_points());
 	this->gameview->repl["[CLRE]"] = Tools::tostr(this->game->get_clearance_error());
 	this->gameview->repl["[GRE]"] = Tools::tostr(this->game->get_game_error());
-	this->gameview->repl["[MXA]"] = Tools::tostr(Tools::round_nearest(Tools::rad2deg(this->game->get_landing_runway().get_heading()) + this->settings.approach_angle, 10));
-	this->gameview->repl["[MNA]"] = Tools::tostr(Tools::round_nearest(Tools::rad2deg(this->game->get_landing_runway().get_heading()) - this->settings.approach_angle, 10));
+	this->gameview->repl["[MXA]"] = Tools::tostr(Tools::round_nearest(Tools::rad2deg(this->atis->get_landing_runway().get_heading()) + this->settings.approach_angle, 10));
+	this->gameview->repl["[MNA]"] = Tools::tostr(Tools::round_nearest(Tools::rad2deg(this->atis->get_landing_runway().get_heading()) - this->settings.approach_angle, 10));
 	
 	if (this->game->get_selected() != NULL) {
 		this->gameview->repl["[PLNA]"] = Tools::tostr(Tools::rad2deg(this->game->get_selected()->get_heading()));
@@ -191,8 +191,6 @@ void Gamecontroller::set_flash_message(std::string message) {
 }
 
 void Gamecontroller::handle_mouse_click(Point& mouse) {
-	this->metar.update("EFHK");
-	
 	if (this->state == GAME) {
 		this->game->selected = NULL;
 

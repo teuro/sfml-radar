@@ -112,8 +112,6 @@ public:
 	void clear_errors();
 	int get_level();
 	void set_level(int level);
-	Runway get_landing_runway() { return this->landing; }
-	Runway get_departure_runway() { return this->departure; }
 private:
 	int level;
     void load_airfield(std::string icao);
@@ -140,8 +138,6 @@ private:
 	std::string command;
 
     Airfield* active_field;
-    Runway departure;
-    Runway landing;
 	Atis*& atis;
 
     double duration;

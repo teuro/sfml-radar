@@ -94,7 +94,7 @@ void Game::handle_holdings() {
         }
 
         Aircraft* t = this->holdings.front();
-        t->set_place(this->departure.get_start_place());
+        t->set_place(this->atis->get_departure_runway().get_start_place());
         t->set_takeoff_clearance();
 		this->aircrafts.push_back(t);
         this->holdings.pop();
