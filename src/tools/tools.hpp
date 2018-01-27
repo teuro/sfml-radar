@@ -95,7 +95,15 @@ namespace Tools {
         return tmp;
 	}
 	
-	//int hex2int(std::hex hexa);
+	/**
+		* hex2int
+		* Converts #... format hex string to int
+		* represent color code
+		* @param std::string
+		* @return int
+	**/
+	
+	int hex2int(std::string hexa);
 	
 	/**
 		* rnd

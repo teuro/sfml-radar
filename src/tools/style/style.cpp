@@ -104,12 +104,7 @@ int Style::parse_color(std::string color) {
 			color = color.substr(0, found);
 		}
 		
-		unsigned int x;   
-		std::stringstream ss;
-		ss << std::hex << color;
-		ss >> x;
-		
-		return x;
+		return Tools::hex2int(color);
 	} else { 
 		std::size_t found = color.find(";");
 		

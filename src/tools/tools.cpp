@@ -64,3 +64,12 @@ int Tools::round_nearest(double number, int multiple) {
 double Tools::nm2ft(double nm) {
 	return nm * milestofeets;
 }
+
+int Tools::hex2int(std::string hexa) {
+	unsigned int color;
+	std::stringstream ss;
+	ss << std::hex << hexa;
+	ss >> color;
+	
+	return color;
+}
