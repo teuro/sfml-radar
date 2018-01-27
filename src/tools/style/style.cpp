@@ -71,7 +71,6 @@ void Style::set_attribute(std::string key, std::string value) {
         this->text_color = this->parse_color(value);
     } else if (key == "background-color") {
         this->background_color = this->parse_color(value);
-		std::clog << this->background_color << std::endl;
     } else if (key == "class") {
         this->s_class = value;
     } else if (key == "name") {
