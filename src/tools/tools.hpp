@@ -95,6 +95,8 @@ namespace Tools {
         return tmp;
 	}
 	
+	//int hex2int(std::hex hexa);
+	
 	/**
 		* rnd
 		* Returns pseudo random integer

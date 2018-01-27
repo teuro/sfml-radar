@@ -94,6 +94,22 @@ int Style::parse_color(std::string color) {
 	
 	if (std::sscanf(color.c_str(), "rgb(%i, %i, %i);", &red, &green, &blue) == 3) {
 		return (red * 256 + green) * 256 + blue;
+	} else if (color.substr(0, 1 ) == "#") {
+		color = color.substr(1);
+		std::size_t found = color.find(";");
+
+		if (found == std::string::npos) {
+			color = color;
+		} else {
+			color = color.substr(0, found);
+		}
+		
+		unsigned int x;   
+		std::stringstream ss;
+		ss << std::hex << color;
+		ss >> x;
+		
+		return x;
 	} else { 
 		std::size_t found = color.find(";");
 		
