@@ -1,3 +1,7 @@
+body {
+	background-color: rgb(40, 30, 40);
+}
+
 #infolist {
 	top: 10px;
 	left: 20px;
