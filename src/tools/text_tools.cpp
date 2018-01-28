@@ -11,10 +11,6 @@ bool Tools::is_match(std::string a, std::string b) {
 }
 
 std::vector <std::string> Tools::split(std::string delimiter, std::string input) {
-	if (input.length() == 0) {
-		throw std::logic_error("input can't be empty");
-	}
-
     std::vector <std::string> tmp_cells;
 	
     while (true) {
