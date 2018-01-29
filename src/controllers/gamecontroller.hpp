@@ -70,7 +70,7 @@ public:
 	
 	/**
 		* get_centerpoint
-		* Sets new centerpoint for settings
+		* get centerpoint from settings
 		* @param void
 		* @return Coordinate&
 	**/
@@ -132,14 +132,6 @@ public:
 	
     bool is_ok();
 	
-	/**
-		* get_active_field
-		* Returns pointer to active_field
-		* @param void
-		* @return Airfield*
-	**/
-	
-    Airfield* get_active_field();
 protected:
 private:
 	void set_variables();
@@ -168,6 +160,5 @@ private:
 	int state;
 	void set_flash_message(std::string message);
 };
-
 
 #endif // GAMECONTROLLER_HPP

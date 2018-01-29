@@ -171,19 +171,6 @@ double Game::get_duration() {
     return this->duration;
 }
 
-void Game::select_aircraft(std::string callsign) {
-    this->selected = NULL;
-
-    std::list <Aircraft*> :: iterator plane;
-
-    for (plane = this->aircrafts.begin(); plane != this->aircrafts.end(); ++plane) {
-        if (callsign == (*plane)->get_name()) {
-            this->selected = (*plane);
-			return;
-        }
-    }
-}
-
 Inpoint Game::select_inpoint() {
 	Inpoint t_inpoint = Tools::random_object<Inpoint>(this->active_field->get_inpoints());
 	

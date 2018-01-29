@@ -40,6 +40,7 @@ public:
         * Game main class
         * @param Settings& s game settiungs
     **/
+	
 	Game(Settings& s, Atis*& atis);
 	~Game();
 
@@ -70,9 +71,10 @@ public:
 
     /**
         Loads game needed variables
-        * @param void
+        * @param std::string
         * @return void
     **/
+	
 	void load(std::string airfield);
 
     /**
@@ -80,16 +82,23 @@ public:
         * @param double elapsed
         * @return void
     **/
+	
 	void update(double elapsed);
+
+	/**
+		* Returns selected plane
+		* @param void
+		* return Aircraft*
+	**/
+	
+	Aircraft* get_selected();
 	
 	/**
-        * Select a plane
-        * @param std::string callsign
-        * @return void
+		* Returns selected airfield
+		* @param void
+		* return Airfield*
 	**/
-	void select_aircraft(std::string callsign);
-
-	Aircraft* get_selected();
+	
 	Airfield* get_active_field();
 	
 	void create_plane();

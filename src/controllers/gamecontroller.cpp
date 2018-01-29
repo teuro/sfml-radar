@@ -103,10 +103,6 @@ void Gamecontroller::set_variables() {
 	this->gameview->repl["[MXA]"] = Tools::tostr(Tools::round_nearest(Tools::rad2deg(this->atis->get_landing_runway().get_heading()) + this->settings.approach_angle, 10));
 	this->gameview->repl["[MNA]"] = Tools::tostr(Tools::round_nearest(Tools::rad2deg(this->atis->get_landing_runway().get_heading()) - this->settings.approach_angle, 10));
 	
-	if (this->game->get_selected() != NULL) {
-		this->gameview->repl["[PLNA]"] = Tools::tostr(Tools::rad2deg(this->game->get_selected()->get_heading()));
-	}
-	
 	this->atisview->repl["[METAR]"] = this->metar.to_string();
 	//this->atisview->repl["[LEV]"] = Tools::tostr(this->game->get_level());
 	this->atisview->repl["[DEPARTURE]"] = this->atis->get_departure_runway().get_name();
