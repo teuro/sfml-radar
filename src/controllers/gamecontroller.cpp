@@ -2,7 +2,7 @@
 
 Gamecontroller::Gamecontroller(Settings& s, Drawsurface& d) : Controller(s, d) { 
 	Metar metar;
-	this->gameview = new Gameview(this->drawer, this->settings);
+	
 	this->atis = new Atis(this->settings, this->metar);
 	this->game = new Game(this->settings, this->atis);
 	
@@ -17,13 +17,9 @@ Gamecontroller::Gamecontroller(Settings& s, Drawsurface& d) : Controller(s, d) {
 }
 
 Gamecontroller::~Gamecontroller() { 
-	delete this->gameview;
-	delete this->atisview;
-	delete this->statview;
-	delete this->menuview;
 	delete this->game;
 	delete this->atis;
-	//delete this->menu;
+	delete this->menu;
 }
 
 void Gamecontroller::load() {
@@ -35,9 +31,15 @@ void Gamecontroller::load() {
 	this->load_menu_items("SELECT ICAO FROM airfields", this->airports);
 	this->menu = this->airports;
 	
-	this->atisview 	= new Atisview(this->drawer, this->settings, this->atis);
-	this->statview 	= new Statview(this->drawer, this->settings);
-	this->menuview 	= new Menuview(this->drawer, this->settings, this->menu);
+	std::auto_ptr <Gameview> gv (new Gameview(this->drawer, this->settings));
+	std::auto_ptr <Atisview> av (new Atisview(this->drawer, this->settings, this->atis));
+	std::auto_ptr <Statview> sv (new Statview(this->drawer, this->settings));
+	std::auto_ptr <Menuview> mv (new Menuview(this->drawer, this->settings, this->menu));
+	
+	this->gameview = gv;
+	this->atisview = av;
+	this->statview = sv;
+	this->menuview = mv;
 	
 	this->menuview->load();
 	this->atisview->load();
@@ -75,6 +77,9 @@ void Gamecontroller::handle_mouse_wheel(int amount) {
 }
 
 void Gamecontroller::set_variables() {
+	#ifdef DEBUG
+	std::clog << "Gamecontroller::set_variables()" << std::endl;
+	#endif
 	this->menuview->repl["[MPL]"] = Tools::tostr(this->settings.max_planes);
 	this->menuview->repl["[RQD]"] = Tools::tostr(this->settings.required_handled);
 	this->menuview->repl["[LEV]"] = Tools::tostr(this->game->get_level());
@@ -123,11 +128,16 @@ void Gamecontroller::calculate_fps() {
 }
 
 void Gamecontroller::update(double elapsed, Point& mouse) {
-	//std::clog << "Gamecontroller::update(" << elapsed << ", " << mouse << ")" << std::endl;
+	#ifdef DEBUG
+	std::clog << "Gamecontroller::update(" << elapsed << ", " << mouse << ")" << std::endl;
+	#endif
 	
 	this->set_variables();
 	
 	if (this->state == ATIS) {
+		#ifdef DEBUG
+		std::clog << "state of the game " << this->state << std::endl;
+		#endif
 		if (this->atis->ok()) {
 			this->state = GAME;
 			this->gameview->load();
@@ -141,6 +151,9 @@ void Gamecontroller::update(double elapsed, Point& mouse) {
 		this->menuview->draw();
 		this->atisview->render();
 	} else if (this->state == GAME) {
+		#ifdef DEBUG
+		std::clog << "state of the game " << this->state << std::endl;
+		#endif
 		this->game_time += elapsed;
 		
 		if (flash_message_begin + flash_message_time < game_time) {
@@ -170,11 +183,19 @@ void Gamecontroller::update(double elapsed, Point& mouse) {
 		
 		this->gameview->render();
 	} else if (this->state == STAT) {
+		#ifdef DEBUG
+		std::clog << "state of the game " << this->state << std::endl;
+		#endif
+		
 		this->statview->clear_screen();
 		this->statview->draw();
 		this->statview->draw_points(this->game->get_points());
 		this->statview->render();
 	} else if (this->state == MENU) {
+		#ifdef DEBUG
+		std::clog << "state of the game " << this->state << std::endl;
+		#endif
+		
 		this->menuview->clear_screen();
 		this->menuview->draw();
 		this->menuview->render();

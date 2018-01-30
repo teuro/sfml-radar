@@ -27,7 +27,10 @@ void View::load_styles() {
 	DIR* dir;
 	struct dirent *ent;
 	
-	if ((dir = opendir (this->settings.style_folder.c_str())) != NULL) {
+	dir = opendir(this->settings.style_folder.c_str());
+	
+	if (dir != NULL) {	
+		std::clog << "View::Style folder opened" << std::endl;
 		while ((ent = readdir (dir)) != NULL) {
 			std::string file_name = this->settings.style_folder + std::string(ent->d_name);
 			
@@ -67,6 +70,8 @@ void View::load_layout(std::string state) {
 	} else if (state == "menu") {
 		load_ok = doc.LoadFile(this->settings.layout_menu_file_name.c_str());
 	}	
+	
+	std::clog << "Layout file loaded" << std::endl;
 	
 	if (!load_ok) {
 		throw std::logic_error("layout-file " + state + ".xml not ok");
@@ -153,6 +158,8 @@ void View::load_layout(std::string state) {
             pParm = pParm->NextSiblingElement();
         }
 	}
+	
+	std::clog << "Layout file parsed" << std::endl;
 }
 
 void View::clear_screen() {
@@ -342,21 +349,41 @@ void View::draw() {
         draw_element(*image);
     }
 	
+	#ifdef DEBUG
+	std::clog << "View::draw() -> images drawed" << std::endl;
+	#endif
+	
 	for (paragraph = this->paragraphs.begin(); paragraph !=  this->paragraphs.end(); ++paragraph) {
         draw_element(*paragraph);
     }
+	
+	#ifdef DEBUG
+	std::clog << "View::draw() -> paragraphs drawed" << std::endl;
+	#endif
 	
 	for (input = this->inputs.begin(); input !=  this->inputs.end(); ++input) {
         draw_element(*input);
     }
 	
+	#ifdef DEBUG
+	std::clog << "View::draw() -> inputs drawed" << std::endl;
+	#endif
+	
 	for (table = this->tables.begin(); table !=  this->tables.end(); ++table) {
         draw_element(*table);
     }
 	
+	#ifdef DEBUG
+	std::clog << "View::draw() -> tables drawed" << std::endl;
+	#endif
+	
 	for (list = this->lists.begin(); list !=  this->lists.end(); ++list) {
         draw_element(*list);
     }
+	
+	#ifdef DEBUG
+	std::clog << "View::draw() -> lists drawed" << std::endl;
+	#endif
 }
 
 void View::draw_element(Drawable_list& dl) {
@@ -394,6 +421,7 @@ void View::draw_element(Drawable_table& dt) {
 	#ifdef DEBUG
 	std::clog << "View::draw_element(Drawable_table& dt)" << std::endl;
 	#endif
+	
 	int color = dt.get_style().get_text_color();
 	Point place = dt.get_style().get_place();
 	int font_size = this->drawer.get_fontsize() + 5;
@@ -401,11 +429,19 @@ void View::draw_element(Drawable_table& dt) {
 	std::list <Row> t_list = dt.get_rows();
 	std::list <Row> :: iterator rit = t_list.begin();
 	
+	#ifdef DEBUG 
+	std::clog << "Count of rows " <<  t_list.size() << std::endl;
+	#endif
+	
 	int length = this->drawer.get_text_length(dt.get_max_length(), 16) + 15;
 	
 	while (rit != t_list.end()) {
 		std::list <Cell> c_list = rit->get_cells();
 		std::list <Cell> :: iterator cit = c_list.begin();
+		
+		#ifdef DEBUG 
+		std::clog << "Count of cells " <<  c_list.size() << std::endl;
+		#endif
 		
 		int t_color = rit->get_style().get_text_color();
 			
@@ -414,6 +450,9 @@ void View::draw_element(Drawable_table& dt) {
 		}
 		
 		while (cit != c_list.end()) {
+			#ifdef DEBUG
+			std::clog << (*cit).get_content() << std::endl;
+			#endif
 			this->draw_element(Tools::replace((*cit).get_content(), repl), place, color);
 			++cit;
 			place.change_x(length);

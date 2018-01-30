@@ -142,10 +142,11 @@ private:
 	std::list <std::string> quicklist;
 	std::list <std::string> :: iterator quick_iterator;
 	std::list <std::string> matching_elements(std::string input);
-    Gameview* gameview;
-    Atisview* atisview;
-    Statview* statview;
-    Menuview* menuview;
+    std::auto_ptr <Gameview> gameview;
+    std::auto_ptr <Atisview> atisview;
+    std::auto_ptr <Statview> statview;
+    std::auto_ptr <Menuview> menuview;
+
     Game* game;
 	Metar metar;
 	Atis* atis;
