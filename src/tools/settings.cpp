@@ -11,13 +11,24 @@ Settings::Settings() {
 	this->bind_term = " = "; 
 	this->sleep = 50;
 	this->display_clearance_errors = 4000;
-	this->colors["red"] = new My_Color(250, 10, 10);
-	this->colors["blue"] = new My_Color(10, 10, 250);
-	this->colors["green"] = new My_Color(10, 250, 10);
-	this->colors["yellow"] = new My_Color(255, 242, 0);
+	
+	this->load();
 }
 
 Settings::~Settings() { }
+
+void Settings::load() {
+	Queryresult colors_result = Database::get_result("SELECT * FROM colors");
+	
+	for (unsigned int i = 0; i < colors_result.size(); ++i) {
+		int red = Tools::tonumber<int>(colors_result(i, "red"));
+		int green = Tools::tonumber<int>(colors_result(i, "green"));
+		int blue = Tools::tonumber<int>(colors_result(i, "blue"));
+		std::string name = colors_result(i, "name");
+		
+		this->colors[name] = new My_Color(red, green, blue);
+	}
+}
 
 void Settings::set_values(std::map<std::string, std::string> values ) {
     this->screen_width                  = Tools::toint(values["screen_width"]);

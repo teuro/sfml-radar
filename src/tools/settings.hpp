@@ -6,6 +6,7 @@
 #include "tools.hpp"
 #include "drawing/mycolor.hpp"
 #include "coordinate_tools.hpp"
+#include "database/database.hpp"
 
 enum turn 		{LEFT = -1, RIGHT = 1};
 enum types 		{DEPARTURE, APPROACH};
@@ -17,6 +18,8 @@ public:
 	Settings();
 	~Settings();
 	void set_values(std::map <std::string, std::string> values);
+	
+	void load();
 
     int screen_width;
     int screen_height;
