@@ -79,7 +79,7 @@ public:
 		* @return void
 	**/
 	
-	void draw_airfield(Airfield* airfield);
+	void draw_airfield(std::shared_ptr <Airfield> airfield);
 	
 	/**
 		* Gameview draw_planes

@@ -13,7 +13,7 @@
 
 class Atisview : public View {
 public:
-	Atisview(Drawsurface& d, Settings& s, Atis*& a);
+	Atisview(Drawsurface& d, Settings& s, std::shared_ptr <Atis> a);
 	~Atisview();
 	void draw();
     void load();
@@ -21,7 +21,7 @@ public:
 	void draw_errors();
 	void update();
 private:
-	Atis* atis;
+	std::shared_ptr <Atis> atis;
 	
 	void draw_runways();
 };

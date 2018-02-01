@@ -169,7 +169,7 @@ double Gameview::distanceNM(double pixels) {
 	return (this->settings.zoom * pixels) / center2corner;
 }
 
-void Gameview::draw_airfield(Airfield* airfield) {
+void Gameview::draw_airfield(std::shared_ptr <Airfield> airfield) {
     std::vector <Runway> runways = airfield->get_runways();
     std::vector <Navpoint> navpoints = airfield->get_navpoints();
 	int color = 1524875;
