@@ -7,7 +7,6 @@
 #include <stdexcept>
 
 #include "queryresult.hpp"
-#include "../settings.hpp"
 #include "../text_tools.hpp"
 
 /**
@@ -15,8 +14,6 @@
     * Tiny wrapper interface to gather data
 	* Database does NOT storage any data, so You just receive raw data.
 **/
-
-class Settings;
 
 class Database {
 public:
