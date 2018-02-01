@@ -10,9 +10,8 @@
 #include "../text_tools.hpp"
 
 /**
-    * namespace Database
-    * Tiny wrapper interface to gather data
-	* Database does NOT storage any data, so You just receive raw data.
+    * Class Database
+    * This is responsible for every database actions
 **/
 
 class Database {
@@ -39,6 +38,17 @@ public:
     **/
 
     std::string bind_param(std::string query_string, std::map <std::string, std::string> variables);
+	
+	 /**
+        * bind_param
+        * Adds specified variable to query string
+		* You may specify Your own search term and bind term if it's nessecery, but defaults works just fine as well.
+		* Technically it would be better to define search and bind terms somewhere else, but for now this is more than enough
+        * @param query_string
+        * @param variables
+        * @return std::string
+    **/
+	
     std::string bind_param(std::string query_string, std::list <std::string> variables);
 };
 
