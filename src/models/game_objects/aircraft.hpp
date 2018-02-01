@@ -27,7 +27,7 @@ public:
 		* @param Inpoint& in
 	**/
 	
-    Aircraft(std::string name, Settings& settings, Airfield*& airport, Atis*& atis, Inpoint& in);
+    Aircraft(std::string name, Settings& settings, std::shared_ptr <Airfield> airport, std::shared_ptr <Atis> a, Inpoint& in);
 	
 	/** 
 		* Departure constructor
@@ -38,7 +38,7 @@ public:
 		* @param Outpoint& out
 	**/
 	
-    Aircraft(std::string name, Settings& settings, Airfield*& airport, Atis*& atis, Outpoint& out);
+    Aircraft(std::string name, Settings& settings, std::shared_ptr <Airfield> airport, std::shared_ptr <Atis> a, Outpoint& out);
 	
     ~Aircraft();
 	
@@ -127,8 +127,8 @@ private:
 	Navpoint target;
 	Coordinate approach_target;
 	Runway landing;
-	Airfield*& airport;
-	Atis*& atis;
+	std::shared_ptr <Airfield> airport;
+	std::shared_ptr <Atis> atis;
 	std::string approach_config_error;
 };
 

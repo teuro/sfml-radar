@@ -47,12 +47,12 @@ public:
 	
 	void set_value(std::string value);
 	
-	void set_airfield(Airfield* airfield);
+	void set_airfield(std::shared_ptr <Airfield> airfield);
 protected:
 private:
     Settings& settings;
 	Metar& metar;
-	Airfield* active_field;
+	std::shared_ptr <Airfield> active_field;
     int transition_level;
     int transition_altitude;
     Runway departure_runway;

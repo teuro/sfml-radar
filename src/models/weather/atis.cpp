@@ -256,7 +256,7 @@ void Atis::set_value(std::string value) {
 	}
 }
 
-void Atis::set_airfield(Airfield* airfield) {
+void Atis::set_airfield(std::shared_ptr <Airfield> airfield) {
 	this->active_field = airfield;
 	
 	for (auto name: this->active_field->get_runways()) {

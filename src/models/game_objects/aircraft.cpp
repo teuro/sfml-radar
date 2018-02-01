@@ -1,6 +1,6 @@
 #include "aircraft.hpp"
 
-Aircraft::Aircraft(std::string t_name, Settings& s, Airfield*& af, Atis*& a, Inpoint& ip) : name(t_name), settings(s), airport(af), atis(a) {
+Aircraft::Aircraft(std::string t_name, Settings& s, std::shared_ptr <Airfield> af, std::shared_ptr <Atis> a, Inpoint& ip) : name(t_name), settings(s), airport(af), atis(a) {
 	this->place 				= ip.get_place();
 	this->heading 				= ip.get_heading();
 	this->altitude 				= ip.get_altitude();
@@ -13,7 +13,7 @@ Aircraft::Aircraft(std::string t_name, Settings& s, Airfield*& af, Atis*& a, Inp
 	this->load();
 }
 
-Aircraft::Aircraft(std::string t_name, Settings& s, Airfield*& af, Atis*& a, Outpoint& op) : name(t_name), settings(s), airport(af), atis(a) {	
+Aircraft::Aircraft(std::string t_name, Settings& s, std::shared_ptr <Airfield> af, std::shared_ptr <Atis> a, Outpoint& op) : name(t_name), settings(s), airport(af), atis(a) {	
 	this->place 				= this->atis->get_departure_runway().get_start_place();
 	std::clog << place << std::endl;
 	this->altitude 				= this->airport->get_altitude();

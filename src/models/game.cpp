@@ -1,6 +1,6 @@
 #include "game.hpp"
 
-Game::Game(Settings& s, Atis*& a) : settings(s), atis(a) {
+Game::Game(Settings& s, std::shared_ptr <Atis> a) : settings(s), atis(a) {
     this->duration = 0;
 	this->selected = NULL;
 	this->loaded = false;
@@ -23,7 +23,7 @@ void Game::load(std::string airfield) {
 	this->loaded = true;
 }
 
-Airfield* Game::get_active_field() {
+std::shared_ptr <Airfield> Game::get_active_field() {
 	if (this->active_field == NULL) {
 		throw std::logic_error("Game::get_active_field() this->active_field == NULL");
 	}
@@ -70,10 +70,7 @@ bool Game::is_free(Inpoint& navpoint) {
     std::list <Aircraft*> :: iterator plane;
 
     for (plane = this->aircrafts.begin(); plane != this->aircrafts.end(); ++plane) {
-        if (
-            Tools::distanceNM(navpoint.get_place(), (*plane)->get_place()) < this->settings.separation_horizontal &&
-            std::abs((*plane)->get_altitude() - navpoint.get_altitude()) < this->settings.separation_vertical
-        ) {
+        if (Tools::distanceNM(navpoint.get_place(), (*plane)->get_place()) < this->settings.separation_horizontal && std::abs((*plane)->get_altitude() - navpoint.get_altitude()) < this->settings.separation_vertical) {
             return false;
         }
     }
@@ -190,6 +187,7 @@ bool Game::check_aircrafts(std::string name) {
 }
 
 void Game::create_plane() {
+	Database db(this->settings);
 	if (this->active_field == NULL) {
 		throw std::logic_error("Airfield not ready");
 	}
@@ -202,7 +200,7 @@ void Game::create_plane() {
 	
 	Outpoint t_outpoint = Tools::random_object<Outpoint>(this->active_field->get_outpoints());
 	
-	Queryresult airlines = Database::get_result("SELECT ICAO FROM airlines");
+	Queryresult airlines = db.get_result("SELECT ICAO FROM airlines");
 	
 	int t_type = Tools::rnd(1, 100);
 	
@@ -239,10 +237,12 @@ void Game::load_navpoints(int airfield_id) {
 	
 	variables.push_back(Tools::tostr(airfield_id));
 	
+	Database db(this->settings);
+	
 	try {
-		std::string query = Database::bind_param("SELECT name, latitude, longitude, altitude, heading, type FROM navpoints WHERE airfield_id = ?", variables);
+		std::string query = db.bind_param("SELECT name, latitude, longitude, altitude, heading, type FROM navpoints WHERE airfield_id = ?", variables);
 		
-		Queryresult q_navpoints = Database::get_result(query);
+		Queryresult q_navpoints = db.get_result(query);
 		
 		for (unsigned int i = 0; i < q_navpoints.size(); ++i) {
 			double t_lat = Tools::tonumber<double>(q_navpoints(i, "latitude"));
@@ -273,10 +273,12 @@ void Game::load_runways(int airfield_id) {
 	
 	variables.push_back(Tools::tostr(airfield_id));
 	
+	Database db(this->settings);
+	
 	try {
-		std::string query = Database::bind_param("SELECT name, start_latitude, start_longitude, end_latitude, end_longitude FROM runways WHERE airfield_id = ?", variables);
+		std::string query = db.bind_param("SELECT name, start_latitude, start_longitude, end_latitude, end_longitude FROM runways WHERE airfield_id = ?", variables);
 		
-		Queryresult q_runways = Database::get_result(query);
+		Queryresult q_runways = db.get_result(query);
 
 		for (unsigned int i = 0; i < q_runways.size(); ++i) {
 			double s_lat = Tools::tonumber<double>(q_runways(i, "start_latitude"));
@@ -303,13 +305,16 @@ void Game::load_airfield(std::string icao) {
 	std::list <std::string> t_airport;
 	t_airport.push_back(icao);
 	
-    Queryresult airport = Database::get_result(Database::bind_param("SELECT ROWID AS airfield_id, ICAO, latitude, longitude, altitude, max_speed, initial_altitude, acceleration_altitude FROM airfields WHERE ICAO = '?'", t_airport));
+	Database db(this->settings);
+	
+    Queryresult airport = db.get_result(db.bind_param("SELECT ROWID AS airfield_id, ICAO, latitude, longitude, altitude, max_speed, initial_altitude, acceleration_altitude FROM airfields WHERE ICAO = '?'", t_airport));
 	
 	int airfield_id = Tools::toint(airport(0, "airfield_id"));
 
     Coordinate place(Tools::tonumber<double>(airport(0, "latitude")), Tools::tonumber<double>(airport(0, "longitude")));
 	
-    this->active_field = new Airfield(airport(0, "ICAO"), place, Tools::toint(airport(0, "max_speed")), Tools::toint(airport(0, "initial_altitude")), Tools::toint(airport(0, "acceleration_altitude")));
+	std::shared_ptr <Airfield> ap (new Airfield(airport(0, "ICAO"), place, Tools::toint(airport(0, "max_speed")), Tools::toint(airport(0, "initial_altitude")), Tools::toint(airport(0, "acceleration_altitude"))));
+    this->active_field = ap;
 	
 	this->settings.airfield_altitude = Tools::toint(airport(0, "altitude"));
 	this->settings.centerpoint = place;

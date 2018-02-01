@@ -142,16 +142,20 @@ private:
 	std::list <std::string> quicklist;
 	std::list <std::string> :: iterator quick_iterator;
 	std::list <std::string> matching_elements(std::string input);
-    std::auto_ptr <Gameview> gameview;
-    std::auto_ptr <Atisview> atisview;
-    std::auto_ptr <Statview> statview;
-    std::auto_ptr <Menuview> menuview;
+	
+    std::shared_ptr <Gameview> gameview;
+    std::shared_ptr <Atisview> atisview;
+    std::shared_ptr <Statview> statview;
+    std::shared_ptr <Menuview> menuview;
 
-    Game* game;
+    std::shared_ptr <Game> game;
+	std::shared_ptr <Atis> atis;
+
 	Metar metar;
-	Atis* atis;
+
 	Menu* menu;
 	Menu* airports;
+
 	int function_key;
 	double game_time;
 	double flash_message_begin;

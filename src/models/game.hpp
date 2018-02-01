@@ -41,7 +41,7 @@ public:
         * @param Settings& s game settiungs
     **/
 	
-	Game(Settings& s, Atis*& atis);
+	Game(Settings& s, std::shared_ptr <Atis> a);
 	~Game();
 
 	/**
@@ -99,7 +99,7 @@ public:
 		* return Airfield*
 	**/
 	
-	Airfield* get_active_field();
+	std::shared_ptr <Airfield> get_active_field();
 	
 	void create_plane();
 	void build_clearance(std::string command);
@@ -146,9 +146,8 @@ private:
 	
 	std::string command;
 
-    Airfield* active_field;
-	Atis*& atis;
-
+    std::shared_ptr <Airfield> active_field;
+	std::shared_ptr <Atis> atis;
     double duration;
 	double pop_holdings;
     int separation_errors;

@@ -3,8 +3,11 @@
 Gamecontroller::Gamecontroller(Settings& s, Drawsurface& d) : Controller(s, d) { 
 	Metar metar;
 	
-	this->atis = new Atis(this->settings, this->metar);
-	this->game = new Game(this->settings, this->atis);
+	std::shared_ptr <Atis> a(new Atis(this->settings, this->metar));
+	this->atis = a;
+	
+	std::shared_ptr <Game> g(new Game(this->settings, this->atis));
+	this->game = g;
 	
 	this->settings.zoom = 110;
 	this->frames = 0;
@@ -17,8 +20,6 @@ Gamecontroller::Gamecontroller(Settings& s, Drawsurface& d) : Controller(s, d) {
 }
 
 Gamecontroller::~Gamecontroller() { 
-	delete this->game;
-	delete this->atis;
 	delete this->menu;
 }
 
@@ -31,10 +32,10 @@ void Gamecontroller::load() {
 	this->load_menu_items("SELECT ICAO FROM airfields", this->airports);
 	this->menu = this->airports;
 	
-	std::auto_ptr <Gameview> gv (new Gameview(this->drawer, this->settings));
-	std::auto_ptr <Atisview> av (new Atisview(this->drawer, this->settings, this->atis));
-	std::auto_ptr <Statview> sv (new Statview(this->drawer, this->settings));
-	std::auto_ptr <Menuview> mv (new Menuview(this->drawer, this->settings, this->menu));
+	std::shared_ptr <Gameview> gv (new Gameview(this->drawer, this->settings));
+	std::shared_ptr <Atisview> av (new Atisview(this->drawer, this->settings, this->atis));
+	std::shared_ptr <Statview> sv (new Statview(this->drawer, this->settings));
+	std::shared_ptr <Menuview> mv (new Menuview(this->drawer, this->settings, this->menu));
 	
 	this->gameview = gv;
 	this->atisview = av;
@@ -231,7 +232,9 @@ void Gamecontroller::load_menu_items(std::string query, Menu*& menu) {
 	std::list <std::string> arguments;
 	arguments.push_back(this->command);
 	
-	Queryresult list = Database::get_result(Database::bind_param(query, arguments));
+	Database db(this->settings);
+	
+	Queryresult list = db.get_result(db.bind_param(query, arguments));
 	
 	for (unsigned int i = 0; i < list.size(); ++i) {
 		std::string name = list(i, "ICAO");
