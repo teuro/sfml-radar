@@ -30,7 +30,7 @@
 
 class View {
 public:
-	View(Drawsurface& d, Settings& s);
+	View(Drawsurface& d, std::shared_ptr <Settings> s);
 	virtual ~View() = 0;
 	void draw();
 	void render();
@@ -44,7 +44,7 @@ public:
 	virtual void flash_message(std::string message);
 protected:
     Drawsurface& drawer;
-    Settings& settings;
+    std::shared_ptr <Settings> settings;
     std::list <Style> styles;
     void draw_element(Image& img);
     void draw_element(Paragraph& p);

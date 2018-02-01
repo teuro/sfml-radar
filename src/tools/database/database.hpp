@@ -20,9 +20,7 @@ class Settings;
 
 class Database {
 public:
-	Database(Settings& s);
-	
-	Settings& settings;
+	Database();
 	
 	/**
         * Make a query and returns data

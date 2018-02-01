@@ -30,7 +30,7 @@ public:
 		* @param Settings&
 		* @param Drawsurface&
 	**/
-    Gamecontroller(Settings& s, Drawsurface& d);
+    Gamecontroller(std::shared_ptr <Settings> s, Drawsurface& d);
     ~Gamecontroller();
 	/**
 		* handle_function_keys

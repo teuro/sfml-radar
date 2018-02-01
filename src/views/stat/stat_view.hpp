@@ -12,7 +12,7 @@
 
 class Statview : public View {
 public:
-	Statview(Drawsurface& d, Settings& s);
+	Statview(Drawsurface& d, std::shared_ptr <Settings> s);
 	~Statview();
 	void draw();
     void load();

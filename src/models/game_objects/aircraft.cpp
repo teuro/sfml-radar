@@ -1,6 +1,6 @@
 #include "aircraft.hpp"
 
-Aircraft::Aircraft(std::string t_name, Settings& s, std::shared_ptr <Airfield> af, std::shared_ptr <Atis> a, Inpoint& ip) : name(t_name), settings(s), airport(af), atis(a) {
+Aircraft::Aircraft(std::string t_name, std::shared_ptr <Settings> s, std::shared_ptr <Airfield> af, std::shared_ptr <Atis> a, Inpoint& ip) : name(t_name), settings(s), airport(af), atis(a) {
 	this->place 				= ip.get_place();
 	this->heading 				= ip.get_heading();
 	this->altitude 				= ip.get_altitude();
@@ -13,7 +13,7 @@ Aircraft::Aircraft(std::string t_name, Settings& s, std::shared_ptr <Airfield> a
 	this->load();
 }
 
-Aircraft::Aircraft(std::string t_name, Settings& s, std::shared_ptr <Airfield> af, std::shared_ptr <Atis> a, Outpoint& op) : name(t_name), settings(s), airport(af), atis(a) {	
+Aircraft::Aircraft(std::string t_name, std::shared_ptr <Settings> s, std::shared_ptr <Airfield> af, std::shared_ptr <Atis> a, Outpoint& op) : name(t_name), settings(s), airport(af), atis(a) {	
 	this->place 				= this->atis->get_departure_runway().get_start_place();
 	std::clog << place << std::endl;
 	this->altitude 				= this->airport->get_altitude();
@@ -70,14 +70,14 @@ bool Aircraft::check_approach_config() {
 	bool speed_ok = true;
 	bool altitude_ok = true;
 	
-	double min_approach_angle = Tools::fix_angle(this->landing.get_heading() - Tools::deg2rad(this->settings.approach_angle));
-	double max_approach_angle = Tools::fix_angle(this->landing.get_heading() + Tools::deg2rad(this->settings.approach_angle));
+	double min_approach_angle = Tools::fix_angle(this->landing.get_heading() - Tools::deg2rad(this->settings->approach_angle));
+	double max_approach_angle = Tools::fix_angle(this->landing.get_heading() + Tools::deg2rad(this->settings->approach_angle));
 	
 	//std::clog << "Min angle " << min_approach_angle << " max angle " << max_approach_angle << " plane heading " << this->heading << std::endl;
 	
 	this->approach_config_error = "";
 	
-	if (this->altitude > this->settings.max_approach_altitude) {
+	if (this->altitude > this->settings->max_approach_altitude) {
 		altitude_ok = false;
 		this->approach_config_error += " Altide is incorrect ";
 	}
@@ -87,7 +87,7 @@ bool Aircraft::check_approach_config() {
 		this->approach_config_error += " heading is incorrect ";
 	} 
 	
-	if (this->speed > this->settings.max_approach_speed) {
+	if (this->speed > this->settings->max_approach_speed) {
 		speed_ok = false;
 		this->approach_config_error += " speed is incorrect ";
 	}
@@ -124,26 +124,26 @@ void Aircraft::update(double elapsed) {
 			double t_distance = Tools::nm2ft(Tools::distanceNM(this->place, this->landing.get_start_place()));
 			double target_approach_altitude = std::tan(Tools::deg2rad(this->landing.get_glidepath())) * t_distance;
 			
-			if (this->altitude - this->settings.airfield_altitude < 1200) {
+			if (this->altitude - this->settings->airfield_altitude < 1200) {
 				this->clearance_speed = this->vapp;
 			} 
 			
-			if (this->altitude - this->settings.airfield_altitude < 800) {
+			if (this->altitude - this->settings->airfield_altitude < 800) {
 				this->clearance_speed = this->vapp-7;
 			} 
 			
-			if (this->altitude - this->settings.airfield_altitude < 300) {
+			if (this->altitude - this->settings->airfield_altitude < 300) {
 				this->clearance_speed = this->vland;
 			}
 			
-			if (this->altitude > this->settings.airfield_altitude) {
+			if (this->altitude > this->settings->airfield_altitude) {
 				if (this->altitude > target_approach_altitude) {
 					this->altitude = target_approach_altitude;
 				}
 			} 
 			
 			if (Tools::on_area(this->place, this->landing.get_start_place())) {
-				this->altitude = this->settings.airfield_altitude;
+				this->altitude = this->settings->airfield_altitude;
 				this->landed = true;
 			}  else if (Tools::on_area(this->place, this->landing.get_approach_place()) && this->final_approach == false) {
 				this->approach_target = this->landing.get_start_place();
@@ -154,7 +154,7 @@ void Aircraft::update(double elapsed) {
 		} else {
 			this->clearance_speed = 10;
 			this->heading = this->landing.get_heading();
-			this->altitude = this->settings.airfield_altitude;
+			this->altitude = this->settings->airfield_altitude;
 		}
 	} else if (this->direct) {
 		this->calculate_angle_target(this->target.get_place());
@@ -191,7 +191,7 @@ void Aircraft::change_speed(double elapsed) {
 		if (std::abs(this->speed - this->clearance_speed) < (0.01 * this->clearance_speed)) {
 			this->speed = this->clearance_speed;
 		} else {
-			this->speed += (elapsed / 1000) * this->settings.speed_change * multiply;
+			this->speed += (elapsed / 1000) * this->settings->speed_change * multiply;
 		}
 	}
 }
@@ -203,7 +203,7 @@ void Aircraft::change_altitude(double elapsed) {
 		if (std::abs(this->altitude - this->clearance_altitude) < (0.01 * this->clearance_altitude)) {
 			this->altitude = this->clearance_altitude;
 		} else {
-			this->altitude += (elapsed / 1000) * this->settings.altitude_change * multiply;
+			this->altitude += (elapsed / 1000) * this->settings->altitude_change * multiply;
 		}
 	}
 }
@@ -213,7 +213,7 @@ void Aircraft::change_heading(double elapsed) {
 		if (std::abs(this->heading - this->clearance_heading) < (0.01 * this->clearance_heading)) {
 			this->heading = this->clearance_heading;
 		} else {
-			this->heading += (elapsed / 1000) * Tools::deg2rad(this->settings.heading_change) * this->turn;
+			this->heading += (elapsed / 1000) * Tools::deg2rad(this->settings->heading_change) * this->turn;
 		}
 	}
 }

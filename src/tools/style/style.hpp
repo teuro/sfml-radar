@@ -19,7 +19,7 @@
 class Style {
 public:
     Style();
-    Style(Settings& s);
+    Style(std::shared_ptr <Settings> s);
     ~Style();
 
     std::string get_id();
@@ -68,7 +68,7 @@ private:
 	int top;
 	int margin;
 	
-	Settings settings;
+	std::shared_ptr <Settings> settings;
 	
 	template <class T>
 	

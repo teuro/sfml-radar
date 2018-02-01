@@ -1,5 +1,5 @@
 #include "stat_view.hpp"
-Statview::Statview(Drawsurface& d, Settings& s) : View(d, s) { }
+Statview::Statview(Drawsurface& d, std::shared_ptr <Settings> s) : View(d, s) { }
 
 Statview::~Statview() { }
 

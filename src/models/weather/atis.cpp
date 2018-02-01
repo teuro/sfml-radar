@@ -1,6 +1,6 @@
 #include "atis.hpp"
 
-Atis::Atis(Settings& s, Metar& m) : settings(s), metar(m) { 
+Atis::Atis(std::shared_ptr <Settings> s, Metar& m) : settings(s), metar(m) { 
 	this->transition_altitude = 0;
 	this->transition_level = 0;
 	
@@ -22,7 +22,7 @@ void Atis::load() {
 	for (unsigned int i = 0; i < altitudes.size(); ++i) {
 		int base = altitudes[i] / 100 - 5;
 		
-		for (int j = 1;  j < this->settings.transition_levels; ++j) {
+		for (int j = 1;  j < this->settings->transition_levels; ++j) {
 			this->levels[altitudes[i]].push_back(base);
 			base += 5;
 		}

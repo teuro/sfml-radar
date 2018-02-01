@@ -1,6 +1,6 @@
 #include "game.hpp"
 
-Game::Game(Settings& s, std::shared_ptr <Atis> a) : settings(s), atis(a) {
+Game::Game(std::shared_ptr <Settings> s, std::shared_ptr <Atis> a) : settings(s), atis(a) {
     this->duration = 0;
 	this->selected = NULL;
 	this->loaded = false;
@@ -51,8 +51,8 @@ void Game::check_collision() {
                 continue;
             }
 
-            if ((*plane_a)->get_altitude() >= 1000 && (*plane_b)->get_altitude() >= 1000 && std::abs((*plane_a)->get_altitude() - (*plane_b)->get_altitude()) < this->settings.separation_vertical) {
-                if (Tools::distanceNM((*plane_a)->get_place(), (*plane_b)->get_place()) < this->settings.separation_horizontal) {
+            if ((*plane_a)->get_altitude() >= 1000 && (*plane_b)->get_altitude() >= 1000 && std::abs((*plane_a)->get_altitude() - (*plane_b)->get_altitude()) < this->settings->separation_vertical) {
+                if (Tools::distanceNM((*plane_a)->get_place(), (*plane_b)->get_place()) < this->settings->separation_horizontal) {
                     this->errors.push_back((*plane_a));
                     this->errors.push_back((*plane_b));
 
@@ -70,7 +70,7 @@ bool Game::is_free(Inpoint& navpoint) {
     std::list <Aircraft*> :: iterator plane;
 
     for (plane = this->aircrafts.begin(); plane != this->aircrafts.end(); ++plane) {
-        if (Tools::distanceNM(navpoint.get_place(), (*plane)->get_place()) < this->settings.separation_horizontal && std::abs((*plane)->get_altitude() - navpoint.get_altitude()) < this->settings.separation_vertical) {
+        if (Tools::distanceNM(navpoint.get_place(), (*plane)->get_place()) < this->settings->separation_horizontal && std::abs((*plane)->get_altitude() - navpoint.get_altitude()) < this->settings->separation_vertical) {
             return false;
         }
     }
@@ -95,7 +95,7 @@ void Game::handle_holdings() {
         t->set_takeoff_clearance();
 		this->aircrafts.push_back(t);
         this->holdings.pop();
-		this->pop_holdings += this->settings.departure_separation * 1000 * 60;
+		this->pop_holdings += this->settings->departure_separation * 1000 * 60;
 	}
 }
 
@@ -157,9 +157,9 @@ void Game::update(double elapsed) {
         (*it)->set_separation_error(true);
     }
 
-    if (this->duration > this->new_plane && this->settings.required_handled > this->handled_planes + this->aircrafts.size() + this->holdings.size()) {
+    if (this->duration > this->new_plane && this->settings->required_handled > this->handled_planes + this->aircrafts.size() + this->holdings.size()) {
         create_plane();
-        double time_for_next_plane = Tools::rnd(this->settings.new_plane_lower * 1000, this->settings.new_plane_upper * 1000);
+        double time_for_next_plane = Tools::rnd(this->settings->new_plane_lower * 1000, this->settings->new_plane_upper * 1000);
 		this->new_plane += time_for_next_plane;
     }
 }
@@ -187,7 +187,7 @@ bool Game::check_aircrafts(std::string name) {
 }
 
 void Game::create_plane() {
-	Database db(this->settings);
+	Database db;
 	if (this->active_field == NULL) {
 		throw std::logic_error("Airfield not ready");
 	}
@@ -237,7 +237,7 @@ void Game::load_navpoints(int airfield_id) {
 	
 	variables.push_back(Tools::tostr(airfield_id));
 	
-	Database db(this->settings);
+	Database db;
 	
 	try {
 		std::string query = db.bind_param("SELECT name, latitude, longitude, altitude, heading, type FROM navpoints WHERE airfield_id = ?", variables);
@@ -273,7 +273,7 @@ void Game::load_runways(int airfield_id) {
 	
 	variables.push_back(Tools::tostr(airfield_id));
 	
-	Database db(this->settings);
+	Database db;
 	
 	try {
 		std::string query = db.bind_param("SELECT name, start_latitude, start_longitude, end_latitude, end_longitude FROM runways WHERE airfield_id = ?", variables);
@@ -289,7 +289,7 @@ void Game::load_runways(int airfield_id) {
 			Coordinate start_p(s_lat, s_lon);
 			Coordinate end_p(e_lat, e_lon);
 			double angle = Tools::fix_angle(Tools::angle(start_p, end_p) - Tools::get_PI());
-			Coordinate approach = Tools::calculate(start_p, angle, this->settings.approach_point_distance);
+			Coordinate approach = Tools::calculate(start_p, angle, this->settings->approach_point_distance);
 
 			Runway rwy(q_runways(i, "name"), start_p, end_p, approach);
 			
@@ -305,7 +305,7 @@ void Game::load_airfield(std::string icao) {
 	std::list <std::string> t_airport;
 	t_airport.push_back(icao);
 	
-	Database db(this->settings);
+	Database db;
 	
     Queryresult airport = db.get_result(db.bind_param("SELECT ROWID AS airfield_id, ICAO, latitude, longitude, altitude, max_speed, initial_altitude, acceleration_altitude FROM airfields WHERE ICAO = '?'", t_airport));
 	
@@ -316,8 +316,8 @@ void Game::load_airfield(std::string icao) {
 	std::shared_ptr <Airfield> ap (new Airfield(airport(0, "ICAO"), place, Tools::toint(airport(0, "max_speed")), Tools::toint(airport(0, "initial_altitude")), Tools::toint(airport(0, "acceleration_altitude"))));
     this->active_field = ap;
 	
-	this->settings.airfield_altitude = Tools::toint(airport(0, "altitude"));
-	this->settings.centerpoint = place;
+	this->settings->airfield_altitude = Tools::toint(airport(0, "altitude"));
+	this->settings->centerpoint = place;
 	
 	this->load_navpoints(airfield_id);
 	this->load_runways(airfield_id);
@@ -380,10 +380,10 @@ void Game::build_clearance(std::string command) {
 				}
 			} else if (Tools::trim(tmp[0]) == "speed") {
 				value = Tools::toint(s_value);
-				if (value > this->settings.clearance_speed_upper) {
-					display_messages.push("Maximum clearance speed is " + Tools::tostr(this->settings.clearance_speed_upper) + " knots");
-				} else if (value < this->settings.clearance_speed_lower) {
-					display_messages.push("Minimum clearance speed is " + Tools::tostr(this->settings.clearance_speed_upper) + " knots");
+				if (value > this->settings->clearance_speed_upper) {
+					display_messages.push("Maximum clearance speed is " + Tools::tostr(this->settings->clearance_speed_upper) + " knots");
+				} else if (value < this->settings->clearance_speed_lower) {
+					display_messages.push("Minimum clearance speed is " + Tools::tostr(this->settings->clearance_speed_upper) + " knots");
 				} else { 
 					this->selected->set_clearance_speed(value);
 				}
@@ -395,8 +395,8 @@ void Game::build_clearance(std::string command) {
 					display_messages.push("Plane must be approaching not departing");
 				}
 			} else if (Tools::trim(tmp[0]) == "direct") {
-				if (this->selected->get_altitude() < this->settings.shortcut) {
-					display_messages.push("Unable to comply because altitude must be greater than " + Tools::tostr(this->settings.shortcut) + " ft");
+				if (this->selected->get_altitude() < this->settings->shortcut) {
+					display_messages.push("Unable to comply because altitude must be greater than " + Tools::tostr(this->settings->shortcut) + " ft");
 				} else {
 					if (this->selected->get_type() == DEPARTURE) {
 						this->selected->set_clearance_direct(s_value);
@@ -491,7 +491,7 @@ int Game::get_new_plane() {
 }
 
 bool Game::ok() {
-	return (this->handled_planes == this->settings.required_handled);
+	return (this->handled_planes == this->settings->required_handled);
 }
 
 int Game::get_level() {

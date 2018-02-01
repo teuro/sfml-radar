@@ -17,7 +17,7 @@ void Drawable_plane::set_callsign(std::string call) {
 	this->callsign = call;
 }
 
-Gameview::Gameview(Drawsurface& d, Settings& s) : View(d, s) { 
+Gameview::Gameview(Drawsurface& d, std::shared_ptr <Settings> s) : View(d, s) { 
 	this->loaded = false;
 }
 
@@ -38,10 +38,10 @@ void Gameview::draw() {
 		throw std::logic_error("Gameview is not loaded");
 	}
 	
-	this->centerpoint_screen.set_place(this->settings.screen_width / 2, this->settings.screen_height / 2);
+	this->centerpoint_screen.set_place(this->settings->screen_width / 2, this->settings->screen_height / 2);
 	this->inputs.back().set_value(this->command);
 	
-	this->calculate_coordinate_limits(this->settings.zoom);
+	this->calculate_coordinate_limits(this->settings->zoom);
 	this->update_command(this->command);
 	
 	this->View::draw();
@@ -59,7 +59,7 @@ void Gameview::draw_plane(Aircraft*& plane, Aircraft* selected, Point& mouse) {
 	Point draw;
 	std::string id = "";
 
-    Coordinate separation_ring_place_c = Tools::calculate(plane->get_place(), settings.separation_horizontal / 2.0, 1);
+    Coordinate separation_ring_place_c = Tools::calculate(plane->get_place(), this->settings->separation_horizontal / 2.0, 1);
 	Point separation_ring_place_p = this->calculate(separation_ring_place_c);
 	double separation_ring = Tools::distancePX(aircraft_place, separation_ring_place_p);
 	
@@ -152,21 +152,21 @@ void Gameview::draw_planes(std::list <Aircraft*> planes, Aircraft* selected, Poi
 }
 
 double Gameview::distancePX(double nautical) {
-	double center_w = this->settings.screen_width / 2.0;
-	double center_h = this->settings.screen_height / 2.0;
+	double center_w = this->settings->screen_width / 2.0;
+	double center_h = this->settings->screen_height / 2.0;
 	
 	double center2corner = std::sqrt(std::pow(center_w, 2.0) + std::pow(center_h, 2.0));
 	
-	return (nautical * center2corner) / this->settings.zoom;
+	return (nautical * center2corner) / this->settings->zoom;
 }
 
 double Gameview::distanceNM(double pixels) {
-	double center_w = this->settings.screen_width / 2.0;
-	double center_h = this->settings.screen_height / 2.0;
+	double center_w = this->settings->screen_width / 2.0;
+	double center_h = this->settings->screen_height / 2.0;
 	
 	double center2corner = std::sqrt(std::pow(center_w, 2.0) + std::pow(center_h, 2.0));
 	
-	return (this->settings.zoom * pixels) / center2corner;
+	return (this->settings->zoom * pixels) / center2corner;
 }
 
 void Gameview::draw_airfield(std::shared_ptr <Airfield> airfield) {
@@ -203,8 +203,8 @@ void Gameview::set_zoom(int zoom) {
 }
 
 void Gameview::calculate_coordinate_limits(double distance) {
-	Coordinate c(Tools::calculate(this->settings.centerpoint, Tools::deg2rad(315.0), distance));
-	Coordinate d(Tools::calculate(this->settings.centerpoint, Tools::deg2rad(135.0), distance));
+	Coordinate c(Tools::calculate(this->settings->centerpoint, Tools::deg2rad(315.0), distance));
+	Coordinate d(Tools::calculate(this->settings->centerpoint, Tools::deg2rad(135.0), distance));
 	
 	min_lat = d.get_latitude();
 	max_lat = c.get_latitude();
@@ -214,8 +214,8 @@ void Gameview::calculate_coordinate_limits(double distance) {
 }
 
 Point Gameview::calculate(Coordinate& target) {
-	int pixelY = this->settings.screen_height - ((target.get_latitude() - min_lat) / (max_lat - min_lat)) * this->settings.screen_height;
-	int pixelX = ((target.get_longitude() - min_lon) / (max_lon - min_lon)) * this->settings.screen_width;
+	int pixelY = this->settings->screen_height - ((target.get_latitude() - min_lat) / (max_lat - min_lat)) * this->settings->screen_height;
+	int pixelX = ((target.get_longitude() - min_lon) / (max_lon - min_lon)) * this->settings->screen_width;
 	
 	Point t(pixelX, pixelY);
 	

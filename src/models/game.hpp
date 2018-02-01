@@ -41,7 +41,7 @@ public:
         * @param Settings& s game settiungs
     **/
 	
-	Game(Settings& s, std::shared_ptr <Atis> a);
+	Game(std::shared_ptr <Settings> s, std::shared_ptr <Atis> a);
 	~Game();
 
 	/**
@@ -133,7 +133,7 @@ private:
 	void calculate_points(int type, double clearance_count, std::string plane);
 	int calculate_clearances(std::string name);
 	bool check_aircrafts(std::string name);
-	Settings& settings;
+	std::shared_ptr <Settings> settings;
 
 	std::vector     <Navpoint>		navpoints;
 	std::list       <Aircraft*>		aircrafts;

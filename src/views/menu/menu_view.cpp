@@ -1,6 +1,6 @@
 #include "menu_view.hpp"
 
-Menuview::Menuview(Drawsurface& d, Settings& s, Menu*& m) : View(d, s), menu(m) { 
+Menuview::Menuview(Drawsurface& d, std::shared_ptr <Settings> s, Menu*& m) : View(d, s), menu(m) { 
 	#ifdef DEBUG
 	std::clog << "Menuview::" << menu->get_items().size() <<  std::endl;
 	#endif

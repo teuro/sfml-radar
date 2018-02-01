@@ -16,9 +16,9 @@ public:
 	virtual void load() = 0;
 	//virtual std::string get_input() = 0;
 protected:
-    Controller(Settings& s, Drawsurface& d) : settings(s), drawer(d) { }
+    Controller(std::shared_ptr <Settings> s, Drawsurface& d) : settings(s), drawer(d) { }
     virtual ~Controller() { }
-	Settings& settings;
+	std::shared_ptr <Settings> settings;
 	Drawsurface& drawer;
 	std::string command;
 	int fps;

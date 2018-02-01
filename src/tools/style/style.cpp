@@ -1,6 +1,6 @@
 #include "style.hpp"
 
-Style::Style(Settings& s) : settings(s) { 
+Style::Style(std::shared_ptr <Settings> s) : settings(s) { 
 	this->place.set_x(0);
 	this->place.set_y(0);
 	this->left = 0;
@@ -55,14 +55,14 @@ void Style::set_attribute(std::string key, std::string value) {
         this->place.set_x(Tools::tonumber<int>(value));
 		this->left = Tools::tonumber<int>(value);
     } else if (key == "right") {
-        this->place.set_x(this->settings.screen_width - Tools::tonumber<int>(value));
-		this->left = this->settings.screen_width - Tools::tonumber<int>(value);
+        this->place.set_x(this->settings->screen_width - Tools::tonumber<int>(value));
+		this->left = this->settings->screen_width - Tools::tonumber<int>(value);
     } else if (key == "top") {
         this->place.set_y(Tools::tonumber<int>(value));
 		this->top = Tools::tonumber<int>(value);
     } else if (key == "bottom") {
-        this->place.set_y(this->settings.screen_height - Tools::tonumber<int>(value));
-		this->top = this->settings.screen_height - Tools::tonumber<int>(value);
+        this->place.set_y(this->settings->screen_height - Tools::tonumber<int>(value));
+		this->top = this->settings->screen_height - Tools::tonumber<int>(value);
     }else if (key == "width") {
         this->width = Tools::tonumber<int>(value);
     } else if (key == "height") {
@@ -114,7 +114,7 @@ int Style::parse_color(std::string color) {
 			color_name = color.substr(0, found);
 		}
 		
-		return this->settings.colors[color_name]->get_color();
+		return this->settings->colors[color_name]->get_color();
 	} 
 }
 

@@ -1,14 +1,16 @@
 #include "settings.hpp"
 
 Settings::Settings() { 	
+	//std::clog << "Settings created" << std::endl;
+	
 	this->database_name = "databases/radar.db"; 
 	this->layout_game_file_name = "layouts/game.xml"; 
 	this->layout_atis_file_name = "layouts/atis.xml"; 
 	this->layout_stat_file_name = "layouts/stat.xml"; 
 	this->layout_menu_file_name = "layouts/menu.xml"; 
 	this->style_folder = "styles/"; 
-	this->search_term = "? = ?"; 
-	this->bind_term = " = "; 
+//	this->search_term = "? = ?"; 
+//	this->bind_term = " = "; 
 	this->sleep = 50;
 	this->display_clearance_errors = 4000;
 	
@@ -18,7 +20,7 @@ Settings::Settings() {
 Settings::~Settings() { }
 
 void Settings::load() {
-	Database db(*this);
+	Database db;
 	Queryresult colors_result = db.get_result("SELECT * FROM colors");
 	
 	for (unsigned int i = 0; i < colors_result.size(); ++i) {
@@ -29,11 +31,6 @@ void Settings::load() {
 		
 		this->colors[name] = new My_Color(red, green, blue);
 	}
-	/*
-	for (auto color : this->colors) {
-		std::clog << color.first << " => " << color.second->red << ", " << color.second->green << ", " << color.second->blue << std::endl;
-	}
-	*/
 }
 
 void Settings::set_values(std::map<std::string, std::string> values ) {

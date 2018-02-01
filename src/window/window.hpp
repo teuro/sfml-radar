@@ -21,7 +21,7 @@ public:
 	virtual void load_settings() = 0;
 	virtual void handle_events() = 0;
 protected:
-	Settings settings;
+	std::shared_ptr <Settings> settings;
 	enum types {PLAYER, ATIS, GAME};
 	Point mouse_start;
     Point mouse_end;

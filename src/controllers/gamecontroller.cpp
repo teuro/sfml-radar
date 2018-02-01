@@ -1,6 +1,6 @@
 #include "gamecontroller.hpp"
 
-Gamecontroller::Gamecontroller(Settings& s, Drawsurface& d) : Controller(s, d) { 
+Gamecontroller::Gamecontroller(std::shared_ptr <Settings> s, Drawsurface& d) : Controller(s, d) { 
 	Metar metar;
 	
 	std::shared_ptr <Atis> a(new Atis(this->settings, this->metar));
@@ -9,7 +9,7 @@ Gamecontroller::Gamecontroller(Settings& s, Drawsurface& d) : Controller(s, d) {
 	std::shared_ptr <Game> g(new Game(this->settings, this->atis));
 	this->game = g;
 	
-	this->settings.zoom = 110;
+	this->settings->zoom = 110;
 	this->frames = 0;
 	this->fps_time = 5000;
 	this->fps_end_time = 8500;
@@ -56,20 +56,20 @@ void Gamecontroller::handle_mouse_release(Point& mouse_start, Point& mouse_end) 
     double angle_rad    = Tools::fix_angle(Tools::angle(mouse_start, mouse_end) + Tools::get_PI() / 2.0);
     double distance_nm  = this->gameview->distanceNM(distance_px);
 	
-    this->settings.centerpoint = Tools::calculate(this->settings.centerpoint, angle_rad, distance_nm);
+    this->settings->centerpoint = Tools::calculate(this->settings->centerpoint, angle_rad, distance_nm);
 }
 
 void Gamecontroller::handle_mouse_wheel(int amount) {
     if (this->state == GAME) {
-		this->settings.zoom += (-amount * 1);
+		this->settings->zoom += (-amount * 1);
 		
-		if (this->settings.zoom < this->settings.zoom_min) {
-			this->settings.zoom = this->settings.zoom_min;
-		} else if (this->settings.zoom > this->settings.zoom_max) {
-			this->settings.zoom = this->settings.zoom_max;
+		if (this->settings->zoom < this->settings->zoom_min) {
+			this->settings->zoom = this->settings->zoom_min;
+		} else if (this->settings->zoom > this->settings->zoom_max) {
+			this->settings->zoom = this->settings->zoom_max;
 		}
 		
-		this->gameview->set_zoom(this->settings.zoom);
+		this->gameview->set_zoom(this->settings->zoom);
 	} else if (this->state == MENU) {
 		this->menu->change_selection(-amount);
 	} else if (this->state == ATIS) {
@@ -81,8 +81,8 @@ void Gamecontroller::set_variables() {
 	#ifdef DEBUG
 	std::clog << "Gamecontroller::set_variables()" << std::endl;
 	#endif
-	this->menuview->repl["[MPL]"] = Tools::tostr(this->settings.max_planes);
-	this->menuview->repl["[RQD]"] = Tools::tostr(this->settings.required_handled);
+	this->menuview->repl["[MPL]"] = Tools::tostr(this->settings->max_planes);
+	this->menuview->repl["[RQD]"] = Tools::tostr(this->settings->required_handled);
 	this->menuview->repl["[LEV]"] = Tools::tostr(this->game->get_level());
 	
 	this->gameview->repl["[PLH]"] = Tools::tostr(this->game->get_handled_planes());
@@ -95,8 +95,8 @@ void Gamecontroller::set_variables() {
 	} else {
 		this->gameview->repl["[PLN]"] = "no plane";
 	}
-	this->gameview->repl["[SPK]"] = Tools::tostr(this->settings.max_separation_errors);
-	this->gameview->repl["[RQD]"] = Tools::tostr(this->settings.required_handled);
+	this->gameview->repl["[SPK]"] = Tools::tostr(this->settings->max_separation_errors);
+	this->gameview->repl["[RQD]"] = Tools::tostr(this->settings->required_handled);
 	this->gameview->repl["[DEP]"] = Tools::tostr(this->atis->get_departure_runway().get_name());
 	this->gameview->repl["[LND]"] = Tools::tostr(this->atis->get_landing_runway().get_name());
 	this->gameview->repl["[TRL]"] = Tools::tostr(this->atis->get_transition_level());
@@ -106,8 +106,8 @@ void Gamecontroller::set_variables() {
 	this->gameview->repl["[PCNT]"] = Tools::tostr(this->game->get_game_points());
 	this->gameview->repl["[CLRE]"] = Tools::tostr(this->game->get_clearance_error());
 	this->gameview->repl["[GRE]"] = Tools::tostr(this->game->get_game_error());
-	this->gameview->repl["[MXA]"] = Tools::tostr(Tools::round_nearest(Tools::rad2deg(this->atis->get_landing_runway().get_heading()) + this->settings.approach_angle, 10));
-	this->gameview->repl["[MNA]"] = Tools::tostr(Tools::round_nearest(Tools::rad2deg(this->atis->get_landing_runway().get_heading()) - this->settings.approach_angle, 10));
+	this->gameview->repl["[MXA]"] = Tools::tostr(Tools::round_nearest(Tools::rad2deg(this->atis->get_landing_runway().get_heading()) + this->settings->approach_angle, 10));
+	this->gameview->repl["[MNA]"] = Tools::tostr(Tools::round_nearest(Tools::rad2deg(this->atis->get_landing_runway().get_heading()) - this->settings->approach_angle, 10));
 	
 	this->atisview->repl["[METAR]"] = this->metar.to_string();
 	//this->atisview->repl["[LEV]"] = Tools::tostr(this->game->get_level());
@@ -117,7 +117,7 @@ void Gamecontroller::set_variables() {
 	this->atisview->repl["[ALTITUDE]"] = Tools::tostr(this->atis->get_transition_altitude());
 	
 	this->statview->repl["[SPE]"] = Tools::tostr(this->game->get_separation_errors());
-	this->statview->repl["[RQD]"] = Tools::tostr(this->settings.required_handled);
+	this->statview->repl["[RQD]"] = Tools::tostr(this->settings->required_handled);
 }
 
 void Gamecontroller::calculate_fps() {
@@ -232,7 +232,7 @@ void Gamecontroller::load_menu_items(std::string query, Menu*& menu) {
 	std::list <std::string> arguments;
 	arguments.push_back(this->command);
 	
-	Database db(this->settings);
+	Database db;
 	
 	Queryresult list = db.get_result(db.bind_param(query, arguments));
 	

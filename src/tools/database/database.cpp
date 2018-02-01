@@ -1,9 +1,9 @@
 #include "database.hpp"
 
-Database::Database(Settings& s) : settings(s) { }
+Database::Database() { }
 
 Queryresult Database::get_result(std::string query) {
-    sqlite3pp::database db(this->settings.database_name.c_str());
+    sqlite3pp::database db("databases/radar.db");
 	
 	sqlite3pp::query qry(db, query.c_str());
 	
@@ -30,8 +30,8 @@ std::string Database::bind_param(std::string query_string, std::map <std::string
 	}
 	
 	for (const auto& item : variables) {
-		std::string replace = item.first + this->settings.bind_term + item.second;
-		query_string = Tools::replace(query_string, this->settings.search_term, replace);
+		std::string replace = item.first + " = " + item.second;
+		query_string = Tools::replace(query_string, "? = ?", replace);
 	}
 	
 	return query_string;

@@ -1,6 +1,6 @@
 #include "atis_view.hpp"
 
-Atisview::Atisview(Drawsurface& d, Settings& s, std::shared_ptr <Atis> a) : View(d, s), atis(a) { }
+Atisview::Atisview(Drawsurface& d, std::shared_ptr <Settings> s, std::shared_ptr <Atis> a) : View(d, s), atis(a) { }
 
 Atisview::~Atisview() { }
 

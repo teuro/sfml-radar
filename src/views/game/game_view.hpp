@@ -46,7 +46,7 @@ public:
 		* @return void
 	**/
 	
-	Gameview(Drawsurface& d, Settings& s);
+	Gameview(Drawsurface& d, std::shared_ptr <Settings> s);
 	
 	/**
 		* Gameview desstructor

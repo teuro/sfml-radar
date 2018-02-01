@@ -1,6 +1,6 @@
 #include "view.hpp"
 
-View::View(Drawsurface& d, Settings& s) : drawer(d), settings(s) { }
+View::View(Drawsurface& d, std::shared_ptr <Settings> s) : drawer(d), settings(s) { }
 
 View::~View() { }
 
@@ -27,12 +27,12 @@ void View::load_styles() {
 	DIR* dir;
 	struct dirent *ent;
 	
-	dir = opendir(this->settings.style_folder.c_str());
+	dir = opendir(this->settings->style_folder.c_str());
 	
 	if (dir != NULL) {	
 		std::clog << "View::Style folder opened" << std::endl;
 		while ((ent = readdir (dir)) != NULL) {
-			std::string file_name = this->settings.style_folder + std::string(ent->d_name);
+			std::string file_name = this->settings->style_folder + std::string(ent->d_name);
 			
 			if (file_name != "/." && file_name != "/..") {
 				this->add_style(this->parse_css(file_name));
@@ -62,13 +62,13 @@ void View::load_layout(std::string state) {
 	bool load_ok = false;
 	
 	if (state == "game") {
-		load_ok = doc.LoadFile(this->settings.layout_game_file_name.c_str());
+		load_ok = doc.LoadFile(this->settings->layout_game_file_name.c_str());
 	} else if (state == "atis") {
-		load_ok = doc.LoadFile(this->settings.layout_atis_file_name.c_str());
+		load_ok = doc.LoadFile(this->settings->layout_atis_file_name.c_str());
 	} else if (state == "stat") {
-		load_ok = doc.LoadFile(this->settings.layout_stat_file_name.c_str());
+		load_ok = doc.LoadFile(this->settings->layout_stat_file_name.c_str());
 	} else if (state == "menu") {
-		load_ok = doc.LoadFile(this->settings.layout_menu_file_name.c_str());
+		load_ok = doc.LoadFile(this->settings->layout_menu_file_name.c_str());
 	}	
 	
 	std::clog << "Layout file loaded" << std::endl;

@@ -18,7 +18,7 @@
 
 class Atis {
 public:
-    Atis(Settings& s, Metar& m);
+    Atis(std::shared_ptr <Settings> s, Metar& m);
     ~Atis();
 	void load();
     void update(int amount);
@@ -50,7 +50,7 @@ public:
 	void set_airfield(std::shared_ptr <Airfield> airfield);
 protected:
 private:
-    Settings& settings;
+    std::shared_ptr <Settings> settings;
 	Metar& metar;
 	std::shared_ptr <Airfield> active_field;
     int transition_level;

@@ -12,7 +12,7 @@
 
 class Menuview : public View {
 public:
-	Menuview(Drawsurface& d, Settings& s, Menu*& m);
+	Menuview(Drawsurface& d, std::shared_ptr <Settings> s, Menu*& m);
 	~Menuview();
 	void draw();
     void load();

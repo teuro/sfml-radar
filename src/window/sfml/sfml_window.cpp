@@ -10,11 +10,13 @@ void SFML_window::init() {
 }
 
 void SFML_window::load_settings() {
+	std::shared_ptr <Settings> s (new Settings);
+	this->settings = s;
 	
 	std::clog << "SFML_window::load_settings()" << std::endl;
 	Tools::init_random();
 	
-	Database db(this->settings);
+	Database db;
 	
 	Queryresult qrslt = db.get_result("SELECT setting_name, setting_value FROM settings");
 	std::map <std::string, std::string> tmp;
@@ -23,7 +25,7 @@ void SFML_window::load_settings() {
 		tmp[qrslt(i, "setting_name")] = qrslt(i, "setting_value");
 	}
 
-	this->settings.set_values(tmp);
+	this->settings->set_values(tmp);
 }
 
 void SFML_window::close() {
@@ -35,7 +37,7 @@ void SFML_window::handle_events() {
 }
 
 void SFML_window::run() {
-	sf::RenderWindow window(sf::VideoMode(this->settings.screen_width, this->settings.screen_height), this->settings.program_name, sf::Style::Resize);
+	sf::RenderWindow window(sf::VideoMode(this->settings->screen_width, this->settings->screen_height), this->settings->program_name, sf::Style::Resize);
 	sf::Image image;
 	image.loadFromFile("images/logo.png");
 	window.setIcon(image.getSize().x, image.getSize().y, image.getPixelsPtr());
@@ -115,8 +117,8 @@ bool SFML_window::handle_event(sf::Event& event, Controller& ctrl, sf::RenderWin
             ctrl.handle_mouse_release(mouse_start, mouse_end);
             return true;
         case sf::Event::Resized:
-            this->settings.screen_height = event.size.height;
-            this->settings.screen_width = event.size.width;
+            this->settings->screen_height = event.size.height;
+            this->settings->screen_width = event.size.width;
         default:
             return true;
     }
