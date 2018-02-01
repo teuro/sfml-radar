@@ -16,7 +16,14 @@
 	* Database does NOT storage any data, so You just receive raw data.
 **/
 
-namespace Database {
+class Settings;
+
+class Database {
+public:
+	Database(Settings& s);
+	
+	Settings& settings;
+	
 	/**
         * Make a query and returns data
 		* Makes absolutely anything to results, so You receive raw data from database
@@ -38,6 +45,6 @@ namespace Database {
 
     std::string bind_param(std::string query_string, std::map <std::string, std::string> variables);
     std::string bind_param(std::string query_string, std::list <std::string> variables);
-}
+};
 
 #endif // DATABASE_HPP

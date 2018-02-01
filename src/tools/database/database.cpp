@@ -1,13 +1,11 @@
 #include "database.hpp"
 
-namespace Database {
-	static Settings s;
-}
+Database::Database(Settings& s) : settings(s) { }
 
 Queryresult Database::get_result(std::string query) {
-    sqlite3pp::database db(s.database_name.c_str());
+    sqlite3pp::database db(this->settings.database_name.c_str());
 	
-    sqlite3pp::query qry(db, query.c_str());
+	sqlite3pp::query qry(db, query.c_str());
 	
     Queryresult qrslt(qry);
 	
@@ -32,8 +30,8 @@ std::string Database::bind_param(std::string query_string, std::map <std::string
 	}
 	
 	for (const auto& item : variables) {
-		std::string replace = item.first + s.bind_term + item.second;
-		query_string = Tools::replace(query_string, s.search_term, replace);
+		std::string replace = item.first + this->settings.bind_term + item.second;
+		query_string = Tools::replace(query_string, this->settings.search_term, replace);
 	}
 	
 	return query_string;

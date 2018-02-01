@@ -1,6 +1,6 @@
 #include "settings.hpp"
 
-Settings::Settings() { 
+Settings::Settings() { 	
 	this->database_name = "databases/radar.db"; 
 	this->layout_game_file_name = "layouts/game.xml"; 
 	this->layout_atis_file_name = "layouts/atis.xml"; 
@@ -18,7 +18,8 @@ Settings::Settings() {
 Settings::~Settings() { }
 
 void Settings::load() {
-	Queryresult colors_result = Database::get_result("SELECT * FROM colors");
+	Database db(*this);
+	Queryresult colors_result = db.get_result("SELECT * FROM colors");
 	
 	for (unsigned int i = 0; i < colors_result.size(); ++i) {
 		int red = Tools::tonumber<int>(colors_result(i, "red"));
@@ -28,6 +29,11 @@ void Settings::load() {
 		
 		this->colors[name] = new My_Color(red, green, blue);
 	}
+	/*
+	for (auto color : this->colors) {
+		std::clog << color.first << " => " << color.second->red << ", " << color.second->green << ", " << color.second->blue << std::endl;
+	}
+	*/
 }
 
 void Settings::set_values(std::map<std::string, std::string> values ) {

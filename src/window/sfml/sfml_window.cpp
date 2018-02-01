@@ -10,9 +10,13 @@ void SFML_window::init() {
 }
 
 void SFML_window::load_settings() {
+	
 	std::clog << "SFML_window::load_settings()" << std::endl;
 	Tools::init_random();
-	Queryresult qrslt = Database::get_result("SELECT setting_name, setting_value FROM settings");
+	
+	Database db(this->settings);
+	
+	Queryresult qrslt = db.get_result("SELECT setting_name, setting_value FROM settings");
 	std::map <std::string, std::string> tmp;
 
 	for (unsigned int i = 0; i < qrslt.size(); ++i) {
