@@ -1,6 +1,6 @@
 #metar {
 	width: 400px;
-	color: rgb(180, 80, 80);
+	color: rgb(10, 10, 10);
 	top: 10px;
 	left: 10px;
 }
@@ -8,17 +8,15 @@
 #basic_info {
 	top: 40px;
 	left: 20px;
-	color: rgb(150, 150, 90);
+	color: rgb(30, 30, 30);
 }
 
 input {
-	top: 400px;
-	left: 30px;
-	color: rgb(150, 30, 30);
+	color: rgb(120, 130, 130);
 }
 
 .userinput {
-	top: 630px;
+	top: 550px;
 	left: 30px;
 	width: 550px;
 	height: 30px;
