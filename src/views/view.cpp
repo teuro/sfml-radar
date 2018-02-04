@@ -164,7 +164,7 @@ void View::load_layout(std::string state) {
 
 void View::clear_screen() {
 	#ifdef DEBUG
-	std::clog << "View::clear_screen()" << std::endl;
+	std::clog << "View::clear_screen(" << body.get_background_color() << ")" << std::endl;
 	#endif
 	
 	drawer.clear_screen(body.get_background_color());
