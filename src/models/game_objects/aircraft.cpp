@@ -46,6 +46,10 @@ void Aircraft::load() {
     this->clearance_speed 		= this->speed;
 	this->clearance_heading 	= this->heading;
 	
+	this->fuel_consumption		= Tools::rnd(550, 1210);
+	this->fuel_amount			= 250 + Tools::rnd(1200, 2950) + 150;
+	this->fuel_final_reserve	= Tools::rnd(850, 1130);
+	
     this->turn 					= LEFT;
 }
 
@@ -102,7 +106,7 @@ void Aircraft::calculate_angle_target(Coordinate& target) {
 	this->turn = (this->heading < this->clearance_heading) ? RIGHT : LEFT;
 }
 
-void Aircraft::update(double elapsed) {
+std::string Aircraft::update(double elapsed) {
 	this->heading = Tools::fix_angle(this->heading);
 	
 	if (this->type == DEPARTURE) {
@@ -166,6 +170,12 @@ void Aircraft::update(double elapsed) {
 	
 	double distance = this->speed * (elapsed / 1000) / 3600;
 	this->place = Tools::calculate(this->place, this->heading, distance);
+	
+	this->fuel_amount -= this->fuel_consumption * (elapsed / 1000) / 3600;
+	
+	if (this->fuel_amount < this->fuel_final_reserve) {
+		return this->name + " BINGO " + Tools::tostr(this->fuel_amount) + " kg left";
+	}
 }
 
 void Aircraft::set_takeoff_clearance() {

@@ -42,7 +42,7 @@ public:
 	
     ~Aircraft();
 	
-	void update(double elapsed);
+	std::string update(double elapsed);
 
     Coordinate& get_place();
 	
@@ -108,6 +108,10 @@ private:
 	double vland;
 	double vclimb;
 	double vcruise;
+	
+	double fuel_consumption;
+	double fuel_amount;
+	double fuel_final_reserve;
 
     void change_speed();
     void change_heading();

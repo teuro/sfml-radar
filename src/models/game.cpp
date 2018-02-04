@@ -137,8 +137,10 @@ void Game::update(double elapsed) {
     this->handle_holdings();
 
     for (std::list <Aircraft*> :: iterator it = this->aircrafts.begin(); it != this->aircrafts.end(); ++it) {
+		std::string aircraft_message;
+		
         (*it)->set_separation_error(false);
-        (*it)->update(elapsed);
+        aircraft_message = (*it)->update(elapsed);
 		
 		if ((*it)->get_speed() < 20 && (*it)->get_type() == APPROACH) {
 			calculate_points(APPROACH, this->calculate_clearances((*it)->get_name()), (*it)->get_name());
