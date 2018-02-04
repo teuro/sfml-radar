@@ -1,17 +1,23 @@
 #include "stat_view.hpp"
-Statview::Statview(Drawsurface& d, std::shared_ptr <Settings> s) : View(d, s) { }
+Statview::Statview(Drawsurface& d, std::shared_ptr <Settings> s, std::shared_ptr <Game> g) : View(d, s), game(g) { }
 
 Statview::~Statview() { }
 
 void Statview::draw() { 
-	 View::draw();
+	this->clear_screen();
+
+	View::draw();
+	 
+	this->draw_points();
 }
 
 void Statview::load() { 
 	View::load("stat");
 }
 
-void Statview::draw_points(std::list <Game_point> points) {
+void Statview::draw_points() {
+	std::list <Game_point> points = this->game->get_points();
+	
 	std::list <Game_point> :: iterator pit = points.begin();
 	Drawable_table point_table("table", "", "points");
 	

@@ -12,11 +12,13 @@
 
 class Statview : public View {
 public:
-	Statview(Drawsurface& d, std::shared_ptr <Settings> s);
+	Statview(Drawsurface& drawsurface, std::shared_ptr <Settings> settings, std::shared_ptr <Game> game);
 	~Statview();
 	void draw();
     void load();
-	void draw_points(std::list <Game_point> points);
+	void draw_points();
+private:
+	std::shared_ptr <Game> game;
 };
 
 #endif // ATIS_VIEW

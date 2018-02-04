@@ -14,6 +14,7 @@
 #include "../../models/coordinate/navpoint.hpp"
 #include "../../models/game_objects/aircraft.hpp"
 #include "../../models/game_objects/airfield.hpp"
+#include "../../models/game.hpp"
 
 class Drawable_plane : public Drawable_element {
 public:
@@ -46,7 +47,7 @@ public:
 		* @return void
 	**/
 	
-	Gameview(Drawsurface& d, std::shared_ptr <Settings> s);
+	Gameview(Drawsurface& drawsurface, std::shared_ptr <Settings> settings, std::shared_ptr <Game> game);
 	
 	/**
 		* Gameview desstructor
@@ -57,11 +58,11 @@ public:
 	/**
 		* Gameview draw
 		* Places logo to screen and calls upper class View::draw() for basic elements
-		* @param void
+		* @param Point& mouse
 		* @return void
 	**/
 	
-	void draw();
+	void draw(Point& mouse);
 	
 	/**
 		* Gameview load
@@ -126,6 +127,8 @@ private:
     void draw_plane(Aircraft*& plane, Aircraft* selected, Point& mouse);
 	std::string command;
 	bool loaded;
+	
+	std::shared_ptr <Game> game;
 };
 
 #endif // _GAME_VIEW_HPP

@@ -32,9 +32,9 @@ void Gamecontroller::load() {
 	this->load_menu_items("SELECT ICAO FROM airfields", this->airports);
 	this->menu = this->airports;
 	
-	std::shared_ptr <Gameview> gv (new Gameview(this->drawer, this->settings));
+	std::shared_ptr <Gameview> gv (new Gameview(this->drawer, this->settings, this->game));
 	std::shared_ptr <Atisview> av (new Atisview(this->drawer, this->settings, this->atis));
-	std::shared_ptr <Statview> sv (new Statview(this->drawer, this->settings));
+	std::shared_ptr <Statview> sv (new Statview(this->drawer, this->settings, this->game));
 	std::shared_ptr <Menuview> mv (new Menuview(this->drawer, this->settings, this->menu));
 	
 	this->gameview = gv;
@@ -136,9 +136,6 @@ void Gamecontroller::update(double elapsed, Point& mouse) {
 	this->set_variables();
 	
 	if (this->state == ATIS) {
-		#ifdef DEBUG
-		std::clog << "state of the game " << this->state << std::endl;
-		#endif
 		if (this->atis->ok()) {
 			this->state = GAME;
 			this->gameview->load();
@@ -152,17 +149,12 @@ void Gamecontroller::update(double elapsed, Point& mouse) {
 		this->menuview->draw();
 		this->atisview->render();
 	} else if (this->state == GAME) {
-		#ifdef DEBUG
-		std::clog << "state of the game " << this->state << std::endl;
-		#endif
 		this->game_time += elapsed;
 		
-		if (flash_message_begin + flash_message_time < game_time) {
-			std::string tmp = this->game->get_message();
+		std::string tmp = this->game->get_message();
 		
-			if (tmp.length()) {
-				this->set_flash_message(tmp);
-			}
+		if (tmp.length()) {
+			this->set_flash_message(tmp);
 		}
 		
 		this->calculate_fps();
@@ -173,10 +165,7 @@ void Gamecontroller::update(double elapsed, Point& mouse) {
 		}
 		
 		this->gameview->update_command(this->command);
-		this->gameview->clear_screen();
-		this->gameview->draw();
-		this->gameview->draw_airfield(this->game->get_active_field());
-		this->gameview->draw_planes(this->game->get_aircrafts(), this->game->get_selected(), mouse);
+		this->gameview->draw(mouse);
 		
 		if (this->game_time < (this->flash_message_begin + this->flash_message_time)) {
 			this->gameview->flash_message(this->message);
@@ -184,19 +173,9 @@ void Gamecontroller::update(double elapsed, Point& mouse) {
 		
 		this->gameview->render();
 	} else if (this->state == STAT) {
-		#ifdef DEBUG
-		std::clog << "state of the game " << this->state << std::endl;
-		#endif
-		
-		this->statview->clear_screen();
 		this->statview->draw();
-		this->statview->draw_points(this->game->get_points());
 		this->statview->render();
 	} else if (this->state == MENU) {
-		#ifdef DEBUG
-		std::clog << "state of the game " << this->state << std::endl;
-		#endif
-		
 		this->menuview->clear_screen();
 		this->menuview->draw();
 		this->menuview->render();

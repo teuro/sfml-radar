@@ -17,7 +17,7 @@ void Drawable_plane::set_callsign(std::string call) {
 	this->callsign = call;
 }
 
-Gameview::Gameview(Drawsurface& d, std::shared_ptr <Settings> s) : View(d, s) { 
+Gameview::Gameview(Drawsurface& d, std::shared_ptr <Settings> s, std::shared_ptr <Game> g) : View(d, s), game(g) { 
 	this->loaded = false;
 }
 
@@ -33,7 +33,9 @@ void Gameview::update_command(std::string t_command) {
 	this->command = t_command;
 }
 
-void Gameview::draw() {
+void Gameview::draw(Point& mouse) {
+	this->clear_screen();
+	
 	if (!this->loaded) {
 		throw std::logic_error("Gameview is not loaded");
 	}
@@ -46,15 +48,11 @@ void Gameview::draw() {
 	
 	this->View::draw();
 	
-	for (unsigned int i = 0; i < this->lists.size(); ++i) {
-		this->style(this->lists[i]);
-		this->draw_element(this->lists[i]);
-	}
+	this->draw_airfield(this->game->get_active_field());
+	this->draw_planes(this->game->get_aircrafts(), this->game->get_selected(), mouse);
 }
 
 void Gameview::draw_plane(Aircraft*& plane, Aircraft* selected, Point& mouse) {
-	lists.clear();
-	
 	Point aircraft_place = this->calculate(plane->get_place());
 	Point draw;
 	std::string id = "";
