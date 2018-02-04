@@ -23,7 +23,7 @@ std::string Metar::to_string() {
 void Metar::update(std::string icao) {
 	this->time = std::time(0);
 	tm *ltm = localtime(&this->time);
-	this->id_code = Tools::tostr(ltm->tm_mday) + Tools::tostr(ltm->tm_hour-3) + Tools::tostr(ltm->tm_min) + "z";
+	this->id_code = Tools::tostr(ltm->tm_mday, 2) + Tools::tostr(ltm->tm_hour-3, 2) + Tools::tostr(ltm->tm_min, 2) + "z";
 	this->clouds.clear();
     this->pressure = Tools::rnd(965, 1035);
 	this->temperature = Tools::rnd(-30, 40);
