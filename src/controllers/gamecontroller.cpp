@@ -13,7 +13,6 @@ Gamecontroller::Gamecontroller(std::shared_ptr <Settings> s, Drawsurface& d) : C
 	this->frames = 0;
 	this->fps_time = 5000;
 	this->fps_end_time = 8500;
-	this->state = MENU;
 	this->flash_message_begin = -1;
 	this->flash_message_time = 2500;
 	quick_iterator = this->quicklist.begin();
@@ -44,6 +43,7 @@ void Gamecontroller::load() {
 	
 	this->menuview->load();
 	this->atisview->load();
+	this->statview->load();
 	this->state = MENU;
 }
 
