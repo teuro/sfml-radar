@@ -20,6 +20,7 @@
 #include "../tools/settings.hpp"
 #include "../tools/tools.hpp"
 #include "../tools/text_tools.hpp"
+#include "../models/menu/menu.hpp"
 
 /**
 	* View
@@ -29,22 +30,71 @@
 **/
 
 class View {
-public:
+protected:
+	/**
+		* View constructor
+		* @param Drawsurface
+		* @param std::shared_ptr settings
+		* @return void
+	**/
+	
 	View(Drawsurface& d, std::shared_ptr <Settings> s);
+	
+	/**
+		* 	Destructor this is pure virtual and protected because You can't make View 
+			It's allways require proper child class.
+	**/
 	virtual ~View() = 0;
+public:
+	/**
+		* Draw
+		* Virtual method to draw object
+		* @param Point& mouse
+		* @return void
+	**/
+	
+	virtual void draw(Point& mouse);
 	void draw();
+	virtual std::string handle_click(Point& mouse) = 0;
+	
+	/**
+		* render
+		* This flips the screen visible
+	**/
+	
 	void render();
+	
+	/**
+		* clear_screen
+		* Fills screen with proper background-color. If background-color is not defined it's black
+	**/
+	
 	void clear_screen();
-	void iterate(TiXmlNode* el);
+	
+	/**
+		* itetare
+		* This walks through *.xml files and parses it to proper elements
+		* @param TiXmlNode* element
+	**/
+	
+	void iterate(TiXmlNode* element);
+	
+	virtual void update() = 0;
+	
 	void add_element(std::string key, std::string id, std::string cl, std::string value);
 	int handled;
 	int required;
 	std::string metar;
 	std::map <std::string, std::string> repl;
-	virtual void flash_message(std::string message);
+	void flash_message(std::string message);
+	virtual void load() = 0;
+	virtual double distanceNM(double pixels);
+	virtual void set_zoom(int zoom);
+	virtual void set_menu(std::shared_ptr <Menu> menu);
 protected:
     Drawsurface& drawer;
     std::shared_ptr <Settings> settings;
+    std::shared_ptr <Menu> menu;
     std::list <Style> styles;
     void draw_element(Image& img);
     void draw_element(Paragraph& p);

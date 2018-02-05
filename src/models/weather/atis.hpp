@@ -34,7 +34,7 @@ public:
 	Runway& get_departure_runway();
 	Runway& get_landing_runway();
 	
-	Menu* get_menu();
+	std::shared_ptr <Menu> get_menu();
 	
 	bool ok();
 	
@@ -75,7 +75,7 @@ private:
 	
 	enum state_names {DEPARTURE, LANDING, ALTITUDE, LEVEL };
 	int state;
-	Menu* menu;
+	std::shared_ptr <Menu> menu;
 };
 
 

@@ -159,7 +159,9 @@ void View::load_layout(std::string state) {
         }
 	}
 	
+	#ifdef DEBUG
 	std::clog << "Layout file parsed" << std::endl;
+	#endif
 }
 
 void View::clear_screen() {
@@ -334,6 +336,8 @@ void View::style(Drawable_element& de) {
 		++t_style;
 	}
 }
+
+void View::draw(Point&) { }
 
 void View::draw() {
 	#ifdef DEBUG
@@ -542,4 +546,12 @@ Style View::find_style(std::string name) {
 	}
 	
 	throw std::runtime_error("Searched style name '" + name + "' not found");
+}
+
+double View::distanceNM(double) { }
+
+void View::set_zoom(int) { }
+
+void View::set_menu(std::shared_ptr <Menu> m) { 
+	this->menu = m;
 }

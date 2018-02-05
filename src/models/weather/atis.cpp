@@ -5,7 +5,9 @@ Atis::Atis(std::shared_ptr <Settings> s, Metar& m) : settings(s), metar(m) {
 	this->transition_level = 0;
 	
 	this->state = DEPARTURE;
-	this->menu = new Menu("runway", "atis_base");
+	
+	std::shared_ptr <Menu> tm(new Menu("runway", "atis_base"));
+	this->menu = tm;
 }
 
 Atis::~Atis() { }
@@ -45,7 +47,7 @@ void Atis::update(int amount) {
 	this->menu->change_selection(amount);
 }
 
-Menu* Atis::get_menu() {
+std::shared_ptr <Menu> Atis::get_menu() {
 	return this->menu;
 }
 

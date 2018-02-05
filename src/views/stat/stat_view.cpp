@@ -3,7 +3,7 @@ Statview::Statview(Drawsurface& d, std::shared_ptr <Settings> s, std::shared_ptr
 
 Statview::~Statview() { }
 
-void Statview::draw() { 
+void Statview::draw(Point& ) { 
 	this->clear_screen();
 
 	View::draw();
@@ -47,3 +47,6 @@ void Statview::draw_points() {
 	this->style(point_table);
 	this->draw_element(point_table);
 }
+
+void Statview::update() { }
+std::string Statview::handle_click(Point&) { return ""; }

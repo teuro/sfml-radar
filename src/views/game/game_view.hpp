@@ -62,7 +62,9 @@ public:
 		* @return void
 	**/
 	
-	void draw(Point& mouse);
+	virtual void draw(Point& mouse);
+	
+	virtual std::string handle_click(Point& mouse);
 	
 	/**
 		* Gameview load
@@ -110,6 +112,7 @@ public:
 	**/
 	
 	 void update_command(std::string command);
+	 virtual void update();
 	 
 	 double distancePX(double nautical);
 	 double distanceNM(double pixels);

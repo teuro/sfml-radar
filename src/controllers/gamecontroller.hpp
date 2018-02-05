@@ -136,7 +136,7 @@ protected:
 private:
 	void set_variables();
 	void calculate_fps();
-	void load_menu_items(std::string query, Menu*& menu);
+	void load_menu_items(std::string query, std::shared_ptr <Menu> menu);
 
 	std::list <Clearance> clearances;
 	std::list <std::string> quicklist;
@@ -147,14 +147,16 @@ private:
     std::shared_ptr <Atisview> atisview;
     std::shared_ptr <Statview> statview;
     std::shared_ptr <Menuview> menuview;
+	
+	std::map <int, std::shared_ptr <View> > views;
 
     std::shared_ptr <Game> game;
 	std::shared_ptr <Atis> atis;
 
 	Metar metar;
 
-	Menu* menu;
-	Menu* airports;
+	std::shared_ptr <Menu> menu;
+	std::shared_ptr <Menu> airports;
 
 	int function_key;
 	double game_time;

@@ -33,6 +33,22 @@ void Gameview::update_command(std::string t_command) {
 	this->command = t_command;
 }
 
+std::string Gameview::handle_click(Point& mouse) {
+	std::list <Aircraft*> :: iterator plane;
+	std::list <Aircraft*> aircrafts = this->game->get_aircrafts();
+
+	for (plane = aircrafts.begin(); plane != aircrafts.end(); ++plane) {
+		Point aircraft = this->calculate((*plane)->get_place());
+
+		if (Tools::on_area(mouse, aircraft, 10)) {
+			this->game->selected = (*plane);
+			return "Plane " + (*plane)->get_name() + " selected";
+		}
+	}
+	
+	return "";
+}
+
 void Gameview::draw(Point& mouse) {
 	this->clear_screen();
 	
@@ -219,3 +235,5 @@ Point Gameview::calculate(Coordinate& target) {
 	
 	return t;
 }
+
+void Gameview::update() { }

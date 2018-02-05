@@ -16,35 +16,33 @@ Gamecontroller::Gamecontroller(std::shared_ptr <Settings> s, Drawsurface& d) : C
 	this->flash_message_begin = -1;
 	this->flash_message_time = 2500;
 	quick_iterator = this->quicklist.begin();
+	
+	this->state = MENU;
 }
 
-Gamecontroller::~Gamecontroller() { 
-	delete this->menu;
-}
+Gamecontroller::~Gamecontroller() { }
 
 void Gamecontroller::load() {
 	std::clog << "Gamecontroller::load()" << std::endl;
 	
-	this->airports 	= new Menu("airport", "airport");
-	this->menu 		= new Menu("airport", "airport");
+	std::shared_ptr <Menu> m(new Menu("airport", "airport"));
+	this->menu 		= m;
 	
-	this->load_menu_items("SELECT ICAO FROM airfields", this->airports);
-	this->menu = this->airports;
+	this->load_menu_items("SELECT ICAO FROM airfields", this->menu);
 	
 	std::shared_ptr <Gameview> gv (new Gameview(this->drawer, this->settings, this->game));
 	std::shared_ptr <Atisview> av (new Atisview(this->drawer, this->settings, this->atis));
 	std::shared_ptr <Statview> sv (new Statview(this->drawer, this->settings, this->game));
 	std::shared_ptr <Menuview> mv (new Menuview(this->drawer, this->settings, this->menu));
 	
-	this->gameview = gv;
-	this->atisview = av;
-	this->statview = sv;
-	this->menuview = mv;
+	this->views[this->MENU] = mv;
+	this->views[this->ATIS] = av;
+	this->views[this->GAME] = gv;
+	this->views[this->STAT] = sv;
 	
-	this->menuview->load();
-	this->atisview->load();
-	this->statview->load();
-	this->state = MENU;
+	this->views[this->MENU]->load();
+	this->views[this->ATIS]->load();
+	this->views[this->STAT]->load();
 }
 
 std::string Gamecontroller::handle_function_keys() {
@@ -54,7 +52,7 @@ std::string Gamecontroller::handle_function_keys() {
 void Gamecontroller::handle_mouse_release(Point& mouse_start, Point& mouse_end) {
     double distance_px  = Tools::distancePX(mouse_start, mouse_end);
     double angle_rad    = Tools::fix_angle(Tools::angle(mouse_start, mouse_end) + Tools::get_PI() / 2.0);
-    double distance_nm  = this->gameview->distanceNM(distance_px);
+    double distance_nm  = this->views[GAME]->distanceNM(distance_px);
 	
     this->settings->centerpoint = Tools::calculate(this->settings->centerpoint, angle_rad, distance_nm);
 }
@@ -69,7 +67,7 @@ void Gamecontroller::handle_mouse_wheel(int amount) {
 			this->settings->zoom = this->settings->zoom_max;
 		}
 		
-		this->gameview->set_zoom(this->settings->zoom);
+		this->views[GAME]->set_zoom(this->settings->zoom);
 	} else if (this->state == MENU) {
 		this->menu->change_selection(-amount);
 	} else if (this->state == ATIS) {
@@ -81,43 +79,43 @@ void Gamecontroller::set_variables() {
 	#ifdef DEBUG
 	std::clog << "Gamecontroller::set_variables()" << std::endl;
 	#endif
-	this->menuview->repl["[MPL]"] = Tools::tostr(this->settings->max_planes);
-	this->menuview->repl["[RQD]"] = Tools::tostr(this->settings->required_handled);
-	this->menuview->repl["[LEV]"] = Tools::tostr(this->game->get_level());
+	this->views[MENU]->repl["[MPL]"] = Tools::tostr(this->settings->max_planes);
+	this->views[MENU]->repl["[RQD]"] = Tools::tostr(this->settings->required_handled);
+	this->views[MENU]->repl["[LEV]"] = Tools::tostr(this->game->get_level());
 	
-	this->gameview->repl["[PLH]"] = Tools::tostr(this->game->get_handled_planes());
-	this->gameview->repl["[METAR]"] = this->metar.to_string();
-	this->gameview->repl["[TIME]"] = Tools::totime(this->game_time, "H:i:s");
-	this->gameview->repl["[PLC]"] = Tools::tostr(this->game->get_planes_count());
-	this->gameview->repl["[SPE]"] = Tools::tostr(this->game->get_separation_errors());
+	this->views[GAME]->repl["[PLH]"] = Tools::tostr(this->game->get_handled_planes());
+	this->views[GAME]->repl["[METAR]"] = this->metar.to_string();
+	this->views[GAME]->repl["[TIME]"] = Tools::totime(this->game_time, "H:i:s");
+	this->views[GAME]->repl["[PLC]"] = Tools::tostr(this->game->get_planes_count());
+	this->views[GAME]->repl["[SPE]"] = Tools::tostr(this->game->get_separation_errors());
 	if (this->game->get_new_plane() > this->game_time) {
-		this->gameview->repl["[PLN]"] = Tools::totime(this->game->get_new_plane() - this->game_time, "i:s");
+		this->views[GAME]->repl["[PLN]"] = Tools::totime(this->game->get_new_plane() - this->game_time, "i:s");
 	} else {
-		this->gameview->repl["[PLN]"] = "no plane";
+		this->views[GAME]->repl["[PLN]"] = "no plane";
 	}
-	this->gameview->repl["[SPK]"] = Tools::tostr(this->settings->max_separation_errors);
-	this->gameview->repl["[RQD]"] = Tools::tostr(this->settings->required_handled);
-	this->gameview->repl["[DEP]"] = Tools::tostr(this->atis->get_departure_runway().get_name());
-	this->gameview->repl["[LND]"] = Tools::tostr(this->atis->get_landing_runway().get_name());
-	this->gameview->repl["[TRL]"] = Tools::tostr(this->atis->get_transition_level());
-	this->gameview->repl["[TRA]"] = Tools::tostr(this->atis->get_transition_altitude());
-	this->gameview->repl["[FPS]"] = Tools::tostr(this->fps);
-	this->gameview->repl["[CLRC]"] = Tools::tostr(this->game->get_clearances().size());
-	this->gameview->repl["[PCNT]"] = Tools::tostr(this->game->get_game_points());
-	this->gameview->repl["[CLRE]"] = Tools::tostr(this->game->get_clearance_error());
-	this->gameview->repl["[GRE]"] = Tools::tostr(this->game->get_game_error());
-	this->gameview->repl["[MXA]"] = Tools::tostr(Tools::round_nearest(Tools::rad2deg(this->atis->get_landing_runway().get_heading()) + this->settings->approach_angle, 10));
-	this->gameview->repl["[MNA]"] = Tools::tostr(Tools::round_nearest(Tools::rad2deg(this->atis->get_landing_runway().get_heading()) - this->settings->approach_angle, 10));
+	this->views[GAME]->repl["[SPK]"] = Tools::tostr(this->settings->max_separation_errors);
+	this->views[GAME]->repl["[RQD]"] = Tools::tostr(this->settings->required_handled);
+	this->views[GAME]->repl["[DEP]"] = Tools::tostr(this->atis->get_departure_runway().get_name());
+	this->views[GAME]->repl["[LND]"] = Tools::tostr(this->atis->get_landing_runway().get_name());
+	this->views[GAME]->repl["[TRL]"] = Tools::tostr(this->atis->get_transition_level());
+	this->views[GAME]->repl["[TRA]"] = Tools::tostr(this->atis->get_transition_altitude());
+	this->views[GAME]->repl["[FPS]"] = Tools::tostr(this->fps);
+	this->views[GAME]->repl["[CLRC]"] = Tools::tostr(this->game->get_clearances().size());
+	this->views[GAME]->repl["[PCNT]"] = Tools::tostr(this->game->get_game_points());
+	this->views[GAME]->repl["[CLRE]"] = Tools::tostr(this->game->get_clearance_error());
+	this->views[GAME]->repl["[GRE]"] = Tools::tostr(this->game->get_game_error());
+	this->views[GAME]->repl["[MXA]"] = Tools::tostr(Tools::round_nearest(Tools::rad2deg(this->atis->get_landing_runway().get_heading()) + this->settings->approach_angle, 10));
+	this->views[GAME]->repl["[MNA]"] = Tools::tostr(Tools::round_nearest(Tools::rad2deg(this->atis->get_landing_runway().get_heading()) - this->settings->approach_angle, 10));
 	
-	this->atisview->repl["[METAR]"] = this->metar.to_string();
-	//this->atisview->repl["[LEV]"] = Tools::tostr(this->game->get_level());
-	this->atisview->repl["[DEPARTURE]"] = this->atis->get_departure_runway().get_name();
-	this->atisview->repl["[LANDING]"] = this->atis->get_landing_runway().get_name();
-	this->atisview->repl["[LEVEL]"] = Tools::tostr(this->atis->get_transition_level());
-	this->atisview->repl["[ALTITUDE]"] = Tools::tostr(this->atis->get_transition_altitude());
+	this->views[ATIS]->repl["[METAR]"] = this->metar.to_string();
+	//this->views[ATIS]->repl["[LEV]"] = Tools::tostr(this->game->get_level());
+	this->views[ATIS]->repl["[DEPARTURE]"] = this->atis->get_departure_runway().get_name();
+	this->views[ATIS]->repl["[LANDING]"] = this->atis->get_landing_runway().get_name();
+	this->views[ATIS]->repl["[LEVEL]"] = Tools::tostr(this->atis->get_transition_level());
+	this->views[ATIS]->repl["[ALTITUDE]"] = Tools::tostr(this->atis->get_transition_altitude());
 	
-	this->statview->repl["[SPE]"] = Tools::tostr(this->game->get_separation_errors());
-	this->statview->repl["[RQD]"] = Tools::tostr(this->settings->required_handled);
+	this->views[STAT]->repl["[SPE]"] = Tools::tostr(this->game->get_separation_errors());
+	this->views[STAT]->repl["[RQD]"] = Tools::tostr(this->settings->required_handled);
 }
 
 void Gamecontroller::calculate_fps() {
@@ -133,53 +131,37 @@ void Gamecontroller::update(double elapsed, Point& mouse) {
 	std::clog << "Gamecontroller::update(" << elapsed << ", " << mouse << ")" << std::endl;
 	#endif
 	
+	if (this->atis->ok() && this->state == ATIS) {
+		this->state = GAME;
+		this->views[GAME]->load();
+	} else if (this->game->ok()) {
+		this->state = STAT;
+	}
+	
+	this->game_time += elapsed;
+	
 	this->set_variables();
 	
-	if (this->state == ATIS) {
-		if (this->atis->ok()) {
-			this->state = GAME;
-			this->gameview->load();
-		} 
-		
-		this->menu = this->atis->get_menu();
-		this->menuview->set_menu(this->menu);
-		this->atisview->clear_screen();
-		this->atisview->draw();
-		this->atisview->draw_errors();
-		this->menuview->draw();
-		this->atisview->render();
-	} else if (this->state == GAME) {
-		this->game_time += elapsed;
-		
+	this->views[this->state]->clear_screen();
+	this->views[this->state]->update();
+	this->views[this->state]->draw(mouse);
+	
+	if (this->game_time < (this->flash_message_begin + this->flash_message_time)) {
+		this->views[this->state]->flash_message(this->message);
+	}
+	
+	if (this->state == GAME) {
 		std::string tmp = this->game->get_message();
-		
+
 		if (tmp.length()) {
 			this->set_flash_message(tmp);
 		}
 		
 		this->calculate_fps();
 		this->game->update(elapsed);
-		
-		if (this->game->ok()) {
-			this->state = STAT;
-		}
-		
-		this->gameview->update_command(this->command);
-		this->gameview->draw(mouse);
-		
-		if (this->game_time < (this->flash_message_begin + this->flash_message_time)) {
-			this->gameview->flash_message(this->message);
-		}
-		
-		this->gameview->render();
-	} else if (this->state == STAT) {
-		this->statview->draw();
-		this->statview->render();
-	} else if (this->state == MENU) {
-		this->menuview->clear_screen();
-		this->menuview->draw();
-		this->menuview->render();
 	}
+	
+	this->views[this->state]->render();
 }
 
 void Gamecontroller::set_flash_message(std::string message) {
@@ -188,24 +170,10 @@ void Gamecontroller::set_flash_message(std::string message) {
 }
 
 void Gamecontroller::handle_mouse_click(Point& mouse) {
-	if (this->state == GAME) {
-		this->game->selected = NULL;
-
-		std::list <Aircraft*> :: iterator plane;
-		std::list <Aircraft*> aircrafts = this->game->get_aircrafts();
-
-		for (plane = aircrafts.begin(); plane != aircrafts.end(); ++plane) {
-			Point aircraft = this->gameview->calculate((*plane)->get_place());
-
-			if (Tools::on_area(mouse, aircraft, 10)) {
-				this->game->selected = (*plane);
-				this->set_flash_message("Plane " + (*plane)->get_name() + " selected");
-			}
-		}
-	} 	
+	this->message = this->views[this->state]->handle_click(mouse);
 }
 
-void Gamecontroller::load_menu_items(std::string query, Menu*& menu) {
+void Gamecontroller::load_menu_items(std::string query, std::shared_ptr <Menu> menu) {
 	std::clog << "Gamecontroller::load_menu_items(" << query << ", menu" << ")" << std::endl;
 	menu->clear();
 	std::list <std::string> arguments;
@@ -247,11 +215,13 @@ void Gamecontroller::handle_text_input() {
 		this->atis->load();
 				
 		this->state = ATIS;
-		this->menuview->set_menu(menu);
+		menu = this->atis->get_menu();
+		this->views[MENU]->set_menu(menu);
 	} else if (this->state == ATIS) {
 		if (this->atis->ok() == true) {
 			this->state = GAME;
 		} else {
+			std::clog << this->menu->get_selected().get_name() << std::endl;
 			this->atis->set_value(this->menu->get_selected().get_name());
 		}
 	}

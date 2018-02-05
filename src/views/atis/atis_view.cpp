@@ -6,11 +6,23 @@ Atisview::~Atisview() { }
 
 void Atisview::load() {
     View::load("atis");
+	
+	std::shared_ptr <Menuview> mv(new Menuview(this->drawer, this->settings, this->atis->get_menu()));
+	this->menuview = mv;
+	
+	this->menuview->load();
 }
 
-void Atisview::draw() {
+void Atisview::draw(Point& mouse) {
+	this->set_menu(this->atis->get_menu());
+	this->draw_errors();
+	
 	View::draw();
+	
+	this->menuview->draw(mouse);
 }
+
+std::string Atisview::handle_click(Point&) { return ""; }
 
 void Atisview::draw_errors() {
 	Drawable_list atis_errors("ul", "list", "atis_error");
@@ -35,4 +47,8 @@ void Atisview::draw_runways() {
 	}
 	
 	this->draw_element(list_runways);
+}
+
+void Atisview::update() {
+
 }

@@ -5,6 +5,7 @@
 #include <iostream>
 
 #include "../view.hpp"
+#include "../menu/menu_view.hpp"
 #include "../../tools/tools.hpp"
 #include "../../tools/point_tools.hpp"
 #include "../../tools/settings.hpp"
@@ -15,13 +16,15 @@ class Atisview : public View {
 public:
 	Atisview(Drawsurface& d, std::shared_ptr <Settings> s, std::shared_ptr <Atis> a);
 	~Atisview();
-	void draw();
+	virtual void draw(Point& mouse);
+	virtual std::string handle_click(Point& mouse);
     void load();
-	std::string get_value(Point& mouse);
+	std::string get_value();
 	void draw_errors();
-	void update();
+	virtual void update();
 private:
 	std::shared_ptr <Atis> atis;
+	std::shared_ptr <Menuview> menuview;
 	
 	void draw_runways();
 };

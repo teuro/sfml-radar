@@ -12,13 +12,15 @@
 
 class Menuview : public View {
 public:
-	Menuview(Drawsurface& d, std::shared_ptr <Settings> s, Menu*& m);
+	Menuview(Drawsurface& d, std::shared_ptr <Settings> s, std::shared_ptr <Menu> menu);
 	~Menuview();
-	void draw();
+	virtual void draw(Point& mouse);
+	virtual std::string handle_click(Point& mouse);
     void load();
-	void set_menu(Menu*& menu);
+	void set_menu(std::shared_ptr <Menu> menu);
+	virtual void update();
 private: 
-	Menu* menu;
+	std::shared_ptr <Menu> menu;
 };
 
 #endif // ATIS_VIEW

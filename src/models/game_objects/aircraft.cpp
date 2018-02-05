@@ -176,6 +176,8 @@ std::string Aircraft::update(double elapsed) {
 	if (this->fuel_amount < this->fuel_final_reserve) {
 		return this->name + " BINGO " + Tools::tostr(this->fuel_amount) + " kg left";
 	}
+	
+	return "";
 }
 
 void Aircraft::set_takeoff_clearance() {
