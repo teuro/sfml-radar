@@ -1,6 +1,23 @@
 #include "view.hpp"
 
-View::View(Drawsurface& d, std::shared_ptr <Settings> s) : drawer(d), settings(s) { }
+void View::calculate_coordinate_limits(double distance) {
+	Coordinate c(Tools::calculate(this->settings->centerpoint, Tools::deg2rad(315.0), distance));
+	Coordinate d(Tools::calculate(this->settings->centerpoint, Tools::deg2rad(135.0), distance));
+	
+	min_lat = d.get_latitude();
+	max_lat = c.get_latitude();
+	
+	min_lon = c.get_longitude();
+	max_lon = d.get_longitude();
+}
+
+
+View::View(Drawsurface& d, std::shared_ptr <Settings> s) : drawer(d), settings(s) { 
+	this->min_lat = 59.5;
+	this->max_lat = 61.5;
+	this->min_lon = 23.0;
+	this->max_lon = 26.0;
+}
 
 View::~View() { }
 
@@ -548,9 +565,23 @@ Style View::find_style(std::string name) {
 	throw std::runtime_error("Searched style name '" + name + "' not found");
 }
 
-double View::distanceNM(double) { }
+double View::distanceNM(double pixels) {
+	double center_w = this->settings->screen_width / 2.0;
+	double center_h = this->settings->screen_height / 2.0;
+	
+	double center2corner = std::sqrt(std::pow(center_w, 2.0) + std::pow(center_h, 2.0));
+	
+	return (this->settings->zoom * pixels) / center2corner;
+}
 
-void View::set_zoom(int) { }
+void View::set_zoom(int zoom) {
+	Coordinate a(min_lat, min_lon);
+	Coordinate b(max_lat, max_lon);
+	
+	double distance = zoom / 2.0;
+	
+	this->calculate_coordinate_limits(distance);
+}
 
 void View::set_menu(std::shared_ptr <Menu> m) { 
 	this->menu = m;

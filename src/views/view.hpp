@@ -92,6 +92,11 @@ public:
 	virtual void set_zoom(int zoom);
 	virtual void set_menu(std::shared_ptr <Menu> menu);
 protected:
+	double min_lat;
+	double max_lat;
+	double min_lon;
+	double max_lon;
+
     Drawsurface& drawer;
     std::shared_ptr <Settings> settings;
     std::shared_ptr <Menu> menu;
@@ -103,6 +108,8 @@ protected:
 	void draw_element(Drawable_list& dl);
 	void draw_element(Drawable_table& dt);
 	void draw_borders(Style& style);
+	
+	void calculate_coordinate_limits(double distance);
 	
 	void style(Drawable_element& de);
     void load(std::string state);

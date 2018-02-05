@@ -94,8 +94,6 @@ public:
 	
 	void draw_planes(std::list <Aircraft*> planes, Aircraft* selected, Point& mouse);
 	
-	void set_zoom(int zoom);
-	
 	/**
 		* calculate
 		* Calculates new screen point
@@ -115,8 +113,6 @@ public:
 	 virtual void update();
 	 
 	 double distancePX(double nautical);
-	 double distanceNM(double pixels);
-	 void calculate_coordinate_limits(double distance);
 private:
 	
 	/**

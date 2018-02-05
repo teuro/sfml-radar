@@ -1,10 +1,5 @@
 #include "game_view.hpp"
 
-double min_lat = 59.5;
-double max_lat = 61.5;
-double min_lon = 23.0;
-double max_lon = 26.0;
-
 Drawable_plane::Drawable_plane(std::string call, std::string t_name, std::string t_class, std::string t_id) : Drawable_element(t_name, t_class, t_id), callsign(call) { 
 	
 }
@@ -34,6 +29,8 @@ void Gameview::update_command(std::string t_command) {
 }
 
 std::string Gameview::handle_click(Point& mouse) {
+	this->game->selected = NULL;
+	
 	std::list <Aircraft*> :: iterator plane;
 	std::list <Aircraft*> aircrafts = this->game->get_aircrafts();
 
@@ -174,15 +171,6 @@ double Gameview::distancePX(double nautical) {
 	return (nautical * center2corner) / this->settings->zoom;
 }
 
-double Gameview::distanceNM(double pixels) {
-	double center_w = this->settings->screen_width / 2.0;
-	double center_h = this->settings->screen_height / 2.0;
-	
-	double center2corner = std::sqrt(std::pow(center_w, 2.0) + std::pow(center_h, 2.0));
-	
-	return (this->settings->zoom * pixels) / center2corner;
-}
-
 void Gameview::draw_airfield(std::shared_ptr <Airfield> airfield) {
     std::vector <Runway> runways = airfield->get_runways();
     std::vector <Navpoint> navpoints = airfield->get_navpoints();
@@ -207,29 +195,9 @@ void Gameview::draw_airfield(std::shared_ptr <Airfield> airfield) {
     }
 }
 
-void Gameview::set_zoom(int zoom) {
-	Coordinate a(min_lat, min_lon);
-	Coordinate b(max_lat, max_lon);
-	
-	double distance = zoom / 2.0;
-	
-	this->calculate_coordinate_limits(distance);
-}
-
-void Gameview::calculate_coordinate_limits(double distance) {
-	Coordinate c(Tools::calculate(this->settings->centerpoint, Tools::deg2rad(315.0), distance));
-	Coordinate d(Tools::calculate(this->settings->centerpoint, Tools::deg2rad(135.0), distance));
-	
-	min_lat = d.get_latitude();
-	max_lat = c.get_latitude();
-	
-	min_lon = c.get_longitude();
-	max_lon = d.get_longitude();
-}
-
 Point Gameview::calculate(Coordinate& target) {
-	int pixelY = this->settings->screen_height - ((target.get_latitude() - min_lat) / (max_lat - min_lat)) * this->settings->screen_height;
-	int pixelX = ((target.get_longitude() - min_lon) / (max_lon - min_lon)) * this->settings->screen_width;
+	int pixelY = this->settings->screen_height - ((target.get_latitude() - this->min_lat) / (this->max_lat - this->min_lat)) * this->settings->screen_height;
+	int pixelX = ((target.get_longitude() - this->min_lon) / (this->max_lon - this->min_lon)) * this->settings->screen_width;
 	
 	Point t(pixelX, pixelY);
 	
