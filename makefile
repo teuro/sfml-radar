@@ -1,10 +1,10 @@
 CXX := g++
-CXXFLAGS := -s -c -O2 -Wall -Wextra -pedantic -std=gnu++11
-LINKFLAGS := -O2 -s
+CXXFLAGS := -g -c -O -Wall -Wextra -pedantic -std=gnu++11
+LINKFLAGS := -O -g
 LIB_DIRS := -Lext/lib
 
-PUTKARTS_VERSION :=
-CXX_VER = "-DPUTKARTS_VERSION=\"$(PUTKARTS_VERSION)\""
+SFML_VERSION :=
+CXX_VER = "-DSFML_VERSION=\"$(SFML_VERSION)\""
 
 FILES_CPP := $(wildcard src/*.cpp) $(wildcard src/*/*.cpp) $(wildcard src/*/*/*.cpp) $(wildcard src/*/*/*/*.cpp)
 FILES_HPP := $(wildcard src/*.hpp) $(wildcard src/*/*.hpp) $(wildcard src/*/*/*.hpp) $(wildcard src/*/*/*/*.hpp)
@@ -23,14 +23,14 @@ ifeq "$(shell echo '1')" "'1'"
 
   # Get the version number from git; we must first check manually that git.exe exists
   ifeq "$(findstring git,$(shell for %%i in (git.exe) do @echo.%%~$$PATH:i))" "git"
-    PUTKARTS_VERSION := $(strip $(shell git describe 2>NUL))
+    SFML_VERSION := $(strip $(shell git describe 2>NUL))
   endif
 else
   mkdir = $(shell mkdir -p $(1))
   rm_rf = $(shell rm -rf $(1)) $(1)
 
   # Get the version number from git
-  PUTKARTS_VERSION := $(strip $(shell git describe 2>/dev/null))
+  SFML_VERSION := $(strip $(shell git describe 2>/dev/null))
 
   # Something needs pthread.
   CLI_LIBS += -lpthread

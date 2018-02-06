@@ -92,7 +92,7 @@ public:
 		* @return void
 	**/
 	
-	void draw_planes(std::list <Aircraft*> planes, Aircraft* selected, Point& mouse);
+	void draw_planes(std::list <aircraft> planes, aircraft selected, Point& mouse);
 	
 	/**
 		* calculate
@@ -123,7 +123,7 @@ private:
 		* @return void
 	**/
 	
-    void draw_plane(Aircraft*& plane, Aircraft* selected, Point& mouse);
+    void draw_plane(aircraft plane, aircraft selected, Point& mouse);
 	std::string command;
 	bool loaded;
 	

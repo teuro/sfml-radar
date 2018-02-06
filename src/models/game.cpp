@@ -31,7 +31,7 @@ std::shared_ptr <Airfield> Game::get_active_field() {
     return this->active_field;
 }
 
-std::list <Aircraft*> Game::get_aircrafts() {
+std::list <aircraft> Game::get_aircrafts() {
     return this->aircrafts;
 }
 
@@ -42,8 +42,8 @@ void Game::add_point(Navpoint np) {
 void Game::check_collision() {
     this->errors.clear();
 
-    std::list <Aircraft*> :: iterator plane_a;
-    std::list <Aircraft*> :: iterator plane_b;
+    std::list <aircraft> :: iterator plane_a;
+    std::list <aircraft> :: iterator plane_b;
 
     for (plane_a = this->aircrafts.begin(); plane_a != this->aircrafts.end(); ++plane_a) {
         for (plane_b = this->aircrafts.begin(); plane_b != this->aircrafts.end(); ++plane_b) {
@@ -67,7 +67,7 @@ void Game::check_collision() {
 }
 
 bool Game::is_free(Inpoint& navpoint) {
-    std::list <Aircraft*> :: iterator plane;
+    std::list <aircraft> :: iterator plane;
 
     for (plane = this->aircrafts.begin(); plane != this->aircrafts.end(); ++plane) {
         if (Tools::distanceNM(navpoint.get_place(), (*plane)->get_place()) < this->settings->separation_horizontal && std::abs((*plane)->get_altitude() - navpoint.get_altitude()) < this->settings->separation_vertical) {
@@ -80,7 +80,7 @@ bool Game::is_free(Inpoint& navpoint) {
 
 void Game::handle_holdings() {
     if (this->holdings.size()) {
-        std::list <Aircraft*> :: iterator plane = this->aircrafts.begin();
+        std::list <aircraft> :: iterator plane = this->aircrafts.begin();
 
         while (plane != this->aircrafts.end()) {
             if ((*plane)->get_altitude() < 1000 || this->duration < this->pop_holdings) {
@@ -90,7 +90,7 @@ void Game::handle_holdings() {
             ++plane;
         }
 
-        Aircraft* t = this->holdings.front();
+        aircraft t = this->holdings.front();
         t->set_place(this->atis->get_departure_runway().get_start_place());
         t->set_takeoff_clearance();
 		this->aircrafts.push_back(t);
@@ -136,7 +136,7 @@ void Game::update(double elapsed) {
     this->check_collision();
     this->handle_holdings();
 
-    for (std::list <Aircraft*> :: iterator it = this->aircrafts.begin(); it != this->aircrafts.end(); ++it) {
+    for (std::list <aircraft> :: iterator it = this->aircrafts.begin(); it != this->aircrafts.end(); ++it) {
 		std::string aircraft_message;
 		
         (*it)->set_separation_error(false);
@@ -155,7 +155,7 @@ void Game::update(double elapsed) {
 		}
     }
 
-    for (std::list <Aircraft*> :: iterator it = errors.begin(); it != errors.end(); ++it) {
+    for (std::list <aircraft> :: iterator it = errors.begin(); it != errors.end(); ++it) {
         (*it)->set_separation_error(true);
     }
 
@@ -177,7 +177,7 @@ Inpoint Game::select_inpoint() {
 }
 
 bool Game::check_aircrafts(std::string name) {
-	std::list <Aircraft*> :: iterator plane;
+	std::list <aircraft> :: iterator plane;
 
     for (plane = this->aircrafts.begin(); plane != this->aircrafts.end(); ++plane) {
 		if ((*plane)->get_name() == name) {
@@ -222,13 +222,11 @@ void Game::create_plane() {
 		t_callsign = airlines(Tools::rnd(0, airlines.size()), "ICAO") + Tools::tostr(Tools::rnd(1, 999), 3);
 	}
 	
-	Aircraft* plane;
-	
 	if (type == DEPARTURE) {
-		plane = new Aircraft(t_callsign, this->settings, this->active_field, this->atis, t_outpoint);
+		aircraft plane(new Aircraft(t_callsign, this->settings, this->active_field, this->atis, t_outpoint));
 		this->holdings.push(plane);
 	} else {
-		plane = new Aircraft(t_callsign, this->settings, this->active_field, this->atis, t_inpoint);
+		aircraft plane (new Aircraft(t_callsign, this->settings, this->active_field, this->atis, t_inpoint));
 		this->aircrafts.push_back(plane);
 	}
 }
@@ -327,7 +325,7 @@ void Game::load_airfield(std::string icao) {
 	std::clog << "airfield loaded ok" << std::endl;
 }
 
-Aircraft* Game::get_selected() {
+aircraft Game::get_selected() {
     return this->selected;
 }
 

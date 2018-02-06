@@ -34,6 +34,8 @@ struct Game_point {
     * Representing state of game
 **/
 
+typedef std::shared_ptr <Aircraft> aircraft;
+
 class Game {
 public:
     /**
@@ -41,7 +43,7 @@ public:
         * @param Settings& s game settiungs
     **/
 	
-	Game(std::shared_ptr <Settings> s, std::shared_ptr <Atis> a);
+	Game(std::shared_ptr <Settings> settings, std::shared_ptr <Atis> atis);
 	~Game();
 
 	/**
@@ -51,9 +53,9 @@ public:
 	**/
 	void add_point(Navpoint np);
 
-	std::list <Aircraft*> get_aircrafts();
+	std::list <aircraft> get_aircrafts();
 	
-	Aircraft* selected;
+	aircraft selected;
 
     /**
         Get's game duration pure value
@@ -91,7 +93,7 @@ public:
 		* return Aircraft*
 	**/
 	
-	Aircraft* get_selected();
+	aircraft get_selected();
 	
 	/**
 		* Returns selected airfield
@@ -136,11 +138,11 @@ private:
 	std::shared_ptr <Settings> settings;
 
 	std::vector     <Navpoint>		navpoints;
-	std::list       <Aircraft*>		aircrafts;
-	std::queue      <Aircraft*>		holdings;
+	std::list       <aircraft>		aircrafts;
+	std::queue      <aircraft>		holdings;
 	std::queue      <std::string>	display_messages;
 	std::queue      <std::string>	game_errors;
-	std::list       <Aircraft*>		errors;
+	std::list       <aircraft>		errors;
 	std::list       <Clearance>		clearances;
 	std::list       <Game_point>	points;
 	

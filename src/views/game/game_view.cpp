@@ -31,8 +31,8 @@ void Gameview::update_command(std::string t_command) {
 std::string Gameview::handle_click(Point& mouse) {
 	this->game->selected = NULL;
 	
-	std::list <Aircraft*> :: iterator plane;
-	std::list <Aircraft*> aircrafts = this->game->get_aircrafts();
+	std::list <aircraft> :: iterator plane;
+	std::list <aircraft> aircrafts = this->game->get_aircrafts();
 
 	for (plane = aircrafts.begin(); plane != aircrafts.end(); ++plane) {
 		Point aircraft = this->calculate((*plane)->get_place());
@@ -65,7 +65,7 @@ void Gameview::draw(Point& mouse) {
 	this->draw_planes(this->game->get_aircrafts(), this->game->get_selected(), mouse);
 }
 
-void Gameview::draw_plane(Aircraft*& plane, Aircraft* selected, Point& mouse) {
+void Gameview::draw_plane(aircraft plane, aircraft selected, Point& mouse) {
 	Point aircraft_place = this->calculate(plane->get_place());
 	Point draw;
 	std::string id = "";
@@ -121,8 +121,8 @@ void Gameview::draw_plane(Aircraft*& plane, Aircraft* selected, Point& mouse) {
 	this->draw_element(info_list);
 }
 
-void Gameview::draw_planes(std::list <Aircraft*> planes, Aircraft* selected, Point& mouse) {
-    std::list <Aircraft*> :: iterator plane = planes.begin();
+void Gameview::draw_planes(std::list <aircraft> planes, aircraft selected, Point& mouse) {
+    std::list <aircraft> :: iterator plane = planes.begin();
 	Drawable_table plane_table("table", "", "planelist");
     	
     while (plane != planes.end()) {
