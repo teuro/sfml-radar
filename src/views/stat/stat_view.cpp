@@ -12,7 +12,10 @@ void Statview::draw(Point& ) {
 }
 
 void Statview::load() { 
+	#ifdef DEBUG
 	std::clog << "Statview::load()" << std::endl;
+	#endif
+	
 	View::load("stat");
 }
 

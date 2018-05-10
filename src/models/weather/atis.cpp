@@ -13,7 +13,10 @@ Atis::Atis(std::shared_ptr <Settings> s, Metar& m) : settings(s), metar(m) {
 Atis::~Atis() { }
 
 void Atis::load() {	
+	#ifdef DEBUG
 	std::clog << "Atis::load()" << std::endl;
+	#endif
+	
 	altitudes.push_back(3000);
 	altitudes.push_back(4000);
 	altitudes.push_back(5000);
@@ -64,12 +67,18 @@ void Atis::set_landing_runway(std::string lnd_rwy) {
 }
 
 void Atis::set_transition_altitude(int tr_alt) {
-	//std::clog << "Atis::set_transition_altitude(" <<  tr_alt << ")" << std::endl; 
+	#ifdef DEBUG
+	std::clog << "Atis::set_transition_altitude(" <<  tr_alt << ")" << std::endl; 
+	#endif
+	
     this->transition_altitude = tr_alt;
 }
 
 void Atis::set_transition_level(int tr_lvl) {
-	//std::clog << "Atis::set_transition_level(" <<  tr_lvl << ")" << std::endl; 
+	#ifdef DEBUG
+	std::clog << "Atis::set_transition_level(" <<  tr_lvl << ")" << std::endl; 
+	#endif
+	
     this->transition_level = tr_lvl;
 }
 
@@ -118,7 +127,10 @@ std::list <std::string>  Atis::get_atis_errors() {
 }
 
 double Atis::calculate_backwind(double runway) {
-	//std::clog << "Atis::calculate_backwind(" << runway << ")" << std::endl;
+	#ifdef DEBUG
+	std::clog << "Atis::calculate_backwind(" << runway << ")" << std::endl;
+	#endif
+	
 	double wind = this->metar.get_wind_direction();
 	int speed = this->metar.get_wind_speed();
 	
@@ -126,14 +138,20 @@ double Atis::calculate_backwind(double runway) {
 }
 
 double Atis::calculate_backwind(Runway& runway) {
-	//std::clog << "Atis::calculate_backwind(" << runway_name << ")" << std::endl;
+	#ifdef DEBUG
+	std::clog << "Atis::calculate_backwind(" << runway_name << ")" << std::endl;
+	#endif
+	
 	std::vector <Runway> :: iterator it_rwy = std::find(this->active_field->get_runways().begin(), this->active_field->get_runways().end(), runway.get_name());
 	
 	return this->calculate_backwind(it_rwy->get_heading());
 }
 
 bool Atis::check_backwind(Runway& runway) {
-	//std::clog << "Atis::check_backwind(" << runway_name << ")" << std::endl;
+	#ifdef DEBUG
+	std::clog << "Atis::check_backwind(" << runway_name << ")" << std::endl;
+	#endif
+	
 	if (runway.get_name().length() > 0) {
 		
 		if (this->calculate_backwind(runway.get_heading()) > 0) {

@@ -15,7 +15,11 @@ Aircraft::Aircraft(std::string t_name, std::shared_ptr <Settings> s, std::shared
 
 Aircraft::Aircraft(std::string t_name, std::shared_ptr <Settings> s, std::shared_ptr <Airfield> af, std::shared_ptr <Atis> a, Outpoint& op) : name(t_name), settings(s), airport(af), atis(a) {	
 	this->place 				= this->atis->get_departure_runway().get_start_place();
+
+	#ifdef DEBUG
 	std::clog << place << std::endl;
+	#endif
+
 	this->altitude 				= this->airport->get_altitude();
 	this->heading 				= this->atis->get_departure_runway().get_heading();
 	this->speed					= 0;

@@ -53,7 +53,10 @@ void Menuview::draw(Point&) {
 }
 
 void Menuview::load() { 
+	#ifdef DEBUG
 	std::clog << "Menuview::load()" << std::endl;
+	#endif
+	
 	View::load("menu");
 }
 

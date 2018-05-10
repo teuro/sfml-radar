@@ -19,7 +19,9 @@ Gameview::Gameview(Drawsurface& d, std::shared_ptr <Settings> s, std::shared_ptr
 Gameview::~Gameview() { }
 
 void Gameview::load() {
+	#ifdef DEBUG
 	std::clog << "Gameview::load()" << std::endl;
+	#endif
 	this->loaded = true;
 	View::load("game");
 }

@@ -5,7 +5,9 @@ SFML_window::SFML_window() { }
 SFML_window::~SFML_window() { }
 
 void SFML_window::init() {
+	#ifdef DEBUG
     std::clog << "SFML_window::init()" << std::endl;
+	#endif
 	this->time_change = sf::milliseconds(80);
 }
 
@@ -13,7 +15,10 @@ void SFML_window::load_settings() {
 	std::shared_ptr <Settings> s (new Settings);
 	this->settings = s;
 	
+	#ifdef DEBUG
 	std::clog << "SFML_window::load_settings()" << std::endl;
+	#endif
+	
 	Tools::init_random();
 	
 	Database db;
@@ -29,11 +34,15 @@ void SFML_window::load_settings() {
 }
 
 void SFML_window::close() {
+	#ifdef DEBUG
     std::clog << "SFML_window::close()" << std::endl;
+	#endif
 }
 
 void SFML_window::handle_events() {
+	#ifdef DEBUG
     std::clog << "SFML_window::handle_events()" << std::endl;
+	#endif
 }
 
 void SFML_window::run() {	
@@ -78,7 +87,10 @@ void SFML_window::run() {
 }
 
 bool SFML_window::handle_event(sf::Event& event, Controller& ctrl, sf::RenderWindow& window) {
-	//std::clog << "SFML_window::handle_event()" << std::endl;
+	#ifdef DEBUG
+	std::clog << "SFML_window::handle_event()" << std::endl;
+	#endif
+	
     sf::Vector2i mouse_place = sf::Mouse::getPosition(window);
 	mouse.set_place(mouse_place.x, mouse_place.y);
 	std::string t_input;
@@ -130,7 +142,6 @@ bool SFML_window::handle_event(sf::Event& event, Controller& ctrl, sf::RenderWin
         case sf::Event::Resized:
             this->settings->screen_height = event.size.height;
             this->settings->screen_width = event.size.width;
-			std::clog << window.getPosition().x << ", " << window.getPosition().y << std::endl;
         default:
             return true;
     }

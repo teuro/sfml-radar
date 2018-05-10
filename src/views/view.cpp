@@ -21,7 +21,9 @@ void View::add_style(std::list <Style> tmp) {
 }
 
 void View::load(std::string state) {
+	#ifdef DEBUG
 	std::clog << "View::load(" << state << ")" << std::endl;
+	#endif
 	this->load_styles();
 	this->load_layout(state);
 	
@@ -34,7 +36,9 @@ void View::load(std::string state) {
 }
 
 void View::load_styles() {
+	#ifdef DEBUG
 	std::clog << "View::load_styles()" << std::endl;
+	#endif
 	
 	DIR* dir;
 	struct dirent *ent;
@@ -42,7 +46,9 @@ void View::load_styles() {
 	dir = opendir(this->settings->style_folder.c_str());
 	
 	if (dir != NULL) {	
+		#ifdef DEBUG
 		std::clog << "View::Style folder opened" << std::endl;
+		#endif
 		while ((ent = readdir (dir)) != NULL) {
 			std::string file_name = this->settings->style_folder + std::string(ent->d_name);
 			
@@ -68,7 +74,9 @@ std::map <std::string, std::string> View::get_info(TiXmlElement *pParm) {
 }
 
 void View::load_layout(std::string state) {
+	#ifdef DEBUG
 	std::clog << "View::load_layout(" << state << ")" << std::endl;
+	#endif
 	
 	TiXmlDocument doc;
 	bool load_ok = false;
@@ -83,7 +91,9 @@ void View::load_layout(std::string state) {
 		load_ok = doc.LoadFile(this->settings->layout_menu_file_name.c_str());
 	}	
 	
+	#ifdef DEBUG
 	std::clog << "Layout file loaded" << std::endl;
+	#endif
 	
 	if (!load_ok) {
 		throw std::logic_error("layout-file " + state + ".xml not ok");

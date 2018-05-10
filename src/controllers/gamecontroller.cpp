@@ -23,7 +23,9 @@ Gamecontroller::Gamecontroller(std::shared_ptr <Settings> s, Drawsurface& d) : C
 Gamecontroller::~Gamecontroller() { }
 
 void Gamecontroller::load() {
+	#ifdef DEBUG
 	std::clog << "Gamecontroller::load()" << std::endl;
+	#endif
 	
 	std::shared_ptr <Menu> m(new Menu("airport", "airport"));
 	this->menu 		= m;
@@ -50,7 +52,10 @@ std::string Gamecontroller::handle_function_keys() {
 }
 
 void Gamecontroller::handle_mouse_release(Point& mouse_start, Point& mouse_end) {
-	//std::clog << "Gamecontroller::handle_mouse_release(" << mouse_start << ", " <<  mouse_end << ")" << std::endl;
+	#ifdef DEBUG
+	std::clog << "Gamecontroller::handle_mouse_release(" << mouse_start << ", " <<  mouse_end << ")" << std::endl;
+	#endif
+	
     double distance_px  = Tools::distancePX(mouse_start, mouse_end);
     double angle_rad    = Tools::fix_angle(Tools::angle(mouse_start, mouse_end) + Tools::get_PI() / 2.0);
     double distance_nm  = this->views[GAME]->distanceNM(distance_px);
@@ -177,7 +182,9 @@ void Gamecontroller::handle_mouse_click(Point& mouse) {
 }
 
 void Gamecontroller::load_menu_items(std::string query, std::shared_ptr <Menu> menu) {
+	#ifdef DEBUG
 	std::clog << "Gamecontroller::load_menu_items(" << query << ", menu" << ")" << std::endl;
+	#endif
 	menu->clear();
 	std::list <std::string> arguments;
 	arguments.push_back(this->command);
@@ -195,7 +202,10 @@ void Gamecontroller::load_menu_items(std::string query, std::shared_ptr <Menu> m
 }
 
 void Gamecontroller::handle_text_input() {
-	//std::clog << "Gamecontroller::handle_text_input()" << std::endl;
+	#ifdef DEBUG
+	std::clog << "Gamecontroller::handle_text_input()" << std::endl;
+	#endif
+	
     std::string t_command = this->command;
 	
 	if (this->state == GAME) {
@@ -224,7 +234,9 @@ void Gamecontroller::handle_text_input() {
 		if (this->atis->ok() == true) {
 			this->state = GAME;
 		} else {
-			std::clog << this->menu->get_selected().get_name() << std::endl;
+			#ifdef DEBUG
+			std::clog << "Gamecontroller::handle_text_input(" << this->menu->get_selected().get_name() << ")" << std::endl;
+			#endif
 			this->atis->set_value(this->menu->get_selected().get_name());
 		}
 	}
@@ -239,6 +251,9 @@ bool Gamecontroller::is_ok() {
 }
 
 void Gamecontroller::update_centerpoint() {
+	#ifdef DEBUG
 	std::clog << "Gamecontroller::update_centerpoint() " <<  this->game->get_active_field()->get_place() << std::endl;
+	#endif
+	
 	//this->settings->set_centerpoint(this->game->get_active_field()->get_place());
 }

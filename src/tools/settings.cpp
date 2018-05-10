@@ -1,7 +1,9 @@
 #include "settings.hpp"
 
 Settings::Settings() { 
+	#ifdef DEBUG
 	std::clog << "Settings::Settings()" << std::endl;
+	#endif
 	
 	this->database_name = "databases/radar.db"; 
 	this->layout_game_file_name = "layouts/game.xml"; 
@@ -18,7 +20,10 @@ Settings::Settings() {
 Settings::~Settings() { }
 
 void Settings::load() {
+	#ifdef DEBUG
 	std::clog << "Settings::load()" << std::endl;
+	#endif
+	
 	Database db;
 	Queryresult colors_result = db.get_result("SELECT * FROM colors");
 	
@@ -91,7 +96,10 @@ void Settings::set_values(std::map<std::string, std::string> values ) {
 }
 
 void Settings::set_centerpoint(Coordinate& cp) {
+	#ifdef DEBUG
 	std::clog << "Settings::set_centerpoint(" << cp << ")" << std::endl;
+	#endif
+	
 	this->centerpoint = cp;
 }
 

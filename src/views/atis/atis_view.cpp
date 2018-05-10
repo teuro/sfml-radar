@@ -39,7 +39,10 @@ void Atisview::draw_errors() {
 }
 
 void Atisview::draw_runways() {
+	#ifdef DEBUG
 	std::clog << "Atisview::draw_runways()" << std::endl;
+	#endif
+	
 	Drawable_list list_runways("ul", "atis_base", "runways");
 	
 	for (auto v: this->atis->get_runways()) {

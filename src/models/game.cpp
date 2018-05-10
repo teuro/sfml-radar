@@ -9,8 +9,10 @@ Game::Game(std::shared_ptr <Settings> s, std::shared_ptr <Atis> a) : settings(s)
 Game::~Game() { }
 
 void Game::load(std::string airfield) {
+	#ifdef DEBUG
     std::clog << "Game::load(" << airfield << ")" << std::endl;
-
+	#endif
+	
     this->load_airfield(airfield);
 
     this->duration = 0;
@@ -238,7 +240,10 @@ void Game::create_plane() {
 }
 
 void Game::load_navpoints(int airfield_id) {
+	#ifdef DEBUG
 	std::clog << "Game::load_navpoints(" << airfield_id << ")" << std::endl;
+	#endif
+	
 	std::list <std::string> variables;
 	
 	variables.push_back(Tools::tostr(airfield_id));
@@ -273,7 +278,9 @@ void Game::load_navpoints(int airfield_id) {
 }
 
 void Game::load_runways(int airfield_id) {
+	#ifdef DEBUG
 	std::clog << "Game::load_runways(" << airfield_id << ")" << std::endl;
+	#endif
 	
 	std::list <std::string> variables;
 	
@@ -307,7 +314,10 @@ void Game::load_runways(int airfield_id) {
 }
 
 void Game::load_airfield(std::string icao) {
+	#ifdef DEBUG
 	std::clog << "Game::load_airfield(" << icao << ")" << std::endl;
+	#endif
+	
 	std::list <std::string> t_airport;
 	t_airport.push_back(icao);
 	
@@ -322,7 +332,9 @@ void Game::load_airfield(std::string icao) {
 	std::shared_ptr <Airfield> ap (new Airfield(airport(0, "ICAO"), place, Tools::toint(airport(0, "max_speed")), Tools::toint(airport(0, "initial_altitude")), Tools::toint(airport(0, "acceleration_altitude"))));
     this->active_field = ap;
 	
+	#ifdef DEBUG
 	std::clog << "Game::load_airfield(" << icao << ")" << this->active_field->get_place() << std::endl;
+	#endif
 	
 	this->settings->airfield_altitude = Tools::toint(airport(0, "altitude"));
 	this->settings->set_centerpoint(place);
@@ -330,7 +342,9 @@ void Game::load_airfield(std::string icao) {
 	this->load_navpoints(airfield_id);
 	this->load_runways(airfield_id);
 	
+	#ifdef DEBUG
 	std::clog << "airfield loaded ok" << std::endl;
+	#endif
 }
 
 aircraft Game::get_selected() {
