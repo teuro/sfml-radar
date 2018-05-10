@@ -45,13 +45,16 @@ void SFML_window::handle_events() {
 	#endif
 }
 
-void SFML_window::run() {	
+void SFML_window::run() {
+	sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
+	
 	sf::RenderWindow window(
 		sf::VideoMode(
 			this->settings->screen_width, 
-			this->settings->screen_height), 
+			this->settings->screen_height,
+			desktop.bitsPerPixel), 
 		this->settings->program_name, 
-		sf::Style::Default
+		sf::Style::Close
 	);
 
 	sf::Image image;
