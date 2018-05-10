@@ -50,11 +50,15 @@ std::string Gamecontroller::handle_function_keys() {
 }
 
 void Gamecontroller::handle_mouse_release(Point& mouse_start, Point& mouse_end) {
+	//std::clog << "Gamecontroller::handle_mouse_release(" << mouse_start << ", " <<  mouse_end << ")" << std::endl;
     double distance_px  = Tools::distancePX(mouse_start, mouse_end);
     double angle_rad    = Tools::fix_angle(Tools::angle(mouse_start, mouse_end) + Tools::get_PI() / 2.0);
     double distance_nm  = this->views[GAME]->distanceNM(distance_px);
 	
-    this->settings->centerpoint = Tools::calculate(this->settings->centerpoint, angle_rad, distance_nm);
+	if (distance_nm > 0.5 && distance_nm < 100) {
+		Coordinate cp = Tools::calculate(this->settings->get_centerpoint(), angle_rad, distance_nm);
+		this->settings->set_centerpoint(cp);
+	}
 }
 
 void Gamecontroller::handle_mouse_wheel(int amount) {
@@ -66,8 +70,6 @@ void Gamecontroller::handle_mouse_wheel(int amount) {
 		} else if (this->settings->zoom > this->settings->zoom_max) {
 			this->settings->zoom = this->settings->zoom_max;
 		}
-		
-		this->views[GAME]->set_zoom(this->settings->zoom);
 	} else if (this->state == MENU) {
 		this->menu->change_selection(-amount);
 	} else if (this->state == ATIS) {
@@ -134,6 +136,7 @@ void Gamecontroller::update(double elapsed, Point& mouse) {
 	if (this->atis->ok() && this->state == ATIS) {
 		this->state = GAME;
 		this->views[GAME]->load();
+		this->game->create_planes(Tools::rnd(3, this->settings->required_handled));
 	} else if (this->game->ok()) {
 		this->state = STAT;
 	}
@@ -233,4 +236,9 @@ void Gamecontroller::update_command(std::string command) {
 
 bool Gamecontroller::is_ok() {
     return false;
+}
+
+void Gamecontroller::update_centerpoint() {
+	std::clog << "Gamecontroller::update_centerpoint() " <<  this->game->get_active_field()->get_place() << std::endl;
+	//this->settings->set_centerpoint(this->game->get_active_field()->get_place());
 }

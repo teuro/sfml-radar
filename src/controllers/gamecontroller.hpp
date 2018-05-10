@@ -132,6 +132,15 @@ public:
 	
     bool is_ok();
 	
+	/**
+		* update_centerpoint
+		* sets center point to selected airport place
+		* @param void
+		* @return void
+	**/
+	
+	void update_centerpoint();
+	
 protected:
 private:
 	void set_variables();

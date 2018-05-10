@@ -23,8 +23,8 @@ public:
     void lineColor(Point& a, Point& b, int color);
     void lineColor(Point& a, Point& b, int red, int green, int blue);
 
-    void circleColor(Point& a, unsigned int radius, int color);
-    void circleColor(Point& a, unsigned int rad, int red, int green, int blue);
+    void circleColor(Point& a, unsigned int radius, int color, bool debug = false);
+    void circleColor(Point& a, unsigned int rad, int red, int green, int blue, bool debug = false);
 
     void trigonColor(Point& a, unsigned int size, int color);
     void trigonColor(Point& a, unsigned int size, int red, int green, int blue);

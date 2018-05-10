@@ -1,23 +1,18 @@
 #include "view.hpp"
 
-void View::calculate_coordinate_limits(double distance) {
-	Coordinate c(Tools::calculate(this->settings->centerpoint, Tools::deg2rad(315.0), distance));
-	Coordinate d(Tools::calculate(this->settings->centerpoint, Tools::deg2rad(135.0), distance));
+void View::calculate_coordinate_limits() {
+	Coordinate c(Tools::calculate(this->settings->get_centerpoint(), Tools::deg2rad(45.0), this->settings->zoom));
+	Coordinate d(Tools::calculate(this->settings->get_centerpoint(), Tools::deg2rad(225.0), this->settings->zoom));
 	
-	min_lat = d.get_latitude();
-	max_lat = c.get_latitude();
+	this->min_lat = d.get_latitude();
+	this->max_lat = c.get_latitude();
 	
-	min_lon = c.get_longitude();
-	max_lon = d.get_longitude();
+	this->min_lon = d.get_longitude();
+	this->max_lon = c.get_longitude();
 }
 
 
-View::View(Drawsurface& d, std::shared_ptr <Settings> s) : drawer(d), settings(s) { 
-	this->min_lat = 59.5;
-	this->max_lat = 61.5;
-	this->min_lon = 23.0;
-	this->max_lon = 26.0;
-}
+View::View(Drawsurface& d, std::shared_ptr <Settings> s) : drawer(d), settings(s) { }
 
 View::~View() { }
 
@@ -572,15 +567,6 @@ double View::distanceNM(double pixels) {
 	double center2corner = std::sqrt(std::pow(center_w, 2.0) + std::pow(center_h, 2.0));
 	
 	return (this->settings->zoom * pixels) / center2corner;
-}
-
-void View::set_zoom(int zoom) {
-	Coordinate a(min_lat, min_lon);
-	Coordinate b(max_lat, max_lon);
-	
-	double distance = zoom / 2.0;
-	
-	this->calculate_coordinate_limits(distance);
 }
 
 void View::set_menu(std::shared_ptr <Menu> m) { 

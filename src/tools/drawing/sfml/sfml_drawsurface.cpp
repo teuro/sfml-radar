@@ -7,18 +7,23 @@ sfml_drawsurface::sfml_drawsurface(sf::RenderWindow& w) : window(w) {
 
 sfml_drawsurface::~sfml_drawsurface() { }
 
-void sfml_drawsurface::circleColor(Point& a, unsigned int radius, int red, int green, int blue) {
+void sfml_drawsurface::circleColor(Point& a, unsigned int radius, int red, int green, int blue, bool debug) {
 	sf::CircleShape circle(radius);
 	circle.setOutlineColor(sf::Color(red, green, blue));
 	circle.setOutlineThickness(2.0);
 	circle.setPosition(sf::Vector2f(a.get_x()-radius, a.get_y()-radius));
+	
+	if (debug) {
+		std::clog << "window position = " << this->window.getPosition().x << ", " << this->window.getPosition().y << std::endl;
+		std::clog << "sfml_drawsurface::circleColor() circle position = " << circle.getPosition().x << ", " << circle.getPosition().y << std::endl;
+	}
 
 	this->window.draw(circle);
 }
 
-void sfml_drawsurface::circleColor(Point& a, unsigned int radius, int t_color) {
+void sfml_drawsurface::circleColor(Point& a, unsigned int radius, int t_color, bool debug) {
 	My_Color color(t_color);
-	circleColor(a, radius, color.red, color.green, color.blue);
+	circleColor(a, radius, color.red, color.green, color.blue, debug);
 }
 
 void sfml_drawsurface::draw_picture(std::string file, Point& a) {

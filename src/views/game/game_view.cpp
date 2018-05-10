@@ -36,7 +36,7 @@ std::string Gameview::handle_click(Point& mouse) {
 
 	for (plane = aircrafts.begin(); plane != aircrafts.end(); ++plane) {
 		Point aircraft = this->calculate((*plane)->get_place());
-
+		
 		if (Tools::on_area(mouse, aircraft, 10)) {
 			this->game->selected = (*plane);
 			return "Plane " + (*plane)->get_name() + " selected";
@@ -53,10 +53,15 @@ void Gameview::draw(Point& mouse) {
 		throw std::logic_error("Gameview is not loaded");
 	}
 	
-	this->centerpoint_screen.set_place(this->settings->screen_width / 2, this->settings->screen_height / 2);
+	Point place_a = this->calculate(this->settings->get_centerpoint());
+	this->drawer.circleColor(place_a, 10, 254624);
+
+	Point place_c(655, 345);
+	this->drawer.circleColor(place_c, 10, 214624);
+	
 	this->inputs.back().set_value(this->command);
 	
-	this->calculate_coordinate_limits(this->settings->zoom);
+	this->calculate_coordinate_limits();
 	this->update_command(this->command);
 	
 	this->View::draw();
@@ -162,15 +167,6 @@ void Gameview::draw_planes(std::list <aircraft> planes, aircraft selected, Point
 	this->draw_element(plane_table);
 }
 
-double Gameview::distancePX(double nautical) {
-	double center_w = this->settings->screen_width / 2.0;
-	double center_h = this->settings->screen_height / 2.0;
-	
-	double center2corner = std::sqrt(std::pow(center_w, 2.0) + std::pow(center_h, 2.0));
-	
-	return (nautical * center2corner) / this->settings->zoom;
-}
-
 void Gameview::draw_airfield(std::shared_ptr <Airfield> airfield) {
     std::vector <Runway> runways = airfield->get_runways();
     std::vector <Navpoint> navpoints = airfield->get_navpoints();
@@ -196,6 +192,8 @@ void Gameview::draw_airfield(std::shared_ptr <Airfield> airfield) {
 }
 
 Point Gameview::calculate(Coordinate& target) {
+	this->calculate_coordinate_limits();
+	
 	int pixelY = this->settings->screen_height - ((target.get_latitude() - this->min_lat) / (this->max_lat - this->min_lat)) * this->settings->screen_height;
 	int pixelX = ((target.get_longitude() - this->min_lon) / (this->max_lon - this->min_lon)) * this->settings->screen_width;
 	
@@ -204,4 +202,6 @@ Point Gameview::calculate(Coordinate& target) {
 	return t;
 }
 
-void Gameview::update() { }
+void Gameview::update() { 
+	//std::clog << "Centerpoint " << this->settings->get_centerpoint() << " on screen (" << this->settings->screen_width << ", " << this->settings->screen_height << ") = " << this->calculate(this->settings->get_centerpoint()) << std::endl;
+}

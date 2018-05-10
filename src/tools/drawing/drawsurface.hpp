@@ -28,8 +28,8 @@ public:
     virtual void lineColor(Point& a, Point& b, int red, int green, int blue) = 0;
     virtual void lineColor(Point& a, Point& b, int color) = 0;
 
-    virtual void circleColor(Point& a, unsigned int radius, int red, int green, int blue) = 0;
-    virtual void circleColor(Point& a, unsigned int radius, int color) = 0;
+    virtual void circleColor(Point& a, unsigned int radius, int red, int green, int blue, bool debug = false) = 0;
+    virtual void circleColor(Point& a, unsigned int radius, int color, bool debug = false) = 0;
 
     virtual void trigonColor(Point& a, unsigned int size, int color) = 0;
     virtual void trigonColor(Point& a, unsigned int size, int red, int green, int blue) = 0;

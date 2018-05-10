@@ -106,6 +106,8 @@ public:
 	void create_plane();
 	void build_clearance(std::string command);
 	
+	void create_planes(int amount);
+	
 	int get_handled_planes();
 	int get_planes_count();
 	int get_separation_errors();

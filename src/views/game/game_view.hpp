@@ -111,8 +111,6 @@ public:
 	
 	 void update_command(std::string command);
 	 virtual void update();
-	 
-	 double distancePX(double nautical);
 private:
 	
 	/**

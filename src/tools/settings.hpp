@@ -83,8 +83,11 @@ public:
 	std::string layout_menu_file_name;
 	std::string style_folder;
 	int display_clearance_errors;
-	Coordinate centerpoint;
 	std::map <std::string, My_Color*> colors;
+	void set_centerpoint(Coordinate& cp);
+	Coordinate& get_centerpoint();
+private:
+	Coordinate centerpoint;
 };
 
 #endif

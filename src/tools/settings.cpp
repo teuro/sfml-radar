@@ -1,6 +1,8 @@
 #include "settings.hpp"
 
-Settings::Settings() { 		
+Settings::Settings() { 
+	std::clog << "Settings::Settings()" << std::endl;
+	
 	this->database_name = "databases/radar.db"; 
 	this->layout_game_file_name = "layouts/game.xml"; 
 	this->layout_atis_file_name = "layouts/atis.xml"; 
@@ -16,6 +18,7 @@ Settings::Settings() {
 Settings::~Settings() { }
 
 void Settings::load() {
+	std::clog << "Settings::load()" << std::endl;
 	Database db;
 	Queryresult colors_result = db.get_result("SELECT * FROM colors");
 	
@@ -27,6 +30,10 @@ void Settings::load() {
 		
 		this->colors[name] = new My_Color(red, green, blue);
 	}
+	
+	Coordinate place(60, 25);
+	
+	this->centerpoint = place;
 }
 
 void Settings::set_values(std::map<std::string, std::string> values ) {
@@ -81,4 +88,13 @@ void Settings::set_values(std::map<std::string, std::string> values ) {
     this->zoom_max			          	= Tools::toint(values["zoom_max"]);
     this->zoom                          = 70;
     this->program_name                  = values["program_name"];
+}
+
+void Settings::set_centerpoint(Coordinate& cp) {
+	std::clog << "Settings::set_centerpoint(" << cp << ")" << std::endl;
+	this->centerpoint = cp;
+}
+
+Coordinate& Settings::get_centerpoint() {
+	return this->centerpoint;
 }

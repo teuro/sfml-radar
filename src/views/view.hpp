@@ -89,7 +89,6 @@ public:
 	void flash_message(std::string message);
 	virtual void load() = 0;
 	virtual double distanceNM(double pixels);
-	virtual void set_zoom(int zoom);
 	virtual void set_menu(std::shared_ptr <Menu> menu);
 protected:
 	double min_lat;
@@ -109,7 +108,7 @@ protected:
 	void draw_element(Drawable_table& dt);
 	void draw_borders(Style& style);
 	
-	void calculate_coordinate_limits(double distance);
+	virtual void calculate_coordinate_limits();
 	
 	void style(Drawable_element& de);
     void load(std::string state);

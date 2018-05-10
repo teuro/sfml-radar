@@ -127,6 +127,12 @@ double Game::get_game_points() {
 	return sum;
 }
 
+void Game::create_planes(int amount) {
+	for (int i = 0; i< amount; ++i) {
+		this->create_plane();
+	}
+}
+
 void Game::update(double elapsed) {	
 	if (!this->loaded) {
 		throw std::logic_error("Game is not loaded");
@@ -316,8 +322,10 @@ void Game::load_airfield(std::string icao) {
 	std::shared_ptr <Airfield> ap (new Airfield(airport(0, "ICAO"), place, Tools::toint(airport(0, "max_speed")), Tools::toint(airport(0, "initial_altitude")), Tools::toint(airport(0, "acceleration_altitude"))));
     this->active_field = ap;
 	
+	std::clog << "Game::load_airfield(" << icao << ")" << this->active_field->get_place() << std::endl;
+	
 	this->settings->airfield_altitude = Tools::toint(airport(0, "altitude"));
-	this->settings->centerpoint = place;
+	this->settings->set_centerpoint(place);
 	
 	this->load_navpoints(airfield_id);
 	this->load_runways(airfield_id);

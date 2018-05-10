@@ -36,8 +36,15 @@ void SFML_window::handle_events() {
     std::clog << "SFML_window::handle_events()" << std::endl;
 }
 
-void SFML_window::run() {
-	sf::RenderWindow window(sf::VideoMode(this->settings->screen_width, this->settings->screen_height), this->settings->program_name, sf::Style::Resize);
+void SFML_window::run() {	
+	sf::RenderWindow window(
+		sf::VideoMode(
+			this->settings->screen_width, 
+			this->settings->screen_height), 
+		this->settings->program_name, 
+		sf::Style::Default
+	);
+
 	sf::Image image;
 	image.loadFromFile("images/logo.png");
 	window.setIcon(image.getSize().x, image.getSize().y, image.getPixelsPtr());
@@ -75,6 +82,8 @@ bool SFML_window::handle_event(sf::Event& event, Controller& ctrl, sf::RenderWin
     sf::Vector2i mouse_place = sf::Mouse::getPosition(window);
 	mouse.set_place(mouse_place.x, mouse_place.y);
 	std::string t_input;
+	sf::Time time_pressed_first;
+	sf::Time time_pressed_again;
 	
     switch (event.type) {
         case sf::Event::Closed:
@@ -114,11 +123,14 @@ bool SFML_window::handle_event(sf::Event& event, Controller& ctrl, sf::RenderWin
             return true;
         case sf::Event::MouseButtonReleased:
             mouse_end.set_place(mouse_place.x, mouse_place.y);
-            ctrl.handle_mouse_release(mouse_start, mouse_end);
-            return true;
+			
+			ctrl.handle_mouse_release(mouse_start, mouse_end);
+			
+			return true;
         case sf::Event::Resized:
             this->settings->screen_height = event.size.height;
             this->settings->screen_width = event.size.width;
+			std::clog << window.getPosition().x << ", " << window.getPosition().y << std::endl;
         default:
             return true;
     }
