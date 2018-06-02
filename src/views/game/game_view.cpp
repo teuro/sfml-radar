@@ -19,15 +19,13 @@ Gameview::Gameview(Drawsurface& d, std::shared_ptr <Settings> s, std::shared_ptr
 Gameview::~Gameview() { }
 
 void Gameview::load() {
-	#ifdef DEBUG
 	std::clog << "Gameview::load()" << std::endl;
-	#endif
+
 	this->loaded = true;
 	View::load("game");
-}
-
-void Gameview::update_command(std::string t_command) {
-	this->command = t_command;
+	
+	std::shared_ptr <Drawable_input> di(new Drawable_input("", "input", "userinput", "userinput"));
+	this->input = di; 
 }
 
 std::string Gameview::handle_click(Point& mouse) {
@@ -55,21 +53,15 @@ void Gameview::draw(Point& mouse) {
 		throw std::logic_error("Gameview is not loaded");
 	}
 	
-	Point place_a = this->calculate(this->settings->get_centerpoint());
-	this->drawer.circleColor(place_a, 10, 254624);
-
-	Point place_c(655, 345);
-	this->drawer.circleColor(place_c, 10, 214624);
-	
-	this->inputs.back().set_value(this->command);
-	
 	this->calculate_coordinate_limits();
-	this->update_command(this->command);
 	
 	this->View::draw();
 	
 	this->draw_airfield(this->game->get_active_field());
 	this->draw_planes(this->game->get_aircrafts(), this->game->get_selected(), mouse);
+	
+	style(this->input);
+	draw_element(this->input);
 }
 
 void Gameview::draw_plane(aircraft plane, aircraft selected, Point& mouse) {
@@ -206,4 +198,8 @@ Point Gameview::calculate(Coordinate& target) {
 
 void Gameview::update() { 
 	//std::clog << "Centerpoint " << this->settings->get_centerpoint() << " on screen (" << this->settings->screen_width << ", " << this->settings->screen_height << ") = " << this->calculate(this->settings->get_centerpoint()) << std::endl;
+}
+
+void Gameview::update_command(std::string command) {
+	this->input->set_value(command);
 }

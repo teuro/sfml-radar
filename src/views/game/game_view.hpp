@@ -109,10 +109,9 @@ public:
 		draw many elements
 	**/
 	
-	 void update_command(std::string command);
 	 virtual void update();
+	 virtual void update_command(std::string command);
 private:
-	
 	/**
 		* Gameview draw_plane
 		* Draw one plane 
@@ -122,10 +121,10 @@ private:
 	**/
 	
     void draw_plane(aircraft plane, aircraft selected, Point& mouse);
-	std::string command;
 	bool loaded;
 	
 	std::shared_ptr <Game> game;
+	std::shared_ptr <Drawable_input> input;
 };
 
 #endif // _GAME_VIEW_HPP

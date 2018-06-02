@@ -90,6 +90,7 @@ public:
 	virtual void load() = 0;
 	virtual double distanceNM(double pixels);
 	virtual void set_menu(std::shared_ptr <Menu> menu);
+	virtual void update_command(std::string command);
 protected:
 	double min_lat;
 	double max_lat;
@@ -103,7 +104,7 @@ protected:
     void draw_element(Image& img);
     void draw_element(Paragraph& p);
     void draw_element(std::string text, Point& place, int color);
-    void draw_element(Drawable_input& di);
+    void draw_element(std::shared_ptr <Drawable_input>& di);
 	void draw_element(Drawable_list& dl);
 	void draw_element(Drawable_table& dt);
 	void draw_borders(Style& style);
@@ -111,18 +112,20 @@ protected:
 	virtual void calculate_coordinate_limits();
 	
 	void style(Drawable_element& de);
+	void style(std::shared_ptr <Drawable_input>& de);
     void load(std::string state);
     Point centerpoint_screen;
 	std::vector <Image> images;
 	std::vector <Paragraph> paragraphs;
-	std::vector <Drawable_input> inputs;
 	std::vector <Drawable_list> lists;
 	std::vector <Drawable_table> tables;
+	std::string command;
 private:
 	void add_style(std::list <Style> tmp);
 	std::list <Style> parse_css(std::string file);
 	void load_styles();
 	void load_layout(std::string state);
+	Style find_style(std::string name, std::list <std::string> t_classes, std::string id);
 	std::map <std::string, std::string> get_info(TiXmlElement *pParm);
 	Style find_style(std::string name); 
 	Style body;
