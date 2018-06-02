@@ -400,7 +400,7 @@ void View::draw() {
 	#endif
 		
 	for (table = this->tables.begin(); table !=  this->tables.end(); ++table) {
-        //draw_element(*table);
+        draw_element(*table);
     }
 	
 	#ifdef DEBUG
@@ -408,7 +408,7 @@ void View::draw() {
 	#endif
 	
 	for (list = this->lists.begin(); list !=  this->lists.end(); ++list) {
-        //draw_element(*list);
+        draw_element(*list);
     }
 	
 	#ifdef DEBUG
