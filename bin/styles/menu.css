@@ -13,9 +13,11 @@
 #choose_airfield {
 	top: 180px;
 	left: 30px;
+	color: rgb(190, 160, 190);
+	width: 350px;
 }
 
-#airports {
+#airport {
 	top: 220px;
 	left: 30px;
 }

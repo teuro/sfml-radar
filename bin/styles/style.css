@@ -12,7 +12,8 @@
 }
 
 input {
-	color: rgb(120, 130, 130);
+	width: 500px;
+	height: 30px;
 }
 
 .userinput {
@@ -20,6 +21,7 @@ input {
 	left: 30px;
 	width: 550px;
 	height: 30px;
+	color: rgb(190, 130, 130);
 }
 
 .selected {

@@ -2,17 +2,5 @@
 <layout>
 	<p id="menu" class="menu">Wellcome to ATC-radar.</p>
 	
-	<table id="variables" class="">
-		<tr>
-			<th>Max planes in control</th>
-			<td>[MPL]</td>
-		</tr>
-		<tr>
-			<th>Required planes</th>
-			<td>[RQD]</td>
-		</tr>
-	</table>
-	
 	<p id="choose_airfield" class="menu">Choose airfield from below.</p>
-	
 </layout>
