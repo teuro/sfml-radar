@@ -86,6 +86,7 @@ public:
 	std::map <std::string, My_Color*> colors;
 	void set_centerpoint(Coordinate& cp);
 	Coordinate& get_centerpoint();
+	std::string logo_image;
 private:
 	Coordinate centerpoint;
 };

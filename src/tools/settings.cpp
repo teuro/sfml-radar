@@ -10,6 +10,7 @@ Settings::Settings() {
 	this->layout_atis_file_name = "layouts/atis.xml"; 
 	this->layout_stat_file_name = "layouts/stat.xml"; 
 	this->layout_menu_file_name = "layouts/menu.xml"; 
+	this->logo_image = "images/logo.png"; 
 	this->style_folder = "styles/"; 
 	this->sleep = 50;
 	this->display_clearance_errors = 4000;

@@ -58,8 +58,10 @@ void SFML_window::run() {
 	);
 
 	sf::Image image;
-	image.loadFromFile("images/logo.png");
-	window.setIcon(image.getSize().x, image.getSize().y, image.getPixelsPtr());
+	
+	if (image.loadFromFile(this->settings->logo_image)) {
+		window.setIcon(image.getSize().x, image.getSize().y, image.getPixelsPtr());
+	} 
 
 	sfml_drawsurface drawer(window);
 	
@@ -99,12 +101,12 @@ bool SFML_window::handle_event(sf::Event& event, Controller& ctrl, sf::RenderWin
 	std::string t_input;
 	sf::Time time_pressed_first;
 	sf::Time time_pressed_again;
-	
+		
     switch (event.type) {
         case sf::Event::Closed:
             return false;
 		 case sf::Event::TextEntered:
-            if (event.text.unicode == 8 && this->input_string.length()) {
+			if (event.text.unicode == 8 && this->input_string.length()) {
                 this->input_string = this->input_string.erase(input_string.length()-1, 1);
             } else if (event.text.unicode != 13 && event.text.unicode < 128) {
                 this->input_string += sf::String(event.text.unicode);
@@ -119,12 +121,11 @@ bool SFML_window::handle_event(sf::Event& event, Controller& ctrl, sf::RenderWin
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Return)) {
                 ctrl.handle_text_input();
                 this->input_string = "";
-				ctrl.update_command(this->input_string);
             } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
                 return false;
             } 
 			
-			sf::sleep(sf::milliseconds(100));
+			sf::sleep(sf::milliseconds(this->settings->sleep));
             
 			return true;
         case sf::Event::MouseButtonPressed:
@@ -142,9 +143,6 @@ bool SFML_window::handle_event(sf::Event& event, Controller& ctrl, sf::RenderWin
 			ctrl.handle_mouse_release(mouse_start, mouse_end);
 			
 			return true;
-        case sf::Event::Resized:
-            this->settings->screen_height = event.size.height;
-            this->settings->screen_width = event.size.width;
         default:
             return true;
     }
