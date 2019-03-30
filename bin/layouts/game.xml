@@ -6,23 +6,12 @@
 		<tr>
 			<td>Planes in area [PLC]</td>
 			<td>Game errors [SPE]</td>
-			<td>Game time [TIME]</td>
+			<td class="time">Game time [TIME]</td>
+			<td class="time">Next plane [PLN]</td>
 		</tr>
 		<tr>
-			<td>FPS [FPS]</td>
-			<td>Next plane [PLN]</td>
 			<td>Planes handled [PLH]</td>
-		</tr>
-		<tr>
 			<td>Clearances relayed [CLRC]</td>
-			<td>departure [DEP]</td>
-			<td>landing [LND]</td>
-		</tr>
-		<tr>
-			<td>max angle [MXA]</td>
-			<td>min angle [MNA]</td>
-		</tr>
-		<tr>
 			<td>points [PCNT]</td>
 			<td>required [RQD]</td>
 		</tr>
