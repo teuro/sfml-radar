@@ -133,20 +133,28 @@ void View::load_layout(std::string state) {
 				this->style(p);
 				this->paragraphs.push_back(p);
 			} else if (selected_element->Value() == std::string("table")) {
-				std::string t_id = Tools::trim(selected_element->Attribute("id"));
-				std::string t_class = Tools::trim(selected_element->Attribute("class"));
-				std::string t_name = selected_element->Value();
+				std::string table_id = (selected_element->Attribute("id") == NULL) ? "" : Tools::trim(selected_element->Attribute("id"));
+				std::string table_class = (selected_element->Attribute("class") == NULL) ? "" : Tools::trim(selected_element->Attribute("class"));
+				std::string table_name = selected_element->Value();
 				
-				Drawable_table table(t_name, t_class, t_id);
+				Drawable_table table(table_name, table_class, table_id);
 				this->style(table);
 				this->tables.push_back(table);
 				
 				for (TiXmlElement* e = selected_element->FirstChildElement(); e != NULL; e = e->NextSiblingElement("tr")) {
-					Row row;
+					std::string row_id = (e->Attribute("id") == NULL) ? "" : Tools::trim(e->Attribute("id"));
+					std::string row_class = (e->Attribute("class") == NULL) ? "" : Tools::trim(e->Attribute("class"));
+					std::string row_name = e->Value();
+					
+					Row row(row_name, row_class, row_id);
 					this->tables.back().add_row(row);
 					
 					for (TiXmlElement* f = e->FirstChildElement(); f != NULL; f = f->NextSiblingElement()) {
-						Cell cell(f->GetText());
+						std::string cell_id = (f->Attribute("id") == NULL) ? "" : Tools::trim(f->Attribute("id"));
+						std::string cell_class = (f->Attribute("class") == NULL) ? "" : Tools::trim(f->Attribute("class"));
+						std::string cell_name = f->Value();
+						
+						Cell cell(f->GetText(), cell_name, cell_class, cell_id);
 						this->tables.back().add_cell(cell);
 					}
 				}
@@ -473,19 +481,27 @@ void View::draw_element(Drawable_table& dt) {
 		std::clog << "Count of cells " <<  c_list.size() << std::endl;
 		#endif
 		
-		int t_color = rit->get_style().get_text_color();
+		int r_color = rit->get_style().get_text_color();
 			
-		if (t_color > 0) {
-			color = t_color;
+		if (r_color > 0) {
+			color = r_color;
 		}
 		
 		while (cit != c_list.end()) {
+			this->style(*cit);
 			#ifdef DEBUG
 			std::clog << (*cit).get_content() << std::endl;
 			#endif
+			int c_color = cit->get_style().get_text_color();
+			
+			if (c_color > 0) {
+				color = c_color;
+			}
+		
 			this->draw_element(Tools::replace((*cit).get_content(), repl), place, color);
 			++cit;
 			place.change_x(length);
+			color = 0;
 		}
 		
 		place.change_x(-length * c_list.size());

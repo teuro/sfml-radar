@@ -1,6 +1,7 @@
 #include "drawable_table.hpp"
 
-Cell::Cell(std::string cnt) : content(cnt) { }
+Cell::Cell(std::string _content, std::string t_name, std::string t_class, std::string t_id) : Drawable_element(t_name, t_class, t_id), content(_content) { }
+Cell::Cell(std::string _content, std::string t_name, std::list <std::string> t_classes, std::string t_id) : Drawable_element(t_name, t_classes, t_id), content(_content) { }
 
 std::string Cell::get_content() { 
 	return this->content; 
