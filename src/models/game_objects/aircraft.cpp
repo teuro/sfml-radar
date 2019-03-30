@@ -80,14 +80,12 @@ bool Aircraft::check_approach_config() {
 	
 	double min_approach_angle = Tools::fix_angle(this->landing.get_heading() - Tools::deg2rad(this->settings->approach_angle));
 	double max_approach_angle = Tools::fix_angle(this->landing.get_heading() + Tools::deg2rad(this->settings->approach_angle));
-	
-	//std::clog << "Min angle " << min_approach_angle << " max angle " << max_approach_angle << " plane heading " << this->heading << std::endl;
-	
+		
 	this->approach_config_error = "";
 	
 	if (this->altitude > this->settings->max_approach_altitude) {
 		altitude_ok = false;
-		this->approach_config_error += " Altide is incorrect ";
+		this->approach_config_error += " Altitude is incorrect ";
 	}
 	
 	if (this->heading > max_approach_angle || this->heading	< min_approach_angle) {
