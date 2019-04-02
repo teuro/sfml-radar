@@ -2,5 +2,7 @@
 <layout>
 	<p id="menu" class="menu">Wellcome to ATC-radar.</p>
 	
-	<p id="choose_airfield" class="menu">Choose airfield from below.</p>
+	<p id="choose_airfield" class="menu">Choose airfield below.</p>
+	
+	<p id="level" class="menu">Choose proper level</p>
 </layout>
