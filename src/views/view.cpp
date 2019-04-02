@@ -122,13 +122,13 @@ void View::load_layout(std::string state) {
 				this->style(img);
 				this->images.push_back(img);
 			} else if (selected_element->Value() == std::string("p")) {
-				std::string t_id = Tools::trim(selected_element->Attribute("id"));
-				std::string t_class = Tools::trim(selected_element->Attribute("class"));
-				std::string t_name = selected_element->Value();
+				std::string paragraph_id = Tools::trim(selected_element->Attribute("id"));
+				std::string paragraph_class = Tools::trim(selected_element->Attribute("class"));
+				std::string paragraph_name = selected_element->Value();
 				
 				std::string content = Tools::trim(selected_element->GetText());
 			
-				Paragraph p(content, t_name, t_class, t_id);
+				Paragraph p(content, paragraph_name, paragraph_class, paragraph_id);
 				
 				this->style(p);
 				this->paragraphs.push_back(p);
@@ -244,7 +244,7 @@ void View::draw_borders(Style& style) {
 
 void View::draw_element(Paragraph& p) {
 	#ifdef DEBUG
-	std::clog << "View::draw_element(Paragraph& p) " << p.get_content() << std::endl;
+	std::clog << "View::draw_element(Paragraph& p) " << p.get_content() << " " << p.get_class() << std::endl;
 	#endif
 	
 	Style st = p.get_style();

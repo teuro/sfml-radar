@@ -81,7 +81,6 @@ public:
 	
 	virtual void update() = 0;
 	
-	void add_element(std::string key, std::string id, std::string cl, std::string value);
 	int handled;
 	int required;
 	std::string metar;
