@@ -47,13 +47,15 @@ void Gamecontroller::handle_mouse_release(Point& mouse_start, Point& mouse_end) 
 	std::clog << "Gamecontroller::handle_mouse_release(" << mouse_start << ", " <<  mouse_end << ")" << std::endl;
 	#endif
 	
-    double distance_px  = Tools::distancePX(mouse_start, mouse_end);
-    double angle_rad    = Tools::fix_angle(Tools::angle(mouse_start, mouse_end) + Tools::get_PI() / 2.0);
-    double distance_nm  = this->views[GAME]->distanceNM(distance_px);
-	
-	if (distance_nm > 0.5 && distance_nm < 100) {
-		Coordinate cp = Tools::calculate(this->settings->get_centerpoint(), angle_rad, distance_nm);
-		this->settings->set_centerpoint(cp);
+	if (this->state == GAME) {
+		double distance_px  = Tools::distancePX(mouse_start, mouse_end);
+		double angle_rad    = Tools::fix_angle(Tools::angle(mouse_start, mouse_end) + Tools::get_PI() / 2.0);
+		double distance_nm  = this->views[GAME]->distanceNM(distance_px);
+		
+		if (distance_nm > 0.5 && distance_nm < 100) {
+			Coordinate cp = Tools::calculate(this->settings->get_centerpoint(), angle_rad, distance_nm);
+			this->settings->set_centerpoint(cp);
+		}
 	}
 }
 
