@@ -102,7 +102,7 @@ protected:
     std::list <Style> styles;
     void draw_element(Image& img);
     void draw_element(Paragraph& p);
-    void draw_element(std::string text, Point& place, int color);
+    void draw_element(std::string text, Point& place, int color, int font_size);
     void draw_element(std::shared_ptr <Drawable_input>& di);
 	void draw_element(Drawable_list& dl);
 	void draw_element(Drawable_table& dt);

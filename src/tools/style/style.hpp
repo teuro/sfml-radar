@@ -34,6 +34,7 @@ public:
     unsigned int get_top();
     unsigned int get_width();
     unsigned int get_height();
+    unsigned int get_font_size();
     unsigned int get_text_color();
     unsigned int get_background_color();
     unsigned int get_border_color();
@@ -67,6 +68,7 @@ private:
 	int left;
 	int top;
 	int margin;
+	int font_size;
 	
 	std::shared_ptr <Settings> settings;
 	

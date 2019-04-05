@@ -11,6 +11,7 @@ Style::Style(std::shared_ptr <Settings> s) : settings(s) {
 	this->background_color = 0;
 	this->border_color = 0;
 	this->margin = 5;
+	this->font_size = 16;
 }
 
 Style::Style() { 
@@ -24,7 +25,9 @@ Style::Style() {
 	this->background_color = 0;
 	this->border_color = 0;
 	this->margin = 5;
+	this->font_size = 16;
 }
+
 Style::~Style() { }
 
 void Style::set_attribute(std::string key, int value) {
@@ -82,9 +85,11 @@ void Style::set_attribute(std::string key, std::string value) {
 	} else if (key == "position") {
 		this->position = value;
 	} else if (key == "margin") {
-		this->margin = Tools::tonumber<int>(value);
+		this->margin = Tools::toint(value);
 	} else if (key == "border") {
 		this->border_color = this->parse_color(value);
+	} else if (key == "font") {
+		this->font_size = Tools::toint(value);
 	}
 }
 
@@ -172,6 +177,10 @@ unsigned int Style::get_border_color() {
 
 unsigned int Style::get_margin() {
     return this->margin;
+}
+
+unsigned int Style::get_font_size() {
+    return this->font_size;
 }
 
 void Style::set_place(Point& t_place) {
