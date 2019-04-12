@@ -52,7 +52,7 @@ void sfml_drawsurface::draw_text(std::string text, Point& a, int red, int green,
 	_text.setFont(this->font);
 	_text.setCharacterSize(font_size);
 	_text.setPosition(sf::Vector2f(a.get_x(), a.get_y()));
-	_text.setColor(clr);
+	_text.setFillColor(clr);
 	_text.setString(text);
 
 	this->window.draw(_text);
