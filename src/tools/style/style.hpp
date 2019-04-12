@@ -10,6 +10,8 @@
 #include <cstdlib>
 #include <cstdio>
 #include <list>
+#include <memory>
+
 #include "../tools.hpp"
 #include "../text_tools.hpp"
 #include "../settings.hpp"
