@@ -234,8 +234,8 @@ void Gamecontroller::handle_text_input() {
 		
 		menu = this->atis->get_menu();
 		
-		this->views[this->ATIS] = av;
-		this->views[this->ATIS]->load();
+		this->views[this->state] = av;
+		this->views[this->state]->load();
 		this->views[MENU]->set_menu(menu);
 	} else if (this->state == ATIS) {
 		#ifdef DEBUG
