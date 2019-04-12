@@ -4,6 +4,7 @@
 #include "queryrow.hpp"
 
 #include <vector>
+#include <algorithm>
 
 /**
     Queryresult provides quite easy access to gathered data from SQL
