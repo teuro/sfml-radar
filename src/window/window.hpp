@@ -4,6 +4,7 @@
 #include <iostream>
 #include <fstream>
 #include <stdexcept>
+#include <memory>
 
 #include <sqlite3pp.h>
 
