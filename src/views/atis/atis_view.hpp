@@ -1,5 +1,5 @@
-#ifndef ATIS_VIEW
-#define ATIS_VIEW
+#ifndef ATIS_VIEW_HPP
+#define ATIS_VIEW_HPP
 
 #include <vector>
 #include <iostream>
@@ -11,11 +11,42 @@
 #include "../../models/weather/atis.hpp"
 #include "../../models/game_objects/runway.hpp"
 
+/**
+	* Atis_view 
+	* Is responsible for display atis. 
+	* 
+**/
+
 class Atisview : public View {
 public:
-	Atisview(Drawsurface& d, std::shared_ptr <Settings> s, std::shared_ptr <Atis> a);
+	/**
+		* Atisview 
+		* Constructor to settle everything up
+		* @param drawer to draw 
+		* @param settings
+		* @param atis 
+		* @return void
+	**/
+	
+	Atisview(Drawsurface& drawer, std::shared_ptr <Settings> settings, std::shared_ptr <Atis> atis);
 	~Atisview();
+	
+	/**
+		* draw
+		* Draw atis 
+		* @param mouse 
+		* @return void
+	**/
+	
 	virtual void draw(Point& mouse);
+	
+	/**
+		* handle_click
+		* NOT IMPLEMENTED YET
+		* @param mouse
+		* @return std::string
+	**/
+	
 	virtual std::string handle_click(Point& mouse);
     void load();
 	std::string get_value();

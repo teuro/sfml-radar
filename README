@@ -1,4 +1,4 @@
-ATC-radar simulates air trafic controller. More precisly radar-controller. 
+ATC-radar simulates air trafic controller. More precisely radar-controller. 
 You have to rely clearances to pilots. It's not easy, but it's fun.
 Basically game should work after downloading. After unzip move all DLL-files visible.
 Move DLL-files for example same director as Your binary is or Windows/system32 directory.
@@ -11,7 +11,7 @@ like You asked.
 Clearance structure
 
 turn:
-	turn [left|right] [heading] directions
+	turn [left|right] [heading]
 
 altitude:
 	climb|descent altitude|flight level 
@@ -19,7 +19,10 @@ altitude:
 speed:
 	speed amount
 
-approach
+expect:
+	expect runway RWY
+	
+approach:
 	approach
 
 Altitude flight level
