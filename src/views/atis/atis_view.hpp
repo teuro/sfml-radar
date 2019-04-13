@@ -5,7 +5,6 @@
 #include <iostream>
 
 #include "../view.hpp"
-#include "../menu/menu_view.hpp"
 #include "../../tools/tools.hpp"
 #include "../../tools/point_tools.hpp"
 #include "../../tools/settings.hpp"
@@ -24,7 +23,6 @@ public:
 	virtual void update();
 private:
 	std::shared_ptr <Atis> atis;
-	std::shared_ptr <Menuview> menuview;
 	
 	void draw_runways();
 };
