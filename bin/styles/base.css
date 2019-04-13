@@ -1,5 +1,5 @@
 p {
-	color: rgb(150, 150, 90);
+	color: rgb(150, 50, 50);
 	width: 400px;
 }
 
@@ -19,9 +19,21 @@ table {
 	color: rgb(150, 150, 90);
 }
 
+tr {
+	color: rgb(150, 20, 20);
+}
+
+td {
+	color: rgb(150, 20, 20);
+}
+
 img {
 	top: 15px;
 	left: 20px;
+}
+
+body {
+	background-color: rgb(20, 20, 20);
 }
 
 #menus {
