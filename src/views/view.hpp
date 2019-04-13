@@ -10,6 +10,8 @@
 #include <vector>
 #include <list>
 #include <fstream>
+#include <memory>
+
 #include "layout/drawable_text_element.hpp"
 #include "layout/drawable_image.hpp"
 #include "layout/drawable_paragraph.hpp"
