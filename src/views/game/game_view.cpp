@@ -68,6 +68,7 @@ void Gameview::draw_plane(aircraft plane, aircraft selected, Point& mouse) {
 	Point aircraft_place = this->calculate(plane->get_place());
 	Point draw;
 	std::string id = "";
+	this->game->get_atis()->get_transition_level();
 
     Coordinate separation_ring_place_c = Tools::calculate(plane->get_place(), this->settings->separation_horizontal / 2.0, 1);
 	Point separation_ring_place_p = this->calculate(separation_ring_place_c);
@@ -83,15 +84,19 @@ void Gameview::draw_plane(aircraft plane, aircraft selected, Point& mouse) {
 	Drawable_list info_list("ul", "infolist", id);
 	
 	info_list.add_element(plane->get_name());
-	info_list.add_element(Tools::tostr((int)plane->get_altitude()) + " / " + Tools::tostr(plane->get_clearance_altitude()));
+	if (plane->get_altitude() > this->game->get_atis()->get_transition_altitude()) {
+		info_list.add_element(Tools::tostr((plane->get_altitude() / 100)) + " / FL " + Tools::tostr((plane->get_clearance_altitude() / 100)));
+	} else {
+		info_list.add_element(Tools::tostr(plane->get_altitude()) + " / " + Tools::tostr(plane->get_clearance_altitude()));
+	}
 	info_list.set_class("normal");
 	
 	if (id == "selected") {
 		info_list.set_class("active");
 		this->style(info_list);
 		
-		info_list.add_element(Tools::tostr((int)plane->get_speed()) + " / " + Tools::tostr((int)plane->get_clearance_speed()));
-		info_list.add_element(Tools::tostr((int)Tools::rad2deg(plane->get_heading())) + " / " + Tools::tostr((int)Tools::rad2deg(plane->get_clearance_heading())));
+		info_list.add_element(Tools::tostr(plane->get_speed()) + " / " + Tools::tostr(plane->get_clearance_speed()));
+		info_list.add_element(Tools::tostr(Tools::rad2deg(plane->get_heading())) + " / " + Tools::tostr(Tools::rad2deg(plane->get_clearance_heading())));
 		
 		if (plane->get_type() == DEPARTURE) {
 			info_list.add_element(plane->get_target().get_name());
@@ -106,7 +111,7 @@ void Gameview::draw_plane(aircraft plane, aircraft selected, Point& mouse) {
 	
 		Point text_place = Tools::calculate_midpoint(aircraft_place, mouse);
 		
-		this->drawer.draw_text(Tools::tostr((int)heading) + " deg " + Tools::tostr((int)distance) + " nm", text_place, info_list.get_style().get_text_color());
+		this->drawer.draw_text(Tools::tostr(heading) + " deg " + Tools::tostr(distance) + " nm", text_place, info_list.get_style().get_text_color());
 		this->drawer.lineColor(aircraft_place, mouse, info_list.get_style().get_text_color());
 	}
 	
