@@ -8,6 +8,10 @@ Game::Game(std::shared_ptr <Settings> s, std::shared_ptr <Atis> a) : settings(s)
 
 Game::~Game() { }
 
+std::shared_ptr <Atis> Game::get_atis() {
+	return this->atis;
+}
+
 void Game::load(std::string airfield) {
 	#ifdef DEBUG
     std::clog << "Game::load(" << airfield << ")" << std::endl;

@@ -103,6 +103,8 @@ public:
 	
 	std::shared_ptr <Airfield> get_active_field();
 	
+	std::shared_ptr <Atis> get_atis();
+	
 	void create_plane();
 	void build_clearance(std::string command);
 	
