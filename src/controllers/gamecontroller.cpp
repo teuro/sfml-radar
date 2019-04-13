@@ -13,7 +13,7 @@ Gamecontroller::Gamecontroller(std::shared_ptr <Settings> s, Drawsurface& d) : C
 	this->frames = 0;
 	this->fps_time = 5000;
 	this->fps_end_time = 8500;
-	this->flash_message_begin = -2501;
+	this->flash_message_begin = 0;
 	this->flash_message_time = 2500;
 	quick_iterator = this->quicklist.begin();
 	
@@ -34,8 +34,8 @@ void Gamecontroller::load() {
 	
 	std::shared_ptr <Menuview> mv (new Menuview(this->drawer, this->settings, this->menu));
 	
-	this->views[this->MENU] = mv;
-	this->views[this->MENU]->load();
+	this->views[this->state] = mv;
+	this->views[this->state]->load();
 }
 
 std::string Gamecontroller::handle_function_keys() {
@@ -50,7 +50,7 @@ void Gamecontroller::handle_mouse_release(Point& mouse_start, Point& mouse_end) 
 	if (this->state == GAME) {
 		double distance_px  = Tools::distancePX(mouse_start, mouse_end);
 		double angle_rad    = Tools::fix_angle(Tools::angle(mouse_start, mouse_end) + Tools::get_PI() / 2.0);
-		double distance_nm  = this->views[GAME]->distanceNM(distance_px);
+		double distance_nm  = this->views[state]->distanceNM(distance_px);
 		
 		if (distance_nm > 0.5 && distance_nm < 100) {
 			Coordinate cp = Tools::calculate(this->settings->get_centerpoint(), angle_rad, distance_nm);
@@ -136,27 +136,23 @@ void Gamecontroller::update(double elapsed, Point& mouse) {
 		
 		std::shared_ptr <Gameview> gv (new Gameview(this->drawer, this->settings, this->game));
 			
-		this->views[this->GAME] = gv;
-		this->views[this->GAME]->load();
+		this->views[this->state] = gv;
+		this->views[this->state]->load();
 		
 		this->game->create_planes(Tools::rnd(3, this->settings->required_handled));
 	} else if (this->game->ok()) {
 		std::shared_ptr <Statview> sv (new Statview(this->drawer, this->settings, this->game));
 		this->state = STAT;
 		
-		this->views[this->STAT] = sv;
-		this->views[this->STAT]->load();
+		this->views[this->state] = sv;
+		this->views[this->state]->load();
 	}
 	
 	this->game_time += elapsed;
 	
 	this->set_variables();
 	
-	this->views[this->state]->clear_screen();
-	this->views[this->state]->update();
-	this->views[this->state]->draw(mouse);
-	
-	if (this->game_time < (this->flash_message_begin + this->flash_message_time)) {
+	if (this->game_time > this->flash_message_begin && this->game_time < (this->flash_message_begin + this->flash_message_time)) {
 		this->views[this->state]->flash_message(this->message);
 	}
 	
@@ -170,6 +166,10 @@ void Gamecontroller::update(double elapsed, Point& mouse) {
 		this->calculate_fps();
 		this->game->update(elapsed);
 	}
+	
+	this->views[this->state]->clear_screen();
+	this->views[this->state]->update();
+	this->views[this->state]->draw(mouse);
 	
 	this->views[this->state]->render();
 }
@@ -236,7 +236,7 @@ void Gamecontroller::handle_text_input() {
 		
 		this->views[this->state] = av;
 		this->views[this->state]->load();
-		this->views[MENU]->set_menu(menu);
+		this->views[this->state]->set_menu(menu);
 	} else if (this->state == ATIS) {
 		#ifdef DEBUG
 		std::clog << "Gamecontroller::handle_text_input(" << this->menu->get_selected().get_name() << ")" << std::endl;
