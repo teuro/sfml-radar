@@ -23,16 +23,13 @@ void View::load(std::string state) {
 	#ifdef DEBUG
 	std::clog << "View::load(" << state << ")" << std::endl;
 	#endif
+	
 	this->paragraphs.clear();
 	this->load_styles();
 	this->load_layout(state);
 	
-	try {
-		this->body = this->find_style("body");
-	} catch (std::runtime_error& re) {
-		std::cerr << re.what() << std::endl;
-		this->body.set_attribute("background-color", 0);
-	}
+	this->body.set_attribute("background-color", 0);
+	this->body = this->find_style("body");
 }
 
 void View::load_styles() {
