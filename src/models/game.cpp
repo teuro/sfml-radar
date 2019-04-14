@@ -111,21 +111,21 @@ void Game::calculate_points(int type, double clearance_count, std::string plane)
 	double point = (type == APPROACH) ? 50 : 30;
 	
 	point = (int)std::log(point / clearance_count) * point * 10;
-	Game_point tgp = {plane, point};
 	
-	this->points.push_back(tgp);
+	this->points[plane].out_time = duration;
+	this->points[plane].points = point;
 }
 
-std::list <Game_point> Game::get_points() {
+std::map <std::string, Game_point> Game::get_points() {
 	return this->points;
 }
 
 double Game::get_game_points() {
-	std::list <Game_point> :: iterator pit = this->points.begin();
+	std::map <std::string, Game_point> :: iterator pit = this->points.begin();
 	double sum = 0;
 	
 	while (pit != this->points.end()) {
-		sum += pit->points;
+		sum += pit->second.points;
 		
 		++pit;
 	}
@@ -134,7 +134,7 @@ double Game::get_game_points() {
 }
 
 void Game::create_planes(int amount) {
-	for (int i = 0; i< amount; ++i) {
+	for (int i = 0; i < amount; ++i) {
 		this->create_plane();
 	}
 }
@@ -201,7 +201,12 @@ bool Game::check_aircrafts(std::string name) {
 }
 
 void Game::create_plane() {
+	#ifdef DEBUG
+	std::clog << "Game::create_plane()" << std::endl;
+	#endif
+	
 	Database db;
+	
 	if (this->active_field == NULL) {
 		throw std::logic_error("Airfield not ready");
 	}
@@ -229,7 +234,10 @@ void Game::create_plane() {
 
     std::string t_callsign;
 	t_callsign = airlines(Tools::rnd(0, airlines.size()), "ICAO") + Tools::tostr(Tools::rnd(1, 999), 3);
-	
+
+	Game_point tmp{0, duration, -1};
+	this->points.insert(std::pair <std::string, Game_point> (t_callsign, tmp));
+
 	while (!this->check_aircrafts(t_callsign)) {
 		t_callsign = airlines(Tools::rnd(0, airlines.size()), "ICAO") + Tools::tostr(Tools::rnd(1, 999), 3);
 	}
@@ -381,15 +389,28 @@ void Game::build_clearance(std::string command) {
 		Clearance t_clearance = {this->duration, this->selected->get_name(), command};
 		this->clearances.push_back(t_clearance);
 		
-		std::string s_value = tmp.back();
-		int value = -5;
+		std::string s_value = Tools::trim(tmp.back());
+		int value;
 		
 		if (tmp.size() > 1) {
 			if (Tools::trim(tmp[0]) == "turn") {
 				value = Tools::toint(s_value);
-				int turn = (Tools::trim(tmp[1]) == "right") ? RIGHT : LEFT;
 				
-				this->selected->set_clearance_heading(Tools::deg2rad(value), turn);
+				int turn = LEFT;
+				
+				if (Tools::trim(tmp[1]) == "right") { 
+					turn = RIGHT; 
+				} else if (Tools::trim(tmp[1]) == "left") {
+					turn = LEFT;
+				} else if (tmp.size() > 2) {
+					turn = ERROR;
+				}
+				
+				if (turn == LEFT || turn == RIGHT) {
+					this->selected->set_clearance_heading(Tools::deg2rad(value), turn);
+				} else {
+					display_messages.push("turn must be either 'left' or 'right'");
+				}
 			} else if (Tools::trim(tmp[0]) == "climb") {
 				value = Tools::toint(s_value);
 				if (this->selected->get_altitude() > value) {

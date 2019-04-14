@@ -20,9 +20,9 @@ void Statview::load() {
 }
 
 void Statview::draw_points() {
-	std::list <Game_point> points = this->game->get_points();
+	std::map <std::string, Game_point> points = this->game->get_points();
 	
-	std::list <Game_point> :: iterator pit = points.begin();
+	std::map <std::string, Game_point> :: iterator pit = points.begin();
 	Drawable_table point_table("table", "", "points");
 	
 	int sum = 0;
@@ -30,12 +30,12 @@ void Statview::draw_points() {
 	while (pit != points.end()) {
 		Row row;
 		point_table.add_row(row);
-		Cell cell1(pit->plane);
+		Cell cell1(pit->first);
 		point_table.add_cell(cell1);
 		
-		Cell cell2(Tools::tostr(pit->points, 4));
+		Cell cell2(Tools::tostr(pit->second.points, 4));
 		point_table.add_cell(cell2);
-		sum += pit->points;
+		sum += pit->second.points;
 		++pit;
 	}
 	

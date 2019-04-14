@@ -25,8 +25,9 @@ struct Clearance {
 };
 
 struct Game_point {
-	std::string plane;
 	double points;
+	double in_time;
+	double out_time;
 };
 
 /**
@@ -106,6 +107,14 @@ public:
 	std::shared_ptr <Atis> get_atis();
 	
 	void create_plane();
+	/** 
+		* build clearance
+		* spilts command into peaces and try to make proper clearance
+		* @todo fix turn there should be left or right every else should be error
+		* @param command
+		* @return void
+		
+	**/
 	void build_clearance(std::string command);
 	
 	void create_planes(int amount);
@@ -114,7 +123,7 @@ public:
 	int get_planes_count();
 	int get_separation_errors();
 	int get_new_plane();
-	std::list <Game_point> get_points();
+	std::map <std::string, Game_point> get_points();
 	double get_game_points();
 	std::list <Clearance> get_clearances();
 	bool ok();
@@ -141,19 +150,20 @@ private:
 	bool check_aircrafts(std::string name);
 	std::shared_ptr <Settings> settings;
 
-	std::vector     <Navpoint>		navpoints;
-	std::list       <aircraft>		aircrafts;
-	std::queue      <aircraft>		holdings;
-	std::queue      <std::string>	display_messages;
-	std::queue      <std::string>	game_errors;
-	std::list       <aircraft>		errors;
-	std::list       <Clearance>		clearances;
-	std::list       <Game_point>	points;
+	std::vector     <Navpoint>					navpoints;
+	std::list       <aircraft>					aircrafts;
+	std::queue      <aircraft>					holdings;
+	std::queue      <std::string>				display_messages;
+	std::queue      <std::string>				game_errors;
+	std::list       <aircraft>					errors;
+	std::list       <Clearance>					clearances;
+	std::map		<std::string, Game_point>	points;
 	
 	std::string command;
 
     std::shared_ptr <Airfield> active_field;
 	std::shared_ptr <Atis> atis;
+	std::unique_ptr <Menu> menu;
     double duration;
 	double pop_holdings;
     int separation_errors;
