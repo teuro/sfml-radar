@@ -8,7 +8,7 @@
 #include "coordinate_tools.hpp"
 #include "database/database.hpp"
 
-enum turn 		{LEFT = -1, RIGHT = 1};
+enum turn 		{LEFT = -1, RIGHT = 1, ERROR};
 enum types 		{DEPARTURE, APPROACH};
 enum altitude 	{DESCENT = -1, CLIMB = 1};
 enum change 	{DECREASE = -1, INCREASE = 1};
