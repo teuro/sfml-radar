@@ -171,7 +171,17 @@ void View::load_layout(std::string state) {
 				
 				this->style(list);
 				this->lists.push_back(list);
-			} 
+			} else if (selected_element->Value() == std::string("click")) {
+				std::string t_id = Tools::trim(selected_element->Attribute("id"));
+				std::string t_class = Tools::trim(selected_element->Attribute("class"));
+				std::string t_name = selected_element->Value();
+				
+				std::string value = Tools::trim(selected_element->GetText());
+				
+				Clickable cl(t_name, t_class, t_id, value, this->settings);
+				
+				this->clicks.push_back(cl);
+			}			
 			
             selected_element = selected_element->NextSiblingElement();
         }

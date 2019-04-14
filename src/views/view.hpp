@@ -18,6 +18,7 @@
 #include "layout/drawable_list.hpp"
 #include "layout/drawable_table.hpp"
 #include "layout/drawable_input.hpp"
+#include "layout/clickable.hpp"
 #include "../tools/style/style.hpp"
 #include "../tools/settings.hpp"
 #include "../tools/tools.hpp"
@@ -120,6 +121,7 @@ protected:
 	std::vector <Paragraph> paragraphs;
 	std::vector <Drawable_list> lists;
 	std::vector <Drawable_table> tables;
+	std::vector <Clickable> clicks;
 	std::string command;
 private:
 	void add_style(std::list <Style> tmp);
