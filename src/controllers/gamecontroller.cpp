@@ -126,7 +126,6 @@ void Gamecontroller::calculate_fps() {
 }
 
 void Gamecontroller::update(double elapsed, Point& mouse) {
-//	std::clog << "Gamecontroller::" << this->command << std::endl;
 	#ifdef DEBUG
 	std::clog << "Gamecontroller::update(" << elapsed << ", " << mouse << ")" << std::endl;
 	#endif
@@ -187,6 +186,7 @@ void Gamecontroller::load_menu_items(std::string query, std::shared_ptr <Menu> m
 	#ifdef DEBUG
 	std::clog << "Gamecontroller::load_menu_items(" << query << ", menu" << ")" << std::endl;
 	#endif
+	
 	menu->clear();
 	std::list <std::string> arguments;
 	arguments.push_back(this->command);
