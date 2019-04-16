@@ -15,6 +15,7 @@
 #include <map>
 #include <stdexcept>
 #include <string>
+#include <random>
 
 /**
 	* Tools 
@@ -26,6 +27,8 @@ namespace Tools {
 	extern const double PI;
 	extern const double earth_radius;
 	extern const double milestofeets;
+	
+	extern std::default_random_engine generator;
 	
 	/**
 		* fix_angle
@@ -106,14 +109,24 @@ namespace Tools {
 	int hex2int(std::string hexa);
 	
 	/**
-		* rnd
+		* linear_random
 		* Returns pseudo random integer
 		* @param int a lower bound
 		* @param int b upper bound
 		* @return int
 	**/
 		
-	int rnd(int a, int b);
+	int linear_random(int a, int b);
+	
+	/**
+		* normal_distribution
+		* Return normal distribution
+		* @param double mean bound
+		* @param double variation bound
+		* @return double
+	**/
+	
+	double normal_distribution(double mean, double variation);
 	
 	/**
 		* deg2rad
@@ -152,7 +165,7 @@ namespace Tools {
 	
 	template <class T>
 	T random_object(std::vector <T> input) {
-		int place = Tools::rnd(0, (int)input.size()-1);
+		int place = Tools::linear_random(0, (int)input.size()-1);
 		
 		return input[place];
 	}

@@ -177,7 +177,7 @@ void Game::update(double elapsed) {
 
     if (this->duration > this->new_plane && this->settings->required_handled > this->handled_planes + this->aircrafts.size() + this->holdings.size()) {
         create_plane();
-        double time_for_next_plane = Tools::rnd(this->settings->new_plane_lower * 1000, this->settings->new_plane_upper * 1000);
+        double time_for_next_plane = Tools::linear_random(this->settings->new_plane_lower * 1000, this->settings->new_plane_upper * 1000);
 		this->new_plane += time_for_next_plane;
     }
 }
@@ -225,7 +225,7 @@ void Game::create_plane() {
 	
 	Queryresult airlines = db.get_result("SELECT ICAO FROM airlines");
 	
-	int t_type = Tools::rnd(1, 100);
+	int t_type = Tools::linear_random(1, 100);
 	
 	/** 
 	testing data
@@ -237,13 +237,13 @@ void Game::create_plane() {
 	types type = (t_type < 50) ? DEPARTURE : APPROACH;
 
     std::string t_callsign;
-	t_callsign = airlines(Tools::rnd(0, airlines.size()), "ICAO") + Tools::tostr(Tools::rnd(1, 999), 3);
+	t_callsign = airlines(Tools::linear_random(0, airlines.size()), "ICAO") + Tools::tostr(Tools::linear_random(1, 999), 3);
 
-	Game_point tmp{0, duration, -1};
+	Game_point tmp{0, duration, -1, 0};
 	this->points.insert(std::pair <std::string, Game_point> (t_callsign, tmp));
 
 	while (!this->check_aircrafts(t_callsign)) {
-		t_callsign = airlines(Tools::rnd(0, airlines.size()), "ICAO") + Tools::tostr(Tools::rnd(1, 999), 3);
+		t_callsign = airlines(Tools::linear_random(0, airlines.size()), "ICAO") + Tools::tostr(Tools::linear_random(1, 999), 3);
 	}
 	
 	if (type == DEPARTURE) {

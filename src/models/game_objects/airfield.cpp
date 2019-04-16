@@ -73,12 +73,12 @@ Outpoint& Airfield::get_outpoint(std::string name) {
 }
 
 Inpoint& Airfield::get_random_inpoint() {
-	int place = Tools::rnd(0, (int)this->inpoints.size()-1);
+	int place = Tools::linear_random(0, (int)this->inpoints.size()-1);
 	return this->inpoints[place];
 }
 
 Outpoint& Airfield::get_random_outpoint() {
-	int place = Tools::rnd(0, (int)this->outpoints.size()-1);
+	int place = Tools::linear_random(0, (int)this->outpoints.size()-1);
 	return this->outpoints[place];
 }
 

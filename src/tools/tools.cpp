@@ -4,6 +4,8 @@ namespace Tools {
 	const double PI = 3.14151927;
 	const double earth_radius = 3440;
 	const double milestofeets = 6076.11549;
+	
+	std::default_random_engine generator(std::time(NULL));
 }
 
 double Tools::fix_angle(double angle) {
@@ -26,8 +28,14 @@ void Tools::init_random() {
 	std::srand(std::time(NULL));
 }
 
-int Tools::rnd(int a, int b) {
+int Tools::linear_random(int a, int b) {
     return (a + std::rand() % (b - a));
+}
+
+double Tools::normal_distribution(double mean, double variation) {
+	std::normal_distribution <double> distribution(mean, variation);
+	
+	return distribution(generator);
 }
 
 double Tools::deg2rad(double deg) {

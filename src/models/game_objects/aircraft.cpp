@@ -7,8 +7,8 @@ Aircraft::Aircraft(std::string t_name, std::shared_ptr <Settings> s, std::shared
 	this->speed 				= ip.get_speed();
 	this->type 					= APPROACH;
 	
-	this->vapp					= Tools::rnd(175, 180);
-	this->vland					= Tools::rnd(130, 138);
+	this->vapp					= Tools::linear_random(175, 180);
+	this->vland					= Tools::linear_random(130, 138);
 	
 	this->load();
 }
@@ -27,11 +27,11 @@ Aircraft::Aircraft(std::string t_name, std::shared_ptr <Settings> s, std::shared
 	this->target 				= op;
 	this->type 					= DEPARTURE;
 	
-	this->v1					= Tools::rnd(130, 142);
-	this->vr					= Tools::rnd(145, 147);
-	this->v2					= Tools::rnd(165, 170);
-	this->vclimb				= Tools::rnd(175, 186);
-	this->vcruise				= Tools::rnd(310, 335);
+	this->v1					= Tools::linear_random(130, 142);
+	this->vr					= Tools::linear_random(145, 147);
+	this->v2					= Tools::linear_random(165, 170);
+	this->vclimb				= Tools::linear_random(175, 186);
+	this->vcruise				= Tools::linear_random(310, 335);
 	
 	this->load();
 }
@@ -50,9 +50,9 @@ void Aircraft::load() {
     this->clearance_speed 		= this->speed;
 	this->clearance_heading 	= this->heading;
 	
-	this->fuel_consumption		= Tools::rnd(550, 1210);
-	this->fuel_amount			= 250 + Tools::rnd(1200, 2950) + 150;
-	this->fuel_final_reserve	= Tools::rnd(850, 1130);
+	this->fuel_consumption		= Tools::linear_random(550, 1210);
+	this->fuel_amount			= 250 + Tools::linear_random(1200, 2950) + 150;
+	this->fuel_final_reserve	= Tools::linear_random(850, 1130);
 	
     this->turn 					= LEFT;
 }
