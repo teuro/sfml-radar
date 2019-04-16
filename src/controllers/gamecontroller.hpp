@@ -143,8 +143,28 @@ public:
 	
 protected:
 private:
+	/**
+		* set_variables
+		* Set game variables for views.
+		* @param void
+		* @return void
+	**/
 	void set_variables();
+	
+	/**
+		* calculate_fps
+		* Calculates fps and stores to proper variable
+		* @param void
+		* @return void
+	**/
 	void calculate_fps();
+	
+	/**
+		* load_menu_items
+		* loads data form menu
+		* @param query
+		* @param menu
+	**/
 	void load_menu_items(std::string query, std::shared_ptr <Menu> menu);
 
 	std::list <Clearance> clearances;
