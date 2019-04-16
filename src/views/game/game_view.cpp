@@ -201,9 +201,7 @@ Point Gameview::calculate(Coordinate& target) {
 	return t;
 }
 
-void Gameview::update() { 
-	//std::clog << "Centerpoint " << this->settings->get_centerpoint() << " on screen (" << this->settings->screen_width << ", " << this->settings->screen_height << ") = " << this->calculate(this->settings->get_centerpoint()) << std::endl;
-}
+void Gameview::update() { }
 
 void Gameview::update_command(std::string command) {
 	this->input->set_value(command);

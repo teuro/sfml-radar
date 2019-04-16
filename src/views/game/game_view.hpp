@@ -53,6 +53,7 @@ public:
 		* Gameview desstructor
 		* @return void
 	**/
+	
 	~Gameview();
 	
 	/**
@@ -63,6 +64,13 @@ public:
 	**/
 	
 	virtual void draw(Point& mouse);
+	
+	/**
+		* handle_click
+		* Handles mouse click
+		* @param mouse
+		* @return string
+	**/
 	
 	virtual std::string handle_click(Point& mouse);
 	
@@ -106,10 +114,21 @@ public:
 	Point calculate(Coordinate& target);
 	
 	/**
-		draw many elements
+		* update
+		* @todo implement in future
+		* @param void
+		* @return void
 	**/
 	
 	 virtual void update();
+	 
+	 /**
+		* update_command
+		* @todo implement in future
+		* @param void
+		* @return void
+	 **/
+	 
 	 virtual void update_command(std::string command);
 private:
 	/**
