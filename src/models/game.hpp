@@ -28,6 +28,7 @@ struct Game_point {
 	double points;
 	double in_time;
 	double out_time;
+	int clearances;
 };
 
 /**

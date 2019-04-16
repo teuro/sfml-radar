@@ -106,13 +106,17 @@ void Game::handle_holdings() {
 }
 
 void Game::calculate_points(int type, double clearance_count, std::string plane) {
+	this->points[plane].out_time = duration;
+	this->points[plane].clearances = clearance_count;
+	
 	++this->handled_planes;
 	
-	double point = (type == APPROACH) ? 50 : 30;
+	double point = (type == APPROACH) ? 8000 : 4000;
 	
-	point = (int)std::log(point / clearance_count) * point * 10;
+	double area_time = this->points[plane].out_time - this->points[plane].in_time;
 	
-	this->points[plane].out_time = duration;
+	point = (int)(point / clearance_count) - (int)area_time;
+	
 	this->points[plane].points = point;
 }
 
