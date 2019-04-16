@@ -182,7 +182,7 @@ private:
     std::shared_ptr <Game> game;
 	std::shared_ptr <Atis> atis;
 
-	Metar metar;
+	std::shared_ptr <Metar> metar;
 
 	std::shared_ptr <Menu> menu;
 	std::shared_ptr <Menu> airports;

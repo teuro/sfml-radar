@@ -1,7 +1,8 @@
 #include "gamecontroller.hpp"
 
 Gamecontroller::Gamecontroller(std::shared_ptr <Settings> s, Drawsurface& d) : Controller(s, d) { 
-	Metar metar;
+	std::shared_ptr <Metar> m(new Metar(settings));
+	this->metar = m;
 	
 	std::shared_ptr <Atis> a(new Atis(this->settings, this->metar));
 	this->atis = a;
@@ -86,7 +87,7 @@ void Gamecontroller::set_variables() {
 		this->views[MENU]->repl["[LEV]"] = Tools::tostr(this->game->get_level());
 	} else if (this->state == GAME) {
 		this->views[GAME]->repl["[PLH]"] = Tools::tostr(this->game->get_handled_planes());
-		this->views[GAME]->repl["[METAR]"] = this->metar.to_string();
+		this->views[GAME]->repl["[METAR]"] = this->metar->to_string();
 		this->views[GAME]->repl["[TIME]"] = Tools::totime(this->game_time, "H:i:s");
 		this->views[GAME]->repl["[PLC]"] = Tools::tostr(this->game->get_planes_count());
 		this->views[GAME]->repl["[SPE]"] = Tools::tostr(this->game->get_separation_errors());	
@@ -105,7 +106,7 @@ void Gamecontroller::set_variables() {
 		this->views[GAME]->repl["[MXA]"] = Tools::tostr(Tools::round_nearest(Tools::rad2deg(this->atis->get_landing_runway().get_heading()) + this->settings->approach_angle, 10));
 		this->views[GAME]->repl["[MNA]"] = Tools::tostr(Tools::round_nearest(Tools::rad2deg(this->atis->get_landing_runway().get_heading()) - this->settings->approach_angle, 10));
 	} else if (this->state == ATIS) {
-		this->views[ATIS]->repl["[METAR]"] = this->metar.to_string();
+		this->views[ATIS]->repl["[METAR]"] = this->metar->to_string();
 		this->views[ATIS]->repl["[LEV]"] = Tools::tostr(this->game->get_level());
 		this->views[ATIS]->repl["[DEPARTURE]"] = this->atis->get_departure_runway().get_name();
 		this->views[ATIS]->repl["[LANDING]"] = this->atis->get_landing_runway().get_name();
@@ -138,7 +139,7 @@ void Gamecontroller::update(double elapsed, Point& mouse) {
 		this->views[this->state] = gv;
 		this->views[this->state]->load();
 		
-		this->game->create_planes(Tools::rnd(3, this->settings->required_handled));
+		this->game->create_planes(Tools::linear_random(3, this->settings->required_handled));
 	} else if (this->game->ok()) {
 		std::shared_ptr <Statview> sv (new Statview(this->drawer, this->settings, this->game));
 		this->state = STAT;
@@ -226,7 +227,7 @@ void Gamecontroller::handle_text_input() {
 	} else if (this->state == MENU) {
 		this->game->load(this->menu->get_selected().get_name());
 		this->atis->set_airfield(this->game->get_active_field());
-		this->metar.update(this->menu->get_selected().get_name());
+		this->metar->update(this->menu->get_selected().get_name());
 		this->atis->load();
 				
 		this->state = ATIS;

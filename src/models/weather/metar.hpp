@@ -5,8 +5,11 @@
 #include <string>
 #include <ctime>
 #include <map>
+#include <random>
+#include <memory>
 
 #include "../../tools/tools.hpp"
+#include "../../tools/settings.hpp"
 #include "../../tools/text_tools.hpp"
 #include "../../tools/database/database.hpp"
 
@@ -22,7 +25,7 @@ struct Cloud {
 };
 
 /**
-	* \struct Wind represent abstract base of winds
+	* @struct Wind represent abstract base of winds
 **/
 
 struct Wind {
@@ -35,7 +38,7 @@ struct Wind {
 
 class Metar {
 public:
-    Metar();
+    Metar(std::shared_ptr <Settings> settings);
     ~Metar();
     std::string to_string();
     void update(std::string icao);
@@ -61,6 +64,8 @@ private:
 	void generate_visibility();
 	void generate_wind();
 	void generate_humidity();
+	
+	std::shared_ptr <Settings> settings;
 };
 
 #endif // METAR_HPP

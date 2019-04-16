@@ -1,6 +1,6 @@
 #include "atis.hpp"
 
-Atis::Atis(std::shared_ptr <Settings> s, Metar& m) : settings(s), metar(m) { 
+Atis::Atis(std::shared_ptr <Settings> s, std::shared_ptr <Metar> m) : settings(s), metar(m) { 
 	this->transition_altitude = 0;
 	this->transition_level = 0;
 	
@@ -131,8 +131,8 @@ double Atis::calculate_backwind(double runway) {
 	std::clog << "Atis::calculate_backwind(" << runway << ")" << std::endl;
 	#endif
 	
-	double wind = this->metar.get_wind_direction();
-	int speed = this->metar.get_wind_speed();
+	double wind = this->metar->get_wind_direction();
+	int speed = this->metar->get_wind_speed();
 	
 	return -std::cos(wind - runway) * speed;
 }
@@ -234,7 +234,7 @@ bool Atis::transition_altitude_ok() {
 bool Atis::transfer_level_ok() {
 	bool ok = true;
 	
-	int calculated_tr_level = this->calculate_tr_level(this->metar.get_pressure(), transition_altitude);
+	int calculated_tr_level = this->calculate_tr_level(this->metar->get_pressure(), transition_altitude);
 		
 	if (calculated_tr_level != transition_level) {
 		this->atis_errors.push_back("transition level should be " + Tools::tostr(calculated_tr_level));

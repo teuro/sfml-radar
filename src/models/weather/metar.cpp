@@ -1,6 +1,6 @@
 #include "metar.hpp"
 
-Metar::Metar() { }
+Metar::Metar(std::shared_ptr <Settings> s) : settings(s) { }
 
 Metar::~Metar() { }
 
@@ -25,8 +25,8 @@ void Metar::update(std::string icao) {
 	tm *ltm = localtime(&this->time);
 	this->id_code = Tools::tostr(ltm->tm_mday, 2) + Tools::tostr(ltm->tm_hour-3, 2) + Tools::tostr(ltm->tm_min, 2) + "z";
 	this->clouds.clear();
-    this->pressure = Tools::rnd(965, 1035);
-	this->temperature = Tools::rnd(-30, 40);
+    this->pressure = Tools::normal_distribution(1003, 11.2);
+	this->temperature = Tools::linear_random(-30, 40);
     this->generate_humidity();
     this->generate_visibility();
     this->generate_wind();
@@ -35,25 +35,16 @@ void Metar::update(std::string icao) {
 	this->generate_clouds();
 }
 
-double f(double x) {
-	return std::pow(x, 0.3285155592603834);
-}
-
-double result(double x, double min_return, double max_return) {
-	double min = 960;
-	double  max = 1050;
-	if (x == min) return min_return;
-	if (x == max) return max_return;
-	return result(min, min_return, max_return) + (f(x) - f(min)) / (f(max) - f(min)) * (result(max, min_return, max_return) - result(min, min_return, max_return));
-}
-
 void Metar::generate_visibility() {
-	this->visibility = Tools::round_nearest(result(this->pressure, 100, 9999), 100);
+	double variation = 100 - ((this->pressure / this->settings->air_pressure_lower) * (this->settings->air_pressure_upper - this->settings->air_pressure_lower));
+	double mean_visibility = 6500;
+	
+	this->visibility = Tools::round_nearest(Tools::normal_distribution(mean_visibility, variation), 100);
 }
 
 void Metar::generate_wind() {
-	this->wind.direction = Tools::round_nearest(Tools::rnd(5, 355), 5);
-    this->wind.speed = Tools::round_nearest(result(this->pressure, 5, 50), 5);
+	this->wind.direction = Tools::round_nearest(Tools::linear_random(5, 355), 5);
+    this->wind.speed = Tools::round_nearest(Tools::linear_random(5, 50), 5);
 }
 
 void Metar::generate_clouds() {
@@ -74,7 +65,7 @@ void Metar::generate_clouds() {
 	while (cloud_iter != cloud_types.begin()) {
 		--cloud_iter;
 		if (this->pressure > cloud_iter->first && clouds_counter < max_clouds) {
-			int altitude = Tools::round_nearest(result(this->pressure, 10, 90), 10);
+			int altitude = Tools::round_nearest(Tools::linear_random(10, 90), 10);
 			std::string name = cloud_iter->second;
 				
 			Cloud cld {name, altitude};
@@ -85,7 +76,7 @@ void Metar::generate_clouds() {
 }
 
 void Metar::generate_humidity() {
-	this->humidity = Tools::round_nearest(result(this->pressure, 5, 80), 1);
+	this->humidity = Tools::round_nearest(Tools::normal_distribution(5, 80), 1);
 }
 
 int Metar::get_pressure() {
