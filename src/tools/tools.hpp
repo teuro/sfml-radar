@@ -16,6 +16,7 @@
 #include <stdexcept>
 #include <string>
 #include <random>
+#include <iostream>
 
 /**
 	* Tools 
@@ -27,8 +28,6 @@ namespace Tools {
 	extern const double PI;
 	extern const double earth_radius;
 	extern const double milestofeets;
-	
-	extern std::default_random_engine generator;
 	
 	/**
 		* fix_angle

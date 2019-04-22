@@ -33,6 +33,7 @@ int Tools::linear_random(int a, int b) {
 }
 
 double Tools::normal_distribution(double mean, double variation) {
+
 	std::normal_distribution <double> distribution(mean, variation);
 	
 	return distribution(generator);
