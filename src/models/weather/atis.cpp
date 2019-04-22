@@ -1,6 +1,6 @@
 #include "atis.hpp"
 
-Atis::Atis(std::shared_ptr <Settings> s, std::shared_ptr <Metar> m) : settings(s), metar(m) { 
+Atis::Atis(std::shared_ptr <Settings> s) : settings(s) { 
 	this->transition_altitude = 0;
 	this->transition_level = 0;
 	
@@ -11,6 +11,10 @@ Atis::Atis(std::shared_ptr <Settings> s, std::shared_ptr <Metar> m) : settings(s
 }
 
 Atis::~Atis() { }
+
+void Atis::set_metar(std::shared_ptr <Metar> m) {
+	this->metar = m;
+}
 
 void Atis::load() {	
 	#ifdef DEBUG

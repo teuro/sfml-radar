@@ -18,10 +18,12 @@
 
 class Atis {
 public:
-    Atis(std::shared_ptr <Settings> s, std::shared_ptr <Metar> m);
+    Atis(std::shared_ptr <Settings> s);
     ~Atis();
 	void load();
     void update(int amount);
+	
+	void set_metar(std::shared_ptr <Metar> m);
 	
 	int get_transition_level();
     int get_transition_altitude();
