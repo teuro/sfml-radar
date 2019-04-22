@@ -11,10 +11,10 @@
 #include "../../tools/tools.hpp"
 #include "../../tools/settings.hpp"
 #include "../../tools/text_tools.hpp"
-#include "../../tools/database/database.hpp"
+#include "../../tools/web_tools.hpp"
 
 /**
-	* Cloud represent abstract base of clouds
+	* Cloud represent of clouds
 	* @var type
 	* @var altitude
 **/
@@ -25,7 +25,7 @@ struct Cloud {
 };
 
 /**
-	* @struct Wind represent abstract base of winds
+	* @struct Wind represent of winds
 **/
 
 struct Wind {
@@ -38,10 +38,11 @@ struct Wind {
 
 class Metar {
 public:
-    Metar(std::shared_ptr <Settings> settings);
+    Metar(std::shared_ptr <Settings> settings, std::string icao);
     ~Metar();
     std::string to_string();
-    void update(std::string icao);
+    void update();
+    void update_pressure();
     int get_pressure();
     double get_wind_direction();
     int get_wind_speed();
@@ -56,7 +57,6 @@ private:
     int visibility;
     std::list <Cloud> clouds;
     Wind wind;
-    std::string icao;
 	std::string id_code;
 	void generate_clouds();
 	std::time_t time;
@@ -66,6 +66,10 @@ private:
 	void generate_humidity();
 	
 	std::shared_ptr <Settings> settings;
+	std::string icao;
+	double weather_type;
+	double average_pressure;
+	double variation_pressure;
 };
 
 #endif // METAR_HPP

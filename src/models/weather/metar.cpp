@@ -1,6 +1,10 @@
 #include "metar.hpp"
 
-Metar::Metar(std::shared_ptr <Settings> s) : settings(s) { }
+Metar::Metar(std::shared_ptr <Settings> s, std::string i) : settings(s), icao(i) { 	
+	this->weather_type = (double)(Tools::linear_random(932, 999)) / 1000.0;
+	this->average_pressure = 1040.00 * weather_type;
+	this->variation_pressure = (double)(Tools::linear_random(200, 950)) / 100.0 - weather_type;
+}
 
 Metar::~Metar() { }
 
@@ -20,18 +24,21 @@ std::string Metar::to_string() {
     return this->icao + " " + this->id_code + " " + Tools::tostr(wind.direction, 3) + "/" + Tools::tostr(wind.speed, 2) + " KT " + Tools::tostr(visibility) + " " + clouds + " " + Tools::tostr(temperature, 2) + "/" + Tools::tostr(devpoint, 2) + " Q" + Tools::tostr(pressure, 4);
 }
 
-void Metar::update(std::string icao) {
+void Metar::update_pressure() {
+	this->pressure = Tools::normal_distribution(average_pressure, variation_pressure);
+}
+
+void Metar::update() {
+	this->update_pressure();
 	this->time = std::time(0);
 	tm *ltm = localtime(&this->time);
 	this->id_code = Tools::tostr(ltm->tm_mday, 2) + Tools::tostr(ltm->tm_hour-3, 2) + Tools::tostr(ltm->tm_min, 2) + "z";
 	this->clouds.clear();
-    this->pressure = Tools::normal_distribution(1003, 11.2);
 	this->temperature = Tools::linear_random(-30, 40);
     this->generate_humidity();
     this->generate_visibility();
     this->generate_wind();
     this->devpoint = (int)this->temperature - ((100 - this->humidity) / 5);
-	this->icao = icao;
 	this->generate_clouds();
 }
 
@@ -49,6 +56,7 @@ void Metar::generate_wind() {
 
 void Metar::generate_clouds() {
 	std::map <int, std::string> cloud_types;
+	
 	cloud_types[1040] = "SKC";
 	cloud_types[1035] = "CLR";
 	cloud_types[1030] = "NSC";
@@ -60,7 +68,7 @@ void Metar::generate_clouds() {
 	
 	std::map <int, std::string> :: iterator cloud_iter = cloud_types.end();
 	int clouds_counter = 0;
-	int max_clouds = 1;
+	int max_clouds = Tools::linear_random(0, 3);
 	
 	while (cloud_iter != cloud_types.begin()) {
 		--cloud_iter;
@@ -68,15 +76,15 @@ void Metar::generate_clouds() {
 			int altitude = Tools::round_nearest(Tools::linear_random(10, 90), 10);
 			std::string name = cloud_iter->second;
 				
-			Cloud cld {name, altitude};
-			this->clouds.push_back(cld);
+			Cloud cloud {name, altitude};
+			this->clouds.push_back(cloud);
 			++clouds_counter;
 		}
 	}
 }
 
 void Metar::generate_humidity() {
-	this->humidity = Tools::round_nearest(Tools::normal_distribution(5, 80), 1);
+	this->humidity = Tools::round_nearest(Tools::normal_distribution(45, 15), 1);
 }
 
 int Metar::get_pressure() {
