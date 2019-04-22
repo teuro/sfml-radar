@@ -1,10 +1,7 @@
 #include "gamecontroller.hpp"
 
 Gamecontroller::Gamecontroller(std::shared_ptr <Settings> s, Drawsurface& d) : Controller(s, d) { 
-	std::shared_ptr <Metar> m(new Metar(settings));
-	this->metar = m;
-	
-	std::shared_ptr <Atis> a(new Atis(this->settings, this->metar));
+	std::shared_ptr <Atis> a(new Atis(this->settings));
 	this->atis = a;
 	
 	std::shared_ptr <Game> g(new Game(this->settings, this->atis));
@@ -103,6 +100,9 @@ void Gamecontroller::set_variables() {
 		this->views[GAME]->repl["[PCNT]"] = Tools::tostr(this->game->get_game_points());
 		this->views[GAME]->repl["[CLRE]"] = Tools::tostr(this->game->get_clearance_error());
 		this->views[GAME]->repl["[GRE]"] = Tools::tostr(this->game->get_game_error());
+		this->views[GAME]->repl["[QNH]"] = Tools::tostr(this->metar->get_pressure());
+		this->views[GAME]->repl["[WNDD]"] = Tools::tostr(this->metar->get_wind_direction());
+		this->views[GAME]->repl["[WNDS]"] = Tools::tostr(this->metar->get_wind_speed());
 		this->views[GAME]->repl["[MXA]"] = Tools::tostr(Tools::round_nearest(Tools::rad2deg(this->atis->get_landing_runway().get_heading()) + this->settings->approach_angle, 10));
 		this->views[GAME]->repl["[MNA]"] = Tools::tostr(Tools::round_nearest(Tools::rad2deg(this->atis->get_landing_runway().get_heading()) - this->settings->approach_angle, 10));
 	} else if (this->state == ATIS) {
@@ -158,6 +158,7 @@ void Gamecontroller::update(double elapsed, Point& mouse) {
 	
 	if (this->state == GAME) {
 		std::string tmp = this->game->get_message();
+		this->metar->update_pressure();
 
 		if (tmp.length()) {
 			this->set_flash_message(tmp);
@@ -227,7 +228,10 @@ void Gamecontroller::handle_text_input() {
 	} else if (this->state == MENU) {
 		this->game->load(this->menu->get_selected().get_name());
 		this->atis->set_airfield(this->game->get_active_field());
-		this->metar->update(this->menu->get_selected().get_name());
+		std::shared_ptr <Metar> m(new Metar(settings, this->menu->get_selected().get_name()));
+		this->metar = m;
+		this->metar->update();
+		this->atis->set_metar(this->metar);
 		this->atis->load();
 				
 		this->state = ATIS;
