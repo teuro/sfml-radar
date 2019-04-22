@@ -2,6 +2,9 @@
 <layout>
 	<p id="metar" class="info">[METAR]</p>
 	
+	<p id="gnh" class="info">[QNH]</p>
+	<p id="wnd" class="info">[WNDD]/[WNDS]</p>
+	
 	<table id="basic_info" class="table">
 		<tr>
 			<td>Planes in area [PLC]</td>
