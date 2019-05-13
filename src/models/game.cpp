@@ -1,6 +1,10 @@
 #include "game.hpp"
 
 Game::Game(std::shared_ptr <Settings> s, std::shared_ptr <Atis> a) : settings(s), atis(a) {
+	#ifdef DEBUG
+    std::clog << "Game::game()" << std::endl;
+	#endif
+	
     this->duration = 0;
 	this->selected = NULL;
 	this->loaded = false;
@@ -30,6 +34,10 @@ void Game::load(std::string airfield) {
 }
 
 std::shared_ptr <Airfield> Game::get_active_field() {
+	#ifdef DEBUG
+    std::clog << "Game::get_active_field()" << std::endl;
+	#endif
+	
 	if (this->active_field == NULL) {
 		throw std::logic_error("Game::get_active_field() this->active_field == NULL");
 	}
@@ -38,14 +46,26 @@ std::shared_ptr <Airfield> Game::get_active_field() {
 }
 
 std::list <aircraft> Game::get_aircrafts() {
+	#ifdef DEBUG
+    std::clog << "Game::get_aircrafts()" << std::endl;
+	#endif
+	
     return this->aircrafts;
 }
 
 void Game::add_point(Navpoint np) {
+	#ifdef DEBUG
+    std::clog << "Game::add_point())" << std::endl;
+	#endif
+
     this->navpoints.push_back(np);
 }
 
 void Game::check_collision() {
+	#ifdef DEBUG
+    std::clog << "Game::check_collision()" << std::endl;
+	#endif
+	
     this->errors.clear();
 
     std::list <aircraft> :: iterator plane_a;
@@ -73,18 +93,51 @@ void Game::check_collision() {
 }
 
 bool Game::is_free(Inpoint& navpoint) {
+	#ifdef DEBUG
+    std::clog << "Game::is_free()" << std::endl;
+	#endif
+	
     std::list <aircraft> :: iterator plane;
 
     for (plane = this->aircrafts.begin(); plane != this->aircrafts.end(); ++plane) {
-        if (Tools::distanceNM(navpoint.get_place(), (*plane)->get_place()) < this->settings->separation_horizontal && std::abs((*plane)->get_altitude() - navpoint.get_altitude()) < this->settings->separation_vertical) {
-            return false;
-        }
+        if ((*plane)->get_type() == APPROACH) {
+			#ifdef DEBUG
+			std::clog << "APPROACH" << std::endl;
+			#endif
+			if (Tools::distanceNM(navpoint.get_place(), (*plane)->get_place()) < this->settings->separation_horizontal) { 
+				#ifdef DEBUG
+				std::clog << navpoint.get_place() << " vs " << (*plane)->get_place() << "is less than required " << this->settings->separation_horizontal << std::endl;
+				#endif
+				if (std::abs((*plane)->get_altitude() - navpoint.get_altitude()) < this->settings->separation_vertical) {
+					#ifdef DEBUG
+					std::clog << (*plane)->get_altitude() << " vs " << navpoint.get_altitude() << "is less than required " << this->settings->separation_vertical << std::endl;
+					#endif
+					return false;
+				} else {
+					#ifdef DEBUG
+					std::clog << (*plane)->get_altitude() << " vs " << navpoint.get_altitude() << "is more than required " << this->settings->separation_vertical << std::endl;
+					#endif
+				}
+			} else {
+				#ifdef DEBUG
+				std::clog << navpoint.get_place() << " vs " << (*plane)->get_place() << "is more than required " << this->settings->separation_horizontal << std::endl;
+				#endif
+			}
+        } else {
+			#ifdef DEBUG
+			std::clog << "DERPARTURE" << std::endl;
+			#endif
+		}
     }
 
     return true;
 }
 
 void Game::handle_holdings() {
+	#ifdef DEBUG
+    std::clog << "Game::handle_holdings()" << std::endl;
+	#endif
+	
     if (this->holdings.size()) {
         std::list <aircraft> :: iterator plane = this->aircrafts.begin();
 
@@ -106,6 +159,10 @@ void Game::handle_holdings() {
 }
 
 void Game::calculate_points(int type, double clearance_count, std::string plane) {
+	#ifdef DEBUG
+    std::clog << "Game::calculate_points(" << type << ", " << clearance_count << ", " << plane << ")" << std::endl;
+	#endif
+	
 	this->points[plane].out_time = duration;
 	this->points[plane].clearances = clearance_count;
 	
@@ -121,10 +178,18 @@ void Game::calculate_points(int type, double clearance_count, std::string plane)
 }
 
 std::map <std::string, Game_point> Game::get_points() {
+	#ifdef DEBUG
+    std::clog << "Game::get_points())" << std::endl;
+	#endif
+	
 	return this->points;
 }
 
 double Game::get_game_points() {
+	#ifdef DEBUG
+    std::clog << "Game::get_game_points()" << std::endl;
+	#endif
+	
 	std::map <std::string, Game_point> :: iterator pit = this->points.begin();
 	double sum = 0;
 	
@@ -138,12 +203,20 @@ double Game::get_game_points() {
 }
 
 void Game::create_planes(int amount) {
+	#ifdef DEBUG
+    std::clog << "Game::create_planes(" << amount << ")" << std::endl;
+	#endif
+
 	for (int i = 0; i < amount; ++i) {
 		this->create_plane();
 	}
 }
 
 void Game::update(double elapsed) {	
+	#ifdef DEBUG
+    std::clog << "Game::get_game_points(" << elapsed << ")" << std::endl;
+	#endif
+	
 	if (!this->loaded) {
 		throw std::logic_error("Game is not loaded");
 	}
@@ -183,16 +256,32 @@ void Game::update(double elapsed) {
 }
 
 double Game::get_duration() {
+	#ifdef DEBUG
+    std::clog << "Game::get_duration()" << std::endl;
+	#endif
+	
     return this->duration;
 }
 
 Inpoint Game::select_inpoint() {
-	Inpoint t_inpoint = Tools::random_object<Inpoint>(this->active_field->get_inpoints());
+	#ifdef DEBUG
+    std::clog << "Game::select_inpoint()" << std::endl;
+	#endif
+	
+	Inpoint t_inpoint = Tools::random_object <Inpoint> (this->active_field->get_inpoints());
+	
+	#ifdef DEBUG
+	std::clog << t_inpoint.get_name() << std::endl;
+	#endif
 	
 	return t_inpoint;
 }
 
 bool Game::check_aircrafts(std::string name) {
+	#ifdef DEBUG
+    std::clog << "Game::check_aircrafts()" << std::endl;
+	#endif
+	
 	std::list <aircraft> :: iterator plane;
 
     for (plane = this->aircrafts.begin(); plane != this->aircrafts.end(); ++plane) {
@@ -217,8 +306,17 @@ void Game::create_plane() {
 
 	Inpoint t_inpoint = this->select_inpoint();
 	
-	while (!is_free(t_inpoint)) { 
+	int tried = 0;
+	bool inpoint_ok = true;
+	
+	while (!is_free(t_inpoint)){ 
 		t_inpoint = this->select_inpoint();
+		++tried;
+		
+		if (tried >= 5) {
+			inpoint_ok = false;
+			break;
+		}
 	}
 	
 	Outpoint t_outpoint = Tools::random_object<Outpoint>(this->active_field->get_outpoints());
@@ -234,7 +332,7 @@ void Game::create_plane() {
 	t_type = 51; 
 	**/
 	
-	types type = (t_type < 50) ? DEPARTURE : APPROACH;
+	types type = (t_type > 50 && inpoint_ok) ? APPROACH : DEPARTURE;
 
     std::string t_callsign;
 	t_callsign = airlines(Tools::linear_random(0, airlines.size()), "ICAO") + Tools::tostr(Tools::linear_random(1, 999), 3);
@@ -364,14 +462,26 @@ void Game::load_airfield(std::string icao) {
 }
 
 aircraft Game::get_selected() {
+	#ifdef DEBUG
+    std::clog << "Game::get_sekected()" << std::endl;
+	#endif
+	
     return this->selected;
 }
 
 std::list <Clearance> Game::get_clearances() {
+	#ifdef DEBUG
+    std::clog << "Game::get_clearances()" << std::endl;
+	#endif
+	
 	return this->clearances;
 }
 
 int Game::calculate_clearances(std::string name) {
+	#ifdef DEBUG
+    std::clog << "Game::calculate_clearances()" << std::endl;
+	#endif
+	
 	int count = 0;
 	
 	std::list <Clearance> :: iterator it = this->clearances.begin();
@@ -387,6 +497,10 @@ int Game::calculate_clearances(std::string name) {
 }
 
 void Game::build_clearance(std::string command) {
+	#ifdef DEBUG
+    std::clog << "Game::build_clearnace(" << command << ")" << std::endl;
+	#endif
+	
 	std::vector <std::string> tmp = Tools::split(" ", command);
 	
 	if (this->selected != NULL) {
@@ -478,6 +592,10 @@ void Game::build_clearance(std::string command) {
 }
 
 std::string Game::get_message() {
+	#ifdef DEBUG
+    std::clog << "Game::get_message()" << std::endl;
+	#endif
+	
 	std::string front;
 	
 	if (!this->display_messages.empty()) {
@@ -492,22 +610,38 @@ std::string Game::get_message() {
 }
 
 void Game::clear_errors() {
+	#ifdef DEBUG
+    std::clog << "Game::clear_errors()" << std::endl;
+	#endif
+	
 	while (!this->display_messages.empty()) {
 		this->display_messages.pop();
 	}
 }
 
 int Game::get_separation_errors() {
+	#ifdef DEBUG
+    std::clog << "Game::get_separation_errors()" << std::endl;
+	#endif
+	
 	return this->separation_errors;
 }
 
 void Game::remove_first_clearance_error() {
+	#ifdef DEBUG
+    std::clog << "Game::remove_first_clearance_error()" << std::endl;
+	#endif
+	
 	if (display_messages.size()) {
 		display_messages.pop();
 	}
 }
 
 std::string Game::get_clearance_error() {
+	#ifdef DEBUG
+    std::clog << "Game::get_clearance_error()" << std::endl;
+	#endif
+	
 	if (display_messages.size()) {
 		return display_messages.front();
 	}
@@ -516,12 +650,20 @@ std::string Game::get_clearance_error() {
 }
 
 void Game::remove_first_game_error() {
+	#ifdef DEBUG
+    std::clog << "Game::remove_first_game_error()" << std::endl;
+	#endif
+	
 	if (game_errors.size()) {
 		game_errors.pop();
 	}
 }
 
 std::string Game::get_game_error() {
+	#ifdef DEBUG
+    std::clog << "Game::get_game_error()" << std::endl;
+	#endif
+	
 	if (game_errors.size()) {
 		return game_errors.front();
 	}
@@ -530,25 +672,49 @@ std::string Game::get_game_error() {
 }
 
 int Game::get_handled_planes() {
+	#ifdef DEBUG
+    std::clog << "Game::get_handled_planes()" << std::endl;
+	#endif
+	
 	return this->handled_planes;
 }
 
 int Game::get_planes_count() {
+	#ifdef DEBUG
+    std::clog << "Game::get_planes_count()" << std::endl;
+	#endif
+	
 	return this->aircrafts.size();
 }
 
 int Game::get_new_plane() {
+	#ifdef DEBUG
+    std::clog << "Game::get_new_plane()" << std::endl;
+	#endif
+	
 	return this->new_plane;
 }
 
 bool Game::ok() {
+	#ifdef DEBUG
+    std::clog << "Game::ok()" << std::endl;
+	#endif
+	
 	return (this->handled_planes == this->settings->required_handled);
 }
 
 int Game::get_level() {
+	#ifdef DEBUG
+    std::clog << "Game::get_level()" << std::endl;
+	#endif
+	
 	return this->level;
 }
 
 void Game::set_level(int level) {
+	#ifdef DEBUG
+    std::clog << "Game::set_level(" << level << ")" << std::endl;
+	#endif
+	
 	this->level = level;
 }
