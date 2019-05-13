@@ -34,8 +34,6 @@ void Metar::update_pressure() {
 		std::cerr << "Generated pressure " << this->pressure <<  " is too high" << std::endl;
 		this->pressure = 1049;
 	}
-	
-	this->pressure = 944;
 }
 
 void Metar::update() {
@@ -57,16 +55,11 @@ void Metar::generate_visibility() {
 	double mean_visibility = 6500;
 	
 	this->visibility = Tools::round_nearest(Tools::normal_distribution(mean_visibility, variation), 100);
-	
-	this->visibility = 6200;
 }
 
 void Metar::generate_wind() {
 	this->wind.direction = Tools::round_nearest(Tools::linear_random(5, 355), 5);
     this->wind.speed = Tools::round_nearest(Tools::linear_random(5, 50), 5);
-	
-	this->wind.direction = 220;
-	this->wind.speed = 15;
 }
 
 void Metar::generate_clouds() {
@@ -84,7 +77,6 @@ void Metar::generate_clouds() {
 
 void Metar::generate_humidity() {
 	this->humidity = Tools::round_nearest(Tools::normal_distribution(45, 15), 1);
-	this->humidity = 55;
 }
 
 int Metar::get_pressure() {
