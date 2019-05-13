@@ -3,6 +3,7 @@
 
 #include <string>
 #include <list>
+#include <set>
 #include "../../models/coordinate/point.hpp"
 #include "../../tools/tools.hpp"
 #include "../../tools/style/style.hpp"
@@ -15,10 +16,10 @@
 **/
 
 struct Drawable_element {
-private:
+protected:
 	std::string name;
 	std::string s_class;
-	std::list <std::string> classes;
+	std::set <std::string> classes;
 	std::string id;
 	
 	/**
@@ -28,12 +29,12 @@ private:
 		* @return void
 	**/
 	void calculate_styles();
-protected:
+
 	std::list <Style> styles;
 	Style style;
 	
 	Drawable_element(std::string t_name, std::string t_class = "", std::string t_id = "");
-	Drawable_element(std::string t_name, std::list <std::string> classes, std::string t_id = ""); 
+	Drawable_element(std::string t_name, std::set <std::string> classes, std::string t_id = ""); 
 	Drawable_element();
 	~Drawable_element();
 public:
@@ -77,7 +78,7 @@ public:
 		* @return std::list <std::string>
 	**/
 	
-	std::list <std::string> get_classes();
+	std::set <std::string> get_classes();
 	
 	/**
 		* get_name
@@ -93,13 +94,22 @@ public:
 		* @return void
 	**/
 	
-	void set_class(std::string t_class);
+	virtual void set_class(std::string t_class);
 	
 	/**
 		* get maximum length
 	**/
 	
 	virtual std::string get_max_length();
+	
+	/**
+		* clear_classes
+		* remove all classes
+		* @param void
+		/ @return void
+	**/
+	
+	virtual void clear_classes();
 };
 
 #endif

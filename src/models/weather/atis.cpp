@@ -46,10 +46,6 @@ std::vector <int> Atis::get_altitudes() {
 	return this->altitudes;
 }
 
-std::vector <int> Atis::get_levels(int altitude) {
-	return this->levels[altitude];
-}
-
 void Atis::update(int amount) {
 	this->menu->change_selection(amount);
 }
@@ -102,10 +98,6 @@ int Atis::get_transition_altitude() {
     return this->transition_altitude;
 }
 
-std::map <int, std::vector <int> > Atis::get_levels() {
-	return this->levels;
-}
-
 int Atis::calculate_tr_level(int pressure, int altitude) {
 	int place = -1;
 
@@ -122,6 +114,10 @@ int Atis::calculate_tr_level(int pressure, int altitude) {
 	} else if (pressure >= 1031 && pressure < 1050) {
 		place = 0;
 	} 
+	
+	#ifdef DEBUG
+	std::clog << "Atis::calculate_tr_level(" << pressure << ", " << altitude << ")" << place << std::endl;
+	#endif
 		
 	return levels[altitude][place];
 }
@@ -264,6 +260,7 @@ bool Atis::ok() {
 }
 
 void Atis::set_value(std::string value) {
+	//std::clog << "Atis::set_value(" << value << ")" << this->state << std::endl;
 	switch (this->state) {
 	case DEPARTURE:
 		this->set_departure_runway(value);

@@ -29,23 +29,33 @@ void Statview::draw_points() {
 	
 	while (pit != points.end()) {
 		Row row;
-		point_table.add_row(row);
 		Cell cell1(pit->first);
-		point_table.add_cell(cell1);
+		row.add_cell(cell1);
 		
 		Cell cell2(Tools::tostr(pit->second.points, 4));
-		point_table.add_cell(cell2);
+		row.add_cell(cell2);
+		
+		Cell cell3(Tools::totime(pit->second.in_time));
+		row.add_cell(cell3);
+		
+		Cell cell4(Tools::totime(pit->second.out_time));
+		row.add_cell(cell4);
+		
+		point_table.add_row(row);
+		
 		sum += pit->second.points;
 		++pit;
 	}
 	
 	Row row;
-	point_table.add_row(row);
+	
 	Cell cell3("SUM");
-	point_table.add_cell(cell3);
+	row.add_cell(cell3);
 	
 	Cell cell4(Tools::tostr(sum, 4));
-	point_table.add_cell(cell4);
+	row.add_cell(cell4);
+	
+	point_table.add_row(row);
 	
 	this->style(point_table);
 	this->draw_element(point_table);

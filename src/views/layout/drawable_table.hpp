@@ -16,7 +16,7 @@
 class Cell : public Drawable_element {
 public:
 	Cell(std::string content, std::string t_name = "tr", std::string t_class = "", std::string t_id = "");
-	Cell(std::string content, std::string t_name, std::list <std::string> classes, std::string t_id);
+	Cell(std::string content, std::string t_name, std::set <std::string> classes, std::string t_id);
 	
 	std::string get_content();
 	void set_content(std::string cnt);
@@ -32,9 +32,11 @@ private:
 class Row : public Drawable_element {
 public:
 	Row(std::string t_name = "tr", std::string t_class = "", std::string t_id = "");
-	Row(std::string t_name, std::list <std::string> classes, std::string t_id);
+	Row(std::string t_name, std::set <std::string> classes, std::string t_id);
 	std::list <Cell> get_cells();
 	void add_cell(Cell& cell);
+	void set_class(std::string s_class);
+	void clear_classes();
 private:
 	std::list <Cell> cells;
 };
@@ -47,11 +49,11 @@ private:
 class Drawable_table : public Drawable_element {
 public:
 	Drawable_table(std::string t_name, std::string t_class, std::string t_id);
-	Drawable_table(std::string t_name, std::list <std::string> classes, std::string t_id);
+	Drawable_table(std::string t_name, std::set <std::string> classes, std::string t_id);
 	std::list <Row> get_rows();
 	void add_row(Row& row);
-	void add_cell(Cell& cell);
 	std::string get_max_length();
+	void set_class(std::string s_class);
 private:
 	std::list <Row> rows;
 };

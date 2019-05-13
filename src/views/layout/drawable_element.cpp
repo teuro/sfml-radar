@@ -1,14 +1,15 @@
 #include "drawable_element.hpp"
-Drawable_element::Drawable_element(std::string t_name, std::string t_class, std::string t_id) : name(t_name), s_class(t_class), id(t_id) { 
-	//std::clog << t_name << " " << t_class << " " << t_id << std::endl;
+Drawable_element::Drawable_element(std::string t_name, std::string t_class, std::string t_id) : name(t_name), id(t_id) { 
+	this->classes.insert(t_class);
 }
-Drawable_element::Drawable_element(std::string t_name, std::list <std::string> t_classes, std::string t_id) : name(t_name), classes(t_classes), id(t_id) { }
+
+Drawable_element::Drawable_element(std::string t_name, std::set <std::string> t_classes, std::string t_id) : name(t_name), classes(t_classes), id(t_id) { }
+
 Drawable_element::Drawable_element() { }
 
 Drawable_element::~Drawable_element() { }
 
 void Drawable_element::set_style(Style& stle) {
-	//std::clog << "Drawable_element::set_style(" << stle << ")" << std::endl;
 	this->styles.push_back(stle);
 	this->calculate_styles();
 }
@@ -22,15 +23,19 @@ std::string Drawable_element::get_id() {
 }
 
 std::string Drawable_element::get_class() {
-	return this->s_class;
-}
-
-std::list <std::string> Drawable_element::get_classes() {
-	if (this->classes.size() == 0) {
-		this->classes.push_back(this->s_class);
+	std::set <std::string> :: iterator it = this->classes.begin();
+	std::string tmp;
+	
+	while (it != this->classes.end()) {
+		tmp += (*it) + " ";
+		++it;
 	}
 	
-	return this->classes;
+	return tmp;
+}
+
+std::set <std::string> Drawable_element::get_classes() {	
+	return classes;
 }
 
 std::string Drawable_element::get_name() {
@@ -38,7 +43,7 @@ std::string Drawable_element::get_name() {
 }
 
 void Drawable_element::set_class(std::string t_class) {
-	this->s_class = t_class;
+	this->classes.insert(t_class);
 }
 
 void Drawable_element::calculate_styles() {
@@ -64,3 +69,6 @@ std::string Drawable_element::get_max_length() {
 	return "";
 }
 
+void Drawable_element::clear_classes() {
+	this->classes.clear();
+}

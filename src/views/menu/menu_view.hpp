@@ -14,11 +14,11 @@ class Menuview : public View {
 public:
 	Menuview(Drawsurface& d, std::shared_ptr <Settings> s, std::shared_ptr <Menu> menu);
 	~Menuview();
-	virtual void draw(Point& mouse);
-	virtual std::string handle_click(Point& mouse);
+	void draw(Point& mouse);
+	std::string handle_click(Point& mouse);
     void load();
 	void set_menu(std::shared_ptr <Menu> menu);
-	virtual void update();
+	void update();
 private: 
 	std::shared_ptr <Menu> menu;
 };

@@ -66,6 +66,7 @@ void SFML_window::run() {
 	sfml_drawsurface drawer(window);
 	
 	Gamecontroller gamecontroller(this->settings, drawer);
+	
 	gamecontroller.load();
 	sf::Time time_now;
 	

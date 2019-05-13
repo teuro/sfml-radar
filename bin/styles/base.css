@@ -16,7 +16,19 @@ input {
 }
 
 table {
-	color: rgb(150, 150, 90);
+	color: rgb(180, 180, 120);
+}
+
+tr {
+	color: rgb(180, 180, 120);
+}
+
+th {
+	color: rgb(180, 180, 120);
+}
+
+td {
+	color: rgb(180, 180, 120);
 }
 
 img {

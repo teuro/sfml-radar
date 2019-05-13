@@ -3,9 +3,4 @@
 	<p id="menu" class="menu">Wellcome to ATC-radar.</p>
 	
 	<p id="choose_airfield" class="menu">Choose airfield below.</p>
-	
-	<p id="level" class="menu">Choose handling amount [RQD]</p>
-	<click class="clickable" id="">5</click>
-	<click class="clickable" id="">15</click>
-	<click class="clickable" id="">25</click>
 </layout>

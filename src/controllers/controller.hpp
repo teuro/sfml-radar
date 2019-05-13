@@ -14,11 +14,9 @@ public:
     virtual void update_command(std::string text) = 0;
     virtual bool is_ok() = 0;
 	virtual void load() = 0;
-	virtual void update_centerpoint() = 0;
-	//virtual std::string get_input() = 0;
 protected:
     Controller(std::shared_ptr <Settings> s, Drawsurface& d) : settings(s), drawer(d) { }
-    virtual ~Controller() { }
+    ~Controller() { }
 	std::shared_ptr <Settings> settings;
 	Drawsurface& drawer;
 	std::string command;
@@ -26,8 +24,6 @@ protected:
 	double frames;
 	double fps_time;
 	double fps_end_time;
-private:
 };
-
 
 #endif // CONTROLLER_HPP

@@ -28,7 +28,6 @@ public:
 	int get_transition_level();
     int get_transition_altitude();
 	std::vector <int> get_altitudes();
-	std::vector <int> get_levels(int altitude);
 	std::vector <Runway> get_runways();
 
     std::list <std::string> get_atis_errors();
@@ -44,8 +43,6 @@ public:
 	bool landing_runway_ok();
 	bool transition_altitude_ok();
 	bool transfer_level_ok();
-	
-	std::map <int, std::vector <int> > get_levels();
 	
 	void set_value(std::string value);
 	

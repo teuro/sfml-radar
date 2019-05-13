@@ -1,7 +1,7 @@
 #include "drawable_input.hpp"
 
 Drawable_input::Drawable_input(std::string val, std::string t_name, std::string t_class, std::string t_id) : Drawable_element(t_name, t_class, t_id), value(val) { }
-Drawable_input::Drawable_input(std::string val, std::string t_name, std::list <std::string> classes, std::string t_id) : Drawable_element(t_name, classes, t_id), value(val) { }
+Drawable_input::Drawable_input(std::string val, std::string t_name, std::set <std::string> classes, std::string t_id) : Drawable_element(t_name, classes, t_id), value(val) { }
 
 void Drawable_input::set_value(std::string val) {
 	this->value = val;

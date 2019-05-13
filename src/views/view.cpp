@@ -19,6 +19,24 @@ void View::add_style(std::list <Style> tmp) {
 	this->styles.splice(this->styles.end(), tmp);
 }
 
+void View::draw_menu(std::shared_ptr <Menu> menu) {
+	Drawable_list menulist("ul", menu->get_class(), menu->get_id());
+	
+	std::vector <Menu_item> items = menu->get_items();
+	
+	std::vector <Menu_item> :: iterator it = items.begin();
+	
+	for (it = items.begin(); it != items.end(); ++it) {
+		if (menu->get_selected().get_id() == (it->get_id())) {
+			menulist.add_element(it->get_name(), "active");
+		} else {
+			menulist.add_element(it->get_name(), "normal");
+		}
+	}
+	
+	this->draw_element(menulist);
+}
+
 void View::load(std::string state) {
 	#ifdef DEBUG
 	std::clog << "View::load(" << state << ")" << std::endl;
@@ -61,15 +79,6 @@ void View::load_styles() {
 	throw std::logic_error("Directory not open");
 }
 
-std::map <std::string, std::string> View::get_info(TiXmlElement *selected_element) {
-	std::map <std::string, std::string> tmp;
-
-	tmp["id"] = selected_element->Attribute("id");
-	tmp["class"] = selected_element->Attribute("class");
-	
-	return tmp;
-}
-
 void View::load_layout(std::string state) {
 	#ifdef DEBUG
 	std::clog << "View::load_layout(" << state << ")" << std::endl;
@@ -105,18 +114,14 @@ void View::load_layout(std::string state) {
 		
         while (selected_element) {
 			if (selected_element->Value() == std::string("img")) {
-				element_info = this->get_info(selected_element);
-				std::string t_name = selected_element->Value();
-				std::list <std::string> t_class;
-				std::vector <std::string> t_explode =  Tools::split(" ", element_info["class"]);
-				
-				std::copy(t_explode.begin(), t_explode.end(), std::back_inserter(t_class));
+				std::string image_id = Tools::trim(selected_element->Attribute("id"));
+				std::string image_class = Tools::trim(selected_element->Attribute("class"));
+				std::string image_name = selected_element->Value();
 				
 				std::string source = selected_element->Attribute("src");
 				
-				Image img(source, t_name, t_class, element_info["id"]);
+				Image img(source, image_name, image_class, image_id);
 				
-				this->style(img);
 				this->images.push_back(img);
 			} else if (selected_element->Value() == std::string("p")) {
 				std::string paragraph_id = Tools::trim(selected_element->Attribute("id"));
@@ -127,7 +132,6 @@ void View::load_layout(std::string state) {
 			
 				Paragraph p(content, paragraph_name, paragraph_class, paragraph_id);
 				
-				this->style(p);
 				this->paragraphs.push_back(p);
 			} else if (selected_element->Value() == std::string("table")) {
 				std::string table_id = (selected_element->Attribute("id") == NULL) ? "" : Tools::trim(selected_element->Attribute("id"));
@@ -135,8 +139,6 @@ void View::load_layout(std::string state) {
 				std::string table_name = selected_element->Value();
 				
 				Drawable_table table(table_name, table_class, table_id);
-				this->style(table);
-				this->tables.push_back(table);
 				
 				for (TiXmlElement* e = selected_element->FirstChildElement(); e != NULL; e = e->NextSiblingElement("tr")) {
 					std::string row_id = (e->Attribute("id") == NULL) ? "" : Tools::trim(e->Attribute("id"));
@@ -144,7 +146,6 @@ void View::load_layout(std::string state) {
 					std::string row_name = e->Value();
 					
 					Row row(row_name, row_class, row_id);
-					this->tables.back().add_row(row);
 					
 					for (TiXmlElement* f = e->FirstChildElement(); f != NULL; f = f->NextSiblingElement()) {
 						std::string cell_id = (f->Attribute("id") == NULL) ? "" : Tools::trim(f->Attribute("id"));
@@ -152,24 +153,27 @@ void View::load_layout(std::string state) {
 						std::string cell_name = f->Value();
 						
 						Cell cell(f->GetText(), cell_name, cell_class, cell_id);
-						this->tables.back().add_cell(cell);
+						row.add_cell(cell);
 					}
+					
+					table.add_row(row);
 				}
-			} else if (selected_element->Value() == std::string("ul")) {
-				std::string t_id = Tools::trim(selected_element->Attribute("id"));
-				std::string t_class = Tools::trim(selected_element->Attribute("class"));
-				std::string t_name = selected_element->Value();
 				
-				Drawable_list list(t_name, t_class, t_id);
+				this->tables.push_back(table);
+			} else if (selected_element->Value() == std::string("ul")) {
+				std::string list_id = Tools::trim(selected_element->Attribute("id"));
+				std::string list_class = Tools::trim(selected_element->Attribute("class"));
+				std::string list_name = selected_element->Value();
+				
+				Drawable_list list(list_name, list_class, list_id);
 				
 				for (TiXmlElement* e = selected_element->FirstChildElement(); e != NULL; e = e->NextSiblingElement()) {
-					std::string t_id1 = Tools::trim(e->Attribute("id"));
-					std::string t_class1 = Tools::trim(e->Attribute("class"));
+					std::string list_item_id = Tools::trim(e->Attribute("id"));
+					std::string list_item_class = Tools::trim(e->Attribute("class"));
 					
-					list.add_element(e->GetText(), t_class1, t_id1);
+					list.add_element(e->GetText(), list_item_class, list_item_id);
 				}
 				
-				this->style(list);
 				this->lists.push_back(list);
 			} else if (selected_element->Value() == std::string("click")) {
 				std::string t_id = Tools::trim(selected_element->Attribute("id"));
@@ -212,6 +216,7 @@ void View::draw_element(Image& img) {
 	std::clog << "View::draw_element(Image& img)" << std::endl;
 	#endif
 	
+	this->style(img);
 	Point place = img.get_style().get_place();
 	this->drawer.draw_picture(img.get_source(), place);
 }
@@ -253,6 +258,8 @@ void View::draw_element(Paragraph& p) {
 	#ifdef DEBUG
 	std::clog << "View::draw_element(Paragraph& p) " << p.get_content() << " " << p.get_class() << std::endl;
 	#endif
+	
+	this->style(p);
 	
 	Style style = p.get_style();
 	int color = style.get_text_color();
@@ -334,7 +341,7 @@ void View::style(std::shared_ptr <Drawable_input>& de) {
 	de->set_style(style);
 }
 
-Style View::find_style(std::string name, std::list <std::string> t_classes, std::string id) {
+Style View::find_style(std::string name, std::set <std::string> t_classes, std::string id) {
 	#ifdef DEBUG
 	std::clog << "View::find_style(" << name << ", " << t_classes.size() << ", " << id << ")" << std::endl;
 	#endif
@@ -352,7 +359,8 @@ Style View::find_style(std::string name, std::list <std::string> t_classes, std:
 	t_style = this->styles.begin();
 	
 	while (t_style != this->styles.end()) {
-		std::list <std::string> :: iterator it = t_classes.begin();
+		std::set <std::string> :: iterator it = t_classes.begin();
+		
 		while (it != t_classes.end()) {
 			if ((*it).length() && t_style->get_class() == (*it)) {
 				style = *t_style;
@@ -434,28 +442,26 @@ void View::draw() {
 }
 
 void View::draw_element(Drawable_list& dl) {
-	#ifdef DEBUG
-	std::clog << "View::draw_element(Drawable& dl)" << std::endl;
-	#endif
+	this->style(dl);
 	
 	int color = dl.get_style().get_text_color();
 	int font_size = dl.get_style().get_font_size();
 	int height = 0;
 	int t_height;
 	
-	std::list <Drawable_list_item> t_list = dl.get_elements();
-	std::list <Drawable_list_item> :: iterator it = t_list.begin();
+	std::list <Drawable_list_item> list_items = dl.get_elements();
+	std::list <Drawable_list_item> :: iterator list_item = list_items.begin();
 	
 	Point place = dl.get_style().get_place();
 	dl.get_style().set_attribute("width", this->drawer.get_text_length(dl.get_max_length(), font_size));
 	
-	for (it = t_list.begin(); it != t_list.end(); ++it) {
-		this->style(*it);
-		color = it->get_style().get_text_color();
-		//std::clog << it->get_content() << " color " << color << std::endl;
-		//std::clog << it->get_style() << std::endl;
-		this->draw_element(Tools::replace(it->get_content(), repl), place, color, font_size);
-		t_height = this->drawer.get_text_height(it->get_content(), font_size) + 5;
+	for (list_item = list_items.begin(); list_item != list_items.end(); ++list_item) {
+		this->style(*list_item);
+		
+		color = list_item->get_style().get_text_color();
+
+		this->draw_element(Tools::replace(list_item->get_content(), repl), place, color, font_size);
+		t_height = this->drawer.get_text_height(list_item->get_content(), font_size) + 5;
 		height += t_height;
 		place.change_y(t_height);
 	}
@@ -469,6 +475,8 @@ void View::draw_element(Drawable_table& dt) {
 	#ifdef DEBUG
 	std::clog << "View::draw_element(Drawable_table& dt)" << std::endl;
 	#endif
+	
+	this->style(dt);
 	
 	int color = dt.get_style().get_text_color();
 	Point place = dt.get_style().get_place();
@@ -484,6 +492,8 @@ void View::draw_element(Drawable_table& dt) {
 	int length = this->drawer.get_text_length(dt.get_max_length(), font_size) + 15;
 	
 	while (rit != t_list.end()) {
+		this->style(*rit);
+		
 		std::list <Cell> c_list = rit->get_cells();
 		std::list <Cell> :: iterator cit = c_list.begin();
 		
@@ -491,24 +501,31 @@ void View::draw_element(Drawable_table& dt) {
 		std::clog << "Count of cells " <<  c_list.size() << std::endl;
 		#endif
 		
+		//std::clog << "View::draw_element(row) " << rit->get_class() << std::endl;
+		
 		int r_color = rit->get_style().get_text_color();
 			
 		if (r_color > 0) {
 			color = r_color;
 		}
 		
-		while (cit != c_list.end()) {
+		while (cit != c_list.end()) {			
 			this->style(*cit);
+			
 			#ifdef DEBUG
-			std::clog << (*cit).get_content() << std::endl;
+			std::clog << (*cit).get_class() << " " << (*cit).get_content() << std::endl;
 			#endif
+			
+			//std::clog << "View::draw_element(cell) " << cit->get_class() << std::endl;
+			
 			int c_color = cit->get_style().get_text_color();
 			
 			if (c_color > 0) {
 				color = c_color;
 			}
-		
+			
 			this->draw_element(Tools::replace((*cit).get_content(), repl), place, color, font_size);
+			
 			++cit;
 			place.change_x(length);
 			color = 0;
@@ -584,12 +601,13 @@ void View::draw_element(std::string text, Point& place_a, int color, int font_si
 	#ifdef DEBUG
 	std::clog << "View::draw_element(" << text << ", " << place_a << ", " << color << ")" << std::endl;
 	#endif
+	
 	this->drawer.draw_text(text, place_a, color, font_size);
 }
 
 void View::flash_message(std::string message) {
 	Paragraph p(message, "p", "message", "flash");
-	this->style(p);
+
 	this->draw_element(p);
 }
 

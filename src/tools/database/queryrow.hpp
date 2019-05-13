@@ -5,8 +5,11 @@
 #include <iostream>
 #include <sqlite3pp.h>
 
+#include "tables/airline.hpp"
+
 /**
     * Queryrow helper class for sqlite3pp. It provides easier access to results.
+	* @todo make class for database table. 
 **/
 
 class Queryrow {
@@ -17,13 +20,15 @@ public:
         @return none
     **/
     Queryrow(std::string row);
+	
     ~Queryrow();
+	
     /**
         * fetch
         * Your get normal vector with all result. It's not ment to use direcly.
         * You should use Queryresult to access to the data.
-        * @return std::vector <std::string>
         * @param none
+        * @return std::vector <std::string>
     **/
     std::vector <std::string> fetch();
 protected:

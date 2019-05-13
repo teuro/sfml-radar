@@ -9,7 +9,7 @@
 #include <sqlite3pp.h>
 
 #include "../controllers/controller.hpp"
-#include "../controllers/gamecontroller.hpp"
+#include "../controllers/game/gamecontroller.hpp"
 #include "../models/coordinate/point.hpp"
 #include "../tools/settings.hpp"
 #include "../tools/database/database.hpp"

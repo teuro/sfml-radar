@@ -9,6 +9,7 @@
 #include <map>
 #include <vector>
 #include <list>
+#include <set>
 #include <fstream>
 #include <memory>
 
@@ -84,6 +85,15 @@ public:
 	
 	virtual void update() = 0;
 	
+	/**
+		* Draw menu
+		* Designed for draw menu
+		* @param std::shared_ptr <Menu>
+		* @return void
+	**/
+	
+	void draw_menu(std::shared_ptr <Menu> menu);
+	
 	int handled;
 	int required;
 	std::string metar;
@@ -128,8 +138,7 @@ private:
 	std::list <Style> parse_css(std::string file);
 	void load_styles();
 	void load_layout(std::string state);
-	Style find_style(std::string name, std::list <std::string> t_classes, std::string id);
-	std::map <std::string, std::string> get_info(TiXmlElement *pParm);
+	Style find_style(std::string name, std::set <std::string> t_classes, std::string id);
 	Style find_style(std::string name); 
 	Style body;
 };

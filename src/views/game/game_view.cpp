@@ -19,8 +19,10 @@ Gameview::Gameview(Drawsurface& d, std::shared_ptr <Settings> s, std::shared_ptr
 Gameview::~Gameview() { }
 
 void Gameview::load() {
+	#ifdef DEBUG
 	std::clog << "Gameview::load()" << std::endl;
-
+	#endif
+	
 	this->loaded = true;
 	View::load("game");
 	
@@ -55,21 +57,20 @@ void Gameview::draw(Point& mouse) {
 	
 	this->calculate_coordinate_limits();
 	
-	this->View::draw();
-	
 	this->draw_airfield(this->game->get_active_field());
 	this->draw_planes(this->game->get_aircrafts(), this->game->get_selected(), mouse);
 	
 	style(this->input);
 	draw_element(this->input);
+	
+	this->View::draw();
 }
 
 void Gameview::draw_plane(aircraft plane, aircraft selected, Point& mouse) {
 	Point aircraft_place = this->calculate(plane->get_place());
 	Point draw;
 	std::string id = "";
-	this->game->get_atis()->get_transition_level();
-
+	
     Coordinate separation_ring_place_c = Tools::calculate(plane->get_place(), this->settings->separation_horizontal / 2.0, 1);
 	Point separation_ring_place_p = this->calculate(separation_ring_place_c);
 	double separation_ring = Tools::distancePX(aircraft_place, separation_ring_place_p);
@@ -81,26 +82,25 @@ void Gameview::draw_plane(aircraft plane, aircraft selected, Point& mouse) {
 		id = "selected";
 	}
 	
-	Drawable_list info_list("ul", "infolist", id);
+	Drawable_list info_list("ul", "", id);
 	
 	info_list.add_element(plane->get_name());
-	if (plane->get_altitude() > this->game->get_atis()->get_transition_altitude()) {
-		info_list.add_element(Tools::tostr((plane->get_altitude() / 100)) + " / FL " + Tools::tostr((plane->get_clearance_altitude() / 100)));
-	} else {
-		info_list.add_element(Tools::tostr(plane->get_altitude()) + " / " + Tools::tostr(plane->get_clearance_altitude()));
-	}
+	info_list.add_element(Tools::tostr(plane->get_altitude()) + " / " + Tools::tostr(plane->get_clearance_altitude()));
+	
 	info_list.set_class("normal");
 	
 	if (id == "selected") {
-		info_list.set_class("active");
-		this->style(info_list);
-		
 		info_list.add_element(Tools::tostr(plane->get_speed()) + " / " + Tools::tostr(plane->get_clearance_speed()));
 		info_list.add_element(Tools::tostr(Tools::rad2deg(plane->get_heading())) + " / " + Tools::tostr(Tools::rad2deg(plane->get_clearance_heading())));
 		
 		if (plane->get_type() == DEPARTURE) {
 			info_list.add_element(plane->get_target().get_name());
 		}
+		
+		info_list.clear_classes();
+		info_list.set_class("active");
+		
+		this->style(info_list);
 		
 		double heading = Tools::angle(aircraft_place, mouse);
 		double distance = Tools::distancePX(aircraft_place, mouse);
@@ -115,30 +115,21 @@ void Gameview::draw_plane(aircraft plane, aircraft selected, Point& mouse) {
 		this->drawer.lineColor(aircraft_place, mouse, info_list.get_style().get_text_color());
 	}
 	
-	this->style(info_list);
-	
 	info_list.get_style().set_place(aircraft_place);
+	
+	this->draw_element(info_list);
 	
 	drawer.lineColor(aircraft_place, end_point_place_p, info_list.get_style().get_text_color());
     drawer.circleColor(aircraft_place, separation_ring, info_list.get_style().get_text_color());
-	
-	this->draw_element(info_list);
 }
 
 void Gameview::draw_planes(std::list <aircraft> planes, aircraft selected, Point& mouse) {
     std::list <aircraft> :: iterator plane = planes.begin();
-	Drawable_table plane_table("table", "", "planelist");
+	Drawable_table plane_table("table", "normal", "planelist");
     	
     while (plane != planes.end()) {
 		std::string special;
-		Row row("tr", "normal", "");
-		
-		if ((*plane) == selected) {
-			row.set_class("selected");
-		}
-		
-		this->style(row);
-		plane_table.add_row(row);
+		Row row("tr", "", "");
 		
 		if ((*plane)->get_type() == APPROACH) {
 			if ((*plane)->get_expect() && !(*plane)->get_approach()) {
@@ -153,16 +144,30 @@ void Gameview::draw_planes(std::list <aircraft> planes, aircraft selected, Point
 		}
 		
 		Cell cell_1((*plane)->get_name());
-		plane_table.add_cell(cell_1);
 		
 		Cell cell_2(special);
-		plane_table.add_cell(cell_2);
+		
+		if ((*plane) == selected) {
+			row.clear_classes();
+			row.set_class("active");
+			cell_1.set_class("active");
+			cell_2.set_class("active");
+		} else {
+			row.clear_classes();
+			row.set_class("normal");
+			cell_1.set_class("normal");
+			cell_2.set_class("normal");
+		}
+		
+		row.add_cell(cell_1);
+		row.add_cell(cell_2);
+		
+		plane_table.add_row(row);
 
         this->draw_plane((*plane), selected, mouse);
         ++plane;
     }
-	
-	this->style(plane_table);
+
 	this->draw_element(plane_table);
 }
 

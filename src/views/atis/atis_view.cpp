@@ -13,24 +13,9 @@ void Atisview::draw(Point&) {
 	
 	View::draw();
 	
-	Drawable_list atis_select_runway("ul", this->menu->get_class(), this->menu->get_id());
-	
-	std::vector <Menu_item> items = this->menu->get_items();
-	std::vector <Menu_item> :: iterator it = items.begin();
-	
-	for (it = items.begin(); it != items.end(); ++it) {
-		if (this->menu->get_selected().get_id() == (it->get_id())) {
-			atis_select_runway.add_element(it->get_name(), "active");
-		} else {
-			atis_select_runway.add_element(it->get_name(), "normal");
-		}
-	}
+	this->draw_menu(this->menu);
 	
 	this->draw_errors();
-	
-	this->style(atis_select_runway);
-	
-	this->draw_element(atis_select_runway);
 }
 
 std::string Atisview::handle_click(Point&) { return ""; }
