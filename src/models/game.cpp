@@ -153,7 +153,7 @@ void Game::handle_holdings() {
         t->set_place(this->atis->get_departure_runway().get_start_place());
         t->set_takeoff_clearance();
 		this->aircrafts.push_back(t);
-        this->holdings.pop();
+        this->holdings.pop_front();
 		this->pop_holdings += this->settings->departure_separation * 1000 * 60;
 	}
 }
@@ -172,7 +172,7 @@ void Game::calculate_points(int type, double clearance_count, std::string plane)
 	
 	double area_time = this->points[plane].out_time - this->points[plane].in_time;
 	
-	point = (int)(point / clearance_count) - (int)area_time;
+	point = (int)(point / clearance_count) - (int)(area_time / 1000);
 	
 	this->points[plane].points = point;
 }
@@ -345,7 +345,7 @@ void Game::create_plane() {
 	
 	if (flight_type == DEPARTURE) {
 		aircraft plane(new Aircraft(callsign, this->settings, this->active_field, this->atis, outpoint));
-		this->holdings.push(plane);
+		this->holdings.push_back(plane);
 	} else {
 		aircraft plane (new Aircraft(callsign, this->settings, this->active_field, this->atis, inpoint));
 		this->aircrafts.push_back(plane);
@@ -626,16 +626,6 @@ int Game::get_separation_errors() {
 	return this->separation_errors;
 }
 
-void Game::remove_first_clearance_error() {
-	#ifdef DEBUG
-    std::clog << "Game::remove_first_clearance_error()" << std::endl;
-	#endif
-	
-	if (display_messages.size()) {
-		display_messages.pop();
-	}
-}
-
 std::string Game::get_clearance_error() {
 	#ifdef DEBUG
     std::clog << "Game::get_clearance_error()" << std::endl;
@@ -699,7 +689,7 @@ bool Game::ok() {
     std::clog << "Game::ok()" << std::endl;
 	#endif
 	
-	return (this->handled_planes == this->settings->required_handled);
+	return (this->handled_planes == this->settings->required_handled && this->aircrafts.size() == 0);
 }
 
 int Game::get_level() {
@@ -718,6 +708,6 @@ void Game::set_level(int level) {
 	this->level = level;
 }
 
-int Game::get_holdings() {
-	return this->holdings.size();
+std::list <aircraft> Game::get_holdings() {
+	return this->holdings;
 }

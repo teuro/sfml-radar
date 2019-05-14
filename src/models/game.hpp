@@ -129,7 +129,6 @@ public:
 	std::list <Clearance> get_clearances();
 	bool ok();
 	std::string get_clearance_error();
-	void remove_first_clearance_error();
 	std::string get_game_error();
 	void remove_first_game_error();
 	
@@ -137,7 +136,7 @@ public:
 	void clear_errors();
 	int get_level();
 	void set_level(int level);
-	int get_holdings();
+	std::list <aircraft> get_holdings();
 private:
 	int level;
     void load_airfield(std::string icao);
@@ -155,7 +154,7 @@ private:
 
 	std::vector     <Navpoint>					navpoints;
 	std::list       <aircraft>					aircrafts;
-	std::queue      <aircraft>					holdings;
+	std::list		<aircraft>					holdings;
 	std::queue      <std::string>				display_messages;
 	std::queue      <std::string>				game_errors;
 	std::list       <aircraft>					errors;

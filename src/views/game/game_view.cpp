@@ -59,6 +59,7 @@ void Gameview::draw(Point& mouse) {
 	
 	this->draw_airfield(this->game->get_active_field());
 	this->draw_planes(this->game->get_aircrafts(), this->game->get_selected(), mouse);
+	this->draw_holdings();
 	
 	style(this->input);
 	draw_element(this->input);
@@ -121,6 +122,21 @@ void Gameview::draw_plane(aircraft plane, aircraft selected, Point& mouse) {
 	
 	drawer.lineColor(aircraft_place, end_point_place_p, info_list.get_style().get_text_color());
     drawer.circleColor(aircraft_place, separation_ring, info_list.get_style().get_text_color());
+}
+
+void Gameview::draw_holdings() {
+	Drawable_list holding_list("ul", "holdings", "");
+	
+	std::list <aircraft> holdings = this->game->get_holdings();
+	std::list <aircraft> :: iterator holding = holdings.begin();
+	
+	while (holding != holdings.end()) {
+		holding_list.add_element((*holding)->get_name());
+		
+		++holding;
+	}
+	
+	this->draw_element(holding_list);
 }
 
 void Gameview::draw_planes(std::list <aircraft> planes, aircraft selected, Point& mouse) {

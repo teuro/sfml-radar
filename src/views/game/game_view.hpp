@@ -140,6 +140,7 @@ private:
 	**/
 	
     void draw_plane(aircraft plane, aircraft selected, Point& mouse);
+	void draw_holdings();
 	bool loaded;
 	
 	std::shared_ptr <Game> game;
