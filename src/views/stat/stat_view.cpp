@@ -41,6 +41,12 @@ void Statview::draw_points() {
 		Cell cell4(Tools::totime(pit->second.out_time));
 		row.add_cell(cell4);
 		
+		Cell cell5(Tools::totime(pit->second.area_time));
+		row.add_cell(cell5);
+		
+		Cell cell6(Tools::totime(pit->second.clearances));
+		row.add_cell(cell6);
+		
 		point_table.add_row(row);
 		
 		sum += pit->second.points;
