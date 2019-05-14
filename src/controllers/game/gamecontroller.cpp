@@ -1,5 +1,7 @@
 #include "gamecontroller.hpp"
 
+#define DEBUG
+
 Gamecontroller::Gamecontroller(std::shared_ptr <Settings> s, Drawsurface& d) : Controller(s, d), out("developer.log", std::ios::out) { 
 	#ifdef DEBUG
 	out << "Gamecontroller::Gamecontroller()" << std::endl;
@@ -130,7 +132,7 @@ void Gamecontroller::set_variables() {
 		this->views[GAME]->repl["[QNH]"] = Tools::tostr(this->metar->get_pressure());
 		this->views[GAME]->repl["[WNDD]"] = Tools::tostr(this->metar->get_wind_direction());
 		this->views[GAME]->repl["[WNDS]"] = Tools::tostr(this->metar->get_wind_speed());
-		this->views[GAME]->repl["[HLD]"] = Tools::tostr(this->game->get_holdings());
+		this->views[GAME]->repl["[HLDA]"] = Tools::tostr(this->game->get_holdings().size());
 		this->views[GAME]->repl["[MXA]"] = Tools::tostr(Tools::round_nearest(Tools::rad2deg(this->atis->get_landing_runway().get_heading()) + this->settings->approach_angle, 10));
 		this->views[GAME]->repl["[MNA]"] = Tools::tostr(Tools::round_nearest(Tools::rad2deg(this->atis->get_landing_runway().get_heading()) - this->settings->approach_angle, 10));
 	} else if (this->state == ATIS) {
