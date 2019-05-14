@@ -130,6 +130,8 @@ void Gameview::draw_holdings() {
 	std::list <aircraft> holdings = this->game->get_holdings();
 	std::list <aircraft> :: iterator holding = holdings.begin();
 	
+	holding_list.add_element("Holdings");
+	
 	while (holding != holdings.end()) {
 		holding_list.add_element((*holding)->get_name());
 		
