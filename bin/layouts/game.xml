@@ -2,9 +2,6 @@
 <layout>
 	<p id="metar" class="info">[METAR]</p>
 	
-	<p id="gnh" class="info">[QNH]</p>
-	<p id="wnd" class="info">[WNDD]/[WNDS]</p>
-	
 	<table id="basic_info" class="table">
 		<tr>
 			<td>Planes in area [PLC]</td>
@@ -17,6 +14,9 @@
 			<td>Clearances relayed [CLRC]</td>
 			<td>points [PCNT]</td>
 			<td>required [RQD]</td>
+		</tr>
+		<tr>
+			<td>Holdings [HLD]</td>
 		</tr>
 	</table>
 </layout>

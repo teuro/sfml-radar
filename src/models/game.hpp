@@ -137,6 +137,7 @@ public:
 	void clear_errors();
 	int get_level();
 	void set_level(int level);
+	int get_holdings();
 private:
 	int level;
     void load_airfield(std::string icao);
@@ -145,6 +146,7 @@ private:
 	void load_navpoints(int airfield_id);
 	void load_runways(int airfield_id);
 	Inpoint select_inpoint();
+	Outpoint select_outpoint();
     bool is_free(Inpoint& navpoint);
 	void calculate_points(int type, double clearance_count, std::string plane);
 	int calculate_clearances(std::string name);

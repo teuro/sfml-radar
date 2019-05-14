@@ -268,13 +268,33 @@ Inpoint Game::select_inpoint() {
     std::clog << "Game::select_inpoint()" << std::endl;
 	#endif
 	
-	Inpoint t_inpoint = Tools::random_object <Inpoint> (this->active_field->get_inpoints());
+	Inpoint inpoint = Tools::random_object <Inpoint> (this->active_field->get_inpoints());
+	
+	
+	while (!is_free(inpoint)) {
+		inpoint = Tools::random_object <Inpoint> (this->active_field->get_inpoints());
+	}
 	
 	#ifdef DEBUG
-	std::clog << t_inpoint.get_name() << std::endl;
+	std::clog << inpoint.get_name() << std::endl;
 	#endif
 	
-	return t_inpoint;
+	return inpoint;
+}
+
+
+Outpoint Game::select_outpoint() {
+	#ifdef DEBUG
+    std::clog << "Game::select_outpoint()" << std::endl;
+	#endif
+	
+	Outpoint outpoint = Tools::random_object <Outpoint> (this->active_field->get_outpoints());
+	
+	#ifdef DEBUG
+	std::clog << outpoint.get_name() << std::endl;
+	#endif
+	
+	return outpoint;
 }
 
 bool Game::check_aircrafts(std::string name) {
@@ -304,51 +324,30 @@ void Game::create_plane() {
 		throw std::logic_error("Airfield not ready");
 	}
 
-	Inpoint t_inpoint = this->select_inpoint();
-	
-	int tried = 0;
-	bool inpoint_ok = true;
-	
-	while (!is_free(t_inpoint)){ 
-		t_inpoint = this->select_inpoint();
-		++tried;
-		
-		if (tried >= 5) {
-			inpoint_ok = false;
-			break;
-		}
-	}
-	
-	Outpoint t_outpoint = Tools::random_object<Outpoint>(this->active_field->get_outpoints());
+	Inpoint inpoint = this->select_inpoint();
+	Outpoint outpoint = this->select_outpoint();
 	
 	Queryresult airlines = db.get_result("SELECT ICAO FROM airlines");
 	
 	int t_type = Tools::linear_random(1, 100);
 	
-	/** 
-	testing data
-	double heading = Tools::deg2rad(227);
-	Coordinate test(60.3680, 25.0666);
-	t_type = 51; 
-	**/
-	
-	types type = (t_type > 50 && inpoint_ok) ? APPROACH : DEPARTURE;
+	types flight_type = (t_type > 50) ? APPROACH : DEPARTURE;
 
-    std::string t_callsign;
-	t_callsign = airlines(Tools::linear_random(0, airlines.size()), "ICAO") + Tools::tostr(Tools::linear_random(1, 999), 3);
+    std::string callsign = airlines(Tools::linear_random(0, airlines.size()), "ICAO") + Tools::tostr(Tools::linear_random(1, 999), 3);
 
 	Game_point tmp{0, duration, -1, 0};
-	this->points.insert(std::pair <std::string, Game_point> (t_callsign, tmp));
+	
+	this->points.insert(std::pair <std::string, Game_point> (callsign, tmp));
 
-	while (!this->check_aircrafts(t_callsign)) {
-		t_callsign = airlines(Tools::linear_random(0, airlines.size()), "ICAO") + Tools::tostr(Tools::linear_random(1, 999), 3);
+	while (!this->check_aircrafts(callsign)) {
+		callsign = airlines(Tools::linear_random(0, airlines.size()), "ICAO") + Tools::tostr(Tools::linear_random(1, 999), 3);
 	}
 	
-	if (type == DEPARTURE) {
-		aircraft plane(new Aircraft(t_callsign, this->settings, this->active_field, this->atis, t_outpoint));
+	if (flight_type == DEPARTURE) {
+		aircraft plane(new Aircraft(callsign, this->settings, this->active_field, this->atis, outpoint));
 		this->holdings.push(plane);
 	} else {
-		aircraft plane (new Aircraft(t_callsign, this->settings, this->active_field, this->atis, t_inpoint));
+		aircraft plane (new Aircraft(callsign, this->settings, this->active_field, this->atis, inpoint));
 		this->aircrafts.push_back(plane);
 	}
 }
@@ -717,4 +716,8 @@ void Game::set_level(int level) {
 	#endif
 	
 	this->level = level;
+}
+
+int Game::get_holdings() {
+	return this->holdings.size();
 }

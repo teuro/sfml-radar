@@ -130,6 +130,7 @@ void Gamecontroller::set_variables() {
 		this->views[GAME]->repl["[QNH]"] = Tools::tostr(this->metar->get_pressure());
 		this->views[GAME]->repl["[WNDD]"] = Tools::tostr(this->metar->get_wind_direction());
 		this->views[GAME]->repl["[WNDS]"] = Tools::tostr(this->metar->get_wind_speed());
+		this->views[GAME]->repl["[HLD]"] = Tools::tostr(this->game->get_holdings());
 		this->views[GAME]->repl["[MXA]"] = Tools::tostr(Tools::round_nearest(Tools::rad2deg(this->atis->get_landing_runway().get_heading()) + this->settings->approach_angle, 10));
 		this->views[GAME]->repl["[MNA]"] = Tools::tostr(Tools::round_nearest(Tools::rad2deg(this->atis->get_landing_runway().get_heading()) - this->settings->approach_angle, 10));
 	} else if (this->state == ATIS) {
@@ -184,8 +185,8 @@ void Gamecontroller::update(double elapsed, Point& mouse) {
 		this->views[ATIS]->set_menu(atis_items);
 	} else if (this->state == ATIS && this->atis->ok()) {
 		this->state = GAME;
-		
-		this->game->create_planes(Tools::linear_random(1, this->settings->required_handled));
+		/** Create maximum inpoints amount of planes due the horizontal separation requirements **/
+		this->game->create_planes(Tools::linear_random(1, this->game->get_active_field()->get_inpoints().size()));
 	} else if (this->game->ok()) {
 		this->state = STAT;
 	}
