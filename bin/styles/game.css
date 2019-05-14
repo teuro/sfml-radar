@@ -24,17 +24,14 @@ body {
 	left: 30px;
 }
 
-.active {
-	color: rgb(250, 15, 15);
-}
-
-.normal {
-	color: rgb(15, 200, 150);
-}
-
 #flash {
 	top: 500px;
 	left: 30px;
 	color: rgb(150, 226, 18);
 	width: 550px;
+}
+
+.holdings {
+	left: 1150px;
+	top: 500px;
 }
