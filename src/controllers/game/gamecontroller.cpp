@@ -1,7 +1,5 @@
 #include "gamecontroller.hpp"
 
-#define DEBUG
-
 Gamecontroller::Gamecontroller(std::shared_ptr <Settings> s, Drawsurface& d) : Controller(s, d), out("developer.log", std::ios::out) { 
 	#ifdef DEBUG
 	out << "Gamecontroller::Gamecontroller()" << std::endl;
