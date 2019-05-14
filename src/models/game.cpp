@@ -175,6 +175,7 @@ void Game::calculate_points(int type, double clearance_count, std::string plane)
 	point = (int)(point / clearance_count) - (int)(area_time / 1000);
 	
 	this->points[plane].points = point;
+	this->points[plane].area_time = area_time;
 }
 
 std::map <std::string, Game_point> Game::get_points() {
@@ -335,7 +336,7 @@ void Game::create_plane() {
 
     std::string callsign = airlines(Tools::linear_random(0, airlines.size()), "ICAO") + Tools::tostr(Tools::linear_random(1, 999), 3);
 
-	Game_point tmp{0, duration, -1, 0};
+	Game_point tmp{0, duration, -1, 0, -1};
 	
 	this->points.insert(std::pair <std::string, Game_point> (callsign, tmp));
 
