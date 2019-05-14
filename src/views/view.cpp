@@ -397,8 +397,6 @@ void View::style(Drawable_element& de) {
 	de.set_style(style);
 }
 
-void View::draw(Point&) { }
-
 void View::draw() {
 	#ifdef DEBUG
 	std::clog << "View::draw()" << std::endl;

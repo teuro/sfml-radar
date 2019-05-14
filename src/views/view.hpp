@@ -57,7 +57,7 @@ public:
 		* @return void
 	**/
 	
-	virtual void draw(Point& mouse);
+	virtual void draw(Point& mouse) = 0;
 	void draw();
 	virtual std::string handle_click(Point& mouse) = 0;
 	
