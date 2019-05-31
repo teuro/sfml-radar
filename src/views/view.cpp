@@ -110,7 +110,6 @@ void View::load_layout(std::string state) {
 	
     if (root_element) {
         selected_element = root_element->FirstChildElement();
-		std::map <std::string, std::string> element_info;
 		
         while (selected_element) {
 			if (selected_element->Value() == std::string("img")) {
@@ -141,8 +140,8 @@ void View::load_layout(std::string state) {
 				Drawable_table table(table_name, table_class, table_id);
 				
 				for (TiXmlElement* e = selected_element->FirstChildElement(); e != NULL; e = e->NextSiblingElement("tr")) {
-					std::string row_id = (e->Attribute("id") == NULL) ? "" : Tools::trim(e->Attribute("id"));
-					std::string row_class = (e->Attribute("class") == NULL) ? "" : Tools::trim(e->Attribute("class"));
+					std::string row_id = (e->Attribute("id") == NULL) ? "-" : Tools::trim(e->Attribute("id"));
+					std::string row_class = (e->Attribute("class") == NULL) ? "-" : Tools::trim(e->Attribute("class"));
 					std::string row_name = e->Value();
 					
 					Row row(row_name, row_class, row_id);
@@ -185,7 +184,7 @@ void View::load_layout(std::string state) {
 				Clickable cl(t_name, t_class, t_id, value, this->settings);
 				
 				this->clicks.push_back(cl);
-			}			
+			} 
 			
             selected_element = selected_element->NextSiblingElement();
         }
@@ -194,6 +193,7 @@ void View::load_layout(std::string state) {
 	#ifdef DEBUG
 	std::clog << "Layout file parsed" << std::endl;
 	#endif
+	
 }
 
 void View::clear_screen() {
@@ -513,8 +513,6 @@ void View::draw_element(Drawable_table& dt) {
 			#ifdef DEBUG
 			std::clog << (*cit).get_class() << " " << (*cit).get_content() << std::endl;
 			#endif
-			
-			//std::clog << "View::draw_element(cell) " << cit->get_class() << std::endl;
 			
 			int c_color = cit->get_style().get_text_color();
 			

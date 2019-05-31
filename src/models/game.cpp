@@ -159,8 +159,8 @@ void Game::handle_holdings() {
 }
 
 void Game::calculate_points(int type, double clearance_count, std::string plane) {
-	#ifdef DEBUG
-    std::clog << "Game::calculate_points(" << type << ", " << clearance_count << ", " << plane << ")" << std::endl;
+	#ifndef DEBUG
+	std::clog << "Game::calculate_points(" << type << ", " << clearance_count << ", " << plane << ")" << std::endl;
 	#endif
 	
 	this->points[plane].out_time = duration;
@@ -168,7 +168,7 @@ void Game::calculate_points(int type, double clearance_count, std::string plane)
 	
 	++this->handled_planes;
 	
-	double point = (type == APPROACH) ? 8000 : 4000;
+	double point = (type == APPROACH) ? 80000 : 40000;
 	
 	double area_time = this->points[plane].out_time - this->points[plane].in_time;
 	
@@ -207,7 +207,7 @@ void Game::create_planes(int amount) {
 	#ifdef DEBUG
     std::clog << "Game::create_planes(" << amount << ")" << std::endl;
 	#endif
-
+	
 	for (int i = 0; i < amount; ++i) {
 		this->create_plane();
 	}
@@ -690,7 +690,7 @@ bool Game::ok() {
     std::clog << "Game::ok()" << std::endl;
 	#endif
 	
-	return (this->handled_planes == this->settings->required_handled && this->aircrafts.size() == 0);
+	return (this->handled_planes >= this->settings->required_handled && this->aircrafts.size() == 0);
 }
 
 int Game::get_level() {

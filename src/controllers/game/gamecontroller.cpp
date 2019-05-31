@@ -54,7 +54,6 @@ void Gamecontroller::load() {
 	this->views[this->GAME]->load();
 		
 	this->views[this->STAT] = sv;
-	this->views[this->STAT]->load();
 }
 
 std::string Gamecontroller::handle_function_keys() {
@@ -144,10 +143,6 @@ void Gamecontroller::set_variables() {
 	} else if (this->state == STAT) {
 		this->views[STAT]->repl["[SPE]"] = Tools::tostr(this->game->get_separation_errors());
 		this->views[STAT]->repl["[RQD]"] = Tools::tostr(this->settings->required_handled);
-		/**
-			* @todo fix this asap 
-		**/
-		//this->views[STAT]->repl["[PNTS]"] = this->game->get_points();
 	}
 }
 
@@ -187,8 +182,9 @@ void Gamecontroller::update(double elapsed, Point& mouse) {
 		this->state = GAME;
 		/** Create maximum inpoints amount of planes due the horizontal separation requirements **/
 		this->game->create_planes(Tools::linear_random(1, this->game->get_active_field()->get_inpoints().size()));
-	} else if (this->game->ok()) {
+	} else if (this->state == GAME && this->game->ok()) {
 		this->state = STAT;
+		this->views[this->STAT]->load();
 	}
 	
 	this->game_time += elapsed;

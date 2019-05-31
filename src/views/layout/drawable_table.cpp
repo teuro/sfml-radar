@@ -68,6 +68,11 @@ void Drawable_table::set_class(std::string s_class) {
 	}
 }
 
+void Drawable_table::delete_row() {
+	//this->rows.erase(row);
+	this->rows.clear();
+}
+
 std::list <Cell> Row::get_cells() { 
 	return this->cells; 
 }

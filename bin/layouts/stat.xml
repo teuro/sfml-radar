@@ -1,4 +1,23 @@
 <?xml version="1.0" ?>
 <layout>
 	<p id="s_info" class="s_info">Well done You handled all [RQD] planes.</p>
+	
+	<table id="points" class="table">
+		<tr>
+			<th>Callsign</th>
+			<th>Points</th>
+			<th>In area</th>
+			<th>Out area</th>
+			<th>Time</th>
+			<th>Clearances</th>
+		</tr>
+		<tr>
+			<td>[callsign]</td>
+			<td>[points]</td>
+			<td>[in_time]</td>
+			<td>[out_time]</td>
+			<td>[area_time]</td>
+			<td>[clearances]</td>
+		</tr>
+	</table>
 </layout>
