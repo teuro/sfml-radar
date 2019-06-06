@@ -36,6 +36,14 @@ void Drawable_table::add_row(Row& row) {
 	this->rows.push_back(row); 
 }
 
+void Drawable_table::clear_rows() {
+	#ifdef DEBUG
+	std::clog << "Drawable_table::clear_rows()" << std::endl;
+	#endif
+	
+	this->rows.clear(); 
+}
+
 std::string Drawable_table::get_max_length() {
 	std::list <Row> :: iterator rit = this->rows.begin();
 	std::string max;
@@ -68,9 +76,10 @@ void Drawable_table::set_class(std::string s_class) {
 	}
 }
 
-void Drawable_table::delete_row() {
-	//this->rows.erase(row);
-	this->rows.clear();
+std::list <Row> :: iterator Drawable_table::delete_row(std::list <Row> :: iterator rit) {
+	rit = this->rows.erase(rit);
+	
+	return rit;
 }
 
 std::list <Cell> Row::get_cells() { 

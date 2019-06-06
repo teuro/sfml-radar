@@ -11,13 +11,21 @@
 			<th>Time</th>
 			<th>Clearances</th>
 		</tr>
-		<tr>
+		<tr id="replace">
 			<td>[callsign]</td>
 			<td>[points]</td>
 			<td>[in_time]</td>
 			<td>[out_time]</td>
 			<td>[area_time]</td>
 			<td>[clearances]</td>
+		</tr>
+		<tr id="sum">
+			<td>[RQD]</td>
+			<td>[SUM]</td>
+			<td></td>
+			<td></td>
+			<td>[AREA]</td>
+			<td>[CLRC]</td>
 		</tr>
 	</table>
 </layout>

@@ -8,6 +8,25 @@ Game::Game(std::shared_ptr <Settings> s, std::shared_ptr <Atis> a) : settings(s)
     this->duration = 0;
 	this->selected = NULL;
 	this->loaded = false;
+	
+	/** TESTING DATA STAT VIEW **/
+	
+	/**
+	Game_point p1 = {0, 1544, 652247, -1, 0};
+	Game_point p2 = {0, 51544, 854875, -1, 0};
+	Game_point p3 = {0, 652485, 854975, -1, 0};
+	Game_point p4 = {0, 248754, 526534, -1, 0};
+	
+	this->points["FIN225"] = p1;
+	this->points["NAX225"] = p2;
+	this->points["BER16E"] = p3;
+	this->points["RYR85A"] = p4;
+	
+	this->calculate_points(APPROACH, 4, "FIN225");
+	this->calculate_points(DEPARTURE, 3, "NAX225");
+	this->calculate_points(DEPARTURE, 6, "BER16E");
+	this->calculate_points(APPROACH, 3, "RYR85A");
+	**/
 }
 
 Game::~Game() { }
@@ -159,7 +178,7 @@ void Game::handle_holdings() {
 }
 
 void Game::calculate_points(int type, double clearance_count, std::string plane) {
-	#ifndef DEBUG
+	#ifdef DEBUG
 	std::clog << "Game::calculate_points(" << type << ", " << clearance_count << ", " << plane << ")" << std::endl;
 	#endif
 	
@@ -172,7 +191,7 @@ void Game::calculate_points(int type, double clearance_count, std::string plane)
 	
 	double area_time = this->points[plane].out_time - this->points[plane].in_time;
 	
-	point = (int)(point / clearance_count) - (int)(area_time / 1000);
+	point = (int)(point / (clearance_count - 2)) - (int)(area_time / 1000);
 	
 	this->points[plane].points = point;
 	this->points[plane].area_time = area_time;

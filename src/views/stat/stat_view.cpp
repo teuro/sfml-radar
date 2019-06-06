@@ -32,12 +32,27 @@ void Statview::load() {
 			
 			std::list <Row> t_list = tit->get_rows();		
 			std::list <Row> :: iterator rit = t_list.begin();
-
-			++rit;
-		
-			tit->delete_row();
+			
+			Row replaced;
+			Row sum_row;
+			
+			while (rit != t_list.end()) {
+				if (rit->get_id() == "replace") {
+					replaced = *rit;
+				} 
+				
+				if (rit->get_id() == "sum") {
+					sum_row = *rit;
+				}
+				
+				++rit;
+			}
+			
+			tit->clear_rows();
 			
 			while (pit != points.end()) {
+				std::list <Cell> t_cells = replaced.get_cells();
+						
 				sum += pit->second.points;
 				area += pit->second.area_time;
 				clearances += pit->second.clearances;
@@ -47,19 +62,19 @@ void Statview::load() {
 				this->repl["[out_time]"] = Tools::totime(pit->second.out_time);
 				this->repl["[area_time]"] = Tools::totime(pit->second.area_time);
 				this->repl["[points]"] = Tools::tostr(pit->second.points, 6);
-				this->repl["[clearances]"] = Tools::tostr(pit->second.clearances, 2);
-			
+				this->repl["[clearances]"] = Tools::tostr(pit->second.clearances, 3);
+				
 				Row row;
 				
-				std::list <Cell> c_list = rit->get_cells();
+				std::list <Cell> c_list = replaced.get_cells();
 				
 				std::list <Cell> :: iterator cit = c_list.begin();
 				
 				while (cit != c_list.end()) {
 					Cell tmp_cell(Tools::replace(cit->get_content(), this->repl));
 
-					++cit;
 					row.add_cell(tmp_cell);
+					++cit;
 				}
 				
 				tit->add_row(row);
@@ -67,21 +82,22 @@ void Statview::load() {
 				++pit;
 			}
 			
+			this->repl["[AREA]"] = Tools::totime(area);
+			this->repl["[SUM]"] = Tools::tostr(sum, 6);
+			this->repl["[CLRC]"] = Tools::tostr(clearances, 3);
+			
 			Row row;
+				
+			std::list <Cell> c_list = sum_row.get_cells();
+			std::clog << "cell amount " <<  c_list.size() << std::endl;
+			std::list <Cell> :: iterator cit = c_list.begin();
 			
-			Cell callsign(Tools::tostr(points.size()));
-			Cell sum_points(Tools::tostr(sum));
-			Cell intime("");
-			Cell outtime("");
-			Cell areatime(Tools::totime(area));
-			Cell sum_clearances(Tools::tostr(clearances));
-			
-			row.add_cell(callsign);
-			row.add_cell(sum_points);
-			row.add_cell(intime);
-			row.add_cell(outtime);
-			row.add_cell(areatime);
-			row.add_cell(sum_clearances);
+			while (cit != c_list.end()) {
+				Cell tmp_cell(Tools::replace(cit->get_content(), this->repl));
+
+				row.add_cell(tmp_cell);
+				++cit;
+			}
 			
 			tit->add_row(row);
 		}

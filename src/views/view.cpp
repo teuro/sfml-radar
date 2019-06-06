@@ -150,8 +150,9 @@ void View::load_layout(std::string state) {
 						std::string cell_id = (f->Attribute("id") == NULL) ? "" : Tools::trim(f->Attribute("id"));
 						std::string cell_class = (f->Attribute("class") == NULL) ? "" : Tools::trim(f->Attribute("class"));
 						std::string cell_name = f->Value();
+						std::string text = (f->GetText()) ? f->GetText() : "";
 						
-						Cell cell(f->GetText(), cell_name, cell_class, cell_id);
+						Cell cell(text, cell_name, cell_class, cell_id);
 						row.add_cell(cell);
 					}
 					

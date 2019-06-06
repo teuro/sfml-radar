@@ -54,7 +54,8 @@ public:
 	void add_row(Row& row);
 	std::string get_max_length();
 	void set_class(std::string s_class);
-	void delete_row();
+	std::list <Row> :: iterator delete_row(std::list <Row> :: iterator rit);
+	void clear_rows();
 private:
 	std::list <Row> rows;
 };

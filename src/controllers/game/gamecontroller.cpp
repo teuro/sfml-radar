@@ -6,7 +6,7 @@ Gamecontroller::Gamecontroller(std::shared_ptr <Settings> s, Drawsurface& d) : C
 	#endif
 	
 	this->settings->zoom = 110;
-	this->settings->required_handled = 20;
+	this->settings->required_handled = 5;
 	this->frames = 0;
 	this->fps_time = 5000;
 	this->fps_end_time = 8500;
@@ -143,6 +143,7 @@ void Gamecontroller::set_variables() {
 	} else if (this->state == STAT) {
 		this->views[STAT]->repl["[SPE]"] = Tools::tostr(this->game->get_separation_errors());
 		this->views[STAT]->repl["[RQD]"] = Tools::tostr(this->settings->required_handled);
+		this->views[GAME]->repl["[CLRC]"] = Tools::tostr(this->game->get_clearances().size());
 	}
 }
 
@@ -180,8 +181,9 @@ void Gamecontroller::update(double elapsed, Point& mouse) {
 		this->views[ATIS]->set_menu(atis_items);
 	} else if (this->state == ATIS && this->atis->ok()) {
 		this->state = GAME;
-		/** Create maximum inpoints amount of planes due the horizontal separation requirements **/
-		this->game->create_planes(Tools::linear_random(1, this->game->get_active_field()->get_inpoints().size()));
+		int max_amount_planes = (this->settings->required_handled < this->game->get_active_field()->get_inpoints().size()) ? this->settings->required_handled : this->game->get_active_field()->get_inpoints().size();
+		
+		this->game->create_planes(Tools::linear_random(1, max_amount_planes));
 	} else if (this->state == GAME && this->game->ok()) {
 		this->state = STAT;
 		this->views[this->STAT]->load();
@@ -190,10 +192,6 @@ void Gamecontroller::update(double elapsed, Point& mouse) {
 	this->game_time += elapsed;
 	
 	this->set_variables();
-	
-	if (this->game_time > this->flash_message_begin && this->game_time < (this->flash_message_begin + this->flash_message_time)) {
-		this->views[this->state]->flash_message(this->message);
-	}
 	
 	if (this->state == GAME) {
 		std::string tmp = this->game->get_message();
@@ -211,22 +209,27 @@ void Gamecontroller::update(double elapsed, Point& mouse) {
 	this->views[this->state]->update();
 	this->views[this->state]->draw(mouse);
 	
+	if (this->game_time > this->flash_message_begin && this->game_time < (this->flash_message_begin + this->flash_message_time) && this->message.length()) {
+		this->views[this->state]->flash_message(this->message);
+	} 	
+	
 	this->views[this->state]->render();
 }
 
 void Gamecontroller::set_flash_message(std::string message) {
-	#ifdef DEBUG
-	out << "Gamecontroller::set_flash_message(" << message << ")" << std::endl;
-	#endif
 	this->message = message;
+	
 	this->flash_message_begin = this->game_time;
+	
+	std::clog << "Gamecontroller::set_flash_message(" << this->message << ") begin " << Tools::totime(this->flash_message_begin) << " end " << Tools::totime(this->flash_message_begin + this->flash_message_time) << std::endl;
 }
 
 void Gamecontroller::handle_mouse_click(Point& mouse) {
 	#ifdef DEBUG
 	out << "Gamecontroller::handle_mouse_click()" << std::endl;
 	#endif
-	this->message = this->views[this->state]->handle_click(mouse);
+	
+	this->set_flash_message(this->views[this->state]->handle_click(mouse));
 }
 
 void Gamecontroller::load_menu_items(std::string query, std::shared_ptr <Menu> menu) {
