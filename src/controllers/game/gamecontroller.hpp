@@ -22,7 +22,7 @@
 
 /**
 	* Gamecontroller
-	* Responsible for linking gameview and model together
+	* Responsible for linking views and models together
 **/
 
 class Gamecontroller : public Controller {
@@ -42,7 +42,7 @@ public:
 		* @return void
 	**/
 	
-    std::string handle_function_keys();
+    void handle_function_keys(int key);
 	
 	/**
 		* handle_mouse_release

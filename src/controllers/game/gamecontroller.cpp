@@ -8,11 +8,11 @@ Gamecontroller::Gamecontroller(std::shared_ptr <Settings> s, Drawsurface& d) : C
 	this->settings->zoom = 110;
 	this->settings->required_handled = 5;
 	this->frames = 0;
-	this->fps_time = 5000;
-	this->fps_end_time = 8500;
+	this->fps_time = 2000;
+	this->fps_end_time = 4000;
 	this->flash_message_begin = 0;
 	this->flash_message_time = 2500;
-	quick_iterator = this->quicklist.begin();
+	this->quick_iterator = this->quicklist.begin();
 	
 	this->level_selected = false;
 	this->airport_selected = false;
@@ -56,11 +56,24 @@ void Gamecontroller::load() {
 	this->views[this->STAT] = sv;
 }
 
-std::string Gamecontroller::handle_function_keys() {
+void Gamecontroller::handle_function_keys(int key) {
 	#ifdef DEBUG
-	out << "Gamecontroller::handle_function_keys()" << std::endl;
+	std::clog << "Gamecontroller::handle_function_keys(" << key << ")" << std::endl;
 	#endif
-	return this->command;
+	
+	switch (key) {
+		case 60:
+			++this->quick_iterator;
+			
+			if (this->quick_iterator == this->quicklist.end()) {
+				this->quick_iterator = this->quicklist.begin();
+			} 
+			
+			this->command = (*this->quick_iterator);
+			break;
+	}
+	
+	this->handle_text_input();
 }
 
 void Gamecontroller::handle_mouse_release(Point& mouse_start, Point& mouse_end) {
@@ -149,7 +162,7 @@ void Gamecontroller::set_variables() {
 
 void Gamecontroller::calculate_fps() {
 	#ifdef DEBUG
-	out << "Gamecontroller::calculate_fps()" << std::endl;
+	std::clog << "Gamecontroller::calculate_fps()" << std::endl;
 	#endif
 	
 	if (this->game_time > this->fps_end_time) {
@@ -161,7 +174,7 @@ void Gamecontroller::calculate_fps() {
 
 void Gamecontroller::update(double elapsed, Point& mouse) {
 	#ifdef DEBUG
-	out << "Gamecontroller::update(" << elapsed << ", " << mouse << ")" << std::endl;
+	std::clog << "Gamecontroller::update(" << elapsed << ", " << mouse << ")" << std::endl;
 	#endif
 	
 	if (this->state == MENU && this->airport_selected) {
@@ -201,6 +214,7 @@ void Gamecontroller::update(double elapsed, Point& mouse) {
 			this->set_flash_message(tmp);
 		}
 		
+		++this->frames;
 		this->calculate_fps();
 		this->game->update(elapsed);
 	}
@@ -220,8 +234,6 @@ void Gamecontroller::set_flash_message(std::string message) {
 	this->message = message;
 	
 	this->flash_message_begin = this->game_time;
-	
-	std::clog << "Gamecontroller::set_flash_message(" << this->message << ") begin " << Tools::totime(this->flash_message_begin) << " end " << Tools::totime(this->flash_message_begin + this->flash_message_time) << std::endl;
 }
 
 void Gamecontroller::handle_mouse_click(Point& mouse) {
