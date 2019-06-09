@@ -8,7 +8,7 @@ void SFML_window::init() {
 	#ifdef DEBUG
     std::clog << "SFML_window::init()" << std::endl;
 	#endif
-	this->time_change = sf::milliseconds(80);
+	this->time_change = sf::milliseconds(25);
 }
 
 void SFML_window::load_settings() {
@@ -74,18 +74,14 @@ void SFML_window::run() {
 	bool on_run = true;
 	
 	while (on_run) {
-		while (window.pollEvent(event)) {
+		while (window.pollEvent(event) && on_run) {
 			on_run = this->handle_event(event, gamecontroller, window);
-			
-			if (on_run == false) { 
-				break;
-			}
 		}
 		
-		sf::sleep(sf::milliseconds(10));
-		
 		time_now = this->clock.restart();
+		
 		gamecontroller.update(time_now.asMilliseconds(), mouse);
+		
 		sf::sleep(time_change - time_now);	
 	}
 	
@@ -124,9 +120,9 @@ bool SFML_window::handle_event(sf::Event& event, Controller& ctrl, sf::RenderWin
                 this->input_string = "";
             } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
                 return false;
-            } 
-			
-			sf::sleep(sf::milliseconds(this->settings->sleep));
+            } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Tab)) {
+				ctrl.handle_function_keys(sf::Keyboard::Tab);
+			}
             
 			return true;
         case sf::Event::MouseButtonPressed:
