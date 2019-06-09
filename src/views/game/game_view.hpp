@@ -105,13 +105,20 @@ public:
 	/**
 		* calculate
 		* Calculates new screen point
-		* @param Point center_point_screen
-		* @param Coordinate center_point_map
 		* @param Coordinate target
-		* @param int zoom
+		* @return Point
 	**/
 	
 	Point calculate(Coordinate& target);
+	
+	/**
+		* calculate
+		* Calculates new coordinate from screen
+		* @param Point target
+		* @return Coordinate
+	**/
+	
+	Coordinate calculate(Point& target);
 	
 	/**
 		* update

@@ -103,10 +103,14 @@ void Gameview::draw_plane(aircraft plane, aircraft selected, Point& mouse) {
 		
 		this->style(info_list);
 		
-		double heading = Tools::angle(aircraft_place, mouse);
+		Coordinate c_plane = plane->get_place();
+		Coordinate c_mouse = this->calculate(mouse);
+		
+		double heading = Tools::angle(c_plane, c_mouse);
 		double distance = Tools::distancePX(aircraft_place, mouse);
 		
-		heading = Tools::fix_angle(heading - Tools::get_PI() / 2.0);
+		heading = Tools::fix_angle(heading);
+		
 		heading = Tools::rad2deg(heading);
 		distance = this->distanceNM(distance);
 	
@@ -221,6 +225,15 @@ Point Gameview::calculate(Coordinate& target) {
 	
 	Point t(pixelX, pixelY);
 	
+	return t;
+}
+
+Coordinate Gameview::calculate(Point& target) {
+	double t_latitude = (1.0 - ((double)target.get_y() / this->settings->screen_height)) * (max_lat - min_lat) + min_lat;
+	double t_longitude = ((double)target.get_x() / this->settings->screen_width) * (max_lon - min_lon) + min_lon;
+	
+	Coordinate t(t_latitude, t_longitude);
+
 	return t;
 }
 
