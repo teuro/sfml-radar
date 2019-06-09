@@ -191,7 +191,7 @@ void Game::calculate_points(int type, double clearance_count, std::string plane)
 	
 	double area_time = this->points[plane].out_time - this->points[plane].in_time;
 	
-	point = (int)(point / (clearance_count - 2)) - (int)(area_time / 1000);
+	point = (int)(point / (clearance_count - 1)) - (int)(area_time / 1000);
 	
 	this->points[plane].points = point;
 	this->points[plane].area_time = area_time;
