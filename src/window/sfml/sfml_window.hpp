@@ -5,6 +5,8 @@
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
+#include <fstream>
+#include <iostream>
 
 class SFML_window : public Window {
 public:

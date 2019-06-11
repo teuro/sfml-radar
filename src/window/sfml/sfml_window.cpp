@@ -20,15 +20,27 @@ void SFML_window::load_settings() {
 	#endif
 	
 	Tools::init_random();
-	
-	Database db;
-	
-	Queryresult qrslt = db.get_result("SELECT setting_name, setting_value FROM settings");
 	std::map <std::string, std::string> tmp;
-
-	for (unsigned int i = 0; i < qrslt.size(); ++i) {
-		tmp[qrslt(i, "setting_name")] = qrslt(i, "setting_value");
+	std::string line;
+	std::string type;
+	std::string name;
+	std::string value;
+	
+	std::ifstream setting_file("settings/settings.ini", std::ios::in);
+	
+	while (std::getline(setting_file, line)) {
+		std::vector <std::string> cells = Tools::split(" ", line);
+		
+		if (cells.size() == 3) {
+			type = cells[0];
+			name = cells[1];
+			value = cells[2];
+			
+			tmp[name] = value;
+		}
 	}
+	
+	setting_file.close();
 
 	this->settings->set_values(tmp);
 }

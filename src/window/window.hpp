@@ -14,6 +14,12 @@
 #include "../tools/settings.hpp"
 #include "../tools/database/database.hpp"
 
+/**
+	* Base class for window 
+	* This provide interface for graphic libraries such as SFML and SDL
+	* is should be quite easy to change graphic library.
+**/
+
 class Window {
 public:
 	virtual void init() = 0;
@@ -23,7 +29,6 @@ public:
 	virtual void handle_events() = 0;
 protected:
 	std::shared_ptr <Settings> settings;
-	enum types {PLAYER, ATIS, GAME};
 	Point mouse_start;
     Point mouse_end;
     Point mouse;
