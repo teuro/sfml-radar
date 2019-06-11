@@ -13,10 +13,8 @@ public:
 	SFML_window();
 	~SFML_window();
 	virtual void init();
-	virtual void close();
 	virtual void run();
 	virtual void load_settings();
-	virtual void handle_events();
 private:
 	virtual bool handle_event(sf::Event& event, Controller& ctrl, sf::RenderWindow& window);
     sf::Clock clock;

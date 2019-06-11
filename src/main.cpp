@@ -16,8 +16,6 @@ int main(){
 		window.init();
 		window.load_settings();
         window.run();
-
-        window.close();
     } catch (std::runtime_error& e) {
         std::cerr << e.what() << std::endl;
         return 1;

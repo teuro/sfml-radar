@@ -8,16 +8,17 @@ void SFML_window::init() {
 	#ifdef DEBUG
     std::clog << "SFML_window::init()" << std::endl;
 	#endif
+	
 	this->time_change = sf::milliseconds(25);
 }
 
 void SFML_window::load_settings() {
-	std::shared_ptr <Settings> s (new Settings);
-	this->settings = s;
-	
 	#ifdef DEBUG
 	std::clog << "SFML_window::load_settings()" << std::endl;
 	#endif
+	
+	std::shared_ptr <Settings> s (new Settings);
+	this->settings = s;
 	
 	Tools::init_random();
 	std::map <std::string, std::string> tmp;
@@ -45,19 +46,11 @@ void SFML_window::load_settings() {
 	this->settings->set_values(tmp);
 }
 
-void SFML_window::close() {
-	#ifdef DEBUG
-    std::clog << "SFML_window::close()" << std::endl;
-	#endif
-}
-
-void SFML_window::handle_events() {
-	#ifdef DEBUG
-    std::clog << "SFML_window::handle_events()" << std::endl;
-	#endif
-}
-
 void SFML_window::run() {
+	#ifdef DEBUG
+	std::clog << "SFML_window::run()" << std::endl;
+	#endif
+	
 	sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
 	
 	sf::RenderWindow window(
@@ -96,8 +89,6 @@ void SFML_window::run() {
 		
 		sf::sleep(time_change - time_now);	
 	}
-	
-	window.close();
 }
 
 bool SFML_window::handle_event(sf::Event& event, Controller& ctrl, sf::RenderWindow& window) {

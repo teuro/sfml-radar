@@ -23,10 +23,8 @@
 class Window {
 public:
 	virtual void init() = 0;
-	virtual void close() = 0;
 	virtual void run() = 0;
 	virtual void load_settings() = 0;
-	virtual void handle_events() = 0;
 protected:
 	std::shared_ptr <Settings> settings;
 	Point mouse_start;
