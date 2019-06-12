@@ -116,7 +116,7 @@ int Atis::calculate_tr_level(int pressure, int altitude) {
 	} 
 	
 	#ifdef DEBUG
-	std::clog << "Atis::calculate_tr_level(" << pressure << ", " << altitude << ")" << place << std::endl;
+	std::clog << "Atis::calculate_tr_level(" << pressure << ", " << altitude << ")" << levels[altitude][place] << std::endl;
 	#endif
 		
 	return levels[altitude][place];
@@ -139,7 +139,7 @@ double Atis::calculate_backwind(double runway) {
 
 double Atis::calculate_backwind(Runway& runway) {
 	#ifdef DEBUG
-	std::clog << "Atis::calculate_backwind(" << runway_name << ")" << std::endl;
+	std::clog << "Atis::calculate_backwind(" << runway.get_name() << ")" << std::endl;
 	#endif
 	
 	std::vector <Runway> :: iterator it_rwy = std::find(this->active_field->get_runways().begin(), this->active_field->get_runways().end(), runway.get_name());
@@ -149,11 +149,10 @@ double Atis::calculate_backwind(Runway& runway) {
 
 bool Atis::check_backwind(Runway& runway) {
 	#ifdef DEBUG
-	std::clog << "Atis::check_backwind(" << runway_name << ")" << std::endl;
+	std::clog << "Atis::check_backwind(" << runway.get_name() << ")" << std::endl;
 	#endif
 	
 	if (runway.get_name().length() > 0) {
-		
 		if (this->calculate_backwind(runway.get_heading()) > 0) {
 			return false;
 		}
@@ -235,7 +234,7 @@ bool Atis::transfer_level_ok() {
 	bool ok = true;
 	
 	int calculated_tr_level = this->calculate_tr_level(this->metar->get_pressure(), transition_altitude);
-		
+	
 	if (calculated_tr_level != transition_level) {
 		this->atis_errors.push_back("transition level should be " + Tools::tostr(calculated_tr_level));
 		ok = false;

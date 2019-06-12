@@ -77,5 +77,4 @@ private:
 	std::shared_ptr <Menu> menu;
 };
 
-
 #endif // ATIS_HPP
