@@ -7,12 +7,12 @@ namespace Tools {
 	/**
 		* is_match
 		* Checks if two strings are similar
-		* @param std::string a
+		* @param std::string input_number
 		* @param std::string b
 		* @return bool
 	**/
 	
-	bool is_match(std::string a, std::string b);
+	bool is_match(std::string input_number, std::string b);
 	
 	/**
 		* split
@@ -80,12 +80,12 @@ namespace Tools {
 	**/
 	
 	template <class T>
-	std::string tostr(T a) {
-        std::ostringstream os;
+	std::string tostr(T input_number) {
+        std::ostringstream outstringstream;
 
-        os << a;
+        outstringstream << input_number;
 
-        return os.str();
+        return outstringstream.str();
 	}
 	
 	/**
@@ -93,29 +93,31 @@ namespace Tools {
 		* converts numbers to constant length string
 		* @param T might bee any number
 		* @param unsigned int length 
+		* @example std::clog << tostr(25, 4) << std::endl; 0025
+		* @example std::clog << tostr(25, 3) << std::endl; 025
 		* @return std::string
 	**/
 	
 	template <class T>
-	std::string tostr(T a, unsigned int length) {
-        std::ostringstream os;
+	std::string tostr(T input_number, unsigned int length) {
+        std::ostringstream outstringstream;
 
-        os << a;
+        outstringstream << input_number;
 		
-		std::string t = os.str();
+		std::string return_string = outstringstream.str();
 		
-		if (t.length() < length) {
-			unsigned int required = length - t.length();
+		if (return_string.length() < length) {
+			unsigned int required = length - return_string.length();
 			std::string fill_zeros;
 			
 			for ( unsigned int i = 0; i < required; ++i) {
 				fill_zeros += "0";
 			}
 			
-			t = fill_zeros + t;
+			return_string = fill_zeros + return_string;
 		}
 
-        return t;
+        return return_string;
 	}
 }
 
