@@ -46,7 +46,7 @@ void Game::load(std::string airfield) {
 	
 	this->separation_errors = 0;
     this->new_plane = 5000;
-    this->pop_holdings = 500;
+    this->pop_holdings = this->settings->departure_separation * 1000;
 	this->handled_planes = 0;
 	
 	this->loaded = true;
@@ -173,7 +173,7 @@ void Game::handle_holdings() {
         t->set_takeoff_clearance();
 		this->aircrafts.push_back(t);
         this->holdings.pop_front();
-		this->pop_holdings += this->settings->departure_separation * 1000 * 60;
+		this->pop_holdings += this->settings->departure_separation * 1000;
 	}
 }
 
