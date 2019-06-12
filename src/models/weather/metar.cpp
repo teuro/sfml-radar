@@ -1,6 +1,6 @@
 #include "metar.hpp"
 
-Metar::Metar(std::shared_ptr <Settings> s, std::string i) : settings(s), icao(i) { 	
+Metar::Metar(std::shared_ptr <Settings> s, std::string i, int avg_wind) : settings(s), icao(i), average_wind_direction(avg_wind) { 	
 	this->weather_type = (double)(Tools::linear_random(932, 999)) / 1000.0;
 	this->average_pressure = 1040.00 * weather_type;
 	this->variation_pressure = (double)(Tools::linear_random(200, 950)) / 100.0 - weather_type;
@@ -58,7 +58,7 @@ void Metar::generate_visibility() {
 }
 
 void Metar::generate_wind() {
-	this->wind.direction = Tools::round_nearest(Tools::linear_random(5, 355), 5);
+	this->wind.direction = Tools::round_nearest(Tools::normal_distribution(this->average_wind_direction, 20), 5);
     this->wind.speed = Tools::round_nearest(Tools::linear_random(5, 50), 5);
 }
 
@@ -73,6 +73,8 @@ void Metar::generate_clouds() {
 	cloud_types[980] = "BKN";
 	cloud_types[970] = "OVC";
 	cloud_types[960] = "VV";
+	
+	
 }
 
 void Metar::generate_humidity() {

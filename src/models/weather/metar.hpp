@@ -38,7 +38,7 @@ struct Wind {
 
 class Metar {
 public:
-    Metar(std::shared_ptr <Settings> settings, std::string icao);
+    Metar(std::shared_ptr <Settings> settings, std::string icao, int average_wind_direction);
     ~Metar();
     std::string to_string();
     void update();
@@ -55,6 +55,7 @@ private:
     int temperature;
     int devpoint;
     int visibility;
+	
     std::list <Cloud> clouds;
     Wind wind;
 	std::string id_code;
@@ -67,6 +68,7 @@ private:
 	
 	std::shared_ptr <Settings> settings;
 	std::string icao;
+	int average_wind_direction;
 	double weather_type;
 	double average_pressure;
 	double variation_pressure;

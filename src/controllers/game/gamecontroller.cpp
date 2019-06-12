@@ -5,8 +5,6 @@ Gamecontroller::Gamecontroller(std::shared_ptr <Settings> s, Drawsurface& d) : C
 	out << "Gamecontroller::Gamecontroller()" << std::endl;
 	#endif
 	
-	this->settings->zoom = 110;
-	this->settings->required_handled = 5;
 	this->frames = 0;
 	this->fps_time = 2000;
 	this->fps_end_time = 4000;
@@ -182,7 +180,7 @@ void Gamecontroller::update(double elapsed, Point& mouse) {
 		
 		this->game->load(this->airport_name);
 		this->atis->set_airfield(this->game->get_active_field());
-		std::shared_ptr <Metar> m(new Metar(settings, this->airport_name));
+		std::shared_ptr <Metar> m(new Metar(settings, this->airport_name, 205));
 		
 		this->metar = m;
 		this->metar->update();
