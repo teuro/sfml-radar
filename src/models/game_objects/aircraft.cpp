@@ -85,7 +85,7 @@ bool Aircraft::check_approach_config() {
 	
 	if (this->altitude > this->settings->max_approach_altitude) {
 		altitude_ok = false;
-		this->approach_config_error += " Altitude is incorrect ";
+		this->approach_config_error += " Altitude is incorrect (" + Tools::tostr(this->settings->max_approach_altitude) + ")";
 	}
 	
 	if (this->heading > max_approach_angle || this->heading	< min_approach_angle) {
