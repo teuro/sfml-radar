@@ -29,9 +29,9 @@ void Settings::load() {
 	Queryresult colors_result = db.get_result("SELECT * FROM colors");
 	
 	for (unsigned int i = 0; i < colors_result.size(); ++i) {
-		int red = Tools::tonumber<int>(colors_result(i, "red"));
-		int green = Tools::tonumber<int>(colors_result(i, "green"));
-		int blue = Tools::tonumber<int>(colors_result(i, "blue"));
+		int red = Tools::tonumber <int> (colors_result(i, "red"));
+		int green = Tools::tonumber <int> (colors_result(i, "green"));
+		int blue = Tools::tonumber <int> (colors_result(i, "blue"));
 		std::string name = colors_result(i, "name");
 		
 		this->colors[name] = new My_Color(red, green, blue);
@@ -65,7 +65,7 @@ void Settings::set_values(std::map<std::string, std::string> values ) {
     this->max_separation_errors         = Tools::toint(values["max_separation_errors"]);
     this->max_approach_speed            = Tools::toint(values["max_approach_speed"]);
     this->approach_angle                = Tools::toint(values["approach_angle"]);
-    this->max_approach_altitude         = Tools::toint(values["max_approach_height"]);
+    this->max_approach_altitude         = Tools::toint(values["max_approach_altitude"]);
     this->approach_speed                = Tools::toint(values["approach_speed"]);
     this->final_approach_speed          = Tools::toint(values["final_approach_speed"]);
     this->glide_slope                   = Tools::toint(values["glide_slope"]);
