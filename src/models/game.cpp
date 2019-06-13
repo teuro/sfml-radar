@@ -552,14 +552,19 @@ void Game::build_clearance(std::string command) {
 				value = Tools::toint(s_value);
 				if (this->selected->get_altitude() > value) {
 					display_messages.push("Can't climb, because altitude " + Tools::tostr(this->selected->get_altitude()) + " ft is higher than " + Tools::tostr(value) + " ft");
+				} else if (value > this->settings->clearnace_height_upper) {
+					display_messages.push("maximum clearance altitude is " + Tools::tostr(this->settings->clearnace_height_upper) + " ft");
 				} else {
 					this->selected->set_clearance_altitude(value);
 				}
 			} else if (Tools::trim(tmp[0]) == "descent") {
 				value = Tools::toint(s_value);
+				
 				if (this->selected->get_altitude() < value) {
 					display_messages.push("Can't descent, because altitude " + Tools::tostr(this->selected->get_altitude()) + " ft is lower than " + Tools::tostr(value) + " ft");
-				} else {
+				} else if (value < this->settings->clearance_height_lower) {
+					display_messages.push("minimum clearance altitude is " + Tools::tostr(this->settings->clearance_height_lower) + " ft");
+				}else {
 					this->selected->set_clearance_altitude(value);
 				}
 			} else if (Tools::trim(tmp[0]) == "speed") {
