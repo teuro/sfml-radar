@@ -90,11 +90,13 @@ bool Aircraft::check_approach_config() {
 	
 	if (this->heading > max_approach_angle || this->heading	< min_approach_angle) {
 		heading_ok = false;
+		
 		this->approach_config_error += " heading is incorrect ";
 	} 
 	
 	if (this->speed > this->settings->max_approach_speed) {
 		speed_ok = false;
+		
 		this->approach_config_error += " speed is incorrect ";
 	}
 	
@@ -179,7 +181,7 @@ std::string Aircraft::update(double elapsed) {
 		return this->name + " BINGO " + Tools::tostr(this->fuel_amount) + " kg left";
 	}
 	
-	return "";
+	return this->name  + " " + Tools::tostr(this->fuel_amount) + " kg left";
 }
 
 void Aircraft::set_takeoff_clearance() {
