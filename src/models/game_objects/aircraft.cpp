@@ -114,11 +114,11 @@ std::string Aircraft::update(double elapsed) {
 	this->heading = Tools::fix_angle(this->heading);
 	
 	if (this->type == DEPARTURE) {
-		if (this->type == DEPARTURE && this->altitude > 10000) {
+		if (this->altitude > this->airport->get_speed_restriction_altitude()) {
 			this->set_clearance_speed(this->vcruise);
 		} else if (this->altitude >= this->airport->get_initial_altitude()) {
 			this->set_clearance_speed(this->airport->get_max_speed());
-		} else if (this->speed >= this->vclimb) {
+		} else if (this->speed >= this->vclimb && this->clearance_altitude <= this->airport->get_initial_altitude()) {
 			this->set_clearance_altitude(this->airport->get_initial_altitude());
 		} else if (this->altitude >= this->airport->get_acceleration_altitude()) {
 			this->set_clearance_speed(this->vclimb);
@@ -226,7 +226,7 @@ void Aircraft::change_altitude(double elapsed) {
 
 void Aircraft::change_heading(double elapsed) {
 	if (this->clearance_heading != 0) {
-		if (std::abs(this->heading - this->clearance_heading) < (0.01 * this->clearance_heading)) {
+		if (std::abs(this->heading - this->clearance_heading) < (0.025 * this->clearance_heading)) {
 			this->heading = this->clearance_heading;
 		} else {
 			this->heading += (elapsed / 1000) * Tools::deg2rad(this->settings->heading_change) * this->turn;

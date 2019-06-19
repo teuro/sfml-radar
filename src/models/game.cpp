@@ -46,7 +46,7 @@ void Game::load(std::string airfield) {
 	
 	this->separation_errors = 0;
     this->new_plane = 5000;
-    this->pop_holdings = this->settings->departure_separation * 1000;
+    this->pop_holdings = 1 * 1000;
 	this->handled_planes = 0;
 	
 	this->loaded = true;
@@ -120,33 +120,12 @@ bool Game::is_free(Inpoint& navpoint) {
 
     for (plane = this->aircrafts.begin(); plane != this->aircrafts.end(); ++plane) {
         if ((*plane)->get_type() == APPROACH) {
-			#ifdef DEBUG
-			std::clog << "APPROACH" << std::endl;
-			#endif
 			if (Tools::distanceNM(navpoint.get_place(), (*plane)->get_place()) < this->settings->separation_horizontal) { 
-				#ifdef DEBUG
-				std::clog << navpoint.get_place() << " vs " << (*plane)->get_place() << "is less than required " << this->settings->separation_horizontal << std::endl;
-				#endif
 				if (std::abs((*plane)->get_altitude() - navpoint.get_altitude()) < this->settings->separation_vertical) {
-					#ifdef DEBUG
-					std::clog << (*plane)->get_altitude() << " vs " << navpoint.get_altitude() << "is less than required " << this->settings->separation_vertical << std::endl;
-					#endif
 					return false;
-				} else {
-					#ifdef DEBUG
-					std::clog << (*plane)->get_altitude() << " vs " << navpoint.get_altitude() << "is more than required " << this->settings->separation_vertical << std::endl;
-					#endif
 				}
-			} else {
-				#ifdef DEBUG
-				std::clog << navpoint.get_place() << " vs " << (*plane)->get_place() << "is more than required " << this->settings->separation_horizontal << std::endl;
-				#endif
-			}
-        } else {
-			#ifdef DEBUG
-			std::clog << "DERPARTURE" << std::endl;
-			#endif
-		}
+			} 
+        } 
     }
 
     return true;
@@ -456,13 +435,13 @@ void Game::load_airfield(std::string icao) {
 	
 	Database db;
 	
-    Queryresult airport = db.get_result(db.bind_param("SELECT ROWID AS airfield_id, ICAO, latitude, longitude, altitude, max_speed, initial_altitude, acceleration_altitude FROM airfields WHERE ICAO = '?'", t_airport));
+    Queryresult airport = db.get_result(db.bind_param("SELECT ROWID AS airfield_id, ICAO, latitude, longitude, altitude, max_speed, initial_altitude, acceleration_altitude, speed_restriction_altitude FROM airfields WHERE ICAO = '?'", t_airport));
 	
 	int airfield_id = Tools::toint(airport(0, "airfield_id"));
 
     Coordinate place(Tools::tonumber<double>(airport(0, "latitude")), Tools::tonumber<double>(airport(0, "longitude")));
 	
-	std::shared_ptr <Airfield> ap (new Airfield(airport(0, "ICAO"), place, Tools::toint(airport(0, "max_speed")), Tools::toint(airport(0, "initial_altitude")), Tools::toint(airport(0, "acceleration_altitude"))));
+	std::shared_ptr <Airfield> ap (new Airfield(airport(0, "ICAO"), place, Tools::toint(airport(0, "max_speed")), Tools::toint(airport(0, "initial_altitude")), Tools::toint(airport(0, "acceleration_altitude")), Tools::toint(airport(0, "speed_restriction_altitude"))));
     this->active_field = ap;
 	
 	#ifdef DEBUG

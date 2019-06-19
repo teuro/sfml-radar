@@ -1,10 +1,11 @@
 #include "airfield.hpp"
 
-Airfield::Airfield(std::string n, Coordinate& p, int max_speed, int initial_altitude, int acceleration_altitude) : name(n), place(p) {
+Airfield::Airfield(std::string n, Coordinate& p, int max_speed, int initial_altitude, int acceleration_altitude, int speed_restriction_altitude) : name(n), place(p) {
 	this->altitude = 150;
 	this->max_speed = max_speed;
 	this->initial_altitude = initial_altitude;
 	this->acceleration_altitude = acceleration_altitude;
+	this->speed_restriction_altitude = speed_restriction_altitude;
 }
 
 Airfield::~Airfield() { }
@@ -102,4 +103,8 @@ void Airfield::add_inpoint(Inpoint ip) {
 void Airfield::add_outpoint(Outpoint op) {
 	this->outpoints.push_back(op);
 	this->navpoints.push_back(op);
+}
+
+int Airfield::get_speed_restriction_altitude() {
+	return this->speed_restriction_altitude;
 }

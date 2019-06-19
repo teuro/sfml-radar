@@ -10,7 +10,7 @@
 
 class Airfield {
 public:
-    Airfield(std::string n, Coordinate& p, int max_speed, int initial_altitude, int acceleration_altitude);
+    Airfield(std::string n, Coordinate& p, int max_speed, int initial_altitude, int acceleration_altitude, int speed_restriction_altitude);
     ~Airfield();
     std::vector <Runway>& get_runways();
     Coordinate& get_place();
@@ -28,6 +28,7 @@ public:
 	int get_max_speed();
 	int get_initial_altitude();
 	int get_acceleration_altitude();
+	int get_speed_restriction_altitude();
 	std::string get_name();
 	void add_inpoint(Inpoint ip);
 	void add_outpoint(Outpoint op);
@@ -43,6 +44,7 @@ private:
 	int initial_altitude;
 	int max_speed;
 	int acceleration_altitude;
+	int speed_restriction_altitude;
 	std::vector <Outpoint> outpoints;
 	std::vector <Inpoint> inpoints;
 	std::vector <Navpoint> navpoints;
