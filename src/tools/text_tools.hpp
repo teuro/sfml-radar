@@ -93,8 +93,8 @@ namespace Tools {
 		* converts numbers to constant length string
 		* @param T might bee any number
 		* @param unsigned int length 
-		* @example std::clog << tostr(25, 4) << std::endl; 0025
-		* @example std::clog << tostr(25, 3) << std::endl; 025
+		* @example tostr(25, 4) 0025
+		* @example tostr(25, 3) 025
 		* @return std::string
 	**/
 	
