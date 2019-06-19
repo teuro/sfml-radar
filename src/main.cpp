@@ -14,7 +14,7 @@ int main(){
         SFML_window window;
 		
 		window.init();
-		window.load_settings();
+		
         window.run();
     } catch (std::runtime_error& e) {
         std::cerr << e.what() << std::endl;

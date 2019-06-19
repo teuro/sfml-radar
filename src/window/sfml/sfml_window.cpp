@@ -10,6 +10,8 @@ void SFML_window::init() {
 	#endif
 	
 	this->time_change = sf::milliseconds(25);
+	
+	this->load_settings();
 }
 
 void SFML_window::load_settings() {
