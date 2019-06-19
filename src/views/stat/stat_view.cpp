@@ -26,7 +26,6 @@ void Statview::load() {
 	
 	while (tit != tables.end()) {
 		if ((*tit).get_id() == std::string("points")) {
-			int sum = 0;
 			int area = 0;
 			int clearances = 0;
 			
@@ -52,8 +51,7 @@ void Statview::load() {
 			
 			while (pit != points.end()) {
 				std::list <Cell> t_cells = replaced.get_cells();
-						
-				sum += pit->second.points;
+
 				area += pit->second.area_time;
 				clearances += pit->second.clearances;
 				
@@ -82,8 +80,8 @@ void Statview::load() {
 				++pit;
 			}
 			
-			this->repl["[AREA]"] = Tools::totime(area);
-			this->repl["[SUM]"] = Tools::tostr(sum, 6);
+			this->repl["[AREA]"] = Tools::totime(area / points.size());
+			this->repl["[SUM]"] = Tools::tostr(this->game->get_game_points(), 6);
 			this->repl["[CLRC]"] = Tools::tostr(clearances, 3);
 			
 			Row row;
