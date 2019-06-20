@@ -120,7 +120,9 @@ void Gameview::draw_plane(aircraft plane, aircraft selected, Point& mouse) {
 		this->drawer.lineColor(aircraft_place, mouse, info_list.get_style().get_text_color());
 	}
 	
-	info_list.get_style().set_place(aircraft_place);
+	Point info_list_place(aircraft_place.get_x() + 20, aircraft_place.get_y() + 20);
+	
+	info_list.get_style().set_place(info_list_place);
 	
 	this->draw_element(info_list);
 	
