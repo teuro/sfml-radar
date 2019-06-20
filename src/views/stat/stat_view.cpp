@@ -87,7 +87,6 @@ void Statview::load() {
 			Row row;
 				
 			std::list <Cell> c_list = sum_row.get_cells();
-			std::clog << "cell amount " <<  c_list.size() << std::endl;
 			std::list <Cell> :: iterator cit = c_list.begin();
 			
 			while (cit != c_list.end()) {
