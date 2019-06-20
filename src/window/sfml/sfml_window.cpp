@@ -9,7 +9,7 @@ void SFML_window::init() {
     std::clog << "SFML_window::init()" << std::endl;
 	#endif
 	
-	this->time_change = sf::milliseconds(25);
+	this->time_change = sf::milliseconds(10);
 	
 	this->load_settings();
 }
