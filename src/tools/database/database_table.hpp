@@ -5,7 +5,7 @@
 
 class Database_table {
 protected:
-	Database_table(std::string table_name);
+	explicit Database_table(std::string table_name);
 	
 	~Database_table();
 

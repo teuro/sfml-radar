@@ -34,20 +34,6 @@ void Atisview::draw_errors() {
 	this->draw_element(atis_errors);
 }
 
-void Atisview::draw_runways() {
-	#ifdef DEBUG
-	std::clog << "Atisview::draw_runways()" << std::endl;
-	#endif
-	
-	Drawable_list list_runways("ul", "atis_base", "runways");
-	
-	for (auto v: this->atis->get_runways()) {
-		list_runways.add_element(v.get_name(), "departure", "");
-	}
-	
-	this->draw_element(list_runways);
-}
-
 void Atisview::update() {
 
 }

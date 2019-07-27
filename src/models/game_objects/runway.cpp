@@ -1,6 +1,9 @@
 #include "runway.hpp"
 
-Runway::Runway(std::string n, Coordinate s, Coordinate e, Coordinate& a) : name(n), start_place(s), end_place(e), approach_point(a) { }
+Runway::Runway(std::string n, Coordinate s, Coordinate e, Coordinate& a) : name(n), start_place(s), end_place(e), approach_point(a) { 
+	this->init_heading = -1;
+	this->turning_altitude = -1;
+}
 
 Runway::Runway() {}
 
@@ -16,10 +19,6 @@ Coordinate& Runway::get_end_place() {
 
 Coordinate& Runway::get_approach_place() {
 	return this->approach_point;
-}
-
-double Runway::get_length() {
-    return Tools::distanceNM(this->start_place, this->end_place);
 }
 
 double Runway::get_heading() {

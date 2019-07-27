@@ -15,8 +15,8 @@
 **/
 class Cell : public Drawable_element {
 public:
-	Cell(std::string content, std::string t_name = "tr", std::string t_class = "", std::string t_id = "");
-	Cell(std::string content, std::string t_name, std::set <std::string> classes, std::string t_id);
+	explicit Cell(std::string content, std::string t_name = "tr", std::string t_class = "", std::string t_id = "");
+	explicit Cell(std::string content, std::string t_name, std::set <std::string> classes, std::string t_id);
 	
 	std::string get_content();
 	void set_content(std::string cnt);
@@ -35,8 +35,8 @@ public:
 	Row(std::string t_name, std::set <std::string> classes, std::string t_id);
 	std::list <Cell> get_cells();
 	void add_cell(Cell& cell);
-	void set_class(std::string s_class);
-	void clear_classes();
+	void set_class(std::string s_class) override;
+	void clear_classes() override;
 private:
 	std::list <Cell> cells;
 };
@@ -52,8 +52,8 @@ public:
 	Drawable_table(std::string t_name, std::set <std::string> classes, std::string t_id);
 	std::list <Row> get_rows();
 	void add_row(Row& row);
-	std::string get_max_length();
-	void set_class(std::string s_class);
+	std::string get_max_length() override;
+	void set_class(std::string s_class) override;
 	std::list <Row> :: iterator delete_row(std::list <Row> :: iterator rit);
 	void clear_rows();
 private:

@@ -16,6 +16,8 @@ Gamecontroller::Gamecontroller(std::shared_ptr <Settings> s, Drawsurface& d) : C
 	this->airport_selected = false;
 	
 	this->state = MENU;
+	this->function_key = -1;
+	this->game_time = 0;
 }
 
 Gamecontroller::~Gamecontroller() { }
@@ -268,7 +270,7 @@ void Gamecontroller::handle_text_input() {
 	out << "Gamecontroller::handle_text_input()" << std::endl;
 	#endif
 	
-    std::string t_command = this->command;
+    std::string t_command;
 	
 	if (this->state == GAME) {
 		std::vector <std::string> tmp = Tools::split(";", this->command);
@@ -303,19 +305,4 @@ void Gamecontroller::update_command(std::string cmd) {
 	this->command = cmd;
 	
 	this->views[state]->update_command(this->command);
-}
-
-bool Gamecontroller::is_ok() {
-	#ifdef DEBUG
-	out << "Gamecontroller::is_ok()" << std::endl;
-	#endif
-    return false;
-}
-
-void Gamecontroller::update_centerpoint() {
-	#ifdef DEBUG
-	out << "Gamecontroller::update_centerpoint() " <<  this->game->get_active_field()->get_place() << std::endl;
-	#endif
-	
-	this->settings->set_centerpoint(this->game->get_active_field()->get_place());
 }

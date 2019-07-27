@@ -15,11 +15,11 @@ class Statview : public View {
 public:
 	Statview(Drawsurface& drawsurface, std::shared_ptr <Settings> settings, std::shared_ptr <Game> game);
 	~Statview();
-	virtual void draw(Point& mouse);
-	virtual std::string handle_click(Point& mouse);
-    void load();
+	virtual void draw(Point& mouse) override;
+	virtual std::string handle_click(Point& mouse) override;
+    void load() override;
 	void draw_points();
-	virtual void update();
+	virtual void update() override;
 private:
 	std::shared_ptr <Game> game;
 };

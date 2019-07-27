@@ -12,11 +12,10 @@ public:
     virtual void update(double elapsed, Point& mouse) = 0;
     virtual void handle_text_input() = 0;
     virtual void update_command(std::string text) = 0;
-    virtual bool is_ok() = 0;
 	virtual void load() = 0;
 protected:
-    Controller(std::shared_ptr <Settings> s, Drawsurface& d) : settings(s), drawer(d) { }
-    ~Controller() { }
+    Controller(std::shared_ptr <Settings> s, Drawsurface& d);
+    ~Controller();
 	std::shared_ptr <Settings> settings;
 	Drawsurface& drawer;
 	std::string command;

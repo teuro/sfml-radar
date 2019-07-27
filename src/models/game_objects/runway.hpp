@@ -15,7 +15,6 @@ public:
     Coordinate& get_end_place();
     Coordinate& get_approach_place();
 
-    double get_length();
     double get_heading();
 	double get_glidepath();
 
@@ -29,7 +28,7 @@ private:
     Coordinate end_place;
     Coordinate approach_point;
     double init_heading;
-    double turning_altirude;
+    double turning_altitude;
 };
 
 #endif // _RUNWAY_HPP

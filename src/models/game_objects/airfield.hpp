@@ -17,11 +17,7 @@ public:
     void add_runway(Runway rwy);
 	Runway& get_runway(std::string name);
 	
-	Inpoint& get_inpoint(std::string name);
 	Outpoint& get_outpoint(std::string name);
-	
-	Inpoint& get_random_inpoint();
-	Outpoint& get_random_outpoint();
 	
 	std::vector <Navpoint>& get_navpoints();
     int get_altitude();

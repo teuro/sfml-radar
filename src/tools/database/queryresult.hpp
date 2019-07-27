@@ -17,7 +17,8 @@ public:
         * @param sqlite3pp::query query normal query
         * @return none
     **/
-    Queryresult(sqlite3pp::query& query);
+    explicit Queryresult(sqlite3pp::query& query);
+	
     Queryresult();
 
     ~Queryresult();

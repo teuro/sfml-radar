@@ -35,24 +35,6 @@ public:
         * @return double
     **/
 	double get_longitude();
-
-    /**
-        * set_latitude
-        * Set new latitude value
-        * @param double latitude
-        * @return none
-        * @throw std::logic_error
-    **/
-	void set_latitude(double latitude);
-
-	/**
-        * set_longitude
-        * Set new longitude value
-        * @param double latitude
-        * @return none
-        * @throw std::logic_error
-    **/
-	void set_longitude(double longitude);
 protected:
 private:
 	double longitude;

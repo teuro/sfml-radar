@@ -33,8 +33,8 @@ protected:
 	std::list <Style> styles;
 	Style style;
 	
-	Drawable_element(std::string t_name, std::string t_class = "", std::string t_id = "");
-	Drawable_element(std::string t_name, std::set <std::string> classes, std::string t_id = ""); 
+	explicit Drawable_element(std::string t_name, std::string t_class = "", std::string t_id = "");
+	explicit Drawable_element(std::string t_name, std::set <std::string> classes, std::string t_id = ""); 
 	Drawable_element();
 	~Drawable_element();
 public:

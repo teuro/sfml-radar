@@ -8,6 +8,11 @@ Game::Game(std::shared_ptr <Settings> s, std::shared_ptr <Atis> a) : settings(s)
     this->duration = 0;
 	this->selected = NULL;
 	this->loaded = false;
+	this->level = -1;
+	this->pop_holdings = -1;
+	this->separation_errors = 0;
+	this->new_plane = 0;
+	this->handled_planes = 0;
 	
 	/** TESTING DATA STAT VIEW **/
 	
@@ -30,10 +35,6 @@ Game::Game(std::shared_ptr <Settings> s, std::shared_ptr <Atis> a) : settings(s)
 }
 
 Game::~Game() { }
-
-std::shared_ptr <Atis> Game::get_atis() {
-	return this->atis;
-}
 
 void Game::load(std::string airfield) {
 	#ifdef DEBUG
@@ -70,14 +71,6 @@ std::list <aircraft> Game::get_aircrafts() {
 	#endif
 	
     return this->aircrafts;
-}
-
-void Game::add_point(Navpoint np) {
-	#ifdef DEBUG
-    std::clog << "Game::add_point())" << std::endl;
-	#endif
-
-    this->navpoints.push_back(np);
 }
 
 void Game::check_collision() {
@@ -252,14 +245,6 @@ void Game::update(double elapsed) {
         double time_for_next_plane = Tools::linear_random(this->settings->new_plane_lower * 1000, this->settings->new_plane_upper * 1000);
 		this->new_plane += time_for_next_plane;
     }
-}
-
-double Game::get_duration() {
-	#ifdef DEBUG
-    std::clog << "Game::get_duration()" << std::endl;
-	#endif
-	
-    return this->duration;
 }
 
 Inpoint Game::select_inpoint() {
@@ -612,16 +597,6 @@ std::string Game::get_message() {
 	return "";
 }
 
-void Game::clear_errors() {
-	#ifdef DEBUG
-    std::clog << "Game::clear_errors()" << std::endl;
-	#endif
-	
-	while (!this->display_messages.empty()) {
-		this->display_messages.pop();
-	}
-}
-
 int Game::get_separation_errors() {
 	#ifdef DEBUG
     std::clog << "Game::get_separation_errors()" << std::endl;
@@ -640,16 +615,6 @@ std::string Game::get_clearance_error() {
 	}
 	
 	return "";
-}
-
-void Game::remove_first_game_error() {
-	#ifdef DEBUG
-    std::clog << "Game::remove_first_game_error()" << std::endl;
-	#endif
-	
-	if (game_errors.size()) {
-		game_errors.pop();
-	}
 }
 
 std::string Game::get_game_error() {
@@ -702,14 +667,6 @@ int Game::get_level() {
 	#endif
 	
 	return this->level;
-}
-
-void Game::set_level(int level) {
-	#ifdef DEBUG
-    std::clog << "Game::set_level(" << level << ")" << std::endl;
-	#endif
-	
-	this->level = level;
 }
 
 std::list <aircraft> Game::get_holdings() {

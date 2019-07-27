@@ -20,14 +20,6 @@ double Coordinate::get_longitude() {
 	return this->longitude;
 }
 
-void Coordinate::set_latitude(double latitude) {
-    this->latitude = latitude;
-}
-
-void Coordinate::set_longitude(double longitude) {
-    this->longitude = longitude;
-}
-
 std::ostream& operator << (std::ostream& virta, const Coordinate& coord) {
 	virta << "(" << coord.latitude << ", " << coord.longitude << ")";
 	return virta;

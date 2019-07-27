@@ -53,16 +53,6 @@ Runway& Airfield::get_runway(std::string name) {
 	throw std::logic_error("Runway " + name + " not exists");
 }
 
-Inpoint& Airfield::get_inpoint(std::string name) {
-	for (unsigned int i = 0; i < this->inpoints.size(); ++i) {
-		if (this->inpoints[i].get_name() == name) {
-			return this->inpoints[i];
-		}
-	}
-	
-	throw std::logic_error("Inpoint " + name + " not exists");
-}
-
 Outpoint& Airfield::get_outpoint(std::string name) {
 	for (unsigned int i = 0; i < this->outpoints.size(); ++i) {
 		if (this->outpoints[i].get_name() == name) {
@@ -71,16 +61,6 @@ Outpoint& Airfield::get_outpoint(std::string name) {
 	}
 	
 	throw std::logic_error("Airfield::get_outpoint :: " + name + " not exists");
-}
-
-Inpoint& Airfield::get_random_inpoint() {
-	int place = Tools::linear_random(0, (int)this->inpoints.size()-1);
-	return this->inpoints[place];
-}
-
-Outpoint& Airfield::get_random_outpoint() {
-	int place = Tools::linear_random(0, (int)this->outpoints.size()-1);
-	return this->outpoints[place];
 }
 
 std::vector <Outpoint>& Airfield::get_outpoints() {

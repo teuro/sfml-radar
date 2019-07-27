@@ -38,7 +38,7 @@ public:
 		* @return void
 	**/
 	
-	virtual void draw(Point& mouse);
+	virtual void draw(Point& mouse) override;
 	
 	/**
 		* handle_click
@@ -47,15 +47,13 @@ public:
 		* @return std::string
 	**/
 	
-	virtual std::string handle_click(Point& mouse);
-    void load();
+	virtual std::string handle_click(Point& mouse) override;
+    void load() override;
 	std::string get_value();
 	void draw_errors();
-	virtual void update();
+	virtual void update() override;
 private:
 	std::shared_ptr <Atis> atis;
-	
-	void draw_runways();
 };
 
 #endif // ATIS_VIEW

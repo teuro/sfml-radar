@@ -1,8 +1,8 @@
 #include "menu_view.hpp"
 
-Menuview::Menuview(Drawsurface& d, std::shared_ptr <Settings> s, std::shared_ptr <Menu> m) : View(d, s), menu(m) { 
+Menuview::Menuview(Drawsurface& d, std::shared_ptr <Settings> s, std::shared_ptr <Menu> m) : View(d, s), menumenu(m) { 
 	#ifdef DEBUG
-	std::clog << "Menuview::" << menu->get_items().size() <<  std::endl;
+	std::clog << "Menuview::" << menumenu->get_items().size() <<  std::endl;
 	#endif
 }
 
@@ -24,7 +24,7 @@ void Menuview::draw(Point&) {
 	std::clog << "View::drawed" << std::endl;
 	#endif
 	
-	this->draw_menu(this->menu);
+	this->draw_menu(this->menumenu);
 }
 
 void Menuview::load() { 

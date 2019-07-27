@@ -7,8 +7,8 @@ public:
 	int green;
 	int blue;
 	
-	My_Color(int r, int g, int b);
-	My_Color(int c);
+	My_Color(int red, int green, int blue);
+	explicit My_Color(int color);
 	
 	int get_color();
 private:

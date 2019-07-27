@@ -50,23 +50,9 @@ public:
 	Game(std::shared_ptr <Settings> settings, std::shared_ptr <Atis> atis);
 	~Game();
 
-	/**
-        Add's new Navpoint to game
-        @param Navpoint& np new nav point
-        @return void
-	**/
-	void add_point(Navpoint np);
-
 	std::list <aircraft> get_aircrafts();
 	
 	aircraft selected;
-
-    /**
-        Get's game duration pure value
-        * @param void
-        * @return double
-    **/
-	double get_duration();
 
 	/**
         Return time when new plane is created
@@ -106,9 +92,7 @@ public:
 	**/
 	
 	std::shared_ptr <Airfield> get_active_field();
-	
-	std::shared_ptr <Atis> get_atis();
-	
+		
 	void create_plane();
 	/** 
 		* build clearance
@@ -132,12 +116,9 @@ public:
 	bool ok();
 	std::string get_clearance_error();
 	std::string get_game_error();
-	void remove_first_game_error();
 	
 	std::string get_message();
-	void clear_errors();
 	int get_level();
-	void set_level(int level);
 	std::list <aircraft> get_holdings();
 private:
 	int level;

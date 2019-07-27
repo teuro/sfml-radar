@@ -1,6 +1,6 @@
 /**
     * point responsible low-level point of screen
-    * MVC-
+    * MVC-model
     * 2014/06/02
     * Juha Teurokoski
 **/
@@ -12,9 +12,10 @@
 
 class Point {
 public:
-	Point() { }
+	Point();
 	Point(int x, int y);
 	~Point();
+	
 	int get_x();
 	int get_y();
 

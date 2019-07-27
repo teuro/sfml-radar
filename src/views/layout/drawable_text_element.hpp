@@ -7,7 +7,7 @@ class Drawable_text_element {
 private:
 	std::string content;
 public:
-	Drawable_text_element(std::string content);
+	explicit Drawable_text_element(std::string content);
 	std::string get_content();
 };
 

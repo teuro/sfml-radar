@@ -25,7 +25,7 @@ void SFML_window::load_settings() {
 	Tools::init_random();
 	std::map <std::string, std::string> tmp;
 	std::string line;
-	std::string type;
+	//std::string type;
 	std::string name;
 	std::string value;
 	
@@ -35,7 +35,7 @@ void SFML_window::load_settings() {
 		std::vector <std::string> cells = Tools::split(" ", line);
 		
 		if (cells.size() == 3) {
-			type = cells[0];
+			//type = cells[0];
 			name = cells[1];
 			value = cells[2];
 			
@@ -100,7 +100,7 @@ bool SFML_window::handle_event(sf::Event& event, Controller& ctrl, sf::RenderWin
 	
     sf::Vector2i mouse_place = sf::Mouse::getPosition(window);
 	mouse.set_place(mouse_place.x, mouse_place.y);
-	std::string t_input;
+	
 	sf::Time time_pressed_first;
 	sf::Time time_pressed_again;
 		

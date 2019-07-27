@@ -10,7 +10,6 @@
 
 class Clickable : public Drawable_element{
 private:
-	int id;
 	std::string content;
 	std::shared_ptr <Settings> settings;
 public:

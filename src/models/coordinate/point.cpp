@@ -1,5 +1,7 @@
 #include "point.hpp"
 
+Point::Point() { }
+
 Point::Point(int x, int y) {
 	this->x = x;
 	this->y = y;

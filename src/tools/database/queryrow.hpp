@@ -19,7 +19,7 @@ public:
         @param std::string row normal string with spaces between values
         @return none
     **/
-    Queryrow(std::string row);
+    explicit Queryrow(std::string row);
 	
     ~Queryrow();
 	

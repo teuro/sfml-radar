@@ -42,7 +42,7 @@ public:
 		* @return void
 	**/
 	
-    void handle_function_keys(int key);
+    void handle_function_keys(int key) override;
 	
 	/**
 		* handle_mouse_release
@@ -51,7 +51,7 @@ public:
 		* @param Point mouse_end point where mouse left button was released
 		* @return void
 	**/
-    void handle_mouse_release(Point& mouse_start, Point& mouse_end);
+    void handle_mouse_release(Point& mouse_start, Point& mouse_end) override;
 	
 	/**
 		* handle_mouse_wheel
@@ -60,7 +60,7 @@ public:
 		* @return void
 	**/
 	
-    void handle_mouse_wheel(int amount);
+    void handle_mouse_wheel(int amount) override;
 	
 	/**
 		* set_centerpoint
@@ -88,7 +88,7 @@ public:
 		* @return void
 	**/
 	
-    void update(double elapsed, Point& mouse);
+    void update(double elapsed, Point& mouse) override;
 	
 	/**
 		* handle_mouse_click
@@ -97,7 +97,7 @@ public:
 		* @return void
 	**/
 	
-    void handle_mouse_click(Point& mouse);
+    void handle_mouse_click(Point& mouse) override;
 	
 	/**
 		* load
@@ -106,7 +106,7 @@ public:
 		* @return void
 	**/
 	
-    void load();
+    void load() override;
 	
 	/**
 		* handle_text_input
@@ -115,7 +115,7 @@ public:
 		* @return void
 	**/
 	
-    void handle_text_input();
+    void handle_text_input() override;
 	
 	/**
 		* update_command
@@ -124,25 +124,7 @@ public:
 		* @return void
 	**/
 	
-    void update_command(std::string command);
-	
-	/**
-		* is_ok
-		* @todo Do checks if everything is ok and game shall end.
-		* @param void
-		* @return bool
-	**/
-	
-    bool is_ok();
-	
-	/**
-		* update_centerpoint
-		* sets center point to selected airport place
-		* @param void
-		* @return void
-	**/
-	
-	void update_centerpoint();
+    void update_command(std::string command) override;
 private:
 	bool level_selected;
 	bool airport_selected;

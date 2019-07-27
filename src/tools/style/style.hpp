@@ -21,7 +21,7 @@
 class Style {
 public:
     Style();
-    Style(std::shared_ptr <Settings> s);
+    explicit Style(std::shared_ptr <Settings> s);
     ~Style();
 
     std::string get_id();

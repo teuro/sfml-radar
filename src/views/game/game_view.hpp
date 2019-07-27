@@ -29,8 +29,6 @@ class Drawable_navpoint : public Drawable_element {
 public:
 	Drawable_navpoint(std::string name, std::string t_name, std::string t_class, std::string t_id);
 	std::string get_name();
-private:
-	std::string name;
 };
 
 /**
@@ -63,7 +61,7 @@ public:
 		* @return void
 	**/
 	
-	virtual void draw(Point& mouse);
+	virtual void draw(Point& mouse) override;
 	
 	/**
 		* handle_click
@@ -72,7 +70,7 @@ public:
 		* @return string
 	**/
 	
-	virtual std::string handle_click(Point& mouse);
+	virtual std::string handle_click(Point& mouse) override;
 	
 	/**
 		* Gameview load
@@ -81,7 +79,7 @@ public:
 		* @return void
 	**/
 	
-	void load();
+	void load() override;
 	
 	/**
 		* Gameview draw_airfield
@@ -127,7 +125,7 @@ public:
 		* @return void
 	**/
 	
-	 virtual void update();
+	 virtual void update() override;
 	 
 	 /**
 		* update_command
@@ -136,7 +134,7 @@ public:
 		* @return void
 	 **/
 	 
-	 virtual void update_command(std::string command);
+	 virtual void update_command(std::string command) override;
 private:
 	/**
 		* Gameview draw_plane

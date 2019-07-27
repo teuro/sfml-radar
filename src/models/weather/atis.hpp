@@ -18,7 +18,7 @@
 
 class Atis {
 public:
-    Atis(std::shared_ptr <Settings> s);
+    explicit Atis(std::shared_ptr <Settings> s);
     ~Atis();
 	void load();
     void update(int amount);

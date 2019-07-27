@@ -4,6 +4,11 @@ Metar::Metar(std::shared_ptr <Settings> s, std::string i, int avg_wind) : settin
 	this->weather_type = (double)(Tools::linear_random(932, 999)) / 1000.0;
 	this->average_pressure = 1040.00 * weather_type;
 	this->variation_pressure = (double)(Tools::linear_random(200, 950)) / 100.0 - weather_type;
+	this->pressure = 800;
+	this->humidity = 0;
+	this->temperature = 0;
+	this->devpoint = 0;
+	this->visibility = 0;
 }
 
 Metar::~Metar() { }
