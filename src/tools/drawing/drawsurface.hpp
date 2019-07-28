@@ -44,7 +44,6 @@ public:
 	virtual int get_text_length(std::string text, int font_size) = 0;
 	virtual int get_text_height(std::string text, int font_size) = 0;
 
-	virtual unsigned int get_fontsize() = 0;
 	virtual void flip() = 0;
 	virtual void clear_screen(int red, int green, int blue) = 0;
 	virtual void clear_screen(int color) = 0;

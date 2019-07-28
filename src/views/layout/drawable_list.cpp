@@ -16,10 +16,6 @@ void Drawable_list::add_element(std::string content, std::set <std::string> clas
 	this->elements.push_back(tmp);
 }
 
-void Drawable_list::clear_content() {
-	this->elements.clear();
-}
-
 std::list <Drawable_list_item> Drawable_list::get_elements() {
 	return this->elements;
 }

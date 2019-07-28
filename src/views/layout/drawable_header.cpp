@@ -6,7 +6,3 @@ Header::Header(std::string cnt, std::string t_name, std::set <std::string> class
 std::string Header::get_content() {
 	return this->content;
 }
-
-void Header::set_content(std::string cnt) {
-	this->content = cnt;
-}

@@ -101,11 +101,10 @@ int Style::parse_color(std::string color) {
 		return (red * 256 + green) * 256 + blue;
 	} else if (color.substr(0, 1 ) == "#") {
 		color = color.substr(1);
+		
 		std::size_t found = color.find(";");
 
-		if (found == std::string::npos) {
-			color = color;
-		} else {
+		if (found != std::string::npos) {
 			color = color.substr(0, found);
 		}
 		
@@ -137,10 +136,6 @@ std::string Style::get_name() {
 
 std::string Style::get_shape() {
     return this->shape;
-}
-
-std::string Style::get_position() {
-    return this->position;
 }
 
 Point& Style::get_place() {

@@ -28,8 +28,7 @@ public:
     std::string get_class();
     std::string get_name();
     std::string get_shape();
-    std::string get_position();
-	
+    
 	Point& get_place();
 	
     unsigned int get_left();

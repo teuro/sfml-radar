@@ -27,7 +27,7 @@ public:
 	
 	int get_transition_level();
     int get_transition_altitude();
-	std::vector <int> get_altitudes();
+	
 	std::vector <Runway> get_runways();
 
     std::list <std::string> get_atis_errors();

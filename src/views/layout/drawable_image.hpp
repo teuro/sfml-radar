@@ -9,7 +9,6 @@ public:
 	Image(std::string source, std::string t_name, std::set <std::string> classes, std::string t_id);
 	
 	std::string get_source();
-	void set_source(std::string src);
 private:
 	std::string source;
 };

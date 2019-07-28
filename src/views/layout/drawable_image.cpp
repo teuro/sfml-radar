@@ -6,7 +6,3 @@ Image::Image(std::string src, std::string t_name, std::set <std::string> classes
 std::string Image::get_source() {
 	return this->source;
 }
-	
-void Image::set_source(std::string src) {
-	this->source = src;
-}

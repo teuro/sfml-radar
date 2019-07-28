@@ -7,10 +7,6 @@ std::string Cell::get_content() {
 	return this->content; 
 }
 
-void Cell::set_content(std::string cnt) { 
-	this->content = cnt; 
-}
-
 Row::Row(std::string t_name, std::string t_class, std::string t_id) : Drawable_element(t_name, t_class, t_id) { }
 Row::Row(std::string t_name, std::set <std::string> classes, std::string t_id) : Drawable_element(t_name, classes, t_id) { }
 
@@ -74,12 +70,6 @@ void Drawable_table::set_class(std::string s_class) {
 		
 		++rit;
 	}
-}
-
-std::list <Row> :: iterator Drawable_table::delete_row(std::list <Row> :: iterator rit) {
-	rit = this->rows.erase(rit);
-	
-	return rit;
 }
 
 std::list <Cell> Row::get_cells() { 

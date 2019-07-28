@@ -45,43 +45,6 @@ void Menu::add_item(std::string name) {
 	this->items.push_back(mi);
 }
 
-void Menu::add_items(std::list <std::string> items) {
-	std::list <std::string> :: iterator it = items.begin();
-	
-	while (it != items.end()) {
-		this->add_item((*it));
-		
-		++it;
-	}
-}
-
-void Menu::add_items(std::list <int> items) {
-	std::list <int> :: iterator it = items.begin();
-	
-	while (it != items.end()) {
-		this->add_item(Tools::tostr(*it));
-		++it;
-	}
-}
-
-void Menu::add_items(std::vector <std::string> items) {
-	std::vector <std::string> :: iterator it = items.begin();
-	
-	while (it != items.end()) {
-		this->add_item((*it));
-		++it;
-	}
-}
-
-void Menu::add_items(std::vector <int> items) {
-	std::vector <int> :: iterator it = items.begin();
-	
-	while (it != items.end()) {
-		this->add_item(Tools::tostr(*it));
-		++it;
-	}
-}
-
 void Menu::clear() {
 	this->items.clear();
 }

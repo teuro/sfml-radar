@@ -40,7 +40,6 @@ public:
 	int get_text_length(std::string text, int font_size) override;
 	int get_text_height(std::string text, int font_size) override;
 
-	unsigned int get_fontsize() override;
 	void flip() override;
 	void clear_screen(int red, int green, int blue) override;
 	void clear_screen(int color) override;

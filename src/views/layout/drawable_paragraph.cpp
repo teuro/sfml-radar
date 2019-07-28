@@ -6,7 +6,3 @@ Paragraph::Paragraph(std::string cnt, std::string t_name, std::set <std::string>
 std::string Paragraph::get_content() {
 	return this->content;
 }
-
-void Paragraph::set_content(std::string cnt) {
-	this->content = cnt;
-}

@@ -42,10 +42,6 @@ std::vector <Runway> Atis::get_runways() {
 	return this->active_field->get_runways();
 }
 
-std::vector <int> Atis::get_altitudes() {
-	return this->altitudes;
-}
-
 void Atis::update(int amount) {
 	this->menu->change_selection(amount);
 }
@@ -247,9 +243,7 @@ bool Atis::ok() {
 	this->atis_errors.clear();
 	bool ok = true;
 	
-	ok = this->departure_runway_ok();
-	ok = this->landing_runway_ok();
-	ok = this->transition_altitude_ok();
+	ok = this->departure_runway_ok() && this->landing_runway_ok() && this->transition_altitude_ok();
 	
 	if (ok) {
 		ok = this->transfer_level_ok();

@@ -9,6 +9,7 @@ Metar::Metar(std::shared_ptr <Settings> s, std::string i, int avg_wind) : settin
 	this->temperature = 0;
 	this->devpoint = 0;
 	this->visibility = 0;
+	this->wind = {0, 0};
 }
 
 Metar::~Metar() { }
@@ -68,6 +69,7 @@ void Metar::generate_wind() {
 }
 
 void Metar::generate_clouds() {
+	/*
 	std::map <int, std::string> cloud_types;
 	
 	cloud_types[1040] = "SKC";
@@ -78,8 +80,7 @@ void Metar::generate_clouds() {
 	cloud_types[980] = "BKN";
 	cloud_types[970] = "OVC";
 	cloud_types[960] = "VV";
-	
-	
+	*/	
 }
 
 void Metar::generate_humidity() {
@@ -88,14 +89,6 @@ void Metar::generate_humidity() {
 
 int Metar::get_pressure() {
     return this->pressure;
-}
-
-int Metar::get_temperature() {
-    return this->temperature;
-}
-
-int Metar::get_visibility() {
-    return this->visibility;
 }
 
 double Metar::get_wind_direction() {

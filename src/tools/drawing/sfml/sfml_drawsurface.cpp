@@ -138,10 +138,6 @@ void sfml_drawsurface::trigonColor(Point& a, unsigned int size, int red, int gre
 	this->window.draw(triangle);
 }
 
-unsigned int sfml_drawsurface::get_fontsize() {
-	return this->font_size;
-}
-
 void sfml_drawsurface::clear_screen(int red, int green, int blue) {
 	//std::clog << "sfml_drawsurface::clear_screen(" << red << ", " << green << ", " << blue << ")" << std::endl;
 	

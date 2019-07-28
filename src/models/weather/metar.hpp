@@ -46,8 +46,6 @@ public:
     int get_pressure();
     double get_wind_direction();
     int get_wind_speed();
-    int get_temperature();
-    int get_visibility();
 protected:
 private:
     int pressure;

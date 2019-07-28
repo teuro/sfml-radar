@@ -19,7 +19,6 @@ public:
 	explicit Cell(std::string content, std::string t_name, std::set <std::string> classes, std::string t_id);
 	
 	std::string get_content();
-	void set_content(std::string cnt);
 private:
 	std::string content;
 };
@@ -54,7 +53,6 @@ public:
 	void add_row(Row& row);
 	std::string get_max_length() override;
 	void set_class(std::string s_class) override;
-	std::list <Row> :: iterator delete_row(std::list <Row> :: iterator rit);
 	void clear_rows();
 private:
 	std::list <Row> rows;

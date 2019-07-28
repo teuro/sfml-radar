@@ -25,10 +25,6 @@ public:
 	std::vector <Menu_item> get_items();
 	void add_item(Menu_item& mi);
 	void add_item(std::string name);
-	void add_items(std::list <int> items);
-	void add_items(std::list <std::string> items);
-	void add_items(std::vector <int> items);
-	void add_items(std::vector <std::string> items);
 	void clear();
 private:
 	std::string id;

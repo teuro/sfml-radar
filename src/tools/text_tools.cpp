@@ -55,12 +55,9 @@ std::string Tools::replace(std::string original, std::string find, std::string r
 		
 	if (pos != std::string::npos) {
 		std::string part1 = original.substr(0, pos);
-		std::string part2 = original.substr(pos, find.length());
-		std::string part3 = original.substr(pos + find.length());
+		std::string part2 = original.substr(pos + find.length());
 		
-		part2 = replace;
-		
-		original = part1 + part2 + part3;
+		original = part1 + replace + part2;
 	}
 
 	return original;

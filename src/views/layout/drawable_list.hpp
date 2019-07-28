@@ -12,7 +12,6 @@ public:
 	void add_element(std::string content, std::string t_class = "", std::string t_id = "");
 	void add_element(std::string content, std::set <std::string> classes, std::string t_id);
 	std::list <Drawable_list_item> get_elements();
-	void clear_content();
 	virtual std::string get_max_length() override;
 	void set_class(std::string t_class) override;
 private:

@@ -19,8 +19,6 @@
 class Drawable_plane : public Drawable_element {
 public:
 	Drawable_plane(std::string callsign, std::string t_name, std::string t_class, std::string t_id);
-	void set_callsign(std::string);
-	std::string get_callsign();
 private:
 	std::string callsign;
 };

@@ -4,14 +4,6 @@ Drawable_plane::Drawable_plane(std::string call, std::string t_name, std::string
 	
 }
 
-std::string Drawable_plane::get_callsign() {
-	return this->callsign;
-}
-	
-void Drawable_plane::set_callsign(std::string call) {
-	this->callsign = call;
-}
-
 Gameview::Gameview(Drawsurface& d, std::shared_ptr <Settings> s, std::shared_ptr <Game> g) : View(d, s), game(g) { 
 	this->loaded = false;
 }
