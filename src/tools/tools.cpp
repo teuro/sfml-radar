@@ -25,6 +25,10 @@ double Tools::get_PI() {
 }
 
 void Tools::init_random() {
+	#ifdef DEBUG
+	std::clog << "Tools::init_random()" << std::endl;
+	#endif
+	
 	std::srand(std::time(NULL));
 }
 
@@ -33,7 +37,6 @@ int Tools::linear_random(int a, int b) {
 }
 
 double Tools::normal_distribution(double mean, double variation) {
-
 	std::normal_distribution <double> distribution(mean, variation);
 	
 	return distribution(generator);

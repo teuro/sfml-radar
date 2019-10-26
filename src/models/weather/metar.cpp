@@ -64,7 +64,7 @@ void Metar::generate_visibility() {
 }
 
 void Metar::generate_wind() {
-	this->wind.direction = Tools::round_nearest(Tools::normal_distribution(this->average_wind_direction, 20), 5);
+	this->wind.direction = Tools::round_nearest(Tools::normal_distribution(this->average_wind_direction, 40), 5);
     this->wind.speed = Tools::round_nearest(Tools::linear_random(5, 50), 5);
 }
 
