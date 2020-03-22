@@ -1,6 +1,6 @@
 CXX := g++
-CXXFLAGS := -s -c -O2 -Wall -Wextra -pedantic -std=gnu++11
-LINKFLAGS := -O2 -s
+CXXFLAGS := -g -c -O -Wall -Wextra -pedantic -std=gnu++11
+LINKFLAGS := -O -g
 LIB_DIRS := -Lext/lib
 
 SFML_VERSION :=
@@ -12,7 +12,7 @@ FILES_DEP := $(patsubst src/%,build/%.dep,$(FILES_CPP))
 
 GUI_SRC := $(filter-out src/cli/%,$(FILES_CPP))
 GUI_BIN := bin/atcradar
-GUI_LIBS := -lsfml-system -lsfml-window -lsfml-graphics -lsfml-network -lsqlite3pp -lsqlite -ltinyxml
+GUI_LIBS := -lsfml-system -lsfml-window -lsfml-graphics -lsfml-network -lglu32 -lsqlite3pp -lsqlite -ltinyxml
 
 # Hack for OS differences.
 # On Windows, echo '1' produces literally '1' instead of 1.

@@ -153,7 +153,6 @@ private:
 	**/
 	void load_menu_items(std::string query, std::shared_ptr <Menu> menu);
 	
-	std::list <Clearance> clearances;
 	std::list <std::string> quicklist;
 	std::list <std::string> :: iterator quick_iterator;
 	std::list <std::string> matching_elements(std::string input);

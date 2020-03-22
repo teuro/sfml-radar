@@ -24,7 +24,7 @@ public:
     int screen_width;
     int screen_height;
     int clearance_height_lower;
-    int clearnace_height_upper;
+    int clearance_height_upper;
     int shortcut;
     int separation_horizontal;
     int separation_vertical;
@@ -48,6 +48,7 @@ public:
     int final_approach_speed;
     int glide_slope;
     int initial_speed;
+	int remove_speed;
     int metar_update;
     int speed_restriction_altitude;
     int fuel_consumption;

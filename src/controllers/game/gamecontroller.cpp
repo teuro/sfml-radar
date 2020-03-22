@@ -135,9 +135,9 @@ void Gamecontroller::set_variables() {
 		this->views[GAME]->repl["[TRL]"] = Tools::tostr(this->atis->get_transition_level());
 		this->views[GAME]->repl["[TRA]"] = Tools::tostr(this->atis->get_transition_altitude());
 		this->views[GAME]->repl["[FPS]"] = Tools::tostr(this->fps);
-		this->views[GAME]->repl["[CLRC]"] = Tools::tostr(this->game->get_clearances().size());
 		this->views[GAME]->repl["[PCNT]"] = Tools::tostr(this->game->get_game_points());
 		this->views[GAME]->repl["[CLRE]"] = Tools::tostr(this->game->get_clearance_error());
+		this->views[GAME]->repl["[CLRC]"] = Tools::tostr(this->game->get_clearance_count());
 		this->views[GAME]->repl["[GRE]"] = Tools::tostr(this->game->get_game_error());
 		this->views[GAME]->repl["[QNH]"] = Tools::tostr(this->metar->get_pressure());
 		this->views[GAME]->repl["[WNDD]"] = Tools::tostr(this->metar->get_wind_direction());
@@ -156,7 +156,6 @@ void Gamecontroller::set_variables() {
 	} else if (this->state == STAT) {
 		this->views[STAT]->repl["[SPE]"] = Tools::tostr(this->game->get_separation_errors());
 		this->views[STAT]->repl["[RQD]"] = Tools::tostr(this->settings->required_handled);
-		this->views[GAME]->repl["[CLRC]"] = Tools::tostr(this->game->get_clearances().size());
 	}
 }
 

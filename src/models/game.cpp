@@ -149,24 +149,34 @@ void Game::handle_holdings() {
 	}
 }
 
-void Game::calculate_points(int type, double clearance_count, std::string plane) {
+void Game::calculate_points(std::shared_ptr <Aircraft> plane) {
 	#ifdef DEBUG
-	std::clog << "Game::calculate_points(" << type << ", " << clearance_count << ", " << plane << ")" << std::endl;
+	std::clog << "Game::calculate_points(" << type << ", " << clearance_count << ", " << plane.get_name() << ")" << std::endl;
 	#endif
 	
-	this->points[plane].out_time = duration;
-	this->points[plane].clearances = clearance_count;
+	this->points[(*plane).get_name()].out_time = duration;
+	this->points[(*plane).get_name()].clearances = (*plane).get_clearances();
 	
 	++this->handled_planes;
 	
-	double point = (type == APPROACH) ? 80000 : 40000;
+	double point = ((*plane).get_type() == APPROACH) ? 80000 : 40000;
 	
-	double area_time = this->points[plane].out_time - this->points[plane].in_time;
+	double area_time = this->points[(*plane).get_name()].out_time - this->points[(*plane).get_name()].in_time;
 	
-	point = (int)(point / (clearance_count - 1)) - (int)(area_time / 1000);
+	point = (int)(point / ((*plane).get_clearances() - 1)) - (int)(area_time / 1000);
 	
-	this->points[plane].points = point;
-	this->points[plane].area_time = area_time;
+	this->points[(*plane).get_name()].points = point;
+	this->points[(*plane).get_name()].area_time = area_time;
+}
+
+int Game::get_clearance_count() {
+	int count = 0;
+	
+	for (auto p : aircrafts) {
+		count += (*p).get_clearances();
+	}
+	
+	return count;
 }
 
 std::map <std::string, Game_point> Game::get_points() {
@@ -223,14 +233,9 @@ void Game::update(double elapsed) {
         (*it)->set_separation_error(false);
         aircraft_message = (*it)->update(elapsed);
 		
-		if ((*it)->get_speed() < 20 && (*it)->get_type() == APPROACH) {
-			calculate_points(APPROACH, this->calculate_clearances((*it)->get_name()), (*it)->get_name());
-			it = this->aircrafts.erase(it);
-			continue;
-		} 
-		
-		if (Tools::on_area((*it)->get_place(), (*it)->get_target().get_place()) && (*it)->get_type() == DEPARTURE) {
-			calculate_points(DEPARTURE, this->calculate_clearances((*it)->get_name()), (*it)->get_name());
+		if ((*it)->remove()) {
+			calculate_points(*it);
+			++handled_planes;
 			it = this->aircrafts.erase(it);
 			continue;
 		}
@@ -452,32 +457,12 @@ aircraft Game::get_selected() {
     return this->selected;
 }
 
-std::list <Clearance> Game::get_clearances() {
-	#ifdef DEBUG
-    std::clog << "Game::get_clearances()" << std::endl;
-	#endif
-	
-	return this->clearances;
-}
-
-int Game::calculate_clearances(std::string name) {
-	#ifdef DEBUG
-    std::clog << "Game::calculate_clearances()" << std::endl;
-	#endif
-	
-	int count = 0;
-	
-	std::list <Clearance> :: iterator it = this->clearances.begin();
-	
-	while (it != this->clearances.end()) {
-		if ((*it).plane == name) {
-			++count;
-		}
-		++it;
-	}
-	
-	return count;
-}
+/** 
+	* @todo 
+	* Build clearance should only build proper clearance NOT assing it nor do anything else
+	* 2019/12/14 10:43 speed part is almost ready. Speed is not assigned to any plane so far next 
+	* is should move to some container perhaps stack 
+**/
 
 void Game::build_clearance(std::string command) {
 	#ifdef DEBUG
@@ -487,9 +472,6 @@ void Game::build_clearance(std::string command) {
 	std::vector <std::string> tmp = Tools::split(" ", command);
 	
 	if (this->selected != NULL) {
-		Clearance t_clearance = {this->duration, this->selected->get_name(), command};
-		this->clearances.push_back(t_clearance);
-		
 		std::string s_value = Tools::trim(tmp.back());
 		int value;
 		
@@ -499,47 +481,37 @@ void Game::build_clearance(std::string command) {
 				
 				int turn = LEFT;
 				
-				if (Tools::trim(tmp[1]) == "right") { 
-					turn = RIGHT; 
-				} else if (Tools::trim(tmp[1]) == "left") {
-					turn = LEFT;
-				} else if (tmp.size() > 2) {
-					turn = ERROR;
+				if (tmp.size() > 2) {
+					if (Tools::trim(tmp[1]) == "right") { 
+						turn = RIGHT; 
+					} else if (Tools::trim(tmp[1]) == "left") {
+						turn = LEFT;
+					} else {
+						turn = ERROR;
+					}
 				}
 				
-				if (turn == LEFT || turn == RIGHT) {
-					this->selected->set_clearance_heading(Tools::deg2rad(value), turn);
+				if (turn != ERROR) {
+					Heading_clearance hdg(this->settings, value, turn);
+					this->selected->set_clearance(hdg);
 				} else {
 					display_messages.push("turn must be either 'left' or 'right'");
 				}
 			} else if (Tools::trim(tmp[0]) == "climb") {
 				value = Tools::toint(s_value);
-				if (this->selected->get_altitude() > value) {
-					display_messages.push("Can't climb, because altitude " + Tools::tostr(this->selected->get_altitude()) + " ft is higher than " + Tools::tostr(value) + " ft");
-				} else if (value > this->settings->clearnace_height_upper) {
-					display_messages.push("maximum clearance altitude is " + Tools::tostr(this->settings->clearnace_height_upper) + " ft");
-				} else {
-					this->selected->set_clearance_altitude(value);
-				}
+				
+				Altitude_clearance alt(this->settings, value);
+				this->selected->set_clearance(alt);
 			} else if (Tools::trim(tmp[0]) == "descent") {
 				value = Tools::toint(s_value);
 				
-				if (this->selected->get_altitude() < value) {
-					display_messages.push("Can't descent, because altitude " + Tools::tostr(this->selected->get_altitude()) + " ft is lower than " + Tools::tostr(value) + " ft");
-				} else if (value < this->settings->clearance_height_lower) {
-					display_messages.push("minimum clearance altitude is " + Tools::tostr(this->settings->clearance_height_lower) + " ft");
-				}else {
-					this->selected->set_clearance_altitude(value);
-				}
+				Altitude_clearance alt(this->settings, value);
+				this->selected->set_clearance(alt);
 			} else if (Tools::trim(tmp[0]) == "speed") {
 				value = Tools::toint(s_value);
-				if (value > this->settings->clearance_speed_upper) {
-					display_messages.push("Maximum clearance speed is " + Tools::tostr(this->settings->clearance_speed_upper) + " knots");
-				} else if (value < this->settings->clearance_speed_lower) {
-					display_messages.push("Minimum clearance speed is " + Tools::tostr(this->settings->clearance_speed_upper) + " knots");
-				} else { 
-					this->selected->set_clearance_speed(value);
-				}
+				
+				Speed_clearance spd(this->settings, value);
+				this->selected->set_clearance(spd);
 			} else if (Tools::trim(tmp[0]) == "expect") { 
 				if (this->selected->get_type() == APPROACH) {
 					std::string landing = Tools::trim(s_value);

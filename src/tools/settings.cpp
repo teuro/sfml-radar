@@ -46,7 +46,7 @@ void Settings::set_values(std::map<std::string, std::string> values ) {
     this->screen_width                  = Tools::toint(values["screen_width"]);
     this->screen_height                 = Tools::toint(values["screen_height"]);
     this->clearance_height_lower        = Tools::toint(values["clearance_height_lower"]);
-    this->clearnace_height_upper        = Tools::toint(values["clearnace_height_upper"]);
+    this->clearance_height_upper        = Tools::toint(values["clearance_height_upper"]);
     this->shortcut                      = Tools::toint(values["shortcut"]);
     this->separation_horizontal         = Tools::toint(values["separation_horizontal"]);
     this->separation_vertical           = Tools::toint(values["separation_vertical"]);
@@ -64,6 +64,7 @@ void Settings::set_values(std::map<std::string, std::string> values ) {
     this->speed_reduction_point         = Tools::toint(values["speed_reduction_point"]);
     this->max_separation_errors         = Tools::toint(values["max_separation_errors"]);
     this->max_approach_speed            = Tools::toint(values["max_approach_speed"]);
+    this->remove_speed		            = Tools::toint(values["remove_speed"]);
     this->approach_angle                = Tools::toint(values["approach_angle"]);
     this->max_approach_altitude         = Tools::toint(values["max_approach_altitude"]);
     this->approach_speed                = Tools::toint(values["approach_speed"]);

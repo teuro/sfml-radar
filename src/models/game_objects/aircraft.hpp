@@ -10,6 +10,12 @@
 #include "runway.hpp"
 #include "airfield.hpp"
 #include "../weather/atis.hpp"
+#include "Clearances/speed_clearance.hpp"
+#include "Clearances/heading_clearance.hpp"
+#include "Clearances/altitude_clearance.hpp"
+#include "Clearances/expect_clearance.hpp"
+#include "Clearances/approach_clearance.hpp"
+#include "Clearances/cancel_clearance.hpp"
 
 /**
 	* Aircraft 
@@ -69,9 +75,13 @@ public:
 		return this->name == t_name;
 	}
 	
-	void set_clearance_speed(double cl_spd);
-    void set_clearance_heading(double cl_hdg, int turn = -1);
-    void set_clearance_altitude(double cl_alt);
+	void set_clearance(Speed_clearance& cl_spd);
+    void set_clearance(Heading_clearance& cl_hdg);
+    void set_clearance(Altitude_clearance& cl_alt);
+    void set_clearance(Approach_clearance& cl_app);
+    void set_clearance(Cancel_clearance& cl_cnl);
+    void set_clearance(Expect_clearance& cl_exp);
+	
     std::string set_clearance_approach();
 	void cancel_approach();
     void set_clearance_direct(std::string outpoint);
@@ -84,8 +94,10 @@ public:
 	std::string get_landing_runway_name();
 	std::string get_target_name();
     int get_type();
+	int get_clearances();
 	
 	void load();
+	bool remove();
 protected:
 private:
     Coordinate place;
@@ -127,6 +139,7 @@ private:
     bool final_approach;
 	bool check_approach_config();
 	void calculate_angle_target(Coordinate& target);
+	int clearances;
     std::shared_ptr <Settings> settings;
 	Navpoint target;
 	Coordinate approach_target;

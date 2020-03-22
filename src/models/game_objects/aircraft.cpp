@@ -6,6 +6,7 @@ Aircraft::Aircraft(std::string t_name, std::shared_ptr <Settings> s, std::shared
 	this->altitude 				= ip.get_altitude();
 	this->speed 				= ip.get_speed();
 	this->type 					= APPROACH;
+	this->clearances			= 0;
 	
 	this->vapp					= Tools::linear_random(175, 180);
 	this->vland					= Tools::linear_random(130, 138);
@@ -26,6 +27,7 @@ Aircraft::Aircraft(std::string t_name, std::shared_ptr <Settings> s, std::shared
 
 	this->target 				= op;
 	this->type 					= DEPARTURE;
+	this->clearances			= 0;
 	
 	this->v1					= Tools::linear_random(130, 142);
 	this->vr					= Tools::linear_random(145, 147);
@@ -115,15 +117,15 @@ std::string Aircraft::update(double elapsed) {
 	
 	if (this->type == DEPARTURE) {
 		if (this->altitude > this->airport->get_speed_restriction_altitude()) {
-			this->set_clearance_speed(this->vcruise);
+			this->clearance_speed = this->vcruise;
 		} else if (this->altitude >= this->airport->get_initial_altitude()) {
-			this->set_clearance_speed(this->airport->get_max_speed());
+			this->clearance_speed = this->airport->get_max_speed();
 		} else if (this->speed >= this->vclimb && this->clearance_altitude <= this->airport->get_initial_altitude()) {
-			this->set_clearance_altitude(this->airport->get_initial_altitude());
+			this->clearance_altitude = this->airport->get_initial_altitude();
 		} else if (this->altitude >= this->airport->get_acceleration_altitude()) {
-			this->set_clearance_speed(this->vclimb);
+			this->clearance_speed = this->vclimb;
 		} else if (this->speed >= this->vr && this->altitude < this->airport->get_acceleration_altitude()) {
-			this->set_clearance_altitude(this->airport->get_acceleration_altitude());
+			this->clearance_altitude = this->airport->get_acceleration_altitude();
 		} 
 	}
 
@@ -262,18 +264,48 @@ void Aircraft::set_place(Coordinate& place) {
     this->place = place;
 }
 
-void Aircraft::set_clearance_speed(double cl_spd) {
-	this->clearance_speed = cl_spd;
+void Aircraft::set_clearance(Speed_clearance& cl_spd) {
+	this->clearance_speed = cl_spd.get_value();
+	++clearances;
 }
 
-void Aircraft::set_clearance_heading(double cl_hdg, int turn) {
-	this->clearance_heading = Tools::fix_angle(cl_hdg);
+void Aircraft::set_clearance(Heading_clearance& cl_hdg) {
+	this->clearance_heading = Tools::fix_angle(cl_hdg.get_value());
 	
-	this->turn = turn;
+	this->turn = cl_hdg.get_direction();
+	
+	++clearances;
 }
 
-void Aircraft::set_clearance_altitude(double cl_alt) {
-	this->clearance_altitude = cl_alt;
+void Aircraft::set_clearance(Altitude_clearance& cl_alt) {
+	this->clearance_altitude = cl_alt.get_value();
+	
+	++clearances;
+}
+
+void Aircraft::set_clearance(Approach_clearance& cl_app) {
+	this->approach = true;
+	
+	++clearances;
+}
+
+void Aircraft::set_clearance(Cancel_clearance& cl_cnl) {
+	this->approach = false;
+	
+	++clearances;
+}
+
+void Aircraft::set_clearance(Expect_clearance& cl_exp){
+	try {
+		this->landing = this->airport->get_runway(cl_exp.get_value());
+		this->expect = true;
+		
+		++clearances;
+	} catch (std::logic_error& e) {
+		std::string tmp = e.what();
+		
+		std::cerr << "Aircraft::set_clearance()" << tmp << std::endl;
+	}
 }
 
 std::string Aircraft::set_clearance_approach() {
@@ -287,10 +319,13 @@ std::string Aircraft::set_clearance_approach() {
 	this->approach_target = this->landing.get_approach_place();
 	
 	return "Cleared approach " + get_landing_runway_name();
+	++clearances;
 }
 
 void Aircraft::cancel_approach() {
 	this->approach = false;
+	
+	++clearances;
 }
 
 void Aircraft::set_clearance_direct(std::string outpoint) {
@@ -298,6 +333,8 @@ void Aircraft::set_clearance_direct(std::string outpoint) {
 		Outpoint t_op = this->airport->get_outpoint(outpoint);
 		this->target = t_op;
 		this->direct = true;
+		
+		++clearances;
 	} catch (std::logic_error& e) {
 		std::cerr << e.what() << std::endl;
 	}
@@ -329,6 +366,24 @@ bool Aircraft::get_landing() {
 
 bool Aircraft::get_expect() {
 	return this->expect;
+}
+
+bool Aircraft::remove() {
+	if (this->type == APPROACH) {
+		if (this->landed && speed < this->settings->remove_speed) {
+			return true;
+		}
+	} else {
+		if (Tools::on_area(this->get_place(), this->target.get_place())) {
+			return true;
+		}
+	}
+	
+	return false;
+}
+
+int Aircraft::get_clearances() {
+	return this->clearances;
 }
 
 std::string Aircraft::get_landing_runway_name() {

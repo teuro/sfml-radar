@@ -11,7 +11,6 @@
 #include "../../tools/tools.hpp"
 #include "../../tools/settings.hpp"
 #include "../../tools/text_tools.hpp"
-#include "../../tools/web_tools.hpp"
 
 /**
 	* Cloud represent of clouds

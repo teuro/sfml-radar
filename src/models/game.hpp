@@ -9,6 +9,7 @@
 #include <stdexcept>
 #include <queue>
 #include <algorithm>
+#include <typeinfo>
 
 #include "game_objects/aircraft.hpp"
 #include "game_objects/airfield.hpp"
@@ -18,12 +19,12 @@
 #include "../tools/text_tools.hpp"
 #include "../tools/time_tools.hpp"
 #include "../tools/database/database.hpp"
+#include "game_objects/Clearances/speed_clearance.hpp"
+#include "game_objects/Clearances/heading_clearance.hpp"
+#include "game_objects/Clearances/altitude_clearance.hpp"
 
-struct Clearance {
-	double time;
-	std::string plane;
-	std::string clearance;
-};
+typedef std::shared_ptr <Aircraft> aircraft;
+typedef std::shared_ptr <Clearance> clearance;
 
 struct Game_point {
 	double points;
@@ -37,8 +38,6 @@ struct Game_point {
     * Game very low-level on MVC model
     * Representing state of game
 **/
-
-typedef std::shared_ptr <Aircraft> aircraft;
 
 class Game {
 public:
@@ -112,7 +111,6 @@ public:
 	int get_new_plane();
 	std::map <std::string, Game_point> get_points();
 	double get_game_points();
-	std::list <Clearance> get_clearances();
 	bool ok();
 	std::string get_clearance_error();
 	std::string get_game_error();
@@ -120,6 +118,7 @@ public:
 	std::string get_message();
 	int get_level();
 	std::list <aircraft> get_holdings();
+	int get_clearance_count();
 private:
 	int level;
     void load_airfield(std::string icao);
@@ -130,8 +129,7 @@ private:
 	Inpoint select_inpoint();
 	Outpoint select_outpoint();
     bool is_free(Inpoint& navpoint);
-	void calculate_points(int type, double clearance_count, std::string plane);
-	int calculate_clearances(std::string name);
+	void calculate_points(std::shared_ptr <Aircraft> plane);
 	bool check_aircrafts(std::string name);
 	std::shared_ptr <Settings> settings;
 
@@ -141,7 +139,6 @@ private:
 	std::queue      <std::string>				display_messages;
 	std::queue      <std::string>				game_errors;
 	std::list       <aircraft>					errors;
-	std::list       <Clearance>					clearances;
 	std::map		<std::string, Game_point>	points;
 	
 	std::string command;
