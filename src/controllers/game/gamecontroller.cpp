@@ -166,6 +166,7 @@ void Gamecontroller::calculate_fps() {
 	
 	if (this->game_time > this->fps_end_time) {
 		this->fps = this->frames / (fps_time / 1000.0);
+		std::clog << this->frames << " / (" << fps_time << " / " << 1000.0 << ") = " << this->fps << std::endl;
 		this->fps_end_time += this->fps_time;
 		this->frames = 0;
 	}

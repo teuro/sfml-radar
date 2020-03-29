@@ -157,8 +157,6 @@ void Game::calculate_points(std::shared_ptr <Aircraft> plane) {
 	this->points[(*plane).get_name()].out_time = duration;
 	this->points[(*plane).get_name()].clearances = (*plane).get_clearances();
 	
-	++this->handled_planes;
-	
 	double point = ((*plane).get_type() == APPROACH) ? 80000 : 40000;
 	
 	double area_time = this->points[(*plane).get_name()].out_time - this->points[(*plane).get_name()].in_time;

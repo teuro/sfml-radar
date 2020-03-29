@@ -266,6 +266,7 @@ void Aircraft::set_place(Coordinate& place) {
 
 void Aircraft::set_clearance(Speed_clearance& cl_spd) {
 	this->clearance_speed = cl_spd.get_value();
+	
 	++clearances;
 }
 
