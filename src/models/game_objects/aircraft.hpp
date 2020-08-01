@@ -14,8 +14,6 @@
 #include "Clearances/heading_clearance.hpp"
 #include "Clearances/altitude_clearance.hpp"
 #include "Clearances/expect_clearance.hpp"
-#include "Clearances/approach_clearance.hpp"
-#include "Clearances/cancel_clearance.hpp"
 
 /**
 	* Aircraft 
@@ -78,8 +76,6 @@ public:
 	void set_clearance(Speed_clearance& cl_spd);
     void set_clearance(Heading_clearance& cl_hdg);
     void set_clearance(Altitude_clearance& cl_alt);
-    void set_clearance(Approach_clearance& cl_app);
-    void set_clearance(Cancel_clearance& cl_cnl);
     void set_clearance(Expect_clearance& cl_exp);
 	
     std::string set_clearance_approach();

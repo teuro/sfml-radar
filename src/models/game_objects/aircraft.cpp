@@ -284,18 +284,6 @@ void Aircraft::set_clearance(Altitude_clearance& cl_alt) {
 	++clearances;
 }
 
-void Aircraft::set_clearance(Approach_clearance& cl_app) {
-	this->approach = true;
-	
-	++clearances;
-}
-
-void Aircraft::set_clearance(Cancel_clearance& cl_cnl) {
-	this->approach = false;
-	
-	++clearances;
-}
-
 void Aircraft::set_clearance(Expect_clearance& cl_exp){
 	try {
 		this->landing = this->airport->get_runway(cl_exp.get_value());
@@ -320,6 +308,7 @@ std::string Aircraft::set_clearance_approach() {
 	this->approach_target = this->landing.get_approach_place();
 	
 	return "Cleared approach " + get_landing_runway_name();
+	
 	++clearances;
 }
 
