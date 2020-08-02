@@ -19,9 +19,6 @@ void Statview::load() {
 	
 	View::load("stat");
 	
-	std::map <std::string, Game_point> points = this->game->get_points();
-	std::map <std::string, Game_point> :: iterator pit = points.begin();
-	
 	std::vector <Drawable_table> :: iterator tit = tables.begin();
 	
 	while (tit != tables.end()) {
@@ -49,18 +46,24 @@ void Statview::load() {
 			
 			tit->clear_rows();
 			
-			while (pit != points.end()) {
+			std::list <aircraft> handled_planes = this->game->get_handled_planes_list();
+			std::list <aircraft> :: iterator hpit = handled_planes.begin();
+			Aircraft& plane = *(*hpit);
+			double area_time;
+			
+			while (hpit != handled_planes.end()) {
 				std::list <Cell> t_cells = replaced.get_cells();
-
-				area += pit->second.area_time;
-				clearances += pit->second.clearances;
+				area_time = plane.get_out_time() - plane.get_in_time();
 				
-				this->repl["[callsign]"] = pit->first;
-				this->repl["[in_time]"] = Tools::totime(pit->second.in_time);
-				this->repl["[out_time]"] = Tools::totime(pit->second.out_time);
-				this->repl["[area_time]"] = Tools::totime(pit->second.area_time);
-				this->repl["[points]"] = Tools::tostr(pit->second.points, 6);
-				this->repl["[clearances]"] = Tools::tostr(pit->second.clearances, 3);
+				area += area_time;
+				clearances += plane.get_clearances();
+				
+				this->repl["[callsign]"] = plane.get_name();
+				this->repl["[in_time]"] = Tools::totime(plane.get_in_time());
+				this->repl["[out_time]"] = Tools::totime(plane.get_out_time());
+				this->repl["[area_time]"] = Tools::totime(area_time);
+				this->repl["[points]"] = Tools::tostr(10, 6);
+				this->repl["[clearances]"] = Tools::tostr(plane.get_clearances(), 3);
 				
 				Row row;
 				
@@ -77,10 +80,10 @@ void Statview::load() {
 				
 				tit->add_row(row);
 				
-				++pit;
+				++hpit;
 			}
 			
-			this->repl["[AREA]"] = Tools::totime(area / points.size());
+			this->repl["[AREA]"] = Tools::totime(area / this->game->get_handled_planes_list().size());
 			this->repl["[SUM]"] = Tools::tostr(this->game->get_game_points(), 6);
 			this->repl["[CLRC]"] = Tools::tostr(clearances, 3);
 			

@@ -61,6 +61,22 @@ void Aircraft::load() {
 
 Aircraft::~Aircraft() { }
 
+double Aircraft::get_in_time() {
+	return this->in_time;
+}
+
+double Aircraft::get_out_time() {
+	return this->out_time;
+}
+
+void Aircraft::set_in_time(double in) {
+	this->in_time = in;
+}
+
+void Aircraft::set_out_time(double out) {
+	this->out_time = out;
+}
+
 std::string Aircraft::set_approach_runway(std::string name) {
 	std::string tmp;
 	

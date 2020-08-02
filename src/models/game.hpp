@@ -26,14 +26,6 @@
 typedef std::shared_ptr <Aircraft> aircraft;
 typedef std::shared_ptr <Clearance> clearance;
 
-struct Game_point {
-	double points;
-	double in_time;
-	double out_time;
-	double area_time;
-	int clearances;
-};
-
 /**
     * Game very low-level on MVC model
     * Representing state of game
@@ -50,6 +42,7 @@ public:
 	~Game();
 
 	std::list <aircraft> get_aircrafts();
+	std::list <aircraft> get_handled_planes_list();
 	
 	aircraft selected;
 
@@ -109,7 +102,6 @@ public:
 	int get_planes_count();
 	int get_separation_errors();
 	int get_new_plane();
-	std::map <std::string, Game_point> get_points();
 	double get_game_points();
 	bool ok();
 	std::string get_clearance_error();
@@ -135,11 +127,11 @@ private:
 
 	std::vector     <Navpoint>					navpoints;
 	std::list       <aircraft>					aircrafts;
+	std::list       <aircraft>					handled_planes;
 	std::list		<aircraft>					holdings;
 	std::queue      <std::string>				display_messages;
 	std::queue      <std::string>				game_errors;
 	std::list       <aircraft>					errors;
-	std::map		<std::string, Game_point>	points;
 	
 	std::string command;
 
@@ -150,7 +142,6 @@ private:
 	double pop_holdings;
     int separation_errors;
     int new_plane;
-	unsigned int handled_planes;
 	bool loaded;
 };
 

@@ -10,6 +10,7 @@
 #include "../../tools/time_tools.hpp"
 #include "../../tools/settings.hpp"
 #include "../../models/game.hpp"
+#include "../../models/game_objects/aircraft.hpp"
 
 class Statview : public View {
 public:

@@ -94,6 +94,12 @@ public:
 	
 	void load();
 	bool remove();
+	
+	double get_in_time();
+	double get_out_time();
+	
+	void set_in_time(double in);
+	void set_out_time(double out);
 protected:
 private:
     Coordinate place;
@@ -116,6 +122,9 @@ private:
 	double vland;
 	double vclimb;
 	double vcruise;
+	
+	double in_time;
+	double out_time;
 	
 	double fuel_consumption;
 	double fuel_amount;

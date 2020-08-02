@@ -12,7 +12,6 @@ Game::Game(std::shared_ptr <Settings> s, std::shared_ptr <Atis> a) : settings(s)
 	this->pop_holdings = -1;
 	this->separation_errors = 0;
 	this->new_plane = 0;
-	this->handled_planes = 0;
 	
 	/** TESTING DATA STAT VIEW **/
 	
@@ -48,7 +47,6 @@ void Game::load(std::string airfield) {
 	this->separation_errors = 0;
     this->new_plane = 5000;
     this->pop_holdings = 1 * 1000;
-	this->handled_planes = 0;
 	
 	this->loaded = true;
 }
@@ -63,6 +61,14 @@ std::shared_ptr <Airfield> Game::get_active_field() {
 	}
 	
     return this->active_field;
+}
+
+std::list <aircraft> Game::get_handled_planes_list() {
+	#ifdef DEBUG
+    std::clog << "Game::get_handled_planes()" << std::endl;
+	#endif
+	
+    return this->handled_planes;
 }
 
 std::list <aircraft> Game::get_aircrafts() {
@@ -154,35 +160,21 @@ void Game::calculate_points(std::shared_ptr <Aircraft> plane) {
 	std::clog << "Game::calculate_points(" << type << ", " << clearance_count << ", " << plane.get_name() << ")" << std::endl;
 	#endif
 	
-	this->points[(*plane).get_name()].out_time = duration;
-	this->points[(*plane).get_name()].clearances = (*plane).get_clearances();
-	
-	double point = ((*plane).get_type() == APPROACH) ? 80000 : 40000;
-	
-	double area_time = this->points[(*plane).get_name()].out_time - this->points[(*plane).get_name()].in_time;
-	
-	point = (int)(point / ((*plane).get_clearances() - 1)) - (int)(area_time / 1000);
-	
-	this->points[(*plane).get_name()].points = point;
-	this->points[(*plane).get_name()].area_time = area_time;
+	this->handled_planes.push_back(plane);
 }
 
 int Game::get_clearance_count() {
 	int count = 0;
 	
-	for (auto p : aircrafts) {
+	for (auto p : this->aircrafts) {
+		count += (*p).get_clearances();
+	}
+	
+	for (auto p : this->handled_planes) {
 		count += (*p).get_clearances();
 	}
 	
 	return count;
-}
-
-std::map <std::string, Game_point> Game::get_points() {
-	#ifdef DEBUG
-    std::clog << "Game::get_points())" << std::endl;
-	#endif
-	
-	return this->points;
 }
 
 double Game::get_game_points() {
@@ -190,14 +182,7 @@ double Game::get_game_points() {
     std::clog << "Game::get_game_points()" << std::endl;
 	#endif
 	
-	std::map <std::string, Game_point> :: iterator pit = this->points.begin();
 	double sum = 0;
-	
-	while (pit != this->points.end()) {
-		sum += pit->second.points;
-		
-		++pit;
-	}
 	
 	return sum;
 }
@@ -233,7 +218,7 @@ void Game::update(double elapsed) {
 		
 		if ((*it)->remove()) {
 			calculate_points(*it);
-			++handled_planes;
+			(*it)->set_out_time(this->duration);
 			it = this->aircrafts.erase(it);
 			continue;
 		}
@@ -243,7 +228,7 @@ void Game::update(double elapsed) {
         (*it)->set_separation_error(true);
     }
 
-    if (this->duration > this->new_plane && this->settings->required_handled > this->handled_planes + this->aircrafts.size() + this->holdings.size()) {
+    if (this->duration > this->new_plane && this->settings->required_handled > this->handled_planes.size() + this->aircrafts.size() + this->holdings.size()) {
         create_plane();
         double time_for_next_plane = Tools::linear_random(this->settings->new_plane_lower * 1000, this->settings->new_plane_upper * 1000);
 		this->new_plane += time_for_next_plane;
@@ -322,19 +307,17 @@ void Game::create_plane() {
 
     std::string callsign = airlines(Tools::linear_random(0, airlines.size()), "ICAO") + Tools::tostr(Tools::linear_random(1, 999), 3);
 
-	Game_point tmp{0, duration, -1, 0, -1};
-	
-	this->points.insert(std::pair <std::string, Game_point> (callsign, tmp));
-
 	while (!this->check_aircrafts(callsign)) {
 		callsign = airlines(Tools::linear_random(0, airlines.size()), "ICAO") + Tools::tostr(Tools::linear_random(1, 999), 3);
 	}
 	
 	if (flight_type == DEPARTURE) {
 		aircraft plane(new Aircraft(callsign, this->settings, this->active_field, this->atis, outpoint));
+		plane->set_in_time(this->duration);
 		this->holdings.push_back(plane);
 	} else {
 		aircraft plane (new Aircraft(callsign, this->settings, this->active_field, this->atis, inpoint));
+		plane->set_in_time(this->duration);
 		this->aircrafts.push_back(plane);
 	}
 }
@@ -449,7 +432,7 @@ void Game::load_airfield(std::string icao) {
 
 aircraft Game::get_selected() {
 	#ifdef DEBUG
-    std::clog << "Game::get_sekected()" << std::endl;
+    std::clog << "Game::get_selected()" << std::endl;
 	#endif
 	
     return this->selected;
@@ -604,7 +587,7 @@ int Game::get_handled_planes() {
     std::clog << "Game::get_handled_planes()" << std::endl;
 	#endif
 	
-	return this->handled_planes;
+	return this->handled_planes.size();
 }
 
 int Game::get_planes_count() {
@@ -628,7 +611,7 @@ bool Game::ok() {
     std::clog << "Game::ok()" << std::endl;
 	#endif
 	
-	return (this->handled_planes >= this->settings->required_handled && this->aircrafts.size() == 0);
+	return (this->handled_planes.size() >= this->settings->required_handled && this->aircrafts.size() == 0);
 }
 
 int Game::get_level() {
