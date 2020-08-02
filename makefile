@@ -15,7 +15,7 @@ FILES_DEP := $(patsubst src/%,build/%.dep,$(FILES_CPP))
 GUI_SRC := $(filter-out src/cli/%,$(FILES_CPP))
 GUI_BIN := bin/atcradar
 
-GUI_LIBS := -lsfml-system -lsfml-window -lsfml-graphics -lsfml-network -lsqlite3pp -lsqlite -ltinyxml -static-libgcc
+GUI_LIBS := -lsfml-system -lsfml-window -lsfml-graphics -lsfml-network -lsqlite3pp -lsqlite -ltinyxml
 
 # Hack for OS differences.
 # On Windows, echo '1' produces literally '1' instead of 1.
