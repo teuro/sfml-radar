@@ -145,6 +145,11 @@ bool SFML_window::handle_event(sf::Event& event, Controller& ctrl, sf::RenderWin
 			ctrl.handle_mouse_release(mouse_start, mouse_end);
 			
 			return true;
+		case sf::Event::Resized:	
+			this->settings->screen_width = event.size.width;
+			this->settings->screen_height = event.size.height;
+
+			return true;
         default:
             return true;
     }
