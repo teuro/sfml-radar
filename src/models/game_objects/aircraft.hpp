@@ -97,9 +97,11 @@ public:
 	
 	double get_in_time();
 	double get_out_time();
+	long long int get_points();
 	
 	void set_in_time(double in);
 	void set_out_time(double out);
+	void set_points(int points);
 protected:
 private:
     Coordinate place;
@@ -125,6 +127,7 @@ private:
 	
 	double in_time;
 	double out_time;
+	long long int points;
 	
 	double fuel_consumption;
 	double fuel_amount;

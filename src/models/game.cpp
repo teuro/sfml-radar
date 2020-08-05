@@ -160,6 +160,15 @@ void Game::calculate_points(std::shared_ptr <Aircraft> plane) {
 	std::clog << "Game::calculate_points(" << type << ", " << clearance_count << ", " << plane.get_name() << ")" << std::endl;
 	#endif
 	
+	double target_time = (((*plane).get_type() == APPROACH) ? 13 : 6) * 60 * 60 * 1000;
+	
+	int clearance_amount = (*plane).get_clearances();
+	double time = (*plane).get_out_time() - (*plane).get_in_time();
+	
+	long long int points = (((*plane).get_type() == APPROACH) ? 40000 : 65000) / clearance_amount - (time - target_time);
+	
+	(*plane).set_points(points);
+	
 	this->handled_planes.push_back(plane);
 }
 

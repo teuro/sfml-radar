@@ -48,10 +48,10 @@ void Statview::load() {
 			
 			std::list <aircraft> handled_planes = this->game->get_handled_planes_list();
 			std::list <aircraft> :: iterator hpit = handled_planes.begin();
-			Aircraft& plane = *(*hpit);
 			double area_time;
 			
 			while (hpit != handled_planes.end()) {
+				Aircraft& plane = *(*hpit);
 				std::list <Cell> t_cells = replaced.get_cells();
 				area_time = plane.get_out_time() - plane.get_in_time();
 				
@@ -62,7 +62,7 @@ void Statview::load() {
 				this->repl["[in_time]"] = Tools::totime(plane.get_in_time());
 				this->repl["[out_time]"] = Tools::totime(plane.get_out_time());
 				this->repl["[area_time]"] = Tools::totime(area_time);
-				this->repl["[points]"] = Tools::tostr(10, 6);
+				this->repl["[points]"] = Tools::tostr(plane.get_points(), 6);
 				this->repl["[clearances]"] = Tools::tostr(plane.get_clearances(), 3);
 				
 				Row row;

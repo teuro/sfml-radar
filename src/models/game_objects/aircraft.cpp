@@ -69,12 +69,20 @@ double Aircraft::get_out_time() {
 	return this->out_time;
 }
 
+long long int Aircraft::get_points() {
+	return this->points;
+}
+
 void Aircraft::set_in_time(double in) {
 	this->in_time = in;
 }
 
 void Aircraft::set_out_time(double out) {
 	this->out_time = out;
+}
+
+void Aircraft::set_points(int p) {
+	this->points = p;
 }
 
 std::string Aircraft::set_approach_runway(std::string name) {
@@ -283,7 +291,7 @@ void Aircraft::set_place(Coordinate& place) {
 void Aircraft::set_clearance(Speed_clearance& cl_spd) {
 	this->clearance_speed = cl_spd.get_value();
 	
-	++clearances;
+	++this->clearances;
 }
 
 void Aircraft::set_clearance(Heading_clearance& cl_hdg) {
@@ -291,13 +299,13 @@ void Aircraft::set_clearance(Heading_clearance& cl_hdg) {
 	
 	this->turn = cl_hdg.get_direction();
 	
-	++clearances;
+	++this->clearances;
 }
 
 void Aircraft::set_clearance(Altitude_clearance& cl_alt) {
 	this->clearance_altitude = cl_alt.get_value();
 	
-	++clearances;
+	++this->clearances;
 }
 
 void Aircraft::set_clearance(Expect_clearance& cl_exp){
@@ -305,7 +313,7 @@ void Aircraft::set_clearance(Expect_clearance& cl_exp){
 		this->landing = this->airport->get_runway(cl_exp.get_value());
 		this->expect = true;
 		
-		++clearances;
+		++this->clearances;
 	} catch (std::logic_error& e) {
 		std::string tmp = e.what();
 		
@@ -325,13 +333,13 @@ std::string Aircraft::set_clearance_approach() {
 	
 	return "Cleared approach " + get_landing_runway_name();
 	
-	++clearances;
+	++this->clearances;
 }
 
 void Aircraft::cancel_approach() {
 	this->approach = false;
 	
-	++clearances;
+	++this->clearances;
 }
 
 void Aircraft::set_clearance_direct(std::string outpoint) {
@@ -340,7 +348,7 @@ void Aircraft::set_clearance_direct(std::string outpoint) {
 		this->target = t_op;
 		this->direct = true;
 		
-		++clearances;
+		++this->clearances;
 	} catch (std::logic_error& e) {
 		std::cerr << e.what() << std::endl;
 	}
