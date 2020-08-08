@@ -155,21 +155,24 @@ void Game::handle_holdings() {
 	}
 }
 
-void Game::calculate_points(std::shared_ptr <Aircraft> plane) {
+void Game::calculate_points(aircraft plane) {
 	#ifdef DEBUG
 	std::clog << "Game::calculate_points(" << type << ", " << clearance_count << ", " << plane.get_name() << ")" << std::endl;
 	#endif
 	
-	double target_time = (((*plane).get_type() == APPROACH) ? 13 : 6) * 60 * 60 * 1000;
-	
-	int clearance_amount = (*plane).get_clearances();
-	double time = (*plane).get_out_time() - (*plane).get_in_time();
-	
-	long long int points = (((*plane).get_type() == APPROACH) ? 40000 : 65000) / clearance_amount - (time - target_time);
-	
-	(*plane).set_points(points);
-	
 	this->handled_planes.push_back(plane);
+	int type = this->handled_planes.back()->get_type();
+	int clearances = this->handled_planes.back()->get_clearances();
+	double in_time = this->handled_planes.back()->get_in_time();
+	double out_time = this->handled_planes.back()->get_out_time();
+	
+	double target_time = ((type == APPROACH) ? 13 : 6) * 60 * 60 * 1000;
+	
+	double time = out_time - in_time;
+	
+	int points = ((1 == 0) ? 40000 : 65000) / 4 / (time / target_time);
+	
+	this->handled_planes.back()->set_points(points);
 }
 
 int Game::get_clearance_count() {
@@ -193,6 +196,10 @@ double Game::get_game_points() {
 	
 	double sum = 0;
 	
+	for (auto p : this->handled_planes) {
+		sum += (*p).get_points();
+	}
+	
 	return sum;
 }
 
@@ -211,6 +218,8 @@ void Game::update(double elapsed) {
     std::clog << "Game::get_game_points(" << elapsed << ")" << std::endl;
 	#endif
 	
+	
+	
 	if (!this->loaded) {
 		throw std::logic_error("Game is not loaded");
 	}
@@ -226,8 +235,8 @@ void Game::update(double elapsed) {
         aircraft_message = (*it)->update(elapsed);
 		
 		if ((*it)->remove()) {
-			calculate_points(*it);
 			(*it)->set_out_time(this->duration);
+			calculate_points(*it);
 			it = this->aircrafts.erase(it);
 			continue;
 		}

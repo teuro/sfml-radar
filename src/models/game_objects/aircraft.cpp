@@ -69,7 +69,7 @@ double Aircraft::get_out_time() {
 	return this->out_time;
 }
 
-long long int Aircraft::get_points() {
+int Aircraft::get_points() {
 	return this->points;
 }
 
@@ -137,6 +137,7 @@ void Aircraft::calculate_angle_target(Coordinate& target) {
 }
 
 std::string Aircraft::update(double elapsed) {
+	//std::clog << "Aircraft::update " << this->name << " clearance amount = " << this->clearances << std::endl;
 	this->heading = Tools::fix_angle(this->heading);
 	
 	if (this->type == DEPARTURE) {

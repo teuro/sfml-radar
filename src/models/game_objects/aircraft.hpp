@@ -97,7 +97,7 @@ public:
 	
 	double get_in_time();
 	double get_out_time();
-	long long int get_points();
+	int get_points();
 	
 	void set_in_time(double in);
 	void set_out_time(double out);
@@ -127,7 +127,7 @@ private:
 	
 	double in_time;
 	double out_time;
-	long long int points;
+	int points;
 	
 	double fuel_consumption;
 	double fuel_amount;

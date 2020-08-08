@@ -20,7 +20,7 @@ void Statview::load() {
 	View::load("stat");
 	
 	std::vector <Drawable_table> :: iterator tit = tables.begin();
-	
+	int sum_points = 0;
 	while (tit != tables.end()) {
 		if ((*tit).get_id() == std::string("points")) {
 			int area = 0;
@@ -62,8 +62,10 @@ void Statview::load() {
 				this->repl["[in_time]"] = Tools::totime(plane.get_in_time());
 				this->repl["[out_time]"] = Tools::totime(plane.get_out_time());
 				this->repl["[area_time]"] = Tools::totime(area_time);
-				this->repl["[points]"] = Tools::tostr(plane.get_points(), 6);
+				this->repl["[points]"] = Tools::tostr(plane.get_points(), 8);
 				this->repl["[clearances]"] = Tools::tostr(plane.get_clearances(), 3);
+				
+				sum_points += plane.get_points();
 				
 				Row row;
 				
@@ -84,7 +86,7 @@ void Statview::load() {
 			}
 			
 			this->repl["[AREA]"] = Tools::totime(area / this->game->get_handled_planes_list().size());
-			this->repl["[SUM]"] = Tools::tostr(this->game->get_game_points(), 6);
+			this->repl["[SUM]"] = Tools::tostr(sum_points, 8);
 			this->repl["[CLRC]"] = Tools::tostr(clearances, 3);
 			
 			Row row;
