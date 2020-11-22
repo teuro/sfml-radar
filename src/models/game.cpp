@@ -71,6 +71,10 @@ std::list <aircraft> Game::get_handled_planes_list() {
     return this->handled_planes;
 }
 
+std::shared_ptr <Atis> Game::get_atis() {
+	return this->atis;
+}
+
 std::list <aircraft> Game::get_aircrafts() {
 	#ifdef DEBUG
     std::clog << "Game::get_aircrafts()" << std::endl;
@@ -170,7 +174,7 @@ void Game::calculate_points(aircraft plane) {
 	
 	double time = out_time - in_time;
 	
-	int points = ((1 == 0) ? 40000 : 65000) / 4 / (time / target_time);
+	int points = ((1 == 0) ? 40000 : 65000) / clearances / (time / target_time);
 	
 	this->handled_planes.back()->set_points(points);
 }
@@ -430,7 +434,7 @@ void Game::load_airfield(std::string icao) {
 
     Coordinate place(Tools::tonumber<double>(airport(0, "latitude")), Tools::tonumber<double>(airport(0, "longitude")));
 	
-	std::shared_ptr <Airfield> ap (new Airfield(airport(0, "ICAO"), place, Tools::toint(airport(0, "max_speed")), Tools::toint(airport(0, "initial_altitude")), Tools::toint(airport(0, "acceleration_altitude")), Tools::toint(airport(0, "speed_restriction_altitude"))));
+	std::shared_ptr <Airfield> ap (new Airfield(airport(0, "ICAO"), place, Tools::toint(airport(0, "altitude")), Tools::toint(airport(0, "max_speed")), Tools::toint(airport(0, "initial_altitude")), Tools::toint(airport(0, "acceleration_altitude")), Tools::toint(airport(0, "speed_restriction_altitude"))));
     this->active_field = ap;
 	
 	#ifdef DEBUG

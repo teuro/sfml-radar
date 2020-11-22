@@ -40,6 +40,7 @@ public:
     unsigned int get_background_color();
     unsigned int get_border_color();
     unsigned int get_margin();
+    unsigned int get_border_thickness();
 	
     void set_attribute(std::string key, std::string value);
     void set_attribute(std::string key, int value);
@@ -51,6 +52,8 @@ public:
 	bool operator ==(std::string name) {
 		return this->name == name;
 	}
+	
+	unsigned int parse_color(std::string color);
 protected:
 private:
     Point place; /* top left corner */
@@ -66,17 +69,13 @@ private:
     int text_color;
     int background_color;
     int border_color;
+	int border_thickness;
 	int left;
 	int top;
 	int margin;
 	int font_size;
 	
 	std::shared_ptr <Settings> settings;
-	
-	template <class T>
-	
-	int parse_color(int color);
-	int parse_color(std::string color);
 };
 
 #endif // STYLE_HPP

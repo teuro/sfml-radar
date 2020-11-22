@@ -209,21 +209,12 @@ void View::render() {
 	#ifdef DEBUG
 	std::clog << "View::render()" << std::endl;
 	#endif
+	
     drawer.flip();
 }
 
-void View::draw_element(Image& img) {
-	#ifdef DEBUG
-	std::clog << "View::draw_element(Image& img)" << std::endl;
-	#endif
-	
-	this->style(img);
-	Point place = img.get_style().get_place();
-	this->drawer.draw_picture(img.get_source(), place);
-}
-
 void View::draw_borders(Style& style) {
-	int color = style.get_border_color();
+	unsigned int color = style.get_border_color();
 	int width = style.get_width();
 	int height = style.get_height();
 	int margin = style.get_margin();
@@ -255,6 +246,16 @@ void View::draw_borders(Style& style) {
 	this->drawer.lineColor(place_a, place_b, color);
 }
 
+void View::draw_element(Image& img) {
+	#ifdef DEBUG
+	std::clog << "View::draw_element(Image& img)" << std::endl;
+	#endif
+	
+	this->style(img);
+	Point place = img.get_style().get_place();
+	this->drawer.draw_picture(img.get_source(), place);
+}
+
 void View::draw_element(Paragraph& p) {
 	#ifdef DEBUG
 	std::clog << "View::draw_element(Paragraph& p) " << p.get_content() << " " << p.get_class() << std::endl;
@@ -263,7 +264,6 @@ void View::draw_element(Paragraph& p) {
 	this->style(p);
 	
 	Style style = p.get_style();
-	int color = style.get_text_color();
 	int font_size = style.get_font_size();
 	
 	Point place_a = style.get_place();
@@ -274,7 +274,7 @@ void View::draw_element(Paragraph& p) {
 	p.get_style().set_attribute("height", height);
 	
 	if (width <= style.get_width()) {
-		this->draw_element(Tools::replace(p.get_content(), repl), place_a, color, font_size);
+		this->draw_element(Tools::replace(p.get_content(), repl), place_a, style.get_text_color(), font_size);
 		t_height = this->drawer.get_text_height(p.get_content(), font_size) + 5;
 		height += t_height;
 		place_a.change_y(t_height);
@@ -303,7 +303,7 @@ void View::draw_element(Paragraph& p) {
 		p.get_style().set_attribute("height", height);
 		
 		for (unsigned int i = 0; i < lines.size(); ++i) {
-			this->draw_element(Tools::replace(lines[i], repl), place_a, color, font_size);
+			this->draw_element(Tools::replace(lines[i], repl), place_a, style.get_text_color(), font_size);
 			t_height = this->drawer.get_text_height(lines[i], font_size) + 5;
 			height += t_height;
 			place_a.change_y(t_height);
@@ -314,6 +314,28 @@ void View::draw_element(Paragraph& p) {
 	this->draw_borders(p.get_style());
 }
 
+void View::draw_element(Drawable_Runway_Element& re) {
+	#ifdef DEBUG
+	std::clog << "View::draw_element(Drawable_Runway_Element& re)" << std::endl;
+	#endif
+	
+	this->drawer.lineColor(re.get_begin(), re.get_end(), re.get_style().get_border_color());
+	this->drawer.circleColor(re.get_approach(), 5, re.get_style().get_border_color());
+}
+
+void View::draw_element(Drawable_Navpoint_Element& ne) {
+	#ifdef DEBUG
+	std::clog << "View::draw_element(Drawable_Navpoint_Element& ne)" << std::endl;
+	#endif
+	
+	Point place_screen = ne.get_place();
+	
+	this->drawer.trigonColor(place_screen, 15, ne.get_style().get_text_color(), ne.get_style().get_border_color());
+	place_screen.change_x(15);
+	place_screen.change_y(-10);
+	this->drawer.draw_text(ne.get_name(), place_screen, ne.get_style().get_text_color());
+}
+
 void View::draw_element(std::shared_ptr <Drawable_input>& i) {
 	#ifdef DEBUG
 	std::clog << "View::draw_element(Drawable_input& i)" << std::endl;
@@ -321,16 +343,13 @@ void View::draw_element(std::shared_ptr <Drawable_input>& i) {
 
 	Style style = i->get_style();
 	int font_size = style.get_font_size();
-	
-	int color = style.get_text_color();
-	int background_color = style.get_background_color();
-	
+		
 	Point place_a = style.get_place();
 		
 	Point place_b(place_a.get_x() + style.get_width(), place_a.get_y() + style.get_height());
 	
-	this->drawer.rectangleColor(place_a, place_b, background_color);
-	this->draw_element(i->get_value(), place_a, color, font_size);
+	this->drawer.rectangleColor(place_a, place_b, style.get_background_color(), style.get_border_color());
+	this->draw_element(i->get_value(), place_a, style.get_text_color(), font_size);
 }
 
 void View::style(std::shared_ptr <Drawable_input>& de) {
@@ -443,7 +462,7 @@ void View::draw() {
 void View::draw_element(Drawable_list& dl) {
 	this->style(dl);
 	
-	int color = dl.get_style().get_text_color();
+	unsigned int color = dl.get_style().get_text_color();
 	int font_size = dl.get_style().get_font_size();
 	int height = 0;
 	int t_height;
@@ -477,7 +496,7 @@ void View::draw_element(Drawable_table& dt) {
 	
 	this->style(dt);
 	
-	int color = dt.get_style().get_text_color();
+	unsigned int color = dt.get_style().get_text_color();
 	Point place = dt.get_style().get_place();
 	int font_size = dt.get_style().get_font_size();
 	
@@ -502,7 +521,7 @@ void View::draw_element(Drawable_table& dt) {
 		
 		//std::clog << "View::draw_element(row) " << rit->get_class() << std::endl;
 		
-		int r_color = rit->get_style().get_text_color();
+		unsigned int r_color = rit->get_style().get_text_color();
 			
 		if (r_color > 0) {
 			color = r_color;
@@ -515,7 +534,7 @@ void View::draw_element(Drawable_table& dt) {
 			std::clog << (*cit).get_class() << " " << (*cit).get_content() << std::endl;
 			#endif
 			
-			int c_color = cit->get_style().get_text_color();
+			unsigned int c_color = cit->get_style().get_text_color();
 			
 			if (c_color > 0) {
 				color = c_color;
@@ -525,7 +544,6 @@ void View::draw_element(Drawable_table& dt) {
 			
 			++cit;
 			place.change_x(length);
-			color = 0;
 		}
 		
 		place.change_x(-length * c_list.size());
@@ -594,7 +612,7 @@ std::list <Style> View::parse_css(std::string file) {
     return tmp;
 }
 
-void View::draw_element(std::string text, Point& place_a, int color, int font_size) {
+void View::draw_element(std::string text, Point& place_a, unsigned int color, int font_size) {
 	#ifdef DEBUG
 	std::clog << "View::draw_element(" << text << ", " << place_a << ", " << color << ")" << std::endl;
 	#endif

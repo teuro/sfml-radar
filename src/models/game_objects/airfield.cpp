@@ -1,7 +1,7 @@
 #include "airfield.hpp"
 
-Airfield::Airfield(std::string n, Coordinate& p, int max_speed, int initial_altitude, int acceleration_altitude, int speed_restriction_altitude) : name(n), place(p) {
-	this->altitude = 150;
+Airfield::Airfield(std::string n, Coordinate& p,  int a, int max_speed, int initial_altitude, int acceleration_altitude, int speed_restriction_altitude) : name(n), place(p) {
+	this->altitude = a;
 	this->max_speed = max_speed;
 	this->initial_altitude = initial_altitude;
 	this->acceleration_altitude = acceleration_altitude;

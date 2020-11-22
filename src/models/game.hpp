@@ -111,6 +111,7 @@ public:
 	int get_level();
 	std::list <aircraft> get_holdings();
 	int get_clearance_count();
+	std::shared_ptr <Atis> get_atis();
 private:
 	int level;
     void load_airfield(std::string icao);

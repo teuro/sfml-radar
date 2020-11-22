@@ -78,7 +78,7 @@ void Gameview::draw_plane(aircraft plane, aircraft selected, Point& mouse) {
 	Drawable_list info_list("ul", "", id);
 	
 	info_list.add_element(plane->get_name());
-	info_list.add_element(Tools::tostr(plane->get_altitude()) + " / " + Tools::tostr(plane->get_clearance_altitude()));
+	info_list.add_element(Tools::tostr(this->calculate_heigth(plane->get_altitude())) + " / " + Tools::tostr(this->calculate_heigth(plane->get_clearance_altitude())));
 	
 	info_list.set_class("normal");
 	
@@ -190,24 +190,25 @@ void Gameview::draw_planes(std::list <aircraft> planes, aircraft selected, Point
 void Gameview::draw_airfield(std::shared_ptr <Airfield> airfield) {
     std::vector <Runway> runways = airfield->get_runways();
     std::vector <Navpoint> navpoints = airfield->get_navpoints();
-	int color = 1524875;
 	
-    for (unsigned int i = 0; i < runways.size(); ++i) {
-		Point rwys = this->calculate(runways[i].get_start_place());
-		Point rwye = this->calculate(runways[i].get_end_place());
-		Point rwya = this->calculate(runways[i].get_approach_place());
+    for (auto rwy : runways) {
+		Point rwys = this->calculate(rwy.get_start_place());
+		Point rwye = this->calculate(rwy.get_end_place());
+		Point rwya = this->calculate(rwy.get_approach_place());
 		
-        this->drawer.lineColor(rwys, rwye, color);
-        this->drawer.circleColor(rwya, 5, color);
+		Drawable_Runway_Element drwy(rwys, rwye, rwya);
+		
+		this->style(drwy);
+		this->draw_element(drwy);
     }
 	
-	for (unsigned int i = 0; i < navpoints.size(); ++i) {
-        Point place_screen = this->calculate(navpoints[i].get_place());
+	for (auto navs : navpoints) {
+        Point place_screen = this->calculate(navs.get_place());
 		
-        this->drawer.trigonColor(place_screen, 15, color);
-		place_screen.change_x(15);
-		place_screen.change_y(-10);
-		this->drawer.draw_text(navpoints[i].get_name(), place_screen, color);
+		Drawable_Navpoint_Element dne(place_screen, navs.get_name());
+		
+		this->style(dne);
+		this->draw_element(dne);
     }
 }
 
@@ -233,6 +234,17 @@ Coordinate Gameview::calculate(Point& target) {
 
 void Gameview::update() { }
 
-void Gameview::update_command(std::string command) {
+void Gameview::update_command(std::string command) {	
 	this->input->set_value(command);
+}
+
+int Gameview::calculate_heigth(double altitude) {
+	//std::clog << "Gameview::calculate_heigth(" << altitude << ")" << std::endl;
+	int height = altitude;
+	
+	if (altitude > this->game->get_atis()->get_transition_altitude()) {
+		height = altitude / 100;
+	}
+	
+	return height;
 }

@@ -2,28 +2,21 @@
 
 sfml_drawsurface::sfml_drawsurface(sf::RenderWindow& w) : window(w) {
 	this->font_loaded = false;
-	this->font_size = 16;
 }
 
 sfml_drawsurface::~sfml_drawsurface() { }
 
-void sfml_drawsurface::circleColor(Point& a, unsigned int radius, int red, int green, int blue, bool debug) {
+void sfml_drawsurface::circleColor(Point& a, unsigned int radius, unsigned int color) {
 	sf::CircleShape circle(radius);
-	circle.setOutlineColor(sf::Color(red, green, blue));
-	circle.setOutlineThickness(2.0);
-	circle.setPosition(sf::Vector2f(a.get_x()-radius, a.get_y()-radius));
 	
-	if (debug) {
-		std::clog << "window position = " << this->window.getPosition().x << ", " << this->window.getPosition().y << std::endl;
-		std::clog << "sfml_drawsurface::circleColor() circle position = " << circle.getPosition().x << ", " << circle.getPosition().y << std::endl;
-	}
+	My_Color t_color(color);
+	
+	circle.setOutlineColor(sf::Color(t_color.red, t_color.green, t_color.blue));
+	circle.setOutlineThickness(2.0);
+	
+	circle.setPosition(sf::Vector2f(a.get_x()-radius, a.get_y()-radius));
 
 	this->window.draw(circle);
-}
-
-void sfml_drawsurface::circleColor(Point& a, unsigned int radius, int t_color, bool debug) {
-	My_Color color(t_color);
-	circleColor(a, radius, color.red, color.green, color.blue, debug);
 }
 
 void sfml_drawsurface::draw_picture(std::string file, Point& a) {
@@ -38,14 +31,13 @@ void sfml_drawsurface::draw_picture(std::string file, Point& a) {
 	this->window.draw(sprite);
 }
 
-void sfml_drawsurface::draw_text(std::string text, Point& a, int red, int green, int blue, int font_size) {
-	this->font_size = font_size;
-	
+void sfml_drawsurface::draw_text(std::string text, Point& a, unsigned int color, int font_size) {
 	if (!font_loaded) {
-		this->load_font("arial.ttf", this->font_size);
+		this->load_font("arial.ttf");
 	}
-
-	sf::Color clr(red, green, blue);
+	
+	My_Color t_color(color);
+	sf::Color clr(t_color.red, t_color.green, t_color.blue);
 	
 	sf::Text _text;
 	
@@ -58,18 +50,10 @@ void sfml_drawsurface::draw_text(std::string text, Point& a, int red, int green,
 	this->window.draw(_text);
 }
 
-void sfml_drawsurface::draw_text(std::string text, Point& a, int t_color, int font_size) {
-	My_Color color(t_color);
-	
-	sfml_drawsurface::draw_text(text, a, color.red, color.green, color.blue, font_size);
-}
-
-void sfml_drawsurface::load_font(std::string _font, unsigned int font_size) {
+void sfml_drawsurface::load_font(std::string _font) {
 	if (!this->font.loadFromFile("fonts/" + _font)) {
 		std::logic_error("Requested font " + _font + " is not available");
 	}
-
-    this->font_size = font_size;
 
 	font_loaded = true;
 }
@@ -78,84 +62,58 @@ void sfml_drawsurface::flip() {
 	this->window.display();
 }
 
-void sfml_drawsurface::lineColor(Point& a, Point& b, int t_color) {
-	My_Color color(t_color);
+void sfml_drawsurface::lineColor(Point& a, Point& b, unsigned int color) {
 	
-	lineColor(a, b, color.red, color.green, color.blue);
-}
-
-void sfml_drawsurface::lineColor(Point& a, Point& b, int red, int green, int blue) {
-    sf::Color color(red, green, blue);
-
+	My_Color t_color(color);
+	sf::Color clr(t_color.red, t_color.green, t_color.blue);
+	
 	sf::Vertex line[] = {
-		sf::Vertex(sf::Vector2f(a.get_x(), a.get_y()), color),
-		sf::Vertex(sf::Vector2f(b.get_x(), b.get_y()), color)
+		sf::Vertex(sf::Vector2f(a.get_x(), a.get_y()), clr),
+		sf::Vertex(sf::Vector2f(b.get_x(), b.get_y()), clr)
 	};
 
 	window.draw(line, 2, sf::Lines);
 }
 
-void sfml_drawsurface::rectangleColor(Point& a, Point& b, int red, int green, int blue, int border_color) {
+void sfml_drawsurface::rectangleColor(Point& a, Point& b, unsigned int color,  unsigned int border_color) {
 	sf::RectangleShape rect(sf::Vector2f(b.get_x()-a.get_x(), b.get_y()-a.get_y()));
 
-    sf::Color fclr(red, green, blue);
+    My_Color fclr(color);
+    My_Color oclr(border_color);
 	
-	My_Color color(border_color);
-	
-    sf::Color oclr(color.red, color.green, color.blue);
-	
-    rect.setOutlineColor(oclr);
+    rect.setOutlineColor(sf::Color(oclr.red, oclr.green, oclr.blue));
     rect.setOutlineThickness(5);
-	rect.setFillColor(fclr);
+	rect.setFillColor(sf::Color(fclr.red, fclr.green, fclr.blue));
 	
 	rect.setPosition(sf::Vector2f(a.get_x(), a.get_y()));
 
 	this->window.draw(rect);
 }
 
-void sfml_drawsurface::rectangleColor(Point& a, Point& b, int t_color, int border_color) {
-	My_Color color(t_color);
-	
-	sfml_drawsurface::rectangleColor(a, b, color.red, color.green, color.blue, border_color);
-}
-
-void sfml_drawsurface::rectangleColor(Point& a, unsigned int length, int red, int green, int blue, int border_color) {
-	Point b(a.get_x() + length, a.get_y() + length);
-	sfml_drawsurface::rectangleColor(a, b, red, green, blue, border_color);
-}
-
-void sfml_drawsurface::trigonColor(Point& a, unsigned int size, int t_color) {
-	My_Color color(t_color);
-	
-	trigonColor(a, size, color.red, color.green, color.blue);
-}
-
-void sfml_drawsurface::trigonColor(Point& a, unsigned int size, int red, int green, int blue) {
+void sfml_drawsurface::trigonColor(Point& a, unsigned int size, unsigned int color,  unsigned int border_color) {
 	sf::CircleShape triangle(size, 3);
-	triangle.setOutlineColor(sf::Color(red, green, blue));
+	
+	My_Color text_color(color);
+	My_Color b_color(border_color);
+	
+	triangle.setOutlineColor(sf::Color(b_color.red, b_color.green, b_color.blue));
+	triangle.setFillColor(sf::Color(text_color.red, text_color.green, text_color.blue));
+	
 	triangle.setPosition(a.get_x() - size, a.get_y() - size);
 	
 	this->window.draw(triangle);
 }
 
-void sfml_drawsurface::clear_screen(int red, int green, int blue) {
+void sfml_drawsurface::clear_screen(unsigned int color) {
 	//std::clog << "sfml_drawsurface::clear_screen(" << red << ", " << green << ", " << blue << ")" << std::endl;
-	
-	sf::Color background(red, green, blue, 0);
+	My_Color t_color(color);
+	sf::Color background(t_color.red, t_color.green, t_color.blue, 0);
 	this->window.clear(background);
-}
-
-void sfml_drawsurface::clear_screen(int t_color) {
-	//std::clog << "sfml_drawsurface::clear_screen(" << color << ")" << std::endl;
-	
-	My_Color color(t_color);
-	
-	this->clear_screen(color.red, color.green, color.blue);
 }
 
 int sfml_drawsurface::get_text_length(std::string text, int font_size) {
 	if (!font_loaded) {
-		this->load_font("arial.ttf", font_size);
+		this->load_font("arial.ttf");
 	}
 	
 	sf::Text t_text;
@@ -169,7 +127,7 @@ int sfml_drawsurface::get_text_length(std::string text, int font_size) {
 
 int sfml_drawsurface::get_text_height(std::string text, int font_size) {
 	if (!font_loaded) {
-		this->load_font("arial.ttf", font_size);
+		this->load_font("arial.ttf");
 	}
 	
 	sf::Text t_text;

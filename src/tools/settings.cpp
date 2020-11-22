@@ -25,18 +25,6 @@ void Settings::load() {
 	std::clog << "Settings::load()" << std::endl;
 	#endif
 	
-	Database db;
-	Queryresult colors_result = db.get_result("SELECT * FROM colors");
-	
-	for (unsigned int i = 0; i < colors_result.size(); ++i) {
-		int red = Tools::tonumber <int> (colors_result(i, "red"));
-		int green = Tools::tonumber <int> (colors_result(i, "green"));
-		int blue = Tools::tonumber <int> (colors_result(i, "blue"));
-		std::string name = colors_result(i, "name");
-		
-		this->colors[name] = new My_Color(red, green, blue);
-	}
-	
 	Coordinate place(60, 25);
 	
 	this->centerpoint = place;

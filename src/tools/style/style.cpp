@@ -93,12 +93,11 @@ void Style::set_attribute(std::string key, std::string value) {
 	}
 }
 
-int Style::parse_color(std::string color) {
+unsigned int Style::parse_color(std::string color) {
 	int red, green, blue;
-	std::string color_name;
 	
 	if (std::sscanf(color.c_str(), "rgb(%i, %i, %i);", &red, &green, &blue) == 3) {
-		return (red * 256 + green) * 256 + blue;
+		
 	} else if (color.substr(0, 1 ) == "#") {
 		color = color.substr(1);
 		
@@ -108,18 +107,16 @@ int Style::parse_color(std::string color) {
 			color = color.substr(0, found);
 		}
 		
-		return Tools::hex2int(color);
-	} else { 
-		std::size_t found = color.find(";");
+		int t_color = Tools::hex2int(color);
 		
-		if (found == std::string::npos) {
-			color_name = color;
-		} else {
-			color_name = color.substr(0, found);
-		}
-		
-		return this->settings->colors[color_name]->get_color();
-	} 
+		red =   ( t_color >>  0 ) & 255;
+		green = ( t_color >>  8 ) & 255;
+		blue =  ( t_color >> 16 ) & 255;
+	}
+	
+	My_Color t_color(red, green, blue);
+	
+	return t_color.get_color();
 }
 
 std::string Style::get_id() {
@@ -168,6 +165,10 @@ unsigned int Style::get_background_color() {
 
 unsigned int Style::get_border_color() {
     return this->border_color;
+}
+
+unsigned int Style::get_border_thickness() {
+    return this->border_thickness;
 }
 
 unsigned int Style::get_margin() {

@@ -19,34 +19,26 @@ protected:
 	
 public:
 	bool font_loaded;
-	unsigned int font_size;
 		
-    virtual void rectangleColor(Point& a, Point& b, int color, int border_color = 0) = 0;
-    virtual void rectangleColor(Point& a, Point& b, int red, int green, int blue, int border_color = 0) = 0;
-    virtual void rectangleColor(Point& a, unsigned int length, int red, int green, int blue, int border_color = 0) = 0;
+    virtual void rectangleColor(Point& a, Point& b, unsigned int color, unsigned int border_color) = 0;
 
-    virtual void lineColor(Point& a, Point& b, int red, int green, int blue) = 0;
-    virtual void lineColor(Point& a, Point& b, int color) = 0;
+    virtual void lineColor(Point& a, Point& b, unsigned int color) = 0;
+    
+    virtual void circleColor(Point& a, unsigned int radius, unsigned int color) = 0;
+    
+    virtual void trigonColor(Point& a, unsigned int size, unsigned int color, unsigned int border_color) = 0;
 
-    virtual void circleColor(Point& a, unsigned int radius, int red, int green, int blue, bool debug = false) = 0;
-    virtual void circleColor(Point& a, unsigned int radius, int color, bool debug = false) = 0;
-
-    virtual void trigonColor(Point& a, unsigned int size, int color) = 0;
-    virtual void trigonColor(Point& a, unsigned int size, int red, int green, int blue) = 0;
-
-    virtual void load_font(std::string font, unsigned int font_size) = 0;
+    virtual void load_font(std::string font) = 0;
 
     virtual void draw_picture(std::string tiedosto, Point& a) = 0;
 	
-    virtual void draw_text(std::string text, Point& a, int red, int green, int blue, int font_size = 16) = 0;
-    virtual void draw_text(std::string text, Point& a, int color, int font_size = 16) = 0;
+    virtual void draw_text(std::string text, Point& a, unsigned int color, int font_size = 16) = 0;
 	
 	virtual int get_text_length(std::string text, int font_size) = 0;
 	virtual int get_text_height(std::string text, int font_size) = 0;
 
 	virtual void flip() = 0;
-	virtual void clear_screen(int red, int green, int blue) = 0;
-	virtual void clear_screen(int color) = 0;
+	virtual void clear_screen(unsigned int color) = 0;
 
     virtual ~Drawsurface() { }
 };

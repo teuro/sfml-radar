@@ -19,6 +19,8 @@
 #include "layout/drawable_list.hpp"
 #include "layout/drawable_table.hpp"
 #include "layout/drawable_input.hpp"
+#include "layout/drawable_Runway_Element.hpp"
+#include "layout/drawable_navpoint_element.hpp"
 #include "layout/clickable.hpp"
 #include "../tools/style/style.hpp"
 #include "../tools/settings.hpp"
@@ -115,10 +117,12 @@ protected:
     std::list <Style> styles;
     void draw_element(Image& img);
     void draw_element(Paragraph& p);
-    void draw_element(std::string text, Point& place, int color, int font_size);
+    void draw_element(std::string text, Point& place, unsigned int color, int font_size);
     void draw_element(std::shared_ptr <Drawable_input>& di);
 	void draw_element(Drawable_list& dl);
 	void draw_element(Drawable_table& dt);
+	void draw_element(Drawable_Runway_Element& re);
+	void draw_element(Drawable_Navpoint_Element& ne);
 	void draw_borders(Style& style);
 	
 	virtual void calculate_coordinate_limits();

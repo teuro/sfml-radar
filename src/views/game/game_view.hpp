@@ -7,6 +7,7 @@
 #include <iostream>
 
 #include "../view.hpp"
+#include "../layout/drawable_runway_element.hpp"
 #include "../../tools/tools.hpp"
 #include "../../tools/point_tools.hpp"
 #include "../../tools/settings.hpp"
@@ -145,6 +146,7 @@ private:
     void draw_plane(aircraft plane, aircraft selected, Point& mouse);
 	void draw_holdings();
 	bool loaded;
+	int calculate_heigth(double altitude);
 	
 	std::shared_ptr <Game> game;
 	std::shared_ptr <Drawable_input> input;

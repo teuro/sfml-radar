@@ -11,6 +11,8 @@ public:
 	explicit My_Color(int color);
 	
 	int get_color();
+	
+	bool operator ==(const My_Color& b);
 private:
 	int color;
 	

@@ -10,7 +10,7 @@
 
 class Airfield {
 public:
-    Airfield(std::string n, Coordinate& p, int max_speed, int initial_altitude, int acceleration_altitude, int speed_restriction_altitude);
+    Airfield(std::string n, Coordinate& p, int altitude, int max_speed, int initial_altitude, int acceleration_altitude, int speed_restriction_altitude);
     ~Airfield();
     std::vector <Runway>& get_runways();
     Coordinate& get_place();
