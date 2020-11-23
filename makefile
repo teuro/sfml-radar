@@ -1,6 +1,6 @@
 CXX := g++
-CXXFLAGS := -c -O -g -Wall -Wextra -pedantic -std=gnu++11
-LINKFLAGS := -O -g
+CXXFLAGS := -c -O2 -s -Wall -Wextra -pedantic -std=gnu++11
+LINKFLAGS := -O2 -s
 LIB_DIRS := -Lext/lib
 
 SFML_VERSION := 2.5.1

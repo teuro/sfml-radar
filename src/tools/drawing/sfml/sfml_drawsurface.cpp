@@ -105,7 +105,9 @@ void sfml_drawsurface::trigonColor(Point& a, unsigned int size, unsigned int col
 }
 
 void sfml_drawsurface::clear_screen(unsigned int color) {
-	//std::clog << "sfml_drawsurface::clear_screen(" << red << ", " << green << ", " << blue << ")" << std::endl;
+	#ifdef DEBUG
+	std::clog << "sfml_drawsurface::clear_screen(" << color << ")" << std::endl;
+	#endif
 	My_Color t_color(color);
 	sf::Color background(t_color.red, t_color.green, t_color.blue, 0);
 	this->window.clear(background);

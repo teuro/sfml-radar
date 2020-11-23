@@ -115,16 +115,16 @@ protected:
     std::shared_ptr <Settings> settings;
     std::shared_ptr <Menu> menu;
     std::list <Style> styles;
+	
     void draw_element(Image& img);
     void draw_element(Paragraph& p);
     void draw_element(std::string text, Point& place, unsigned int color, int font_size);
     void draw_element(std::shared_ptr <Drawable_input>& di);
 	void draw_element(Drawable_list& dl);
 	void draw_element(Drawable_table& dt);
-	void draw_element(Drawable_Runway_Element& re);
-	void draw_element(Drawable_Navpoint_Element& ne);
 	void draw_borders(Style& style);
-	
+	void draw_element(Drawable_Runway_Element& re);
+	void draw_element(Drawable_Navpoint_Element& re);
 	virtual void calculate_coordinate_limits();
 	
 	void style(Drawable_element& de);

@@ -94,7 +94,9 @@ void Style::set_attribute(std::string key, std::string value) {
 }
 
 unsigned int Style::parse_color(std::string color) {
-	int red, green, blue;
+	int red = 10;
+	int green = 10; 
+	int blue = 120;
 	
 	if (std::sscanf(color.c_str(), "rgb(%i, %i, %i);", &red, &green, &blue) == 3) {
 		

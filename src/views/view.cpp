@@ -46,7 +46,7 @@ void View::load(std::string state) {
 	this->load_styles();
 	this->load_layout(state);
 	
-	this->body.set_attribute("background-color", 0);
+	this->body.set_attribute("background-color", "rgb(0, 0, 0);");
 	this->body = this->find_style("body");
 }
 
@@ -202,6 +202,7 @@ void View::clear_screen() {
 	std::clog << "View::clear_screen(" << body.get_background_color() << ")" << std::endl;
 	#endif
 	
+	this->body = this->find_style("body");
 	drawer.clear_screen(body.get_background_color());
 }
 
