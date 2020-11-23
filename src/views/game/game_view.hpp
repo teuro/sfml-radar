@@ -17,19 +17,6 @@
 #include "../../models/game_objects/airfield.hpp"
 #include "../../models/game.hpp"
 
-class Drawable_plane : public Drawable_element {
-public:
-	Drawable_plane(std::string callsign, std::string t_name, std::string t_class, std::string t_id);
-private:
-	std::string callsign;
-};
-
-class Drawable_navpoint : public Drawable_element {
-public:
-	Drawable_navpoint(std::string name, std::string t_name, std::string t_class, std::string t_id);
-	std::string get_name();
-};
-
 /**
 	* Gameview is responsible to render game to screen.
 	* view 

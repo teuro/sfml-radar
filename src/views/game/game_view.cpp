@@ -1,9 +1,5 @@
 #include "game_view.hpp"
 
-Drawable_plane::Drawable_plane(std::string call, std::string t_name, std::string t_class, std::string t_id) : Drawable_element(t_name, t_class, t_id), callsign(call) { 
-	
-}
-
 Gameview::Gameview(Drawsurface& d, std::shared_ptr <Settings> s, std::shared_ptr <Game> g) : View(d, s), game(g) { 
 	this->loaded = false;
 }
@@ -189,7 +185,8 @@ void Gameview::draw_planes(std::list <aircraft> planes, aircraft selected, Point
 
 void Gameview::draw_airfield(std::shared_ptr <Airfield> airfield) {
     std::vector <Runway> runways = airfield->get_runways();
-    std::vector <Navpoint> navpoints = airfield->get_navpoints();
+    std::vector <Inpoint> inpoints = airfield->get_inpoints();
+    std::vector <Outpoint> outpoints = airfield->get_outpoints();
 	
     for (auto rwy : runways) {
 		Point rwys = this->calculate(rwy.get_start_place());
@@ -202,10 +199,21 @@ void Gameview::draw_airfield(std::shared_ptr <Airfield> airfield) {
 		this->draw_element(drwy);
     }
 	
-	for (auto navs : navpoints) {
+	for (auto navs : inpoints) {
         Point place_screen = this->calculate(navs.get_place());
 		
 		Drawable_Navpoint_Element dne(place_screen, navs.get_name());
+		dne.set_class("inpoint");
+		
+		this->style(dne);
+		this->draw_element(dne);
+    }
+	
+	for (auto navs : outpoints) {
+        Point place_screen = this->calculate(navs.get_place());
+		
+		Drawable_Navpoint_Element dne(place_screen, navs.get_name());
+		dne.set_class("outpoint");
 		
 		this->style(dne);
 		this->draw_element(dne);
