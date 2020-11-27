@@ -50,6 +50,10 @@ void View::load(std::string state) {
 	this->body = this->find_style("body");
 }
 
+/**
+	* @TODO repair this as to read one .css file 
+**/
+
 void View::load_styles() {
 	#ifdef DEBUG
 	std::clog << "View::load_styles()" << std::endl;
@@ -78,6 +82,10 @@ void View::load_styles() {
 	
 	throw std::logic_error("Directory not open");
 }
+
+/**
+	* @TODO move this to layout ASAP
+**/
 
 void View::load_layout(std::string state) {
 	#ifdef DEBUG

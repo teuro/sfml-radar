@@ -78,14 +78,6 @@ public:
 	
 	void clear_screen();
 	
-	/**
-		* itetare
-		* This walks through *.xml files and parses it to proper elements
-		* @param TiXmlNode* element
-	**/
-	
-	void iterate(TiXmlNode* element);
-	
 	virtual void update() = 0;
 	
 	/**
