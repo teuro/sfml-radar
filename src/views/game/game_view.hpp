@@ -130,7 +130,7 @@ private:
 		* @return void
 	**/
 	
-    void draw_plane(aircraft plane, aircraft selected, Point& mouse);
+    void draw_plane(aircraft plane, bool selected, Point& mouse);
 	void draw_holdings();
 	bool loaded;
 	int calculate_heigth(double altitude);

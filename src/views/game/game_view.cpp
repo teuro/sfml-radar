@@ -55,7 +55,7 @@ void Gameview::draw(Point& mouse) {
 	this->View::draw();
 }
 
-void Gameview::draw_plane(aircraft plane, aircraft selected, Point& mouse) {
+void Gameview::draw_plane(aircraft plane, bool selected, Point& mouse) {
 	Point aircraft_place = this->calculate(plane->get_place());
 	Point draw;
 	std::string id = "";
@@ -67,7 +67,7 @@ void Gameview::draw_plane(aircraft plane, aircraft selected, Point& mouse) {
 	Coordinate end_point_place_c = Tools::calculate(plane->get_place(), plane->get_heading(), plane->get_speed() * (1.0 / 60.0));
 	Point end_point_place_p = this->calculate(end_point_place_c);
 	
-	if (plane == selected) {
+	if (selected) {
 		id = "selected";
 	}
 	
@@ -142,6 +142,7 @@ void Gameview::draw_planes(std::list <aircraft> planes, aircraft selected, Point
     while (plane != planes.end()) {
 		std::string special;
 		Row row("tr", "", "");
+		bool is_selected = selected == (*plane);
 		
 		if ((*plane)->get_type() == APPROACH) {
 			if ((*plane)->get_expect() && !(*plane)->get_approach()) {
@@ -159,7 +160,7 @@ void Gameview::draw_planes(std::list <aircraft> planes, aircraft selected, Point
 		
 		Cell cell_2(special);
 		
-		if ((*plane) == selected) {
+		if (is_selected) {
 			row.clear_classes();
 			row.set_class("active");
 			cell_1.set_class("active");
@@ -176,7 +177,7 @@ void Gameview::draw_planes(std::list <aircraft> planes, aircraft selected, Point
 		
 		plane_table.add_row(row);
 
-        this->draw_plane((*plane), selected, mouse);
+        this->draw_plane((*plane), is_selected, mouse);
         ++plane;
     }
 
@@ -185,8 +186,7 @@ void Gameview::draw_planes(std::list <aircraft> planes, aircraft selected, Point
 
 void Gameview::draw_airfield(std::shared_ptr <Airfield> airfield) {
     std::vector <Runway> runways = airfield->get_runways();
-    std::vector <Inpoint> inpoints = airfield->get_inpoints();
-    std::vector <Outpoint> outpoints = airfield->get_outpoints();
+    std::vector <Navpoint> navpoints = airfield->get_navpoints();
 	
     for (auto rwy : runways) {
 		Point rwys = this->calculate(rwy.get_start_place());
@@ -199,21 +199,13 @@ void Gameview::draw_airfield(std::shared_ptr <Airfield> airfield) {
 		this->draw_element(drwy);
     }
 	
-	for (auto navs : inpoints) {
+	for (auto navs : navpoints) {
         Point place_screen = this->calculate(navs.get_place());
 		
 		Drawable_Navpoint_Element dne(place_screen, navs.get_name());
-		dne.set_class("inpoint");
 		
-		this->style(dne);
-		this->draw_element(dne);
-    }
-	
-	for (auto navs : outpoints) {
-        Point place_screen = this->calculate(navs.get_place());
 		
-		Drawable_Navpoint_Element dne(place_screen, navs.get_name());
-		dne.set_class("outpoint");
+		dne.set_class(navs.get_type());
 		
 		this->style(dne);
 		this->draw_element(dne);
