@@ -23,6 +23,7 @@
 #include "layout/drawable_navpoint_element.hpp"
 #include "layout/clickable.hpp"
 #include "../tools/style/style.hpp"
+#include "../tools/style_tools.hpp"
 #include "../tools/settings.hpp"
 #include "../tools/tools.hpp"
 #include "../tools/text_tools.hpp"
@@ -139,7 +140,6 @@ protected:
 	std::string command;
 private:
 	void add_style(std::list <Style> tmp);
-	std::list <Style> parse_css(std::string file);
 	void load_styles();
 	void load_layout(std::string state);
 	Style find_style(std::string name, std::set <std::string> t_classes, std::string id);
