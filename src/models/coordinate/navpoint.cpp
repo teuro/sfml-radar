@@ -2,9 +2,7 @@
 
 Navpoint::Navpoint() { }
 
-Navpoint::Navpoint(std::string name, Coordinate p) : place(p) {
-    this->name = name;
-}
+Navpoint::Navpoint(std::string n, Coordinate p, std::string t) : name(n), place(p), type(t) { }
 
 Navpoint::Navpoint(std::string name, double latitude, double longitude) {
     this->name = name;
@@ -24,4 +22,7 @@ std::string Navpoint::get_name() {
 
 bool Navpoint::operator ==(std::string name) {
     return this->name == name;
+}
+std::string Navpoint::get_type() {
+	return this->type;
 }
