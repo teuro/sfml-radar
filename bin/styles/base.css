@@ -52,12 +52,3 @@ navpoint {
 	border: rgb(10, 150, 10);
 	color: rgb(200, 50, 50);
 }
-
-.clickable {
-	color: rgb(250, 20, 20);
-}
-
-#menus {
-	top: 250px;
-	left: 30px;
-}
