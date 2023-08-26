@@ -12,8 +12,8 @@
 #include <list>
 #include <memory>
 
-#include "../tools.hpp"
-#include "../text_tools.hpp"
+#include <tools/tools.hpp>
+#include <tools/text_tools.hpp>
 #include "../settings.hpp"
 #include "../../models/coordinate/point.hpp"
 #include "../drawing/mycolor.hpp"

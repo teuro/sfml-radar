@@ -6,8 +6,6 @@
 #include <stdexcept>
 #include <memory>
 
-#include <sqlite3pp.h>
-
 #include "../controllers/controller.hpp"
 #include "../controllers/game/gamecontroller.hpp"
 #include "../models/coordinate/point.hpp"

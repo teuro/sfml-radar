@@ -6,7 +6,7 @@
 #include "runway.hpp"
 #include "../coordinate/inpoint.hpp"
 #include "../coordinate/outpoint.hpp"
-#include "../../tools/tools.hpp"
+#include <tools/tools.hpp>
 
 class Airfield {
 public:

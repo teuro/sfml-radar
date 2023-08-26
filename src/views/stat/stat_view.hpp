@@ -5,9 +5,9 @@
 #include <iostream>
 
 #include "../view.hpp"
-#include "../../tools/tools.hpp"
+#include <tools/tools.hpp>
 #include "../../tools/point_tools.hpp"
-#include "../../tools/time_tools.hpp"
+#include <tools/time_tools.hpp>
 #include "../../tools/settings.hpp"
 #include "../../models/game.hpp"
 #include "../../models/game_objects/aircraft.hpp"

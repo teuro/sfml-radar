@@ -7,6 +7,7 @@ Gamecontroller::Gamecontroller(std::shared_ptr <Settings> s, Drawsurface& d) : C
 	
 	this->frames = 0;
 	this->fps_time = 2000;
+	this->previous_fps_time = this->fps_time;
 	this->fps_end_time = 4000;
 	this->flash_message_begin = 0;
 	this->flash_message_time = 2500;
@@ -71,9 +72,21 @@ void Gamecontroller::handle_function_keys(int key) {
 			
 			this->command = (*this->quick_iterator);
 			break;
+		case 73:
+			if (this->state == MENU) {
+				this->airports->change_selection(-1);
+			} else if (this->state == ATIS) {
+				this->atis->update(-1);
+			}
+			break;
+		case 74:
+			if (this->state == MENU) {
+				this->airports->change_selection(1);
+			} else if (this->state == ATIS) {
+				this->atis->update(1);
+			}
+			break;
 	}
-	
-	this->handle_text_input();
 }
 
 void Gamecontroller::handle_mouse_release(Point& mouse_start, Point& mouse_end) {
@@ -165,12 +178,13 @@ void Gamecontroller::calculate_fps() {
 	#endif
 	
 	if (this->game_time > this->fps_end_time) {
-		this->fps = this->frames / (fps_time / 1000.0);
-		#ifdef DEBUG
-		std::clog << "Gamecontroller::calculate_fps() " << this->frames << " / (" << fps_time << " / " << 1000.0 << ") = " << this->fps << std::endl;
-		#endif
+		this->fps = this->frames / ((this->game_time - this->previous_fps_time) / 1000.0);
+		
+		//std::clog << this->frames << " / ((" << game_time << " - " << previous_fps_time << ") / 1000.0)" << std::endl;
+		
 		this->fps_end_time += this->fps_time;
 		this->frames = 0;
+		this->previous_fps_time = this->game_time;
 	}
 }
 
@@ -210,8 +224,7 @@ void Gamecontroller::update(double elapsed, Point& mouse) {
 	
 	if (this->state == GAME) {
 		std::string tmp = this->game->get_message();
-		//this->metar->update_pressure();
-
+		
 		if (tmp.length()) {
 			this->set_flash_message(tmp);
 		}
@@ -219,6 +232,7 @@ void Gamecontroller::update(double elapsed, Point& mouse) {
 		++this->frames;
 		this->calculate_fps();
 		this->game->update(elapsed);
+		this->metar->update();
 	}
 	
 	this->views[this->state]->clear_screen();
@@ -291,9 +305,7 @@ void Gamecontroller::handle_text_input() {
 		this->airport_name = this->airports->get_selected().get_name();
 		this->airport_selected = true;
 	} else if (this->state == ATIS) {
-		#ifdef DEBUG
 		out << "Gamecontroller::handle_text_input(" << this->atis_items->get_selected().get_name() << ")" << std::endl;
-		#endif
 		
 		this->atis->set_value(this->atis_items->get_selected().get_name());
 	}

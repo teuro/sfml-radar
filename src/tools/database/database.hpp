@@ -7,7 +7,7 @@
 #include <stdexcept>
 
 #include "queryresult.hpp"
-#include "../text_tools.hpp"
+#include <tools/text_tools.hpp>
 
 /**
     * Class Database

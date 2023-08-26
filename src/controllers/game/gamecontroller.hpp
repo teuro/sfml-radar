@@ -10,10 +10,10 @@
 #include "../../models/weather/metar.hpp"
 #include "../../models/menu/menu.hpp"
 #include "../../models/menu/menu_item.hpp"
-#include "../../tools/tools.hpp"
 #include "../../tools/point_tools.hpp"
-#include "../../tools/time_tools.hpp"
-#include "../../tools/text_tools.hpp"
+#include <tools/tools.hpp>
+#include <tools/time_tools.hpp>
+#include <tools/text_tools.hpp>
 #include "../../views/game/game_view.hpp"
 #include "../../views/atis/atis_view.hpp"
 #include "../../views/stat/stat_view.hpp"
@@ -174,6 +174,7 @@ private:
 
 	int function_key;
 	double game_time;
+	double previous_fps_time;
 	double flash_message_begin;
 	double flash_message_time;
 	std::string message;

@@ -2,7 +2,7 @@
 #define _RUNWAY_HPP
 
 #include "../coordinate/coordinate.hpp"
-#include "../../tools/tools.hpp"
+#include <tools/tools.hpp>
 #include "../../tools/coordinate_tools.hpp"
 
 class Runway {

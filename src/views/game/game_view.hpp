@@ -8,7 +8,7 @@
 
 #include "../view.hpp"
 #include "../layout/drawable_runway_element.hpp"
-#include "../../tools/tools.hpp"
+#include <tools/tools.hpp>
 #include "../../tools/point_tools.hpp"
 #include "../../tools/settings.hpp"
 #include "../../models/coordinate/coordinate.hpp"

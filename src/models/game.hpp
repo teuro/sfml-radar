@@ -15,9 +15,9 @@
 #include "game_objects/airfield.hpp"
 #include "weather/atis.hpp"
 #include "../tools/settings.hpp"
-#include "../tools/tools.hpp"
-#include "../tools/text_tools.hpp"
-#include "../tools/time_tools.hpp"
+#include <tools/tools.hpp>
+#include <tools/text_tools.hpp>
+#include <tools/time_tools.hpp>
 #include "../tools/database/database.hpp"
 #include "game_objects/Clearances/speed_clearance.hpp"
 #include "game_objects/Clearances/heading_clearance.hpp"

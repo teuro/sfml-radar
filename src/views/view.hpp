@@ -25,8 +25,8 @@
 #include "../tools/style/style.hpp"
 #include "../tools/style_tools.hpp"
 #include "../tools/settings.hpp"
-#include "../tools/tools.hpp"
-#include "../tools/text_tools.hpp"
+#include <tools/tools.hpp>
+#include <tools/text_tools.hpp>
 #include "../models/menu/menu.hpp"
 
 /**

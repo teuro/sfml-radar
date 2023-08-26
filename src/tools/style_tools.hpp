@@ -1,6 +1,6 @@
 #include <fstream>
 #include <string>
-#include "tools.hpp"
+#include <tools/tools.hpp>
 #include "style/style.hpp"
 #include "settings.hpp"
 

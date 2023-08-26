@@ -5,7 +5,7 @@
 
 #include "../coordinate/inpoint.hpp"
 #include "../coordinate/outpoint.hpp"
-#include "../../tools/tools.hpp"
+#include <tools/tools.hpp>
 #include "../../tools/settings.hpp"
 #include "runway.hpp"
 #include "airfield.hpp"

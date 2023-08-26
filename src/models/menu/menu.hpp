@@ -8,7 +8,7 @@
 
 #include "menu_item.hpp"
 
-#include "../../tools/text_tools.hpp"
+#include <tools/text_tools.hpp>
 
 class Menu {
 public:

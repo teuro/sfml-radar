@@ -32,13 +32,11 @@ std::string Metar::to_string() {
 
 void Metar::update_pressure() {
 	this->pressure = Tools::normal_distribution(average_pressure, variation_pressure);
+	this->pressures.push_back(this->pressure);
+	this->pressure = Tools::average(this->pressures);
 	
-	if (this->pressure < 943) {
-		std::cerr << "Generated pressure " << this->pressure <<  " is too low" << std::endl;
-		this->pressure = 944;
-	} else if (this->pressure > 1050) {
-		std::cerr << "Generated pressure " << this->pressure <<  " is too high" << std::endl;
-		this->pressure = 1049;
+	if (this->pressures.size() > 100) {
+		this->pressures.pop_front();
 	}
 }
 
@@ -49,11 +47,11 @@ void Metar::update() {
 	this->id_code = Tools::tostr(ltm->tm_mday, 2) + Tools::tostr(ltm->tm_hour-3, 2) + Tools::tostr(ltm->tm_min, 2) + "z";
 	this->clouds.clear();
 	this->temperature = 15;
-    this->generate_humidity();
-    this->generate_visibility();
-    this->generate_wind();
+    //this->generate_humidity();
+    //this->generate_visibility();
+    //this->generate_wind();
     this->devpoint = (int)this->temperature - ((100 - this->humidity) / 5);
-	this->generate_clouds();
+	//this->generate_clouds();
 }
 
 void Metar::generate_visibility() {

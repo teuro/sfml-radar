@@ -8,9 +8,9 @@
 #include <random>
 #include <memory>
 
-#include "../../tools/tools.hpp"
+#include <tools/tools.hpp>
+#include <tools/text_tools.hpp>
 #include "../../tools/settings.hpp"
-#include "../../tools/text_tools.hpp"
 
 /**
 	* Cloud represent of clouds
@@ -54,6 +54,7 @@ private:
     int visibility;
 	
     std::list <Cloud> clouds;
+    std::list <int> pressures;
     Wind wind;
 	std::string id_code;
 	void generate_clouds();

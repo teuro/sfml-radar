@@ -1,7 +1,5 @@
 CXX := g++
-CXXFLAGS := -c -O -g -Wall -Wextra -pedantic -std=gnu++11
-LINKFLAGS := -O -g
-LIB_DIRS := -Lext/lib
+CXXFLAGS := -c -O -g -Wall -Wextra -pedantic -std=gnu++17
 
 SFML_VERSION := 2.5.1
 
@@ -14,7 +12,7 @@ FILES_DEP := $(patsubst src/%,build/%.dep,$(FILES_CPP))
 GUI_SRC := $(filter-out src/cli/%,$(FILES_CPP))
 GUI_BIN := bin/atcradar
 
-GUI_LIBS := -lsfml-system -lsfml-window -lsfml-graphics -lsfml-network -lsqlite3pp -lsqlite -ltinyxml
+GUI_LIBS := -lsfml-system -lsfml-window -lsfml-graphics -lsfml-network -lsqlite3pp -lsqlite -ltinyxml -lstdc++ -ltools
 
 # Hack for OS differences.
 # On Windows, echo '1' produces literally '1' instead of 1.
@@ -58,7 +56,7 @@ all: gui
 gui: $(GUI_BIN)
 
 clean:
-	@echo [RM] $(call rm_rf, build html)
+	@echo [RM] $(call rm_rf, build html bin)
 clean_deps:
 	@echo [RM] $(call rm_rf,$(FILES_DEP))
 clean_html:
@@ -76,7 +74,7 @@ $(GUI_BIN): $(patsubst src/%,build/%.o,$(GUI_SRC))
 $(GUI_BIN):
 	@echo [LINK] $@
 	@$(call mkdir,$(dir $@))
-	@$(CXX) $(LINKFLAGS) $(LIB_DIRS) -o $@ $(filter %.o,$^) $(GUI_LIBS)
+	@$(CXX) -o $@ $(filter %.o,$^) $(GUI_LIBS)
 
 
 # Include dependencies; generation rules are below.
@@ -90,7 +88,7 @@ build/%.dep: src/%
 
 # Compilation
 build/%.o: src/% build/%.dep
-	@echo [CXX] $<
+	@echo [COMPILE] $<
 	@$(call mkdir,$(dir $@))
 	@$(CXX) $(CXXFLAGS) $(CXX_VER) $< -c -o $@
 

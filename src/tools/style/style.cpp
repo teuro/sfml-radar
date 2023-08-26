@@ -11,7 +11,7 @@ Style::Style(std::shared_ptr <Settings> s) : settings(s) {
 	this->background_color = 0;
 	this->border_color = 0;
 	this->margin = 5;
-	this->font_size = 16;
+	this->font_size = 24;
 }
 
 Style::Style() { 
@@ -25,7 +25,7 @@ Style::Style() {
 	this->background_color = 0;
 	this->border_color = 0;
 	this->margin = 5;
-	this->font_size = 16;
+	this->font_size = 24;
 }
 
 Style::~Style() { }
@@ -56,7 +56,7 @@ void Style::set_attribute(std::string key, std::string value) {
 	
     if (key == "left") {
         this->place.set_x(Tools::tonumber<int>(value));
-		this->left = Tools::tonumber<int>(value);
+		this->left = Tools::toint(value);
     } else if (key == "right") {
         this->place.set_x(this->settings->screen_width - Tools::tonumber<int>(value));
 		this->left = this->settings->screen_width - Tools::tonumber<int>(value);
@@ -88,7 +88,7 @@ void Style::set_attribute(std::string key, std::string value) {
 		this->margin = Tools::toint(value);
 	} else if (key == "border") {
 		this->border_color = this->parse_color(value);
-	} else if (key == "font") {
+	} else if (key == "font-size") {
 		this->font_size = Tools::toint(value);
 	}
 }

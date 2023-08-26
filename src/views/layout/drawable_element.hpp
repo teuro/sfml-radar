@@ -5,7 +5,7 @@
 #include <list>
 #include <set>
 #include "../../models/coordinate/point.hpp"
-#include "../../tools/tools.hpp"
+#include <tools/tools.hpp>
 #include "../../tools/style/style.hpp"
 
 /**
