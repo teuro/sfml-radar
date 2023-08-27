@@ -11,7 +11,7 @@ Style::Style(std::shared_ptr <Settings> s) : settings(s) {
 	this->background_color = 0;
 	this->border_color = 0;
 	this->margin = 5;
-	this->font_size = 24;
+	this->font_size = 20;
 }
 
 Style::Style() { 
@@ -25,7 +25,7 @@ Style::Style() {
 	this->background_color = 0;
 	this->border_color = 0;
 	this->margin = 5;
-	this->font_size = 24;
+	this->font_size = 32;
 }
 
 Style::~Style() { }
@@ -41,6 +41,8 @@ void Style::set_attribute(std::string key, int value) {
 			this->border_color = value;
 		} else if (key == "margin") {
 			this->margin = value;
+		} else if (key == "font-size") {
+			this->font_size = value;
 		} else { 
 			this->set_attribute(key, Tools::tostr(value));
 		}

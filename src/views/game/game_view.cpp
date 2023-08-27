@@ -203,11 +203,10 @@ void Gameview::draw_airfield(std::shared_ptr <Airfield> airfield) {
         Point place_screen = this->calculate(navs.get_place());
 		
 		Drawable_Navpoint_Element dne(place_screen, navs.get_name());
-		
-		
+			
 		dne.set_class(navs.get_type());
-		
 		this->style(dne);
+		
 		this->draw_element(dne);
     }
 }

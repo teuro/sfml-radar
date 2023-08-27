@@ -60,6 +60,7 @@ void Drawable_element::calculate_styles() {
 		this->style.set_attribute("shape", (*style).get_shape());
 		this->style.set_attribute("class", (*style).get_class());
 		this->style.set_attribute("id", (*style).get_id());
+		this->style.set_attribute("font-size", (*style).get_font_size());
 		
 		++style;
 	 }

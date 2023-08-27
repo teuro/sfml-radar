@@ -342,7 +342,8 @@ void View::draw_element(Drawable_Navpoint_Element& ne) {
 	this->drawer.trigonColor(place_screen, 15, ne.get_style().get_text_color(), ne.get_style().get_border_color());
 	place_screen.change_x(15);
 	place_screen.change_y(-10);
-	this->drawer.draw_text(ne.get_name(), place_screen, ne.get_style().get_text_color());
+	
+	this->drawer.draw_text(ne.get_name(), place_screen, ne.get_style().get_text_color(), ne.get_style().get_font_size());
 }
 
 void View::draw_element(std::shared_ptr <Drawable_input>& i) {
@@ -417,7 +418,6 @@ Style View::find_style(std::string name, std::set <std::string> t_classes, std::
 }
 
 void View::style(Drawable_element& de) {
-	//std::clog << de.get_id() << " " << de.get_class() << std::endl;
 	#ifdef DEBUG
 	std::clog << "View::style(Drawable_element& de)" << std::endl;
 	#endif
@@ -527,8 +527,6 @@ void View::draw_element(Drawable_table& dt) {
 		#ifdef DEBUG 
 		std::clog << "Count of cells " <<  c_list.size() << std::endl;
 		#endif
-		
-		//std::clog << "View::draw_element(row) " << rit->get_class() << std::endl;
 		
 		unsigned int r_color = rit->get_style().get_text_color();
 			
