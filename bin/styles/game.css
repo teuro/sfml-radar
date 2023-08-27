@@ -35,9 +35,11 @@
 .inpoint {
 	color: rgb(250, 20, 20);
 	border: rgb(250, 20, 20);
+	font-size: 30px;
 }
 
 .outpoint {
 	color: rgb(20, 20, 250);
 	border: rgb(20, 20, 250);
+	font-size: 30px;
 }

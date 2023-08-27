@@ -51,4 +51,5 @@ runway {
 navpoint {
 	border: rgb(10, 150, 10);
 	color: rgb(200, 50, 50);
+	font-size: 30px;
 }
