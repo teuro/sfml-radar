@@ -70,7 +70,7 @@ void View::load_styles() {
 		#endif
 		while ((ent = readdir (dir)) != NULL) {
 			std::string file_name = this->settings->style_folder + std::string(ent->d_name);
-			std::clog << "loading style-file: " << file_name << std::endl;
+			
 			if (file_name != "/." && file_name != "/..") {
 				this->add_style(Tools::parse_css(file_name, this->settings));
 			}

@@ -129,6 +129,7 @@ protected:
 	std::vector <Drawable_list> lists;
 	std::vector <Drawable_table> tables;
 	std::vector <Clickable> clicks;
+	std::list <std::string> style_files;
 	std::string command;
 private:
 	void add_style(std::list <Style> tmp);
