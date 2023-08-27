@@ -1,13 +1,18 @@
 CXX := g++
-CXXFLAGS := -c -O -g -Wall -Wextra -pedantic -std=gnu++17
+CXXFLAGS := -O2 -s -Wall -Wextra -pedantic -std=gnu++17
+CXXFLAGS_DEBUG := -O -g -Wall -Wextra -pedantic -std=gnu++17
 
-SFML_VERSION := 2.5.1
+TARGET := release
+DEBUG := YES
 
-CXX_VER = "-DSFML_VERSION=\"$(SFML_VERSION)\""
+ifeq (YES, ${DEBUG})
+   CXXFLAGS     := ${CXXFLAGS_DEBUG}
+   TARGET 		:= debug
+endif
 
 FILES_CPP := $(wildcard src/*.cpp) $(wildcard src/*/*.cpp) $(wildcard src/*/*/*.cpp) $(wildcard src/*/*/*/*.cpp)
 FILES_HPP := $(wildcard src/*.hpp) $(wildcard src/*/*.hpp) $(wildcard src/*/*/*.hpp) $(wildcard src/*/*/*/*.hpp)
-FILES_DEP := $(patsubst src/%,build/%.dep,$(FILES_CPP))
+FILES_DEP := $(patsubst src/%,depend/%.dep,$(FILES_CPP))
 
 GUI_SRC := $(filter-out src/cli/%,$(FILES_CPP))
 GUI_BIN := bin/atcradar
@@ -56,7 +61,7 @@ all: gui
 gui: $(GUI_BIN)
 
 clean:
-	@echo [RM] $(call rm_rf, build html bin)
+	@echo [RM] $(call rm_rf, build html)
 clean_deps:
 	@echo [RM] $(call rm_rf,$(FILES_DEP))
 clean_html:
@@ -69,7 +74,7 @@ html: Doxyfile $(FILES_CPP) $(FILES_HPP)
 	@doxygen > html/doxygen.log
 
 # Build rules for binaries.
-$(GUI_BIN): $(patsubst src/%,build/%.o,$(GUI_SRC))
+$(GUI_BIN): $(patsubst src/%,$(TARGET)/build/%.o,$(FILES_CPP))
 
 $(GUI_BIN):
 	@echo [LINK] $@
@@ -81,13 +86,13 @@ $(GUI_BIN):
 -include $(FILES_DEP)
 
 # Dependency generation.
-build/%.dep: src/%
+depend/%.dep: src/%
 	@echo [DEPEND] $<
 	@$(call mkdir,$(dir $@))
-	@$(CXX) $(CXXFLAGS) $(CXX_VER) -MM $< -MT $@ -MP > $@
+	@$(CXX) $(CXXFLAGS) -MM $< -MT $@ -MP > $@
 
 # Compilation
-build/%.o: src/% build/%.dep
+$(TARGET)/build/%.o: src/% depend/%.dep
 	@echo [COMPILE] $<
 	@$(call mkdir,$(dir $@))
 	@$(CXX) $(CXXFLAGS) $(CXX_VER) $< -c -o $@
