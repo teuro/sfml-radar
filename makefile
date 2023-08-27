@@ -96,6 +96,3 @@ $(TARGET)/build/%.o: src/% depend/%.dep
 	@echo [COMPILE] $<
 	@$(call mkdir,$(dir $@))
 	@$(CXX) $(CXXFLAGS) $(CXX_VER) $< -c -o $@
-
-# Always regenerate program version string
-build/ProgramInfo.cpp.o: $(FILES_CPP) $(FILES_HPP)
