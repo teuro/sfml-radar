@@ -8,6 +8,8 @@
 #include <SFML/Graphics.hpp>
 #include <fstream>
 #include <iostream>
+#include <list>
+#include <tools/tools.hpp>
 
 class SFML_window : public Window {
 public:

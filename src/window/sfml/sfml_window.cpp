@@ -9,7 +9,7 @@ void SFML_window::init() {
     std::clog << "SFML_window::init()" << std::endl;
 	#endif
 	
-	this->time_change = sf::milliseconds(40);
+	this->time_change = sf::milliseconds(100);
 	
 	this->load_settings();
 }
@@ -79,6 +79,9 @@ void SFML_window::run() {
 	
 	sf::Event event;
 	bool on_run = true;
+	std::list <int> waits;
+	unsigned int round = 0;
+	unsigned int rounds = 50;
 	
 	while (on_run) {
 		while (window.pollEvent(event) && on_run) {
@@ -86,10 +89,34 @@ void SFML_window::run() {
 		}
 		
 		time_now = this->clock.restart();
+		int wait = (time_change - time_now).asMilliseconds();
+		
+		if (wait) {
+			waits.push_back(wait);
+		}
+		
+		//std::clog << "Sleeping " << Tools::average(waits) << " ms" << std::endl;
+		
+		if (waits.size()) {
+			if (waits.size() > rounds) {
+				waits.pop_front();
+			}
+			
+			if (round == rounds) {
+				if (Tools::average(waits) > 20) {
+					this->time_change -= sf::milliseconds(1);
+				} else if (Tools::average(waits) < 15) {
+					this->time_change += sf::milliseconds(10);
+				}
+				
+				round = 0;
+			}
+		}
 		
 		gamecontroller.update(time_change.asMilliseconds(), mouse);
 		
-		sf::sleep(time_change - time_now);	
+		sf::sleep(sf::milliseconds(wait));
+		++round;
 	}
 }
 
