@@ -18,6 +18,9 @@ class Database {
 public:
 	Database();
 	
+	void insert(std::string table_name, std::list <std::string> columns, std::list <std::string> values);
+	void update(std::string table_name, std::map <std::string, std::string> values, std::string condition);
+	
 	/**
         * Make a query and returns data
 		* Makes absolutely anything to results, so You receive raw data from database
