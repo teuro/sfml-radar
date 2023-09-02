@@ -217,12 +217,14 @@ void Game::create_planes(int amount) {
 	}
 }
 
-void Game::update(double elapsed) {	
+void Game::update(double elapsed) {
+	Database db;
+	
+	std::map <std::string, std::string> val;
+	
 	#ifdef DEBUG
     std::clog << "Game::get_game_points(" << elapsed << ")" << std::endl;
 	#endif
-	
-	
 	
 	if (!this->loaded) {
 		throw std::logic_error("Game is not loaded");
@@ -240,6 +242,10 @@ void Game::update(double elapsed) {
 		
 		if ((*it)->remove()) {
 			(*it)->set_out_time(this->duration);
+			std::pair <std::string, std::string> value{"time_out", Tools::tostr(this->duration)};
+			val.insert(value);
+			
+			db.update("planes", val, "callsign = '" + (*it)->get_name() + "'");
 			calculate_points(*it);
 			it = this->aircrafts.erase(it);
 			continue;
@@ -342,6 +348,16 @@ void Game::create_plane() {
 		plane->set_in_time(this->duration);
 		this->aircrafts.push_back(plane);
 	}
+	
+	std::list <std::string> col;
+	col.push_back("callsign");
+	col.push_back("time_in");
+	
+	std::list <std::string> val;
+	val.push_back(callsign);
+	val.push_back(Tools::tostr(this->duration));
+	
+	db.insert("planes", col, val);
 }
 
 void Game::load_navpoints(int airfield_id) {
