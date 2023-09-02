@@ -57,11 +57,10 @@ ifdef WIN32
 endif
 
 # Abstract build rules.
-all: gui
-gui: $(GUI_BIN)
+all: $(GUI_BIN)
 
 clean:
-	@echo [RM] $(call rm_rf, build html)
+	@echo [RM] $(call rm_rf, release debug depend)
 clean_deps:
 	@echo [RM] $(call rm_rf,$(FILES_DEP))
 clean_html:
