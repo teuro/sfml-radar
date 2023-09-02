@@ -164,7 +164,7 @@ bool SFML_window::handle_event(sf::Event& event, Controller& ctrl, sf::RenderWin
 				ctrl.handle_function_keys(sf::Keyboard::Down);
 			} else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
 				ctrl.handle_function_keys(sf::Keyboard::Up);
-			}
+			} 
             
 			return true;
 			
