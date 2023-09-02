@@ -63,7 +63,10 @@ void Gamecontroller::handle_function_keys(int key) {
 	#endif
 	
 	switch (key) {
-		case 60:
+		case 60: /** Tab **/
+			for (auto qi: this->quicklist) {
+				std::clog << qi << std::endl;
+			}
 			++this->quick_iterator;
 			
 			if (this->quick_iterator == this->quicklist.end()) {
@@ -71,6 +74,7 @@ void Gamecontroller::handle_function_keys(int key) {
 			} 
 			
 			this->command = (*this->quick_iterator);
+			this->handle_text_input();
 			break;
 		case 73:
 			if (this->state == MENU) {
