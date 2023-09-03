@@ -22,7 +22,7 @@ Queryresult::Queryresult() { }
 Queryresult::~Queryresult() { }
 
 std::string Queryresult::operator()(unsigned int row, std::string s) {
-    std::vector<std::string> :: iterator p = std::find(headers.begin(), headers.end(), s);
+    std::vector <std::string> :: iterator p = std::find(headers.begin(), headers.end(), s);
 
     if (p != headers.end()) {
         int column = std::distance(headers.begin(), p);
@@ -40,6 +40,6 @@ Queryrow Queryresult::operator[](unsigned int row) {
     return this->queryrows[row];
 }
 
- std::size_t Queryresult::size() {
+std::size_t Queryresult::size() {
     return this->queryrows.size();
 }

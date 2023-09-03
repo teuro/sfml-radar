@@ -1,6 +1,7 @@
 #include <iostream>
 #include <stdexcept>
 
+#include "setup/database_setup.hpp"
 #include "window/sfml/sfml_window.hpp"
 
 /**
@@ -9,7 +10,13 @@
 	* 
 **/
 
-int main(){
+int main(int argc, char** argv) {
+	if (argc > 1) {
+		if (strcmp(argv[1], "-ct") == 0) {
+			Setup::create_tables();
+		}
+	}
+	
     try {
         SFML_window window;
 		
