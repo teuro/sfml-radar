@@ -37,8 +37,26 @@ Game::~Game() { }
 
 void Game::load(std::string airfield) {
 	#ifdef DEBUG
-    std::clog << "Game::load(" << airfield << ")" << std::endl;
+	std::clog << "Game::load(" << airfield << ")" << std::endl;
 	#endif
+	
+	Database db;
+	
+	Queryresult game_id_query = db.get_result("SELECT MAX(id) AS id FROM games GROUP BY id");
+	
+	int game_id = 1;
+	
+	if (game_id_query.size() > 0) { 
+		game_id = 1 + Tools::toint(game_id_query(0, "id"));
+	}
+	
+	std::list <std::string> col;
+	std::list <std::string> val;
+	
+	col.push_back("id");
+	val.push_back(Tools::tostr(game_id));
+	
+	db.insert("games", col, val);
 	
     this->load_airfield(airfield);
 
@@ -317,6 +335,7 @@ void Game::create_plane() {
 	#ifdef DEBUG
 	std::clog << "Game::create_plane()" << std::endl;
 	#endif
+	int game_id = -1;
 	
 	Database db;
 	
@@ -328,6 +347,9 @@ void Game::create_plane() {
 	Outpoint outpoint = this->select_outpoint();
 	
 	Queryresult airlines = db.get_result("SELECT ICAO FROM airlines");
+	Queryresult game_id_query = db.get_result("SELECT MAX(id) AS id FROM games GROUP BY id");
+	
+	game_id = Tools::toint(game_id_query(0, "id"));
 	
 	int t_type = Tools::linear_random(1, 100);
 	
@@ -351,10 +373,12 @@ void Game::create_plane() {
 	
 	std::list <std::string> col;
 	col.push_back("callsign");
+	col.push_back("game_id");
 	col.push_back("time_in");
 	
 	std::list <std::string> val;
 	val.push_back(callsign);
+	val.push_back(Tools::tostr(game_id));
 	val.push_back(Tools::tostr(this->duration));
 	
 	db.insert("planes", col, val);
