@@ -21,6 +21,7 @@ void Statview::load() {
 	
 	std::vector <Drawable_table> :: iterator tit = tables.begin();
 	int sum_points = 0;
+	
 	while (tit != tables.end()) {
 		if ((*tit).get_id() == std::string("points")) {
 			int area = 0;
@@ -45,27 +46,28 @@ void Statview::load() {
 			}
 			
 			tit->clear_rows();
-			
-			std::list <aircraft> handled_planes = this->game->get_handled_planes_list();
-			std::list <aircraft> :: iterator hpit = handled_planes.begin();
+			Queryresult handled_planes = this->game->get_stat_data();
 			double area_time;
 			
-			while (hpit != handled_planes.end()) {
-				Aircraft& plane = *(*hpit);
+			for (unsigned int i = 0; i < handled_planes.size(); ++ ++i) {
 				std::list <Cell> t_cells = replaced.get_cells();
-				area_time = plane.get_out_time() - plane.get_in_time();
+				
+				double in_time = Tools::toint(handled_planes(i, "in_time"));
+				double out_time = Tools::toint(handled_planes(i, "out_time"));
+				
+				area_time = out_time - in_time;
 				
 				area += area_time;
-				clearances += plane.get_clearances();
+				clearances += Tools::toint(handled_planes(i, "clearances"));
 				
-				this->repl["[callsign]"] = plane.get_name();
-				this->repl["[in_time]"] = Tools::totime(plane.get_in_time());
-				this->repl["[out_time]"] = Tools::totime(plane.get_out_time());
+				this->repl["[callsign]"] = handled_planes(i, "callsign");
+				this->repl["[in_time]"] = Tools::totime(in_time);
+				this->repl["[out_time]"] = Tools::totime(out_time);
 				this->repl["[area_time]"] = Tools::totime(area_time);
-				this->repl["[points]"] = Tools::tostr(plane.get_points(), 8);
-				this->repl["[clearances]"] = Tools::tostr(plane.get_clearances(), 3);
+				this->repl["[points]"] = Tools::tostr(handled_planes(i, "points"), 8);
+				this->repl["[clearances]"] = Tools::tostr(handled_planes(i, "clearances"), 3);
 				
-				sum_points += plane.get_points();
+				sum_points += Tools::toint(handled_planes(i, "points"));
 				
 				Row row;
 				
@@ -81,11 +83,9 @@ void Statview::load() {
 				}
 				
 				tit->add_row(row);
-				
-				++hpit;
 			}
 			
-			this->repl["[AREA]"] = Tools::totime(area / this->game->get_handled_planes_list().size());
+			this->repl["[AREA]"] = Tools::totime(area / this->game->get_handled_planes());
 			this->repl["[SUM]"] = Tools::tostr(sum_points, 8);
 			this->repl["[CLRC]"] = Tools::tostr(clearances, 3);
 			

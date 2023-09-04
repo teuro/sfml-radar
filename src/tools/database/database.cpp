@@ -2,7 +2,7 @@
 
 Database::Database() { }
 
-void Database::insert(std::string table_name, std::list <std::string> columns, std::list <std::string> values) {
+int Database::insert(std::string table_name, std::list <std::string> columns, std::list <std::string> values) {
 	sqlite3pp::database db("databases/radar.db");
 	
 	std::string query = "INSERT INTO " +  table_name + " (";
@@ -22,6 +22,10 @@ void Database::insert(std::string table_name, std::list <std::string> columns, s
 	query += ")";
 	
 	db.execute(query.c_str());
+	
+	int last_id = db.last_insert_rowid();
+	
+	return last_id;
 }
 
 void Database::update(std::string table_name, std::map <std::string, std::string> values, std::string condition) {

@@ -61,6 +61,14 @@ void Aircraft::load() {
 
 Aircraft::~Aircraft() { }
 
+int Aircraft::get_id() {
+	return this->id;
+}
+
+void Aircraft::set_id(int id) {
+	this->id = id;
+}
+
 double Aircraft::get_in_time() {
 	return this->in_time;
 }

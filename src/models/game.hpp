@@ -42,7 +42,6 @@ public:
 	~Game();
 
 	std::list <aircraft> get_aircrafts();
-	std::list <aircraft> get_handled_planes_list();
 	
 	aircraft selected;
 
@@ -112,8 +111,12 @@ public:
 	std::list <aircraft> get_holdings();
 	int get_clearance_count();
 	std::shared_ptr <Atis> get_atis();
+	Queryresult get_stat_data();
 private:
+	unsigned int clearance_count;
+	unsigned int handled_planes;
 	int level;
+	int game_id;
     void load_airfield(std::string icao);
     void check_collision();
     void handle_holdings();
@@ -128,7 +131,6 @@ private:
 
 	std::vector     <Navpoint>					navpoints;
 	std::list       <aircraft>					aircrafts;
-	std::list       <aircraft>					handled_planes;
 	std::list		<aircraft>					holdings;
 	std::queue      <std::string>				display_messages;
 	std::queue      <std::string>				game_errors;

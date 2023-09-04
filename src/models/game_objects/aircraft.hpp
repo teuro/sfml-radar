@@ -98,12 +98,15 @@ public:
 	double get_in_time();
 	double get_out_time();
 	int get_points();
+	int get_id();
+	void set_id(int id);
 	
 	void set_in_time(double in);
 	void set_out_time(double out);
 	void set_points(int points);
 protected:
 private:
+	int id;
     Coordinate place;
     std::string name;
     bool separation_error;

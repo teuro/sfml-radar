@@ -18,7 +18,7 @@ class Database {
 public:
 	Database();
 	
-	void insert(std::string table_name, std::list <std::string> columns, std::list <std::string> values);
+	int insert(std::string table_name, std::list <std::string> columns, std::list <std::string> values);
 	void update(std::string table_name, std::map <std::string, std::string> values, std::string condition);
 	
 	/**

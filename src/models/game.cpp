@@ -12,6 +12,8 @@ Game::Game(std::shared_ptr <Settings> s, std::shared_ptr <Atis> a) : settings(s)
 	this->pop_holdings = -1;
 	this->separation_errors = 0;
 	this->new_plane = 0;
+	this->clearance_count = 0;
+	this->handled_planes = 0;
 	
 	/** TESTING DATA STAT VIEW **/
 	
@@ -44,10 +46,8 @@ void Game::load(std::string airfield) {
 	
 	Queryresult game_id_query = db.get_result("SELECT MAX(id) AS id FROM games GROUP BY id");
 	
-	int game_id = 1;
-	
 	if (game_id_query.size() > 0) { 
-		game_id = 1 + Tools::toint(game_id_query(0, "id"));
+		this->game_id = 1 + Tools::toint(game_id_query(0, "id"));
 	}
 	
 	std::list <std::string> col;
@@ -69,6 +69,14 @@ void Game::load(std::string airfield) {
 	this->loaded = true;
 }
 
+Queryresult Game::get_stat_data() {
+	Database db;
+	
+	Queryresult stat = db.get_result("SELECT in_time, out_time, callsign, clearances, points FROM planes ORDER BY in_time ASC");
+	
+	return stat;
+}
+
 std::shared_ptr <Airfield> Game::get_active_field() {
 	#ifdef DEBUG
     std::clog << "Game::get_active_field()" << std::endl;
@@ -79,14 +87,6 @@ std::shared_ptr <Airfield> Game::get_active_field() {
 	}
 	
     return this->active_field;
-}
-
-std::list <aircraft> Game::get_handled_planes_list() {
-	#ifdef DEBUG
-    std::clog << "Game::get_handled_planes()" << std::endl;
-	#endif
-	
-    return this->handled_planes;
 }
 
 std::shared_ptr <Atis> Game::get_atis() {
@@ -182,33 +182,20 @@ void Game::calculate_points(aircraft plane) {
 	std::clog << "Game::calculate_points(" << type << ", " << clearance_count << ", " << plane.get_name() << ")" << std::endl;
 	#endif
 	
-	this->handled_planes.push_back(plane);
-	int type = this->handled_planes.back()->get_type();
-	int clearances = this->handled_planes.back()->get_clearances();
-	double in_time = this->handled_planes.back()->get_in_time();
-	double out_time = this->handled_planes.back()->get_out_time();
+	int type = plane->get_type();
+	int clearances = 0;
+	double in_time = 0;
+	double out_time = 0;
 	
 	double target_time = ((type == APPROACH) ? 13 : 6) * 60 * 60 * 1000;
 	
 	double time = out_time - in_time;
 	
 	int points = ((1 == 0) ? 40000 : 65000) / clearances / (time / target_time);
-	
-	this->handled_planes.back()->set_points(points);
 }
 
 int Game::get_clearance_count() {
-	int count = 0;
-	
-	for (auto p : this->aircrafts) {
-		count += (*p).get_clearances();
-	}
-	
-	for (auto p : this->handled_planes) {
-		count += (*p).get_clearances();
-	}
-	
-	return count;
+	return this->clearance_count;
 }
 
 double Game::get_game_points() {
@@ -217,10 +204,6 @@ double Game::get_game_points() {
 	#endif
 	
 	double sum = 0;
-	
-	for (auto p : this->handled_planes) {
-		sum += (*p).get_points();
-	}
 	
 	return sum;
 }
@@ -259,13 +242,13 @@ void Game::update(double elapsed) {
         aircraft_message = (*it)->update(elapsed);
 		
 		if ((*it)->remove()) {
-			(*it)->set_out_time(this->duration);
 			std::pair <std::string, std::string> value{"time_out", Tools::tostr(this->duration)};
 			val.insert(value);
 			
 			db.update("planes", val, "callsign = '" + (*it)->get_name() + "'");
 			calculate_points(*it);
 			it = this->aircrafts.erase(it);
+			++this->handled_planes;
 			continue;
 		}
     }
@@ -274,7 +257,7 @@ void Game::update(double elapsed) {
         (*it)->set_separation_error(true);
     }
 
-    if (this->duration > this->new_plane && this->settings->required_handled > this->handled_planes.size() + this->aircrafts.size() + this->holdings.size()) {
+    if (this->duration > this->new_plane && this->settings->required_handled > this->handled_planes + this->aircrafts.size() + this->holdings.size()) {
         create_plane();
         double time_for_next_plane = Tools::linear_random(this->settings->new_plane_lower * 1000, this->settings->new_plane_upper * 1000);
 		this->new_plane += time_for_next_plane;
@@ -335,7 +318,6 @@ void Game::create_plane() {
 	#ifdef DEBUG
 	std::clog << "Game::create_plane()" << std::endl;
 	#endif
-	int game_id = -1;
 	
 	Database db;
 	
@@ -347,9 +329,6 @@ void Game::create_plane() {
 	Outpoint outpoint = this->select_outpoint();
 	
 	Queryresult airlines = db.get_result("SELECT ICAO FROM airlines");
-	Queryresult game_id_query = db.get_result("SELECT MAX(id) AS id FROM games GROUP BY id");
-	
-	game_id = Tools::toint(game_id_query(0, "id"));
 	
 	int t_type = Tools::linear_random(1, 100);
 	
@@ -361,16 +340,6 @@ void Game::create_plane() {
 		callsign = airlines(Tools::linear_random(0, airlines.size()), "ICAO") + Tools::tostr(Tools::linear_random(1, 999), 3);
 	}
 	
-	if (flight_type == DEPARTURE) {
-		aircraft plane(new Aircraft(callsign, this->settings, this->active_field, this->atis, outpoint));
-		plane->set_in_time(this->duration);
-		this->holdings.push_back(plane);
-	} else {
-		aircraft plane (new Aircraft(callsign, this->settings, this->active_field, this->atis, inpoint));
-		plane->set_in_time(this->duration);
-		this->aircrafts.push_back(plane);
-	}
-	
 	std::list <std::string> col;
 	col.push_back("callsign");
 	col.push_back("game_id");
@@ -378,10 +347,20 @@ void Game::create_plane() {
 	
 	std::list <std::string> val;
 	val.push_back(callsign);
-	val.push_back(Tools::tostr(game_id));
+	val.push_back(Tools::tostr(this->game_id));
 	val.push_back(Tools::tostr(this->duration));
 	
-	db.insert("planes", col, val);
+	int plane_id = db.insert("planes", col, val);
+	
+	if (flight_type == DEPARTURE) {
+		aircraft plane(new Aircraft(callsign, this->settings, this->active_field, this->atis, outpoint));
+		plane->set_id(plane_id);
+		this->holdings.push_back(plane);
+	} else {
+		aircraft plane (new Aircraft(callsign, this->settings, this->active_field, this->atis, inpoint));
+		plane->set_id(plane_id);
+		this->aircrafts.push_back(plane);
+	}
 }
 
 void Game::load_navpoints(int airfield_id) {
@@ -512,13 +491,24 @@ void Game::build_clearance(std::string command) {
     std::clog << "Game::build_clearnace(" << command << ")" << std::endl;
 	#endif
 	
+	Database db;
+	
 	std::vector <std::string> tmp = Tools::split(" ", command);
+	std::list <std::string> col;
+	std::list <std::string> val;
+	
+	col.push_back("clearance");
+	col.push_back("plane_id");
+	
+	val.push_back(command);
+	val.push_back(Tools::tostr(this->selected->get_id()));
 	
 	if (this->selected != NULL) {
 		std::string s_value = Tools::trim(tmp.back());
 		int value;
 		
 		if (tmp.size() > 1) {
+			db.insert("clearances", col, val);
 			if (Tools::trim(tmp[0]) == "turn") {
 				value = Tools::toint(s_value);
 				
@@ -649,7 +639,7 @@ int Game::get_handled_planes() {
     std::clog << "Game::get_handled_planes()" << std::endl;
 	#endif
 	
-	return this->handled_planes.size();
+	return this->handled_planes;
 }
 
 int Game::get_planes_count() {
@@ -673,7 +663,7 @@ bool Game::ok() {
     std::clog << "Game::ok()" << std::endl;
 	#endif
 	
-	return (this->handled_planes.size() >= this->settings->required_handled && this->aircrafts.size() == 0);
+	return (this->handled_planes >= this->settings->required_handled && this->aircrafts.size() == 0);
 }
 
 int Game::get_level() {
