@@ -44,19 +44,13 @@ void Game::load(std::string airfield) {
 	
 	Database db;
 	
-	Queryresult game_id_query = db.get_result("SELECT MAX(id) AS id FROM games GROUP BY id");
-	
-	if (game_id_query.size() > 0) { 
-		this->game_id = 1 + Tools::toint(game_id_query(0, "id"));
-	}
-	
 	std::list <std::string> col;
 	std::list <std::string> val;
 	
 	col.push_back("id");
-	val.push_back(Tools::tostr(game_id));
+	val.push_back(Tools::tostr(this->game_id));
 	
-	db.insert("games", col, val);
+	this->game_id = 1 + db.insert("games", col, val);
 	
     this->load_airfield(airfield);
 
@@ -72,7 +66,7 @@ void Game::load(std::string airfield) {
 Queryresult Game::get_stat_data() {
 	Database db;
 	
-	Queryresult stat = db.get_result("SELECT in_time, out_time, callsign, clearances, points FROM planes ORDER BY in_time ASC");
+	Queryresult stat = db.get_result("SELECT time_in, time_out, callsign, SUM(clearances) AS clearances, points FROM planes ORDER BY in_time ASC");
 	
 	return stat;
 }
@@ -179,19 +173,12 @@ void Game::handle_holdings() {
 
 void Game::calculate_points(aircraft plane) {
 	#ifdef DEBUG
-	std::clog << "Game::calculate_points(" << type << ", " << clearance_count << ", " << plane.get_name() << ")" << std::endl;
+	std::clog << "Game::calculate_points()" << std::endl;
 	#endif
 	
 	int type = plane->get_type();
-	int clearances = 0;
-	double in_time = 0;
-	double out_time = 0;
 	
-	double target_time = ((type == APPROACH) ? 13 : 6) * 60 * 60 * 1000;
-	
-	double time = out_time - in_time;
-	
-	int points = ((1 == 0) ? 40000 : 65000) / clearances / (time / target_time);
+	int points = ((type == APPROACH) ? 13 : 6);
 }
 
 int Game::get_clearance_count() {
@@ -226,6 +213,8 @@ void Game::update(double elapsed) {
 	#ifdef DEBUG
     std::clog << "Game::get_game_points(" << elapsed << ")" << std::endl;
 	#endif
+	
+	this->clearance_count = Tools::toint(db.get_result("SELECT COUNT(clearance) AS clearance_count FROM clearances, planes WHERE planes.rowid = clearances.plane_id AND planes.game_id = " + Tools::tostr(this->game_id))(0, 0));
 	
 	if (!this->loaded) {
 		throw std::logic_error("Game is not loaded");
@@ -332,7 +321,7 @@ void Game::create_plane() {
 	
 	int t_type = Tools::linear_random(1, 100);
 	
-	types flight_type = (t_type > 50) ? APPROACH : DEPARTURE;
+	types flight_type = (t_type > 20) ? APPROACH : DEPARTURE;
 
     std::string callsign = airlines(Tools::linear_random(0, airlines.size()), "ICAO") + Tools::tostr(Tools::linear_random(1, 999), 3);
 
