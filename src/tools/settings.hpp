@@ -74,6 +74,7 @@ public:
 	int transition_levels;
 	int zoom_min;
 	int zoom_max;
+	int time_change;
     std::string program_name;
     std::string database_name;
     std::string search_term;
