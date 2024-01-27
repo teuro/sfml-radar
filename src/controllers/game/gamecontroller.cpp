@@ -192,7 +192,7 @@ void Gamecontroller::calculate_fps() {
 	}
 }
 
-void Gamecontroller::update(double elapsed, Point& mouse) {
+void Gamecontroller::update(double elapsed) {
 	#ifdef DEBUG
 	std::clog << "Gamecontroller::update(" << elapsed << ", " << mouse << ")" << std::endl;
 	#endif
@@ -238,7 +238,9 @@ void Gamecontroller::update(double elapsed, Point& mouse) {
 		this->game->update(elapsed);
 		this->metar->update();
 	}
-	
+}
+
+void Gamecontroller::draw(Point& mouse) {
 	this->views[this->state]->clear_screen();
 	this->views[this->state]->update();
 	this->views[this->state]->draw(mouse);

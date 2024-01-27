@@ -1,3 +1,4 @@
+
 #ifndef GAMECONTROLLER_HPP
 #define GAMECONTROLLER_HPP
 
@@ -88,7 +89,7 @@ public:
 		* @return void
 	**/
 	
-    void update(double elapsed, Point& mouse) override;
+    void update(double elapsed) override;
 	
 	/**
 		* handle_mouse_click
@@ -125,6 +126,8 @@ public:
 	**/
 	
     void update_command(std::string command) override;
+	
+	void draw(Point& mouse);
 private:
 	bool level_selected;
 	bool airport_selected;
