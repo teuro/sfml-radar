@@ -1,20 +1,23 @@
 #include "queryresult.hpp"
 
 Queryresult::Queryresult(sqlite3pp::query& qry) {
-    std::string tmp = "";
+	std::string tmp = "";
 
     for (int i = 0; i < qry.column_count(); ++i) {
-        headers.push_back(qry.column_name(i));
+		headers.push_back(qry.column_name(i));
     }
-
+	
     for (sqlite3pp::query::iterator i = qry.begin(); i != qry.end(); ++i) {
-        for (int j = 0; j < qry.column_count(); ++j) {
-            tmp += (*i).get<std::string>(j) + " ";
+		for (int j = 0; j < qry.column_count(); ++j) {
+			if ((*i).get<std::string>(j).length()) {
+				tmp += (*i).get<std::string>(j) + " ";
+			}
         }
-
-        Queryrow qr(tmp);
-        tmp = "";
-        this->queryrows.push_back(qr);
+		if (tmp.length()) {
+			Queryrow qr(tmp);
+			tmp = "";
+			this->queryrows.push_back(qr);
+		}
     }
 }
 

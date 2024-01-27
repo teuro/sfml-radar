@@ -43,7 +43,7 @@ void Database::update(std::string table_name, std::map <std::string, std::string
 }
 
 Queryresult Database::get_result(std::string query) {
-    sqlite3pp::database db("databases/radar.db");
+	sqlite3pp::database db("databases/radar.db");
 	
 	sqlite3pp::query qry(db, query.c_str());
 	
