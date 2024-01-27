@@ -9,43 +9,9 @@ void SFML_window::init() {
     std::clog << "SFML_window::init()" << std::endl;
 	#endif
 	
-	this->time_change = sf::milliseconds(100);
-	
 	this->load_settings();
-}
-
-void SFML_window::load_settings() {
-	#ifdef DEBUG
-	std::clog << "SFML_window::load_settings()" << std::endl;
-	#endif
 	
-	std::shared_ptr <Settings> s (new Settings);
-	this->settings = s;
-	
-	Tools::init_random();
-	std::map <std::string, std::string> tmp;
-	std::string line;
-	//std::string type;
-	std::string name;
-	std::string value;
-	
-	std::ifstream setting_file("settings/settings.ini", std::ios::in);
-	
-	while (std::getline(setting_file, line)) {
-		std::vector <std::string> cells = Tools::split(" ", line);
-		
-		if (cells.size() == 3) {
-			//type = cells[0];
-			name = cells[1];
-			value = cells[2];
-			
-			tmp[name] = value;
-		}
-	}
-	
-	setting_file.close();
-
-	this->settings->set_values(tmp);
+	this->time_change = sf::milliseconds(this->settings->time_change);
 }
 
 void SFML_window::run() {
@@ -76,47 +42,35 @@ void SFML_window::run() {
 	
 	gamecontroller.load();
 	sf::Time time_now;
+	sf::Time game_time;
 	
 	sf::Event event;
 	bool on_run = true;
-	std::list <int> waits;
-	unsigned int round = 0;
-	unsigned int rounds = 50;
+	bool drawed = false;
+	
+	game_time = sf::milliseconds(1);
 	
 	while (on_run) {
 		while (window.pollEvent(event) && on_run) {
 			on_run = this->handle_event(event, gamecontroller, window);
 		}
 		
-		time_now = this->clock.restart();
-		int wait = (time_change - time_now).asMilliseconds();
+		time_now = this->clock.getElapsedTime();
 		
-		if (wait) {
-			waits.push_back(wait);
-		}
-		
-		//std::clog << "Sleeping " << Tools::average(waits) << " ms" << std::endl;
-		
-		if (waits.size()) {
-			if (waits.size() > rounds) {
-				waits.pop_front();
-			}
+		while (game_time + time_change <= time_now) {
+			gamecontroller.update(time_change.asMilliseconds());
 			
-			if (round == rounds) {
-				if (Tools::average(waits) > 20) {
-					this->time_change -= sf::milliseconds(1);
-				} else if (Tools::average(waits) < 15) {
-					this->time_change += sf::milliseconds(10);
-				}
-				
-				round = 0;
-			}
+			game_time += time_change;
+			
+			drawed = false;
 		}
 		
-		gamecontroller.update(time_change.asMilliseconds(), mouse);
-		
-		sf::sleep(sf::milliseconds(wait));
-		++round;
+		if (drawed) {
+			sf::sleep(sf::milliseconds(1));
+		} else {
+			gamecontroller.draw(mouse);
+			drawed = true;
+		}
 	}
 }
 
