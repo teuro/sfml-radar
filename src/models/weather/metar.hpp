@@ -24,14 +24,14 @@ struct Cloud {
 };
 
 /**
-	* @struct Wind represent of winds
+	* @struct Wind 
 **/
 
 struct Wind {
-	/** \var direction **/
+	/** @var direction **/
     int direction;
 	
-	/** \var speed **/
+	/** @var speed **/
     int speed;
 };
 
