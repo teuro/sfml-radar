@@ -4,15 +4,18 @@ Statview::Statview(Drawsurface& d, std::shared_ptr <Settings> s, std::shared_ptr
 
 Statview::~Statview() { }
 
-void Statview::draw(Point& ) { 
+void Statview::draw(Point& mouse) {
 	this->clear_screen();
-
-	View::draw();
-	 
-	this->draw_points();
+	
+	if (!this->loaded) {
+		throw std::logic_error("Statview is not loaded");
+	}
+	
+	this->View::draw();
 }
 
 void Statview::load() { 
+	this->loaded = false;
 	#ifdef DEBUG
 	std::clog << "Statview::load()" << std::endl;
 	#endif
@@ -46,16 +49,23 @@ void Statview::load() {
 			}
 			
 			tit->clear_rows();
-			Queryresult handled_planes = this->game->get_stat_data();
-			double area_time;
+			/** 
+				* @todo
+				* get data from controller
+				* SELECT COUNT(clearances.clearance) AS clearances, planes.callsign, planes.game_id FROM planes LEFT JOIN clearances ON planes.rowid = clearances.plane_id WHERE planes.game_id = game_id GROUP BY planes.rowid ORDER BY clearances DESC, callsign ASC;
+			**/
+			Database db;
+			//Queryresult handled_planes = this->game->get_stat_data();
+			Queryresult handled_planes = db.get_result("SELECT COUNT(clearances.clearance) AS clearances, planes.callsign, planes.game_id, planes.time_in AS in_time, planes.time_out AS out_time FROM planes LEFT JOIN clearances ON planes.rowid = clearances.plane_id WHERE planes.game_id = game_id GROUP BY planes.rowid ORDER BY clearances DESC, callsign ASC");
+			int area_time = 0;
 			
-			for (unsigned int i = 0; i < handled_planes.size(); ++ ++i) {
+			for (unsigned int i = 0; i < handled_planes.size(); ++i) {
 				std::list <Cell> t_cells = replaced.get_cells();
 				
-				double in_time = Tools::toint(handled_planes(i, "in_time"));
-				double out_time = Tools::toint(handled_planes(i, "out_time"));
+				int in_time = Tools::toint(handled_planes(i, "in_time"));
+				int out_time = Tools::toint(handled_planes(i, "out_time"));
 				
-				area_time = out_time - in_time;
+				area_time = out_time - in_time;				
 				
 				area += area_time;
 				clearances += Tools::toint(handled_planes(i, "clearances"));
@@ -64,10 +74,10 @@ void Statview::load() {
 				this->repl["[in_time]"] = Tools::totime(in_time);
 				this->repl["[out_time]"] = Tools::totime(out_time);
 				this->repl["[area_time]"] = Tools::totime(area_time);
-				this->repl["[points]"] = Tools::tostr(handled_planes(i, "points"), 8);
+				//this->repl["[points]"] = Tools::tostr(handled_planes(i, "points"), 8);
 				this->repl["[clearances]"] = Tools::tostr(handled_planes(i, "clearances"), 3);
 				
-				sum_points += Tools::toint(handled_planes(i, "points"));
+				//sum_points += Tools::toint(handled_planes(i, "points"));
 				
 				Row row;
 				
@@ -85,8 +95,8 @@ void Statview::load() {
 				tit->add_row(row);
 			}
 			
-			this->repl["[AREA]"] = Tools::totime(area / this->game->get_handled_planes());
-			this->repl["[SUM]"] = Tools::tostr(sum_points, 8);
+			this->repl["[AREA]"] = Tools::totime(area / handled_planes.size());
+			//this->repl["[SUM]"] = Tools::tostr(sum_points, 8);
 			this->repl["[CLRC]"] = Tools::tostr(clearances, 3);
 			
 			Row row;
@@ -106,6 +116,8 @@ void Statview::load() {
 		
 		++tit;
 	}
+	
+	this->loaded = true;
 }
 
 void Statview::draw_points() {

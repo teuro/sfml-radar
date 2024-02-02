@@ -23,6 +23,7 @@ public:
 	virtual void update() override;
 private:
 	std::shared_ptr <Game> game;
+	bool loaded;
 };
 
 #endif // ATIS_VIEW
