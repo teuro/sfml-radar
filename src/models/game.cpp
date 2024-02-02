@@ -47,10 +47,10 @@ void Game::load(std::string airfield) {
 	std::list <std::string> col;
 	std::list <std::string> val;
 	
-	col.push_back("id");
-	val.push_back(Tools::tostr(this->game_id));
+	col.push_back("airfield");
+	val.push_back(airfield);
 	
-	this->game_id = 1 + db.insert("games", col, val);
+	this->game_id = db.insert("games", col, val);
 	
     this->load_airfield(airfield);
 
