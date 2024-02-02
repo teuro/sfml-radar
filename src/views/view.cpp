@@ -516,7 +516,7 @@ void View::draw_element(Drawable_table& dt) {
 	std::clog << "Count of rows " <<  t_list.size() << std::endl;
 	#endif
 	
-	int length = this->drawer.get_text_length(dt.get_max_length(), font_size) + 5;
+	int length = this->drawer.get_text_length(dt.get_max_length(), font_size) + 30;
 	
 	while (rit != t_list.end()) {
 		this->style(*rit);
