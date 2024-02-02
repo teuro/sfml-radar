@@ -55,6 +55,7 @@ void Gamecontroller::load() {
 	this->views[this->GAME]->load();
 		
 	this->views[this->STAT] = sv;
+	this->views[this->STAT]->load();
 }
 
 void Gamecontroller::handle_function_keys(int key) {
@@ -214,9 +215,8 @@ void Gamecontroller::update(double elapsed) {
 		this->views[ATIS]->set_menu(atis_items);
 	} else if (this->state == ATIS && this->atis->ok()) {
 		this->state = GAME;
-		int max_amount_planes = (this->settings->required_handled < this->game->get_active_field()->get_inpoints().size()) ? this->settings->required_handled : this->game->get_active_field()->get_inpoints().size();
 		
-		this->game->create_planes(Tools::linear_random(1, max_amount_planes));
+		this->game->create_planes(5);
 	} else if (this->state == GAME && this->game->ok()) {
 		this->state = STAT;
 		this->views[this->STAT]->load();
