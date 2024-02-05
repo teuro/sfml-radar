@@ -55,7 +55,6 @@ void Gamecontroller::load() {
 	this->views[this->GAME]->load();
 		
 	this->views[this->STAT] = sv;
-	this->views[this->STAT]->load();
 }
 
 void Gamecontroller::handle_function_keys(int key) {
