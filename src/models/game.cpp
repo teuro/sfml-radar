@@ -63,12 +63,8 @@ void Game::load(std::string airfield) {
 	this->loaded = true;
 }
 
-Queryresult Game::get_stat_data() {
-	Database db;
-	
-	Queryresult stat = db.get_result("SELECT time_in, time_out, callsign, SUM(clearances) AS clearances, points FROM planes ORDER BY in_time ASC");
-	
-	return stat;
+int Game::get_id() {
+	return this->game_id;
 }
 
 std::shared_ptr <Airfield> Game::get_active_field() {

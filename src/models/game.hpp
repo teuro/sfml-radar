@@ -111,7 +111,7 @@ public:
 	std::list <aircraft> get_holdings();
 	int get_clearance_count();
 	std::shared_ptr <Atis> get_atis();
-	Queryresult get_stat_data();
+	int get_id();
 private:
 	unsigned int clearance_count;
 	unsigned int handled_planes;
