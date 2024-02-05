@@ -9,20 +9,20 @@
 #include "../../tools/point_tools.hpp"
 #include <tools/time_tools.hpp>
 #include "../../tools/settings.hpp"
-#include "../../models/game.hpp"
 
 class Statview : public View {
 public:
-	Statview(Drawsurface& drawsurface, std::shared_ptr <Settings> settings, std::shared_ptr <Game> game);
+	Statview(Drawsurface& drawsurface, std::shared_ptr <Settings> settings);
 	~Statview();
 	virtual void draw(Point& mouse) override;
 	virtual std::string handle_click(Point& mouse) override;
     void load() override;
 	void draw_points();
 	virtual void update() override;
+	void set_handled_planes(Queryresult handled_planes);
 private:
-	std::shared_ptr <Game> game;
 	bool loaded;
+	Queryresult handled_planes;
 };
 
 #endif // ATIS_VIEW

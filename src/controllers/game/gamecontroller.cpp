@@ -43,7 +43,7 @@ void Gamecontroller::load() {
 	std::shared_ptr <Menuview> mv (new Menuview(this->drawer, this->settings, this->airports));	
 	std::shared_ptr <Atisview> av (new Atisview(this->drawer, this->settings, this->atis));
 	std::shared_ptr <Gameview> gv (new Gameview(this->drawer, this->settings, this->game));
-	std::shared_ptr <Statview> sv (new Statview(this->drawer, this->settings, this->game));
+	std::shared_ptr <Statview> sv (new Statview(this->drawer, this->settings));
 	
 	this->views[this->MENU] = mv;
 	this->views[this->MENU]->load();
@@ -218,6 +218,12 @@ void Gamecontroller::update(double elapsed) {
 		this->game->create_planes(5);
 	} else if (this->state == GAME && this->game->ok()) {
 		this->state = STAT;
+		
+		Database db;
+		Queryresult handled_planes = db.get_result(std::string("SELECT COUNT(clearances.clearance) AS clearances, planes.callsign, planes.game_id, planes.time_in AS in_time, planes.time_out AS out_time FROM planes LEFT JOIN clearances ON planes.rowid = clearances.plane_id WHERE planes.game_id = game_id AND planes.game_id = '" + Tools::tostr(this->game->get_id()) + "' GROUP BY planes.rowid ORDER BY clearances DESC, callsign ASC"));
+		
+		this->statview->set_handled_planes(handled_planes);
+		
 		this->views[this->STAT]->load();
 	}
 	

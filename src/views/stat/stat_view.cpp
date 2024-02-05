@@ -1,6 +1,6 @@
 #include "stat_view.hpp"
 
-Statview::Statview(Drawsurface& d, std::shared_ptr <Settings> s, std::shared_ptr <Game> g) : View(d, s), game(g) { }
+Statview::Statview(Drawsurface& d, std::shared_ptr <Settings> s) : View(d, s) { }
 
 Statview::~Statview() { }
 
@@ -12,6 +12,10 @@ void Statview::draw(Point& mouse) {
 	}
 	
 	this->View::draw();
+}
+
+void Statview::set_handled_planes(Queryresult handled_planes) {
+	this->handled_planes = handled_planes;
 }
 
 void Statview::load() { 
@@ -49,14 +53,7 @@ void Statview::load() {
 			}
 			
 			tit->clear_rows();
-			/** 
-				* @todo
-				* get data from controller
-				* SELECT COUNT(clearances.clearance) AS clearances, planes.callsign, planes.game_id FROM planes LEFT JOIN clearances ON planes.rowid = clearances.plane_id WHERE planes.game_id = game_id GROUP BY planes.rowid ORDER BY clearances DESC, callsign ASC;
-			**/
-			Database db;
-			
-			Queryresult handled_planes = db.get_result(std::string("SELECT COUNT(clearances.clearance) AS clearances, planes.callsign, planes.game_id, planes.time_in AS in_time, planes.time_out AS out_time FROM planes LEFT JOIN clearances ON planes.rowid = clearances.plane_id WHERE planes.game_id = game_id AND planes.game_id = '" + Tools::tostr(this->game->get_id()) + "' GROUP BY planes.rowid ORDER BY clearances DESC, callsign ASC"));
+
 			int area_time = 0;
 			
 			for (unsigned int i = 0; i < handled_planes.size(); ++i) {
